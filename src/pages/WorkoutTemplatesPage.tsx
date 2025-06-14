@@ -15,18 +15,10 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { useToast } from "@/hooks/use-toast";
 import { exercises as allExercises } from "@/data/exercises";
-import type { ExerciseDef, TemplateExercise, WorkoutTemplate } from "@/types";
+import type { TemplateExercise, WorkoutTemplate } from "@/types";
 import { Checkbox } from "@/components/ui/checkbox";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { useNavigate } from "react-router-dom";
-
-type TemplateExercise = ExerciseDef & { sets: number };
-
-type WorkoutTemplate = {
-  id: string;
-  name: string;
-  exercises: TemplateExercise[];
-};
 
 const WorkoutTemplatesPage = () => {
   const navigate = useNavigate();
