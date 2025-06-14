@@ -6,13 +6,6 @@ import * as z from 'zod';
 import { supabase } from '@/integrations/supabase/client';
 import { useNavigate } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import {
   Form,
@@ -37,6 +30,7 @@ const AuthPage = () => {
   const { session } = useAuth();
   const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
+  const [activeTab, setActiveTab] = useState('signin');
 
   useEffect(() => {
     if (session) {
@@ -51,6 +45,11 @@ const AuthPage = () => {
       password: '',
     },
   });
+  
+  const onTabChange = (value: string) => {
+    form.clearErrors();
+    setActiveTab(value);
+  }
 
   const handleSignIn = async (values: AuthFormValues) => {
     setLoading(true);
@@ -91,21 +90,22 @@ const AuthPage = () => {
   }
 
   return (
-    <div className="flex items-center justify-center min-h-screen p-4 bg-background">
-      <Tabs defaultValue="signin" className="w-full max-w-sm">
-        <TabsList className="grid w-full grid-cols-2">
-          <TabsTrigger value="signin">Sign In</TabsTrigger>
-          <TabsTrigger value="signup">Sign Up</TabsTrigger>
-        </TabsList>
-        <TabsContent value="signin">
-          <Card>
-            <CardHeader>
-              <CardTitle>Sign In</CardTitle>
-              <CardDescription>
-                Enter your credentials to access your account.
-              </CardDescription>
-            </CardHeader>
-            <CardContent>
+    <div className="w-full lg:grid lg:min-h-screen lg:grid-cols-2">
+      <div className="flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
+        <div className="mx-auto w-full max-w-sm space-y-6">
+          <div className="space-y-2 text-center">
+            <h1 className="text-3xl font-bold">{activeTab === 'signin' ? 'Welcome back' : 'Create an account'}</h1>
+            <p className="text-muted-foreground">
+              {activeTab === 'signin' ? "Enter your email below to login to your account" : "Enter your details to create an account"}
+            </p>
+          </div>
+          
+          <Tabs value={activeTab} onValueChange={onTabChange} className="w-full">
+            <TabsList className="grid w-full grid-cols-2">
+              <TabsTrigger value="signin">Sign In</TabsTrigger>
+              <TabsTrigger value="signup">Sign Up</TabsTrigger>
+            </TabsList>
+            <TabsContent value="signin" className="pt-6">
               <Form {...form}>
                 <form onSubmit={form.handleSubmit(handleSignIn)} className="space-y-4">
                   <FormField
@@ -139,18 +139,8 @@ const AuthPage = () => {
                   </Button>
                 </form>
               </Form>
-            </CardContent>
-          </Card>
-        </TabsContent>
-        <TabsContent value="signup">
-          <Card>
-            <CardHeader>
-              <CardTitle>Sign Up</CardTitle>
-              <CardDescription>
-                Create a new account to get started.
-              </CardDescription>
-            </CardHeader>
-            <CardContent>
+            </TabsContent>
+            <TabsContent value="signup" className="pt-6">
               <Form {...form}>
                 <form onSubmit={form.handleSubmit(handleSignUp)} className="space-y-4">
                   <FormField
@@ -184,10 +174,24 @@ const AuthPage = () => {
                   </Button>
                 </form>
               </Form>
-            </CardContent>
-          </Card>
-        </TabsContent>
-      </Tabs>
+            </TabsContent>
+          </Tabs>
+
+        </div>
+      </div>
+      <div className="hidden bg-muted lg:block relative">
+        <img
+          src="https://images.unsplash.com/photo-1581009137052-c032ded73957?auto=format&fit=crop&q=80&w=1974"
+          alt="Woman lifting weights in a gym"
+          className="absolute inset-0 h-full w-full object-cover"
+        />
+        <div className="relative z-10 flex h-full items-end bg-gradient-to-t from-black/80 to-transparent p-10">
+            <div className="text-white max-w-md">
+                <h2 className="text-4xl font-bold">Track. Analyze. Improve.</h2>
+                <p className="mt-4 text-lg text-gray-200">Your ultimate fitness companion. All your workout and running data in one place.</p>
+            </div>
+        </div>
+      </div>
     </div>
   );
 };
