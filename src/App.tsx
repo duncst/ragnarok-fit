@@ -12,6 +12,7 @@ import NewWorkoutPage from "./pages/NewWorkoutPage";
 import ExercisesPage from "./pages/ExercisesPage";
 import LogRunPage from "./pages/LogRunPage";
 import OneRepMaxCalculatorPage from "./pages/OneRepMaxCalculatorPage";
+import WorkoutHistoryPage from "./pages/WorkoutHistoryPage";
 
 const queryClient = new QueryClient();
 
@@ -25,6 +26,7 @@ const App = () => (
           <Route element={<Layout />}>
             <Route path="/" element={<HomePage />} />
             <Route path="/exercises" element={<ExercisesPage />} />
+            <Route path="/history" element={<WorkoutHistoryPage />} />
             <Route path="/run" element={<RunPage />} />
             <Route path="/log-run" element={<LogRunPage />} />
             <Route path="/workout/new" element={<NewWorkoutPage />} />

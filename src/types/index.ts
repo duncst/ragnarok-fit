@@ -1,4 +1,3 @@
-
 export interface WorkoutSet {
   id: string;
   reps: number;
@@ -18,6 +17,7 @@ export interface Workout {
   startTime: Date;
   endTime?: Date;
   exercises: Exercise[];
+  notes?: string;
 }
 
 export interface ExerciseDef {
