@@ -27,3 +27,12 @@ export interface ExerciseDef {
   targetMuscles: string[];
   description: string;
 }
+
+export interface Run {
+  id: string;
+  distance: number; // in km
+  duration: number; // in seconds
+  runType: string;
+  date: Date;
+  notes?: string;
+}

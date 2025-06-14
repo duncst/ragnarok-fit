@@ -10,6 +10,7 @@ import WorkoutsPage from "./pages/WorkoutsPage";
 import RunPage from "./pages/RunPage";
 import NewWorkoutPage from "./pages/NewWorkoutPage";
 import ExercisesPage from "./pages/ExercisesPage";
+import LogRunPage from "./pages/LogRunPage";
 
 const queryClient = new QueryClient();
 
@@ -24,6 +25,7 @@ const App = () => (
             <Route path="/" element={<WorkoutsPage />} />
             <Route path="/exercises" element={<ExercisesPage />} />
             <Route path="/run" element={<RunPage />} />
+            <Route path="/log-run" element={<LogRunPage />} />
             <Route path="/workout/new" element={<NewWorkoutPage />} />
           </Route>
           <Route path="*" element={<NotFound />} />

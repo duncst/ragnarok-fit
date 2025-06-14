@@ -5,7 +5,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Play, Square, MapPin } from "lucide-react";
 import React, { useState, useEffect, useRef } from "react";
 import { cn } from "@/lib/utils";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 const runTypes = [
   "Easy Run",
@@ -78,6 +78,11 @@ const RunPage = () => {
           <p className="text-muted-foreground">
             {isRunning ? `Running - ${runType}` : "Ready to start"}
           </p>
+          {!isRunning && (
+            <Button asChild variant="link" className="p-0 h-auto text-base">
+              <Link to="/log-run">Or, log a completed run</Link>
+            </Button>
+          )}
         </CardContent>
       </Card>
       
