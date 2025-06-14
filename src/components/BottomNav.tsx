@@ -1,5 +1,5 @@
 
-import { Library, History } from "lucide-react";
+import { History } from "lucide-react";
 import { NavLink } from "react-router-dom";
 import { cn } from "@/lib/utils";
 import { ImageIcon } from "./ImageIcon";
@@ -16,9 +16,13 @@ const TemplateIcon = ({ className }: { className?: string }) => (
     <ImageIcon src="/lovable-uploads/1283fc3a-3186-4200-86ce-e6e99c46f46d.png" alt="Template icon" className={className} />
 );
 
+const ExerciseIcon = ({ className }: { className?: string }) => (
+    <ImageIcon src="/lovable-uploads/59098dd1-6550-4f60-bc29-d0c1165a7d3c.png" alt="Exercise icon" className={className} />
+);
+
 const navItems = [
   { to: "/", icon: HomeIcon, label: "Home" },
-  { to: "/exercises", icon: Library, label: "Exercises" },
+  { to: "/exercises", icon: ExerciseIcon, label: "Exercises" },
   { to: "/templates", icon: TemplateIcon, label: "Templates" },
   { to: "/history", icon: History, label: "History" },
   { to: "/run", icon: RunningIcon, label: "Running" },
