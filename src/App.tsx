@@ -13,6 +13,8 @@ import ExercisesPage from "./pages/ExercisesPage";
 import LogRunPage from "./pages/LogRunPage";
 import OneRepMaxCalculatorPage from "./pages/OneRepMaxCalculatorPage";
 import WorkoutHistoryPage from "./pages/WorkoutHistoryPage";
+import { AuthProvider } from "./contexts/AuthContext";
+import AuthPage from "./pages/AuthPage";
 
 const queryClient = new QueryClient();
 
@@ -21,20 +23,23 @@ const App = () => (
     <TooltipProvider>
       <Toaster />
       <Sonner />
-      <BrowserRouter>
-        <Routes>
-          <Route element={<Layout />}>
-            <Route path="/" element={<HomePage />} />
-            <Route path="/exercises" element={<ExercisesPage />} />
-            <Route path="/history" element={<WorkoutHistoryPage />} />
-            <Route path="/run" element={<RunPage />} />
-            <Route path="/log-run" element={<LogRunPage />} />
-            <Route path="/workout/new" element={<NewWorkoutPage />} />
-            <Route path="/1rm-calculator" element={<OneRepMaxCalculatorPage />} />
-          </Route>
-          <Route path="*" element={<NotFound />} />
-        </Routes>
-      </BrowserRouter>
+      <AuthProvider>
+        <BrowserRouter>
+          <Routes>
+            <Route path="/auth" element={<AuthPage />} />
+            <Route element={<Layout />}>
+              <Route path="/" element={<HomePage />} />
+              <Route path="/exercises" element={<ExercisesPage />} />
+              <Route path="/history" element={<WorkoutHistoryPage />} />
+              <Route path="/run" element={<RunPage />} />
+              <Route path="/log-run" element={<LogRunPage />} />
+              <Route path="/workout/new" element={<NewWorkoutPage />} />
+              <Route path="/1rm-calculator" element={<OneRepMaxCalculatorPage />} />
+            </Route>
+            <Route path="*" element={<NotFound />} />
+          </Routes>
+        </BrowserRouter>
+      </AuthProvider>
     </TooltipProvider>
   </QueryClientProvider>
 );
