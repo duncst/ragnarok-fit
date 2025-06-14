@@ -86,7 +86,7 @@ const AuthPage = () => {
 
       <div className="relative z-10 flex items-center justify-center min-h-screen py-12 px-4 sm:px-6 lg:px-8">
         <div className="mx-auto w-full max-w-sm space-y-6">
-          <img src="/lovable-uploads/3c72ab12-a451-49fc-b1bc-c2401b77cb96.png" alt="Ragnarok Fit Nordic Barbell Logo" className="mx-auto h-80 w-auto mt-16" />
+          <img src="/lovable-uploads/f6efc86e-49db-45d0-90c4-b8e5fc3a8144.png" alt="Ragnarok Fit Logo" className="mx-auto h-80 w-auto mt-16" />
           <div className="space-y-2 text-center">
             <h1 className="text-3xl font-bold text-white">Forge your legend.</h1>
             <p className="text-muted-foreground">
