@@ -1,29 +1,15 @@
+
 import { useState, useEffect } from 'react';
-import { useForm } from 'react-hook-form';
+import { useForm, FormProvider } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
-import * as z from 'zod';
 import { supabase } from '@/integrations/supabase/client';
 import { useNavigate } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import {
-  Form,
-  FormControl,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
-} from '@/components/ui/form';
 import { toast as sonnerToast } from 'sonner';
 import { useAuth } from '@/contexts/AuthContext';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-
-const authSchema = z.object({
-  email: z.string().email({ message: 'Invalid email address.' }),
-  password: z.string().min(6, { message: 'Password must be at least 6 characters.' }),
-});
-
-type AuthFormValues = z.infer<typeof authSchema>;
+import { authSchema, type AuthFormValues } from '@/lib/schemas/auth';
+import { AuthForm } from '@/components/auth/AuthForm';
 
 const AuthPage = () => {
   const { session } = useAuth();
@@ -46,7 +32,7 @@ const AuthPage = () => {
   });
   
   const onTabChange = (value: string) => {
-    form.clearErrors();
+    form.reset();
     setActiveTab(value);
   }
 
@@ -107,82 +93,30 @@ const AuthPage = () => {
             </p>
           </div>
           
-          <Tabs value={activeTab} onValueChange={onTabChange} className="w-full">
-            <TabsList className="grid w-full grid-cols-2">
-              <TabsTrigger value="signin">Sign In</TabsTrigger>
-              <TabsTrigger value="signup">Sign Up</TabsTrigger>
-            </TabsList>
-            <TabsContent value="signin" className="pt-6">
-              <Form {...form}>
-                <form onSubmit={form.handleSubmit(handleSignIn)} className="space-y-4">
-                  <FormField
-                    control={form.control}
-                    name="email"
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel>Email</FormLabel>
-                        <FormControl>
-                          <Input placeholder="m@example.com" {...field} />
-                        </FormControl>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
-                  <FormField
-                    control={form.control}
-                    name="password"
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel>Password</FormLabel>
-                        <FormControl>
-                          <Input type="password" {...field} />
-                        </FormControl>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
-                  <Button type="submit" className="w-full" disabled={loading}>
-                    {loading ? 'Signing In...' : 'Sign In'}
-                  </Button>
-                </form>
-              </Form>
-            </TabsContent>
-            <TabsContent value="signup" className="pt-6">
-              <Form {...form}>
-                <form onSubmit={form.handleSubmit(handleSignUp)} className="space-y-4">
-                  <FormField
-                    control={form.control}
-                    name="email"
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel>Email</FormLabel>
-                        <FormControl>
-                          <Input placeholder="m@example.com" {...field} />
-                        </FormControl>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
-                  <FormField
-                    control={form.control}
-                    name="password"
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel>Password</FormLabel>
-                        <FormControl>
-                          <Input type="password" {...field} />
-                        </FormControl>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
-                  <Button type="submit" className="w-full" disabled={loading}>
-                    {loading ? 'Signing Up...' : 'Sign Up'}
-                  </Button>
-                </form>
-              </Form>
-            </TabsContent>
-          </Tabs>
+          <FormProvider {...form}>
+            <Tabs value={activeTab} onValueChange={onTabChange} className="w-full">
+              <TabsList className="grid w-full grid-cols-2">
+                <TabsTrigger value="signin">Sign In</TabsTrigger>
+                <TabsTrigger value="signup">Sign Up</TabsTrigger>
+              </TabsList>
+              <TabsContent value="signin" className="pt-6">
+                <AuthForm
+                  onSubmit={handleSignIn}
+                  loading={loading}
+                  submitButtonText="Sign In"
+                  loadingButtonText="Signing In..."
+                />
+              </TabsContent>
+              <TabsContent value="signup" className="pt-6">
+                <AuthForm
+                  onSubmit={handleSignUp}
+                  loading={loading}
+                  submitButtonText="Sign Up"
+                  loadingButtonText="Signing Up..."
+                />
+              </TabsContent>
+            </Tabs>
+          </FormProvider>
 
         </div>
       </div>
