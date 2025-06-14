@@ -1,22 +1,8 @@
 
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Dumbbell, Footprints, Plus, Calendar, TrendingUp, Zap, Target, ArrowRight } from "lucide-react";
+import { Card, CardContent } from "@/components/ui/card";
+import { Dumbbell, Footprints, Plus, ArrowRight } from "lucide-react";
 import { Link } from "react-router-dom";
-import { StrengthChart } from "@/components/StrengthChart";
-import { RunChart } from "@/components/RunChart";
-
-const StatItem = ({ icon: Icon, value, label }: { icon: React.ElementType, value: string | number, label: string }) => (
-  <div className="flex items-start gap-3">
-    <div className="bg-secondary p-2 rounded-lg">
-      <Icon className="h-5 w-5 text-primary" />
-    </div>
-    <div>
-      <p className="text-xl font-bold">{value}</p>
-      <p className="text-sm text-muted-foreground">{label}</p>
-    </div>
-  </div>
-);
 
 const recentActivity = [
   { id: 1, type: "workout", name: "Push Day", date: "Yesterday", details: "5 exercises • 1h 5m" },
@@ -38,42 +24,6 @@ const WorkoutsPage = () => {
           </Link>
         </Button>
       </div>
-
-      <Card>
-        <CardHeader>
-          <CardTitle className="flex items-center gap-2">
-            <Dumbbell className="text-primary" />
-            Strength Training
-          </CardTitle>
-        </CardHeader>
-        <CardContent className="space-y-4">
-          <div className="grid grid-cols-2 gap-4">
-            <StatItem icon={Calendar} value={24} label="Workouts" />
-            <StatItem icon={Target} value={3} label="This Week" />
-            <StatItem icon={TrendingUp} value={12} label="PR's Set" />
-            <StatItem icon={Zap} value="204K" label="Total Volume" />
-          </div>
-          <StrengthChart />
-        </CardContent>
-      </Card>
-
-      <Card>
-        <CardHeader>
-          <CardTitle className="flex items-center gap-2">
-            <Footprints className="text-primary" />
-            Running
-          </CardTitle>
-        </CardHeader>
-        <CardContent className="space-y-4">
-          <div className="grid grid-cols-2 gap-4">
-            <StatItem icon={Calendar} value={18} label="Total Runs" />
-            <StatItem icon={Target} value={4} label="This Week" />
-            <StatItem icon={Zap} value="140.5" label="Total Distance" />
-            <StatItem icon={TrendingUp} value="4:47" label="Best Pace" />
-          </div>
-          <RunChart />
-        </CardContent>
-      </Card>
       
       <div>
         <h2 className="text-2xl font-bold mb-4">Recent Activity</h2>

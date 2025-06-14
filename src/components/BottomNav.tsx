@@ -1,10 +1,11 @@
 
-import { Dumbbell, Footprints, Library } from "lucide-react";
+import { Home, BarChart2, Library, Footprints } from "lucide-react";
 import { NavLink } from "react-router-dom";
 import { cn } from "@/lib/utils";
 
 const navItems = [
-  { to: "/", icon: Dumbbell, label: "Workouts" },
+  { to: "/", icon: Home, label: "Home" },
+  { to: "/analytics", icon: BarChart2, label: "Analytics" },
   { to: "/exercises", icon: Library, label: "Exercises" },
   { to: "/run", icon: Footprints, label: "Running" },
 ];
