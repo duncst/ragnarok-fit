@@ -1,7 +1,6 @@
-
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Dumbbell, Footprints, Plus, ArrowRight, Calendar, TrendingUp, Zap, Target } from "lucide-react";
+import { Dumbbell, Footprints, Plus, ArrowRight, Calendar, TrendingUp, Zap, Target, Calculator } from "lucide-react";
 import { Link } from "react-router-dom";
 import { StrengthChart } from "@/components/StrengthChart";
 import { RunChart } from "@/components/RunChart";
@@ -101,10 +100,18 @@ const HomePage = () => {
           
           <Card>
             <CardHeader>
-                <CardTitle className="flex items-center gap-2 text-lg font-semibold">
-                    <TrendingUp className="text-primary" />
-                    1 Rep Max PRs
-                </CardTitle>
+                <div className="flex justify-between items-center">
+                    <CardTitle className="flex items-center gap-2 text-lg font-semibold">
+                        <TrendingUp className="text-primary" />
+                        1 Rep Max PRs
+                    </CardTitle>
+                    <Button asChild variant="outline" size="sm">
+                        <Link to="/1rm-calculator">
+                            <Calculator className="mr-2 h-4 w-4" />
+                            Calculator
+                        </Link>
+                    </Button>
+                </div>
             </CardHeader>
             <CardContent className="pt-0">
                 <Table>
