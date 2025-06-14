@@ -198,7 +198,7 @@ const HomePage = () => {
               ) : (
                 <>
                   <div className="grid grid-cols-2 gap-4">
-                    <StatItem icon={Calendar} value={totalWorkouts} label="Workouts" />
+                    <StatItem icon={Zap} value={totalWorkouts} label="Workouts" />
                     <StatItem icon={TargetIcon} value={workoutsThisWeek} label="This Week" />
                     <StatItem icon={TrendingUp} value={totalPRs} label="PR's Set" />
                     <StatItem icon={VolumeIcon} value={`${(totalVolume / 1000).toFixed(1)}K`} label="Total Volume (kg)" />
@@ -230,7 +230,7 @@ const HomePage = () => {
               ) : (
                 <>
                   <div className="grid grid-cols-2 gap-4">
-                    <StatItem icon={Calendar} value={totalRuns} label="Total Runs" />
+                    <StatItem icon={Zap} value={totalRuns} label="Total Runs" />
                     <StatItem icon={TargetIcon} value={runsThisWeek} label="This Week" />
                     <StatItem icon={Zap} value={`${totalDistance.toFixed(1)} km`} label="Total Distance" />
                     <StatItem icon={TrendingUp} value={formatPace(bestPace)} label="Best Pace (min/km)" />
