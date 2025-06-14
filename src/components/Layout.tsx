@@ -1,7 +1,7 @@
 
 import { Outlet, useNavigate } from "react-router-dom";
 import BottomNav from "./BottomNav";
-import { Barbell, LogOut } from "lucide-react";
+import { Dumbbell, LogOut } from "lucide-react";
 import { useAuth } from "@/contexts/AuthContext";
 import { useEffect } from "react";
 import { Button } from "./ui/button";
@@ -37,7 +37,7 @@ const Layout = () => {
       <header className="sticky top-0 bg-background/95 backdrop-blur-sm z-10">
         <div className="flex items-center justify-between p-4 border-b">
             <div className="flex items-center gap-2">
-              <Barbell className="h-6 w-6 text-primary" />
+              <Dumbbell className="h-6 w-6 text-primary" />
               <h1 className="font-bold text-lg tracking-tight">Hybrid Trainer</h1>
             </div>
             <Button variant="ghost" size="icon" onClick={handleLogout} aria-label="Log out">
