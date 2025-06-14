@@ -36,7 +36,7 @@ const BottomNav = () => {
               )
             }
           >
-            <item.icon className="h-6 w-6 mb-1" />
+            <item.icon className="h-7 w-7 mb-1" />
             <span className="text-xs font-medium">{item.label}</span>
           </NavLink>
         ))}
