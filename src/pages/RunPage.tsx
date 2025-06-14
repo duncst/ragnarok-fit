@@ -1,13 +1,29 @@
+
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
-import { Play, Square } from "lucide-react";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { Play, Square, MapPin } from "lucide-react";
 import React, { useState, useEffect, useRef } from "react";
 import { cn } from "@/lib/utils";
+import { useNavigate } from "react-router-dom";
+
+const runTypes = [
+  "Easy Run",
+  "Tempo Run",
+  "Interval Training",
+  "Long Run",
+  "Recovery Run",
+  "Fartlek",
+  "Hill Training",
+  "Race",
+];
 
 const RunPage = () => {
   const [isRunning, setIsRunning] = useState(false);
   const [time, setTime] = useState(0);
+  const [runType, setRunType] = useState(runTypes[0]);
   const timerRef = useRef<NodeJS.Timeout | null>(null);
+  const navigate = useNavigate();
 
   useEffect(() => {
     if (isRunning) {
@@ -24,46 +40,88 @@ const RunPage = () => {
 
   const handleToggleRun = () => {
     if (isRunning) {
-      // Reset when stopping
+      // For now, stopping the run resets it. We can add a summary page later.
       setTime(0);
+      setIsRunning(false);
+    } else {
+      setIsRunning(true);
     }
-    setIsRunning(!isRunning);
   };
+  
+  const handleCancel = () => {
+    navigate(-1);
+  }
 
   const formatTime = (seconds: number) => {
-    const getSeconds = `0${seconds % 60}`.slice(-2);
-    const minutes = Math.floor(seconds / 60);
-    const getMinutes = `0${minutes % 60}`.slice(-2);
-    const getHours = `0${Math.floor(seconds / 3600)}`.slice(-2);
-    return `${getHours}:${getMinutes}:${getSeconds}`;
+    if (seconds === 0) return "0:00";
+    const h = Math.floor(seconds / 3600);
+    const m = Math.floor((seconds % 3600) / 60);
+    const s = seconds % 60;
+
+    const pad = (num: number) => num.toString().padStart(2, '0');
+
+    if (h > 0) {
+      return `${h}:${pad(m)}:${pad(s)}`;
+    }
+    return `${m}:${pad(s)}`;
   };
 
   return (
-    <div className="flex flex-col items-center justify-center h-full text-center space-y-8">
-      <h1 className="text-3xl font-bold">Start Running</h1>
-      <Card className="w-full">
-        <CardContent className="pt-6">
-          <div className="grid grid-cols-2 gap-4 text-center">
-            <div>
-              <p className="text-muted-foreground">Time</p>
-              <p className="text-4xl font-bold">{formatTime(time)}</p>
-            </div>
-            <div>
-              <p className="text-muted-foreground">Distance</p>
-              <p className="text-4xl font-bold">0.0 <span className="text-lg">km</span></p>
-            </div>
-          </div>
+    <div className="flex flex-col h-full space-y-6">
+      <h1 className="text-2xl font-bold flex items-center gap-2">
+        <MapPin className="text-primary" /> Run Tracker
+      </h1>
+      
+      <Card>
+        <CardContent className="text-center p-8 space-y-2">
+          <p className="text-7xl font-bold tracking-tighter">{formatTime(time)}</p>
+          <p className="text-muted-foreground">
+            {isRunning ? `Running - ${runType}` : "Ready to start"}
+          </p>
         </CardContent>
       </Card>
-      <Button 
-        onClick={handleToggleRun} 
-        size="lg" 
-        variant={isRunning ? "destructive" : "default"}
-        className={cn("w-full h-16 text-2xl", !isRunning && "bg-green-500 hover:bg-green-600 text-primary-foreground")}
-      >
-        {isRunning ? <Square className="mr-2 h-6 w-6" /> : <Play className="mr-2 h-6 w-6" />}
-        {isRunning ? "Stop" : "Start Run"}
-      </Button>
+      
+      <div className="grid grid-cols-2 gap-4 text-center">
+        <div>
+          <p className="text-sm text-muted-foreground">Distance</p>
+          <p className="text-2xl font-bold">0.0<span className="text-sm ml-1">km</span></p>
+        </div>
+        <div>
+          <p className="text-sm text-muted-foreground">Pace</p>
+          <p className="text-2xl font-bold">--:--<span className="text-sm ml-1">/km</span></p>
+        </div>
+      </div>
+
+      <div>
+        <label htmlFor="run-type" className="text-sm font-medium text-muted-foreground">Run Type</label>
+        <Select value={runType} onValueChange={setRunType} disabled={isRunning}>
+          <SelectTrigger id="run-type" className="w-full mt-1">
+            <SelectValue placeholder="Select run type" />
+          </SelectTrigger>
+          <SelectContent>
+            {runTypes.map(type => (
+              <SelectItem key={type} value={type}>{type}</SelectItem>
+            ))}
+          </SelectContent>
+        </Select>
+      </div>
+
+      <div className="flex-grow" />
+
+      <div className="space-y-3">
+        <Button 
+          onClick={handleToggleRun} 
+          size="lg" 
+          variant={isRunning ? "destructive" : "default"}
+          className={cn("w-full h-14 text-xl", !isRunning && "bg-green-500 hover:bg-green-600 text-primary-foreground")}
+        >
+          {isRunning ? <Square className="mr-2 h-6 w-6" /> : <Play className="mr-2 h-6 w-6" />}
+          {isRunning ? "Stop" : "Start Run"}
+        </Button>
+        <Button variant="outline" size="lg" className="w-full h-14 text-xl" onClick={handleCancel}>
+          Cancel
+        </Button>
+      </div>
     </div>
   );
 };
