@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Plus, X, ArrowUp, ArrowDown, Play } from "lucide-react";
+import { Plus, X, ArrowUp, ArrowDown, Lightning } from "lucide-react";
 import {
   Dialog,
   DialogContent,
@@ -240,7 +240,7 @@ const WorkoutTemplatesPage = () => {
                     <CardHeader className="flex flex-row items-center justify-between pb-2">
                       <CardTitle className="text-lg">{template.name}</CardTitle>
                       <Button variant="ghost" size="icon" onClick={() => handleStartWorkout(template)}>
-                        <Play className="h-5 w-5 text-primary" />
+                        <Lightning className="h-5 w-5 text-primary" />
                       </Button>
                     </CardHeader>
                     <CardContent>
