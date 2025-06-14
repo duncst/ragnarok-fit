@@ -92,7 +92,7 @@ const WorkoutCard = ({ workout }: { workout: Workout }) => {
         <CardContent className="p-4 space-y-4">
           <div className="flex justify-between items-start">
             <div>
-              <Badge variant="outline" className="font-semibold">{workout.name}</Badge>
+              <Badge variant="outline" className="font-semibold text-card-foreground">{workout.name}</Badge>
               <div className="flex items-center gap-2 text-sm text-muted-foreground mt-2">
                 <Calendar className="h-4 w-4" />
                 <span>{format(workout.startTime, 'MMM d, yyyy')}</span>
@@ -165,7 +165,7 @@ const RunCard = ({ run }: { run: Run }) => {
             <CardContent className="p-4 space-y-4">
                 <div className="flex justify-between items-start">
                     <div>
-                        <Badge variant="outline" className="font-semibold">{run.runType}</Badge>
+                        <Badge variant="outline" className="font-semibold text-card-foreground">{run.runType}</Badge>
                         <div className="flex items-center gap-2 text-sm text-muted-foreground mt-2">
                             <Calendar className="h-4 w-4" />
                             <span>{format(run.date, 'MMM d, yyyy')}</span>
@@ -283,7 +283,7 @@ const WorkoutHistoryPage = () => {
     <div className="space-y-6">
       <div className="flex justify-between items-center">
         <h1 className="text-2xl font-bold">History</h1>
-        <p className="text-muted-foreground text-sm">{combinedHistory.length} total activities</p>
+        <p className="text-secondary text-sm">{combinedHistory.length} total activities</p>
       </div>
       
       {combinedHistory.length === 0 && (
