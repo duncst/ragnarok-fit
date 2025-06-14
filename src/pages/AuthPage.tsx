@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from 'react';
 import { useForm, FormProvider } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -74,10 +73,17 @@ const AuthPage = () => {
   }
 
   return (
-    <div className="w-full lg:grid lg:min-h-screen lg:grid-cols-2">
-      <div className="flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
+    <div className="relative min-h-screen w-full">
+      <img
+        src="/lovable-uploads/fa0e47b1-a91c-4377-b5e0-17b5a55dfff8.png"
+        alt="Epic landscape with mountains and lightning"
+        className="absolute inset-0 h-full w-full object-cover"
+      />
+      <div className="absolute inset-0 bg-black/60" />
+
+      <div className="relative z-10 flex min-h-screen items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
         <div className="mx-auto w-full max-w-sm space-y-6">
-          <img src="/lovable-uploads/f6efc86e-49db-45d0-90c4-b8e5fc3a8144.png" alt="Ragnarok Fit Logo" className="mx-auto h-28 w-auto" />
+          <img src="/lovable-uploads/f6efc86e-49db-45d0-90c4-b8e5fc3a8144.png" alt="Ragnarok Fit Logo" className="mx-auto h-84 w-auto" />
           <div className="space-y-2 text-center">
             <h1 className="text-3xl font-bold text-white">{activeTab === 'signin' ? 'Welcome back' : 'Create an account'}</h1>
             <p className="text-muted-foreground">
@@ -110,22 +116,6 @@ const AuthPage = () => {
             </Tabs>
           </FormProvider>
 
-        </div>
-      </div>
-      <div className="hidden lg:block relative">
-        <img
-          src="/lovable-uploads/fa0e47b1-a91c-4377-b5e0-17b5a55dfff8.png"
-          alt="Epic landscape with mountains and lightning"
-          className="absolute inset-0 h-full w-full object-cover"
-        />
-        <div className="absolute inset-0 bg-black/60" />
-        <div className="relative z-10 flex h-full items-end p-16">
-          <div className="text-white">
-            <h2 className="text-4xl font-bold">Forge Your Legend.</h2>
-            <p className="mt-2 text-lg text-muted-foreground">
-              Track every lift, every run. Unleash the warrior within.
-            </p>
-          </div>
         </div>
       </div>
     </div>
