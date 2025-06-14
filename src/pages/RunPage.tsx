@@ -1,3 +1,4 @@
+
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
@@ -117,7 +118,7 @@ const RunPage = () => {
           onClick={handleToggleRun} 
           size="lg" 
           variant={isRunning ? "destructive" : "default"}
-          className="w-full h-14 text-xl"
+          className={cn("w-full h-14 text-xl", !isRunning && "bg-primary hover:bg-primary/90")}
         >
           {isRunning ? <Square className="mr-2 h-6 w-6" /> : <Play className="mr-2 h-6 w-6" />}
           {isRunning ? "Stop" : "Start Run"}
