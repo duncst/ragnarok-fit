@@ -182,14 +182,14 @@ const AuthPage = () => {
       </div>
       <div className="hidden bg-muted lg:block relative">
         <img
-          src="https://images.unsplash.com/photo-1581009137052-c032ded73957?auto=format&fit=crop&q=80&w=1974"
-          alt="Woman lifting weights in a gym"
+          src="/lovable-uploads/fa0e47b1-a91c-4377-b5e0-17b5a55dfff8.png"
+          alt="Epic landscape with mountains and lightning"
           className="absolute inset-0 h-full w-full object-cover"
         />
         <div className="relative z-10 flex h-full items-end bg-gradient-to-t from-black/80 to-transparent p-10">
             <div className="text-white max-w-md">
-                <h2 className="text-4xl font-bold">Track. Analyze. Improve.</h2>
-                <p className="mt-4 text-lg text-gray-200">Your ultimate fitness companion. All your workout and running data in one place.</p>
+                <h2 className="text-4xl font-bold">Forge Your Legend.</h2>
+                <p className="mt-4 text-lg text-gray-200">Track every lift, every run. Unleash the warrior within.</p>
             </div>
         </div>
       </div>
