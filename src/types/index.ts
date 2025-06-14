@@ -19,3 +19,11 @@ export interface Workout {
   endTime?: Date;
   exercises: Exercise[];
 }
+
+export interface ExerciseDef {
+  name: string;
+  bodyPart: string;
+  equipment: string;
+  targetMuscles: string[];
+  description: string;
+}

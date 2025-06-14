@@ -9,6 +9,7 @@ import Layout from "./components/Layout";
 import WorkoutsPage from "./pages/WorkoutsPage";
 import RunPage from "./pages/RunPage";
 import NewWorkoutPage from "./pages/NewWorkoutPage";
+import ExercisesPage from "./pages/ExercisesPage";
 
 const queryClient = new QueryClient();
 
@@ -21,6 +22,7 @@ const App = () => (
         <Routes>
           <Route element={<Layout />}>
             <Route path="/" element={<WorkoutsPage />} />
+            <Route path="/exercises" element={<ExercisesPage />} />
             <Route path="/run" element={<RunPage />} />
             <Route path="/workout/new" element={<NewWorkoutPage />} />
           </Route>

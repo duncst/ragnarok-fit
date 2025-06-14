@@ -1,10 +1,11 @@
 
-import { Dumbbell, Footprints, Home } from "lucide-react";
+import { Dumbbell, Footprints, Library } from "lucide-react";
 import { NavLink } from "react-router-dom";
 import { cn } from "@/lib/utils";
 
 const navItems = [
   { to: "/", icon: Dumbbell, label: "Workouts" },
+  { to: "/exercises", icon: Library, label: "Exercises" },
   { to: "/run", icon: Footprints, label: "Running" },
 ];
 
@@ -16,7 +17,7 @@ const BottomNav = () => {
           <NavLink
             key={item.label}
             to={item.to}
-            end
+            end={item.to === '/'}
             className={({ isActive }) =>
               cn(
                 "flex flex-col items-center justify-center w-full text-muted-foreground transition-colors",
