@@ -5,33 +5,33 @@
 
 @layer base {
   :root {
-    --background: 227 29% 26%; /* Midnight Steel */
+    --background: 225 26% 18%; /* Viking Night */
     --foreground: 30 50% 98%; /* Bone White */
 
     --card: 30 50% 98%; /* Bone White */
-    --card-foreground: 227 29% 26%; /* Midnight Steel */
+    --card-foreground: 225 26% 18%; /* Viking Night */
 
     --popover: 30 50% 98%; /* Bone White */
-    --popover-foreground: 227 29% 26%; /* Midnight Steel */
+    --popover-foreground: 225 26% 18%; /* Viking Night */
 
-    --primary: 215 74% 62%; /* Fjord Blue */
+    --primary: 213 59% 52%; /* Fjord Water */
     --primary-foreground: 30 50% 98%; /* Bone White */
 
-    --secondary: 200 18% 73%; /* Ash Grey */
-    --secondary-foreground: 227 29% 26%; /* Midnight Steel */
+    --secondary: 208 12% 65%; /* Shield Grey */
+    --secondary-foreground: 225 26% 18%; /* Viking Night */
 
-    --muted: 200 18% 73%; /* Ash Grey */
-    --muted-foreground: 227 29% 40%; /* Darker Midnight Steel */
+    --muted: 208 12% 65%; /* Shield Grey */
+    --muted-foreground: 225 26% 28%; /* Darker Viking Night */
 
-    --accent: 215 74% 62%; /* Fjord Blue */
+    --accent: 213 59% 52%; /* Fjord Water */
     --accent-foreground: 30 50% 98%; /* Bone White */
 
     --destructive: 15 100% 62%; /* Ember Orange */
     --destructive-foreground: 30 50% 98%; /* Bone White */
 
-    --border: 227 29% 35%; /* Lighter Midnight Steel */
-    --input: 227 29% 35%; /* Lighter Midnight Steel */
-    --ring: 215 74% 62%; /* Fjord Blue */
+    --border: 223 23% 35%; /* Forged Steel */
+    --input: 223 23% 35%; /* Forged Steel */
+    --ring: 213 59% 52%; /* Fjord Water */
 
     --radius: 0.5rem;
   }
