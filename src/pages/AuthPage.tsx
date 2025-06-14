@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -90,13 +89,20 @@ const AuthPage = () => {
   }
 
   return (
-    <div className="w-full lg:grid lg:min-h-screen lg:grid-cols-2">
-      <div className="flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
-        <div className="mx-auto w-full max-w-sm space-y-6">
+    <div className="relative min-h-screen w-full">
+      <img
+        src="/lovable-uploads/fa0e47b1-a91c-4377-b5e0-17b5a55dfff8.png"
+        alt="Epic landscape with mountains and lightning"
+        className="absolute inset-0 h-full w-full object-cover"
+      />
+      <div className="absolute inset-0 bg-black/60" />
+
+      <div className="relative z-10 flex min-h-screen items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
+        <div className="mx-auto w-full max-w-sm space-y-6 rounded-lg bg-card/80 p-8 shadow-2xl backdrop-blur-sm">
           <img src="/lovable-uploads/f6efc86e-49db-45d0-90c4-b8e5fc3a8144.png" alt="Ragnarok Fit Logo" className="mx-auto h-28 w-auto" />
           <div className="space-y-2 text-center">
-            <h1 className="text-3xl font-bold">{activeTab === 'signin' ? 'Welcome back' : 'Create an account'}</h1>
-            <p className="text-muted-foreground">
+            <h1 className="text-3xl font-bold text-white">{activeTab === 'signin' ? 'Welcome back' : 'Create an account'}</h1>
+            <p className="text-gray-300">
               {activeTab === 'signin' ? "Enter your email below to login to your account" : "Enter your details to create an account"}
             </p>
           </div>
@@ -178,19 +184,6 @@ const AuthPage = () => {
             </TabsContent>
           </Tabs>
 
-        </div>
-      </div>
-      <div className="hidden bg-muted lg:block relative">
-        <img
-          src="/lovable-uploads/fa0e47b1-a91c-4377-b5e0-17b5a55dfff8.png"
-          alt="Epic landscape with mountains and lightning"
-          className="absolute inset-0 h-full w-full object-cover"
-        />
-        <div className="relative z-10 flex h-full items-end bg-gradient-to-t from-black/80 to-transparent p-10">
-            <div className="text-white max-w-md">
-                <h2 className="text-4xl font-bold">Forge Your Legend.</h2>
-                <p className="mt-4 text-lg text-gray-200">Track every lift, every run. Unleash the warrior within.</p>
-            </div>
         </div>
       </div>
     </div>
