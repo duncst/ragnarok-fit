@@ -1,8 +1,9 @@
 
+```typescript
 import { useState, useEffect } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Plus, X } from "lucide-react";
+import { Plus, X, ArrowUp, ArrowDown } from "lucide-react";
 import {
   Dialog,
   DialogContent,
@@ -20,11 +21,13 @@ import type { ExerciseDef } from "@/types";
 import { Checkbox } from "@/components/ui/checkbox";
 import { ScrollArea } from "@/components/ui/scroll-area";
 
+type TemplateExercise = ExerciseDef & { sets: number };
+
 const WorkoutTemplatesPage = () => {
   const [open, setOpen] = useState(false);
   const [templateName, setTemplateName] = useState("");
   const { toast } = useToast();
-  const [selectedExercises, setSelectedExercises] = useState<ExerciseDef[]>([]);
+  const [selectedExercises, setSelectedExercises] = useState<TemplateExercise[]>([]);
   const [isExercisePickerOpen, setExercisePickerOpen] = useState(false);
   const [pickerSelectedExercises, setPickerSelectedExercises] = useState<Set<string>>(new Set());
   const [exerciseSearchTerm, setExerciseSearchTerm] = useState("");
@@ -61,7 +64,7 @@ const WorkoutTemplatesPage = () => {
       return;
     }
     // In a real app, you'd save this to a database.
-    console.log("Creating template:", templateName, "with exercises:", selectedExercises.map(e => e.name));
+    console.log("Creating template:", templateName, "with exercises:", selectedExercises.map(e => ({ name: e.name, sets: e.sets })));
     toast({
       title: "Success",
       description: `Template "${templateName}" created.`,
@@ -74,9 +77,42 @@ const WorkoutTemplatesPage = () => {
   };
   
   const handleAddSelectedExercises = () => {
-    const exercisesToAdd = allExercises.filter(ex => pickerSelectedExercises.has(ex.name));
-    setSelectedExercises(exercisesToAdd);
+    const newSelectedExercises = allExercises
+      .filter((ex) => pickerSelectedExercises.has(ex.name))
+      .map((ex) => {
+        const existingExercise = selectedExercises.find(
+          (selectedEx) => selectedEx.name === ex.name
+        );
+        return existingExercise || { ...ex, sets: 3 };
+      });
+    
+    // This logic ensures that unselected exercises are removed, and the order is preserved for existing ones.
+    const finalExercises = newSelectedExercises.filter(ex => pickerSelectedExercises.has(ex.name));
+    setSelectedExercises(finalExercises);
     setExercisePickerOpen(false);
+  };
+
+  const handleSetsChange = (exerciseName: string, sets: number) => {
+    setSelectedExercises(currentExercises =>
+      currentExercises.map(ex =>
+        ex.name === exerciseName ? { ...ex, sets: isNaN(sets) || sets < 1 ? 1 : sets } : ex
+      )
+    );
+  };
+
+  const handleMoveExercise = (index: number, direction: 1 | -1) => {
+    setSelectedExercises(prev => {
+      const newExercises = [...prev];
+      const newIndex = index + direction;
+
+      if (newIndex < 0 || newIndex >= newExercises.length) {
+        return prev;
+      }
+
+      const [item] = newExercises.splice(index, 1);
+      newExercises.splice(newIndex, 0, item);
+      return newExercises;
+    });
   };
 
   const filteredPickerExercises = allExercises.filter(ex => 
@@ -113,14 +149,48 @@ const WorkoutTemplatesPage = () => {
                 </div>
                 <div className="space-y-2 pt-2">
                   <Label>Exercises</Label>
-                  <div className="space-y-2 max-h-48 overflow-y-auto rounded-md border p-2">
+                  <div className="space-y-2 max-h-64 overflow-y-auto rounded-md border p-2">
                     {selectedExercises.length > 0 ? (
-                      selectedExercises.map((exercise) => (
-                        <div key={exercise.name} className="flex items-center justify-between rounded-md bg-muted/50 p-2">
-                          <span className="text-sm font-medium">{exercise.name}</span>
-                          <Button variant="ghost" size="icon" className="h-6 w-6" onClick={() => handleRemoveExercise(exercise.name)}>
-                            <X className="h-4 w-4" />
-                          </Button>
+                      selectedExercises.map((exercise, index) => (
+                        <div key={exercise.name} className="flex items-center justify-between rounded-md bg-muted/50 p-2 text-sm">
+                          <div className="flex items-center gap-2">
+                            <div className="flex flex-col">
+                              <Button
+                                variant="ghost"
+                                size="icon"
+                                className="h-5 w-5"
+                                onClick={() => handleMoveExercise(index, -1)}
+                                disabled={index === 0}
+                              >
+                                <ArrowUp className="h-3 w-3" />
+                              </Button>
+                              <Button
+                                variant="ghost"
+                                size="icon"
+                                className="h-5 w-5"
+                                onClick={() => handleMoveExercise(index, 1)}
+                                disabled={index === selectedExercises.length - 1}
+                              >
+                                <ArrowDown className="h-3 w-3" />
+                              </Button>
+                            </div>
+                            <span className="font-medium">{exercise.name}</span>
+                          </div>
+
+                          <div className="flex items-center gap-2">
+                            <Input
+                              type="number"
+                              min="1"
+                              value={exercise.sets}
+                              onChange={(e) => handleSetsChange(exercise.name, parseInt(e.target.value, 10))}
+                              className="w-16 h-8 text-center"
+                              aria-label={`Sets for ${exercise.name}`}
+                            />
+                            <span className="text-muted-foreground">sets</span>
+                            <Button variant="ghost" size="icon" className="h-6 w-6" onClick={() => handleRemoveExercise(exercise.name)}>
+                              <X className="h-4 w-4" />
+                            </Button>
+                          </div>
                         </div>
                       ))
                     ) : (
@@ -209,7 +279,7 @@ const WorkoutTemplatesPage = () => {
             <Button type="button" variant="secondary" onClick={() => setExercisePickerOpen(false)}>
               Cancel
             </Button>
-            <Button type="button" onClick={handleAddSelectedExercises}>Add Exercises</Button>
+            <Button type="button" onClick={handleAddSelectedExercises}>Add Selected</Button>
           </DialogFooter>
         </DialogContent>
       </Dialog>
@@ -218,3 +288,4 @@ const WorkoutTemplatesPage = () => {
 };
 
 export default WorkoutTemplatesPage;
+```
