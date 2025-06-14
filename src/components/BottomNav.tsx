@@ -2,13 +2,14 @@
 import { Library, History, ClipboardList } from "lucide-react";
 import { NavLink } from "react-router-dom";
 import { cn } from "@/lib/utils";
+import { ImageIcon } from "./ImageIcon";
 
 const HomeIcon = ({ className }: { className?: string }) => (
-    <img src="/lovable-uploads/1162d462-bd6b-4a8e-9f3f-4c0f1ebce4b3.png" alt="Home icon" className={cn("rounded-sm", className)} />
+    <ImageIcon src="/lovable-uploads/1162d462-bd6b-4a8e-9f3f-4c0f1ebce4b3.png" alt="Home icon" className={className} />
 );
 
 const RunningIcon = ({ className }: { className?: string }) => (
-    <img src="/lovable-uploads/8379f417-caf8-4131-802a-7bef3758e114.png" alt="Running icon" className={cn("rounded-sm", className)} />
+    <ImageIcon src="/lovable-uploads/8379f417-caf8-4131-802a-7bef3758e114.png" alt="Running icon" className={className} />
 );
 
 const navItems = [

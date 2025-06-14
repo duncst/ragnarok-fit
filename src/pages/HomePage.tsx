@@ -14,6 +14,7 @@ import type { Workout, Run } from '@/types';
 import { Tables } from '@/integrations/supabase/types';
 import { subDays, format, isSameWeek, startOfDay, isWithinInterval } from 'date-fns';
 import { Skeleton } from "@/components/ui/skeleton";
+import { ImageIcon } from "@/components/ImageIcon";
 
 const HomePage = () => {
   const { user } = useAuth();
@@ -153,7 +154,7 @@ const HomePage = () => {
       <div className="grid grid-cols-2 gap-4">
         <Button asChild variant="secondary">
           <Link to="/run">
-            <img src="/lovable-uploads/8379f417-caf8-4131-802a-7bef3758e114.png" alt="Running icon" className="mr-2 h-5 w-5 rounded-sm" /> Start Run
+            <ImageIcon src="/lovable-uploads/8379f417-caf8-4131-802a-7bef3758e114.png" alt="Running icon" className="mr-2 h-5 w-5" /> Start Run
           </Link>
         </Button>
         <Button asChild>
@@ -203,7 +204,7 @@ const HomePage = () => {
           <Card>
             <CardHeader>
               <CardTitle className="flex items-center gap-2 text-lg font-semibold">
-                <img src="/lovable-uploads/8379f417-caf8-4131-802a-7bef3758e114.png" alt="Running icon" className="h-6 w-6 rounded-sm" />
+                <ImageIcon src="/lovable-uploads/8379f417-caf8-4131-802a-7bef3758e114.png" alt="Running icon" className="h-6 w-6 text-primary" />
                 Running
               </CardTitle>
             </CardHeader>

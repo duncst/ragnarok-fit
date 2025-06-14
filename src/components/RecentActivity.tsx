@@ -10,6 +10,7 @@ import { Dumbbell, ArrowRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Link } from "react-router-dom";
+import { ImageIcon } from "./ImageIcon";
 
 const getWorkoutDuration = (workout: Workout) => {
     if (!workout.endTime) return 'N/A';
@@ -85,7 +86,7 @@ export const RecentActivity = () => {
                 <CardContent className="p-4 flex justify-between items-center">
                     <div className="flex items-center gap-4">
                         <div className="bg-secondary p-3 rounded-full">
-                            {activity.type === 'workout' ? <Dumbbell className="h-5 w-5 text-primary" /> : <img src="/lovable-uploads/8379f417-caf8-4131-802a-7bef3758e114.png" alt="Running icon" className="h-5 w-5" />}
+                            {activity.type === 'workout' ? <Dumbbell className="h-5 w-5 text-primary" /> : <ImageIcon src="/lovable-uploads/8379f417-caf8-4131-802a-7bef3758e114.png" alt="Running icon" className="h-5 w-5 text-primary" />}
                         </div>
                         <div>
                             <p className="font-semibold">{name}</p>
