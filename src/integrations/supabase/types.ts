@@ -9,13 +9,109 @@ export type Json =
 export type Database = {
   public: {
     Tables: {
-      [_ in never]: never
+      workout_exercises: {
+        Row: {
+          id: string
+          name: string
+          order: number
+          workout_id: string
+        }
+        Insert: {
+          id?: string
+          name: string
+          order: number
+          workout_id: string
+        }
+        Update: {
+          id?: string
+          name?: string
+          order?: number
+          workout_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "workout_exercises_workout_id_fkey"
+            columns: ["workout_id"]
+            isOneToOne: false
+            referencedRelation: "workouts"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      workout_sets: {
+        Row: {
+          completed: boolean
+          id: string
+          order: number
+          reps: number
+          weight: number
+          workout_exercise_id: string
+        }
+        Insert: {
+          completed?: boolean
+          id?: string
+          order: number
+          reps: number
+          weight: number
+          workout_exercise_id: string
+        }
+        Update: {
+          completed?: boolean
+          id?: string
+          order?: number
+          reps?: number
+          weight?: number
+          workout_exercise_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "workout_sets_workout_exercise_id_fkey"
+            columns: ["workout_exercise_id"]
+            isOneToOne: false
+            referencedRelation: "workout_exercises"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      workouts: {
+        Row: {
+          created_at: string
+          end_time: string | null
+          id: string
+          name: string | null
+          notes: string | null
+          start_time: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          end_time?: string | null
+          id?: string
+          name?: string | null
+          notes?: string | null
+          start_time?: string
+          user_id?: string
+        }
+        Update: {
+          created_at?: string
+          end_time?: string | null
+          id?: string
+          name?: string | null
+          notes?: string | null
+          start_time?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
     }
     Functions: {
-      [_ in never]: never
+      get_user_workouts: {
+        Args: Record<PropertyKey, never>
+        Returns: Json
+      }
     }
     Enums: {
       [_ in never]: never

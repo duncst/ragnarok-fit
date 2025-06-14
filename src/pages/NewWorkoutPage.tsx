@@ -1,15 +1,27 @@
-
 import React, { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Card, CardContent, CardHeader } from '@/components/ui/card';
-import { Plus, Trash2, Check } from 'lucide-react';
+import { Plus, Trash2, Check, Loader2 } from 'lucide-react';
 import type { Exercise, WorkoutSet } from '@/types';
 import { useNavigate } from 'react-router-dom';
+import { useAuth } from '@/contexts/AuthContext';
+import { supabase } from '@/integrations/supabase/client';
+import { toast as sonnerToast } from "sonner";
+import { useMutation, useQueryClient } from '@tanstack/react-query';
 
 const NewWorkoutPage = () => {
   const navigate = useNavigate();
-  const [exercises, setExercises] = useState<Exercise[]>([]);
+  const { user } = useAuth();
+  const queryClient = useQueryClient();
+  const [exercises, setExercises] = useState<Exercise[]>([
+    {
+      id: `ex-${Date.now()}`,
+      name: 'Bench Press',
+      sets: [{ id: `set-${Date.now()}`, reps: 8, weight: 60, completed: false }],
+    }
+  ]);
+  const [workoutName, setWorkoutName] = useState('');
 
   const addExercise = () => {
     const newExercise: Exercise = {
@@ -91,17 +103,89 @@ const NewWorkoutPage = () => {
     );
   };
 
+  const saveWorkoutMutation = useMutation({
+    mutationFn: async ({ exercises, name }: { exercises: Exercise[], name: string }) => {
+      if (!user) throw new Error("You must be logged in to save a workout.");
+
+      // 1. Create the workout
+      const { data: workoutData, error: workoutError } = await supabase
+        .from('workouts')
+        .insert({ user_id: user.id, name: name || null, end_time: new Date().toISOString() })
+        .select()
+        .single();
+
+      if (workoutError) throw workoutError;
+
+      // 2. Create workout exercises and sets
+      for (const [exerciseIndex, exercise] of exercises.entries()) {
+        if (!exercise.name) continue; // Don't save exercises without a name
+
+        const { data: exerciseData, error: exerciseError } = await supabase
+          .from('workout_exercises')
+          .insert({
+            workout_id: workoutData.id,
+            name: exercise.name,
+            "order": exerciseIndex,
+          })
+          .select()
+          .single();
+        
+        if (exerciseError) {
+            console.error('Error inserting exercise, rolling back workout');
+            await supabase.from('workouts').delete().eq('id', workoutData.id);
+            throw exerciseError;
+        };
+
+        if (exercise.sets.length > 0) {
+            const setsToInsert = exercise.sets.map((set, setIndex) => ({
+              workout_exercise_id: exerciseData.id,
+              reps: set.reps,
+              weight: set.weight,
+              completed: set.completed,
+              "order": setIndex,
+            }));
+            
+            const { error: setsError } = await supabase
+              .from('workout_sets')
+              .insert(setsToInsert);
+              
+            if (setsError) {
+                console.error('Error inserting sets, rolling back workout');
+                await supabase.from('workouts').delete().eq('id', workoutData.id);
+                throw setsError;
+            };
+        }
+      }
+      return workoutData;
+    },
+    onSuccess: () => {
+      sonnerToast.success("Workout saved successfully!");
+      queryClient.invalidateQueries({ queryKey: ['workouts'] });
+      navigate('/history');
+    },
+    onError: (error) => {
+      sonnerToast.error("Failed to save workout", { description: (error as Error).message });
+    }
+  });
+
   const finishWorkout = () => {
-    // In a real app, we would save the workout here
-    console.log('Workout Finished:', { exercises });
-    navigate('/');
+    const workoutNameOrDefault = workoutName.trim() || `Workout - ${new Date().toLocaleDateString()}`;
+    saveWorkoutMutation.mutate({ exercises, name: workoutNameOrDefault });
   };
 
   return (
     <div className="space-y-4 pb-16">
       <div className="flex justify-between items-center">
-        <h1 className="text-2xl font-bold">New Workout</h1>
-        <Button onClick={finishWorkout}>Finish</Button>
+        <Input
+          placeholder="Workout Name (e.g. Push Day)"
+          value={workoutName}
+          onChange={(e) => setWorkoutName(e.target.value)}
+          className="text-2xl font-bold border-none focus-visible:ring-0 focus-visible:ring-offset-0 p-0 h-auto"
+        />
+        <Button onClick={finishWorkout} disabled={saveWorkoutMutation.isPending}>
+          {saveWorkoutMutation.isPending && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
+          Finish
+        </Button>
       </div>
 
       {exercises.map((exercise, exerciseIndex) => (
@@ -176,4 +260,3 @@ const NewWorkoutPage = () => {
 };
 
 export default NewWorkoutPage;
-

@@ -18,57 +18,12 @@ import {
   TableRow,
 } from "@/components/ui/table"
 import { Button } from "@/components/ui/button"
+import { useQuery } from '@tanstack/react-query';
+import { useAuth } from '@/contexts/AuthContext';
+import { supabase } from '@/integrations/supabase/client';
+import { Skeleton } from '@/components/ui/skeleton';
 
-const workoutHistory: Workout[] = [
-  {
-    id: 'workout-1',
-    name: 'Push Day',
-    startTime: new Date('2025-06-10T09:00:00'),
-    endTime: new Date('2025-06-10T10:15:00'),
-    notes: 'Great session, hit new PR on bench!',
-    exercises: [
-      { id: 'ex-1-1', name: 'Bench Press', sets: [ { id: 's1', reps: 8, weight: 80, completed: true }, { id: 's2', reps: 8, weight: 80, completed: true }, { id: 's3', reps: 6, weight: 85, completed: true } ]},
-      { id: 'ex-1-2', name: 'Overhead Press', sets: [ { id: 's1', reps: 10, weight: 40, completed: true }, { id: 's2', reps: 10, weight: 40, completed: true }, { id: 's3', reps: 8, weight: 45, completed: true } ]},
-      { id: 'ex-1-3', name: 'Incline Dumbbell Press', sets: [ { id: 's1', reps: 12, weight: 25, completed: true }, { id: 's2', reps: 12, weight: 25, completed: true }, { id: 's3', reps: 10, weight: 25, completed: true } ]},
-      { id: 'ex-1-4', name: 'Tricep Pushdown', sets: [ { id: 's1', reps: 15, weight: 20, completed: true }, { id: 's2', reps: 15, weight: 20, completed: true }, { id: 's3', reps: 12, weight: 25, completed: true } ]},
-      { id: 'ex-1-5', name: 'Lateral Raises', sets: [ { id: 's1', reps: 15, weight: 10, completed: true }, { id: 's2', reps: 15, weight: 10, completed: true }, { id: 's3', reps: 15, weight: 10, completed: true } ]},
-      { id: 'ex-1-6', name: 'Chest Flys', sets: [ { id: 's1', reps: 12, weight: 15, completed: true }, { id: 's2', reps: 12, weight: 15, completed: true }]},
-      { id: 'ex-1-7', name: 'Front Raises', sets: [ { id: 's1', reps: 12, weight: 10, completed: true }, { id: 's2', reps: 12, weight: 10, completed: true }]},
-      { id: 'ex-1-8', name: 'Push Ups', sets: [ { id: 's1', reps: 20, weight: 0, completed: true }, { id: 's2', reps: 18, weight: 0, completed: true }]},
-    ],
-  },
-  {
-    id: 'workout-2',
-    name: 'Pull Day',
-    startTime: new Date('2025-06-08T17:30:00'),
-    endTime: new Date('2025-06-08T19:00:00'),
-    exercises: [
-        { id: 'ex-2-1', name: 'Deadlift', sets: [ { id: 's1', reps: 5, weight: 130, completed: true }, { id: 's2', reps: 5, weight: 130, completed: true }, { id: 's3', reps: 3, weight: 140, completed: true } ]},
-        { id: 'ex-2-2', name: 'Pull Ups', sets: [ { id: 's1', reps: 8, weight: 0, completed: true }, { id: 's2', reps: 6, weight: 0, completed: true }, { id: 's3', reps: 5, weight: 0, completed: true } ]},
-        { id: 'ex-2-3', name: 'Bent Over Rows', sets: [ { id: 's1', reps: 10, weight: 60, completed: true }, { id: 's2', reps: 10, weight: 60, completed: true }, { id: 's3', reps: 8, weight: 65, completed: true } ]},
-        { id: 'ex-2-4', name: 'Bicep Curls', sets: [ { id: 's1', reps: 12, weight: 15, completed: true }, { id: 's2', reps: 12, weight: 15, completed: true }, { id: 's3', reps: 10, weight: 15, completed: true } ]},
-        { id: 'ex-2-5', name: 'Face Pulls', sets: [ { id: 's1', reps: 15, weight: 15, completed: true }, { id: 's2', reps: 15, weight: 15, completed: true }, { id: 's3', reps: 15, weight: 15, completed: true } ]},
-        { id: 'ex-2-6', name: 'Lat Pulldowns', sets: [ { id: 's1', reps: 12, weight: 50, completed: true }, { id: 's2', reps: 10, weight: 55, completed: true }]},
-        { id: 'ex-2-7', name: 'Hammer Curls', sets: [ { id: 's1', reps: 12, weight: 12, completed: true }, { id: 's2', reps: 10, weight: 12, completed: true }]},
-    ]
-  },
-  {
-    id: 'workout-3',
-    name: 'Leg Day',
-    startTime: new Date('2025-06-06T08:00:00'),
-    endTime: new Date('2025-06-06T09:45:00'),
-    notes: 'Focused on high volume squats',
-    exercises: [
-        { id: 'ex-3-1', name: 'Squats', sets: [ { id: 's1', reps: 10, weight: 100, completed: true }, { id: 's2', reps: 10, weight: 100, completed: true }, { id: 's3', reps: 8, weight: 110, completed: true }, { id: 's4', reps: 8, weight: 110, completed: true } ]},
-        { id: 'ex-3-2', name: 'Leg Press', sets: [ { id: 's1', reps: 12, weight: 200, completed: true }, { id: 's2', reps: 12, weight: 200, completed: true }, { id: 's3', reps: 10, weight: 220, completed: true } ]},
-        { id: 'ex-3-3', name: 'Leg Curls', sets: [ { id: 's1', reps: 15, weight: 40, completed: true }, { id: 's2', reps: 15, weight: 40, completed: true }, { id: 's3', reps: 12, weight: 45, completed: true } ]},
-        { id: 'ex-3-4', name: 'Leg Extensions', sets: [ { id: 's1', reps: 15, weight: 40, completed: true }, { id: 's2', reps: 15, weight: 40, completed: true }, { id: 's3', reps: 12, weight: 45, completed: true } ]},
-        { id: 'ex-3-5', name: 'Calf Raises', sets: [ { id: 's1', reps: 20, weight: 50, completed: true }, { id: 's2', reps: 20, weight: 50, completed: true }, { id: 's3', reps: 15, weight: 60, completed: true } ]},
-        { id: 'ex-3-6', name: 'Goblet Squats', sets: [ { id: 's1', reps: 12, weight: 20, completed: true }, { id: 's2', reps: 12, weight: 20, completed: true }]},
-    ]
-  }
-];
-
+// Hardcoded run history will remain for now
 const runHistory: Run[] = [
   {
     id: 'run-1',
@@ -108,7 +63,6 @@ const runHistory: Run[] = [
     avgHr: 175,
   }
 ];
-
 
 const StatItem = ({
   icon: Icon,
@@ -281,11 +235,54 @@ const RunCard = ({ run }: { run: Run }) => {
 };
 
 const WorkoutHistoryPage = () => {
+  const { user } = useAuth();
+
+  const { data: workoutHistory, isLoading: isLoadingWorkouts } = useQuery<Workout[]>({
+    queryKey: ['workouts', user?.id],
+    queryFn: async () => {
+      if (!user) return [];
+      
+      const { data, error } = await supabase.rpc('get_user_workouts');
+
+      if (error) {
+        console.error('Error fetching workouts:', error);
+        throw new Error('Failed to fetch workout history.');
+      }
+
+      if (!data) return [];
+      
+      // The RPC returns a JSONB object, which Tanstack Query will parse.
+      // We need to convert date strings to Date objects.
+      const parsedWorkouts = (data as any[]).map(workout => ({
+        ...workout,
+        startTime: new Date(workout.startTime),
+        endTime: workout.endTime ? new Date(workout.endTime) : undefined,
+      }));
+
+      return parsedWorkouts;
+    },
+    enabled: !!user,
+  });
 
   const combinedHistory = [
-    ...workoutHistory.map(w => ({ ...w, type: 'workout' as const, date: w.startTime })),
+    ...(workoutHistory || []).map(w => ({ ...w, type: 'workout' as const, date: w.startTime })),
     ...runHistory.map(r => ({ ...r, type: 'run' as const }))
   ].sort((a, b) => b.date.getTime() - a.date.getTime());
+
+  if (isLoadingWorkouts) {
+    return (
+      <div className="space-y-6">
+        <div className="flex justify-between items-center">
+          <h1 className="text-2xl font-bold">History</h1>
+        </div>
+        <div className="space-y-4">
+          <Skeleton className="h-48 w-full rounded-lg" />
+          <Skeleton className="h-48 w-full rounded-lg" />
+          <Skeleton className="h-32 w-full rounded-lg" />
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="space-y-6">
@@ -294,6 +291,15 @@ const WorkoutHistoryPage = () => {
         <p className="text-muted-foreground text-sm">{combinedHistory.length} total activities</p>
       </div>
       
+      {combinedHistory.length === 0 && (
+        <Card>
+          <CardContent className="p-6 text-center text-muted-foreground">
+            <p>No activities recorded yet.</p>
+            <p>Go to "New Workout" to log your first session!</p>
+          </CardContent>
+        </Card>
+      )}
+
       <div className="space-y-4">
         {combinedHistory.map(item => {
           if (item.type === 'workout') {
