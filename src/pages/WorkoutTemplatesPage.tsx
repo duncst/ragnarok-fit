@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -22,11 +21,18 @@ import { ScrollArea } from "@/components/ui/scroll-area";
 
 type TemplateExercise = ExerciseDef & { sets: number };
 
+type WorkoutTemplate = {
+  id: string;
+  name: string;
+  exercises: TemplateExercise[];
+};
+
 const WorkoutTemplatesPage = () => {
   const [open, setOpen] = useState(false);
   const [templateName, setTemplateName] = useState("");
   const { toast } = useToast();
   const [selectedExercises, setSelectedExercises] = useState<TemplateExercise[]>([]);
+  const [templates, setTemplates] = useState<WorkoutTemplate[]>([]);
   const [isExercisePickerOpen, setExercisePickerOpen] = useState(false);
   const [pickerSelectedExercises, setPickerSelectedExercises] = useState<Set<string>>(new Set());
   const [exerciseSearchTerm, setExerciseSearchTerm] = useState("");
@@ -62,6 +68,13 @@ const WorkoutTemplatesPage = () => {
       });
       return;
     }
+    const newTemplate: WorkoutTemplate = {
+      id: new Date().toISOString(),
+      name: templateName,
+      exercises: selectedExercises,
+    };
+    setTemplates((prev) => [...prev, newTemplate]);
+
     // In a real app, you'd save this to a database.
     console.log("Creating template:", templateName, "with exercises:", selectedExercises.map(e => ({ name: e.name, sets: e.sets })));
     toast({
@@ -222,9 +235,32 @@ const WorkoutTemplatesPage = () => {
             <CardTitle>My Templates</CardTitle>
           </CardHeader>
           <CardContent>
-            <p className="text-muted-foreground">
-              You don't have any workout templates yet.
-            </p>
+            {templates.length > 0 ? (
+              <div className="space-y-4">
+                {templates.map((template) => (
+                  <Card key={template.id}>
+                    <CardHeader className="flex flex-row items-center justify-between pb-2">
+                      <CardTitle className="text-lg">{template.name}</CardTitle>
+                      {/* Placeholder for future actions */}
+                    </CardHeader>
+                    <CardContent>
+                      <ul className="space-y-2 text-sm">
+                        {template.exercises.map((ex) => (
+                          <li key={ex.name} className="flex justify-between">
+                            <span>{ex.name}</span>
+                            <span className="text-muted-foreground">{ex.sets} sets</span>
+                          </li>
+                        ))}
+                      </ul>
+                    </CardContent>
+                  </Card>
+                ))}
+              </div>
+            ) : (
+              <p className="text-muted-foreground">
+                You don't have any workout templates yet.
+              </p>
+            )}
           </CardContent>
         </Card>
       </div>
