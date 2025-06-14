@@ -7,27 +7,17 @@ import {
   ChartConfig,
 } from "@/components/ui/chart"
 
-const chartData = [
-  { day: "Mon", volume: 5800 },
-  { day: "Tue", volume: 7200 },
-  { day: "Wed", volume: 6200 },
-  { day: "Thu", volume: 0 },
-  { day: "Fri", volume: 7800 },
-  { day: "Sat", volume: 6500 },
-  { day: "Sun", volume: 0 },
-]
-
 const chartConfig = {
   volume: {
-    label: "Volume",
+    label: "Volume (kg)",
     color: "hsl(var(--primary))",
   },
 } satisfies ChartConfig
 
-export function StrengthChart() {
+export function StrengthChart({ data }: { data: {day: string, volume: number}[] }) {
   return (
     <ChartContainer config={chartConfig} className="min-h-[200px] w-full">
-      <BarChart accessibilityLayer data={chartData} margin={{ top: 20 }}>
+      <BarChart accessibilityLayer data={data} margin={{ top: 20 }}>
         <CartesianGrid vertical={false} />
         <XAxis
           dataKey="day"

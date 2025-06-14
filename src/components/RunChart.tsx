@@ -7,29 +7,19 @@ import {
   ChartConfig,
 } from "@/components/ui/chart"
 
-const chartData = [
-  { day: "Mon", distance: 4.5 },
-  { day: "Tue", distance: 0 },
-  { day: "Wed", distance: 8 },
-  { day: "Thu", distance: 2 },
-  { day: "Fri", distance: 0 },
-  { day: "Sat", distance: 12.5 },
-  { day: "Sun", distance: 6 },
-]
-
 const chartConfig = {
   distance: {
-    label: "Distance",
+    label: "Distance (km)",
     color: "hsl(var(--primary))",
   },
 } satisfies ChartConfig
 
-export function RunChart() {
+export function RunChart({ data }: { data: {day: string, distance: number}[] }) {
   return (
     <ChartContainer config={chartConfig} className="min-h-[200px] w-full">
       <AreaChart
         accessibilityLayer
-        data={chartData}
+        data={data}
         margin={{ top: 20 }}
       >
         <CartesianGrid vertical={false} />
