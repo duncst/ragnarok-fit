@@ -5,7 +5,7 @@ import { cn } from "@/lib/utils";
 import { ImageIcon } from "./ImageIcon";
 
 const HomeIcon = ({ className }: { className?: string }) => (
-    <ImageIcon src="/lovable-uploads/1162d462-bd6b-4a8e-9f3f-4c0f1ebce4b3.png" alt="Home icon" className={className} />
+    <ImageIcon src="/lovable-uploads/5059a70b-8676-4d2d-931a-778ccd2f786b.png" alt="Home icon" className={className} />
 );
 
 const RunningIcon = ({ className }: { className?: string }) => (
