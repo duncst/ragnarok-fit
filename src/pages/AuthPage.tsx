@@ -90,7 +90,7 @@ const AuthPage = () => {
           <div className="space-y-2 text-center">
             <h1 className="text-3xl font-bold text-white">Forge your legend.</h1>
             <p className="text-muted-foreground">
-              Track every lift, every run. Only challenge creates change.
+              Track every lift, every run. Valhalla awaits.
             </p>
           </div>
           
