@@ -22,6 +22,7 @@ import { useQuery } from '@tanstack/react-query';
 import { useAuth } from '@/contexts/AuthContext';
 import { supabase } from '@/integrations/supabase/client';
 import { Skeleton } from '@/components/ui/skeleton';
+import { Tables } from '@/integrations/supabase/types';
 
 // Hardcoded run history will remain for now
 const runHistory: Run[] = [
@@ -264,12 +265,47 @@ const WorkoutHistoryPage = () => {
     enabled: !!user,
   });
 
+  const { data: runHistory, isLoading: isLoadingRuns } = useQuery<Run[]>({
+    queryKey: ['runs', user?.id],
+    queryFn: async () => {
+      if (!user) return [];
+      
+      const { data, error } = await supabase
+        .from('runs')
+        .select('*')
+        .order('date', { ascending: false });
+
+      if (error) {
+        console.error('Error fetching runs:', error);
+        throw new Error('Failed to fetch run history.');
+      }
+
+      if (!data) return [];
+      
+      const parsedRuns = (data as Tables<'runs'>[]).map(run => ({
+        id: run.id,
+        distance: run.distance,
+        duration: run.duration,
+        runType: run.run_type,
+        date: new Date(run.date),
+        notes: run.notes,
+        elevation: run.elevation,
+        avgHr: run.avg_hr,
+      }));
+
+      return parsedRuns;
+    },
+    enabled: !!user,
+  });
+
+  const isLoading = isLoadingWorkouts || isLoadingRuns;
+
   const combinedHistory = [
     ...(workoutHistory || []).map(w => ({ ...w, type: 'workout' as const, date: w.startTime })),
-    ...runHistory.map(r => ({ ...r, type: 'run' as const }))
+    ...(runHistory || []).map(r => ({ ...r, type: 'run' as const }))
   ].sort((a, b) => b.date.getTime() - a.date.getTime());
 
-  if (isLoadingWorkouts) {
+  if (isLoading) {
     return (
       <div className="space-y-6">
         <div className="flex justify-between items-center">

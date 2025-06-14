@@ -1,11 +1,11 @@
-
 import React from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
 import { useNavigate } from "react-router-dom";
 import { format } from "date-fns";
-import { Calendar as CalendarIcon, Save } from "lucide-react";
+import { Calendar as CalendarIcon, Save, Loader2 } from "lucide-react";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
@@ -16,6 +16,9 @@ import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
 import { useToast } from "@/hooks/use-toast";
+import { supabase } from "@/integrations/supabase/client";
+import { useAuth } from "@/contexts/AuthContext";
+import { TablesInsert } from "@/integrations/supabase/types";
 
 const runTypes = [
   "Easy Run", "Tempo Run", "Interval Training", "Long Run",
@@ -42,6 +45,8 @@ type LogRunFormValues = z.infer<typeof logRunFormSchema>;
 const LogRunPage = () => {
   const navigate = useNavigate();
   const { toast } = useToast();
+  const { user } = useAuth();
+  const queryClient = useQueryClient();
 
   const form = useForm<LogRunFormValues>({
     resolver: zodResolver(logRunFormSchema),
@@ -54,19 +59,50 @@ const LogRunPage = () => {
     },
   });
 
+  const { mutate: logRun, isPending } = useMutation({
+    mutationFn: async (runData: TablesInsert<'runs'>) => {
+      const { error } = await supabase.from('runs').insert(runData);
+      if (error) {
+        throw error;
+      }
+      return runData;
+    },
+    onSuccess: (data) => {
+      toast({
+        title: "Run Logged!",
+        description: `Your ${data.distance}km ${data.run_type} has been saved.`,
+      });
+      queryClient.invalidateQueries({ queryKey: ['runs', user?.id] });
+      navigate("/history");
+    },
+    onError: (error) => {
+      toast({
+        title: "Error logging run",
+        description: error.message,
+        variant: "destructive",
+      });
+    },
+  });
+
   function onSubmit(data: LogRunFormValues) {
+    if (!user) {
+      toast({
+        title: "Not authenticated",
+        description: "You need to be logged in to save a run.",
+        variant: "destructive"
+      });
+      return;
+    }
     const totalSeconds = (data.duration.hours || 0) * 3600 + (data.duration.minutes || 0) * 60 + (data.duration.seconds || 0);
-    const runData = {
-        ...data,
-        id: new Date().toISOString(),
+    const runData: TablesInsert<'runs'> = {
+        distance: data.distance,
         duration: totalSeconds,
+        run_type: data.runType,
+        date: data.date.toISOString(),
+        notes: data.notes,
+        user_id: user.id
     };
-    console.log("Logged Run:", runData);
-    toast({
-      title: "Run Logged!",
-      description: `Your ${data.distance}km ${data.runType} has been saved.`,
-    });
-    navigate("/run");
+    logRun(runData);
   }
 
   return (
@@ -210,7 +246,13 @@ const LogRunPage = () => {
           />
 
           <div className="flex gap-4 pt-4">
-            <Button type="submit" size="lg" className="flex-1"><Save /> Save Run</Button>
+            <Button type="submit" size="lg" className="flex-1" disabled={isPending}>
+              {isPending ? (
+                <><Loader2 className="mr-2 h-4 w-4 animate-spin" /> Saving...</>
+              ) : (
+                <><Save className="mr-2 h-4 w-4" /> Save Run</>
+              )}
+            </Button>
             <Button type="button" size="lg" variant="outline" onClick={() => navigate(-1)} className="flex-1">Cancel</Button>
           </div>
         </form>
