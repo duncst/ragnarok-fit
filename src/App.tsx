@@ -15,6 +15,7 @@ import OneRepMaxCalculatorPage from "./pages/OneRepMaxCalculatorPage";
 import WorkoutHistoryPage from "./pages/WorkoutHistoryPage";
 import { AuthProvider } from "./contexts/AuthContext";
 import AuthPage from "./pages/AuthPage";
+import WorkoutTemplatesPage from "./pages/WorkoutTemplatesPage";
 
 const queryClient = new QueryClient();
 
@@ -30,6 +31,7 @@ const App = () => (
             <Route element={<Layout />}>
               <Route path="/" element={<HomePage />} />
               <Route path="/exercises" element={<ExercisesPage />} />
+              <Route path="/templates" element={<WorkoutTemplatesPage />} />
               <Route path="/history" element={<WorkoutHistoryPage />} />
               <Route path="/run" element={<RunPage />} />
               <Route path="/log-run" element={<LogRunPage />} />
