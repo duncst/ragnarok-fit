@@ -9,7 +9,7 @@ const HomeIcon = ({ className }: { className?: string }) => (
 );
 
 const RunningIcon = ({ className }: { className?: string }) => (
-    <ImageIcon src="/lovable-uploads/8379f417-caf8-4131-802a-7bef3758e114.png" alt="Running icon" className={className} />
+    <ImageIcon src="/lovable-uploads/ce6da73b-d67b-4c6a-9101-65cfa425f67a.png" alt="Running icon" className={className} />
 );
 
 const navItems = [
