@@ -35,4 +35,6 @@ export interface Run {
   runType: string;
   date: Date;
   notes?: string;
+  elevation?: number; // in meters
+  avgHr?: number; // in bpm
 }
