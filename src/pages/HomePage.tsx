@@ -1,3 +1,4 @@
+
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Dumbbell, Footprints, Plus, ArrowRight, Calendar, TrendingUp, Zap, Target, Calculator } from "lucide-react";
@@ -151,7 +152,7 @@ const HomePage = () => {
   return (
     <div className="space-y-6">
       <div className="grid grid-cols-2 gap-4">
-        <Button asChild className="bg-green-500 hover:bg-green-600 text-primary-foreground">
+        <Button asChild variant="secondary">
           <Link to="/run">
             <Footprints className="mr-2 h-5 w-5" /> Start Run
           </Link>
