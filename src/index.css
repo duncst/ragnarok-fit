@@ -5,33 +5,33 @@
 
 @layer base {
   :root {
-    --background: 225 26% 18%; /* Viking Night */
-    --foreground: 30 50% 98%; /* Bone White */
+    --background: 222 47% 11%; /* Deep Fjord */
+    --foreground: 210 40% 98%; /* Snow Drift */
 
-    --card: 30 50% 98%; /* Bone White */
-    --card-foreground: 225 26% 18%; /* Viking Night */
+    --card: 222 47% 16%; /* Fjord Stone */
+    --card-foreground: 210 40% 98%; /* Snow Drift */
 
-    --popover: 30 50% 98%; /* Bone White */
-    --popover-foreground: 225 26% 18%; /* Viking Night */
+    --popover: 222 47% 16%; /* Fjord Stone */
+    --popover-foreground: 210 40% 98%; /* Snow Drift */
 
-    --primary: 213 59% 52%; /* Fjord Water */
-    --primary-foreground: 30 50% 98%; /* Bone White */
+    --primary: 30 78% 58%; /* Sunken Gold */
+    --primary-foreground: 222 47% 11%; /* Deep Fjord */
 
-    --secondary: 208 12% 65%; /* Shield Grey */
-    --secondary-foreground: 225 26% 18%; /* Viking Night */
+    --secondary: 213 59% 52%; /* Fjord Water */
+    --secondary-foreground: 210 40% 98%; /* Snow Drift */
 
-    --muted: 208 12% 65%; /* Shield Grey */
-    --muted-foreground: 225 26% 28%; /* Darker Viking Night */
+    --muted: 215 28% 47%; /* Misted Fjord */
+    --muted-foreground: 210 40% 96%; /* Lighter Snow Drift */
 
-    --accent: 213 59% 52%; /* Fjord Water */
-    --accent-foreground: 30 50% 98%; /* Bone White */
+    --accent: 30 78% 58%; /* Sunken Gold */
+    --accent-foreground: 222 47% 11%; /* Deep Fjord */
 
-    --destructive: 15 100% 62%; /* Ember Orange */
-    --destructive-foreground: 30 50% 98%; /* Bone White */
+    --destructive: 0 84% 60%; /* Berserker Red */
+    --destructive-foreground: 210 40% 98%; /* Snow Drift */
 
-    --border: 223 23% 35%; /* Forged Steel */
-    --input: 223 23% 35%; /* Forged Steel */
-    --ring: 213 59% 52%; /* Fjord Water */
+    --border: 215 20% 30%; /* Fjord Cliff */
+    --input: 215 20% 30%; /* Fjord Cliff */
+    --ring: 30 78% 58%; /* Sunken Gold */
 
     --radius: 0.5rem;
   }
