@@ -1,8 +1,8 @@
-
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Play, Square } from "lucide-react";
 import React, { useState, useEffect, useRef } from "react";
+import { cn } from "@/lib/utils";
 
 const RunPage = () => {
   const [isRunning, setIsRunning] = useState(false);
@@ -55,7 +55,12 @@ const RunPage = () => {
           </div>
         </CardContent>
       </Card>
-      <Button onClick={handleToggleRun} size="lg" className="w-full h-16 text-2xl">
+      <Button 
+        onClick={handleToggleRun} 
+        size="lg" 
+        variant={isRunning ? "destructive" : "default"}
+        className={cn("w-full h-16 text-2xl", !isRunning && "bg-green-500 hover:bg-green-600 text-primary-foreground")}
+      >
         {isRunning ? <Square className="mr-2 h-6 w-6" /> : <Play className="mr-2 h-6 w-6" />}
         {isRunning ? "Stop" : "Start Run"}
       </Button>
