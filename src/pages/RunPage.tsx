@@ -117,8 +117,8 @@ const RunPage = () => {
         <Button 
           onClick={handleToggleRun} 
           size="lg" 
-          variant={isRunning ? "destructive" : "default"}
-          className={cn("w-full h-14 text-xl", !isRunning && "bg-primary hover:bg-primary/90")}
+          variant={isRunning ? "destructive" : "secondary"}
+          className="w-full h-14 text-xl"
         >
           {isRunning ? <Square className="mr-2 h-6 w-6" /> : <Play className="mr-2 h-6 w-6" />}
           {isRunning ? "Stop" : "Start Run"}
