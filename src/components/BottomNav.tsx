@@ -36,7 +36,7 @@ const BottomNav = () => {
               )
             }
           >
-            <item.icon className="h-7 w-7 mb-1" />
+            <item.icon className={cn("mb-1", item.label === 'Running' ? 'h-8 w-8' : 'h-7 w-7')} />
             <span className="text-xs font-medium">{item.label}</span>
           </NavLink>
         ))}

@@ -1,3 +1,4 @@
+
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Dumbbell, Plus, ArrowRight, Calendar, TrendingUp, Zap, Target, Calculator } from "lucide-react";
@@ -154,7 +155,7 @@ const HomePage = () => {
       <div className="grid grid-cols-2 gap-4">
         <Button asChild variant="secondary">
           <Link to="/run">
-            <ImageIcon src="/lovable-uploads/ce6da73b-d67b-4c6a-9101-65cfa425f67a.png" alt="Running icon" className="mr-2 h-6 w-6" /> Start Run
+            <ImageIcon src="/lovable-uploads/ce6da73b-d67b-4c6a-9101-65cfa425f67a.png" alt="Running icon" className="mr-2 h-7 w-7" /> Start Run
           </Link>
         </Button>
         <Button asChild>
@@ -204,7 +205,7 @@ const HomePage = () => {
           <Card>
             <CardHeader>
               <CardTitle className="flex items-center gap-2 text-lg font-semibold">
-                <ImageIcon src="/lovable-uploads/ce6da73b-d67b-4c6a-9101-65cfa425f67a.png" alt="Running icon" className="h-7 w-7 text-primary" />
+                <ImageIcon src="/lovable-uploads/ce6da73b-d67b-4c6a-9101-65cfa425f67a.png" alt="Running icon" className="h-8 w-8 text-primary" />
                 Running
               </CardTitle>
             </CardHeader>

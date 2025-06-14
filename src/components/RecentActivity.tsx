@@ -1,3 +1,4 @@
+
 import React from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { useAuth } from '@/contexts/AuthContext';
@@ -86,7 +87,7 @@ export const RecentActivity = () => {
                 <CardContent className="p-4 flex justify-between items-center">
                     <div className="flex items-center gap-4">
                         <div className="bg-secondary p-3 rounded-full">
-                            {activity.type === 'workout' ? <Dumbbell className="h-6 w-6 text-primary" /> : <ImageIcon src="/lovable-uploads/ce6da73b-d67b-4c6a-9101-65cfa425f67a.png" alt="Running icon" className="h-6 w-6 text-primary" />}
+                            {activity.type === 'workout' ? <Dumbbell className="h-6 w-6 text-primary" /> : <ImageIcon src="/lovable-uploads/ce6da73b-d67b-4c6a-9101-65cfa425f67a.png" alt="Running icon" className="h-7 w-7 text-primary" />}
                         </div>
                         <div>
                             <p className="font-semibold">{name}</p>
