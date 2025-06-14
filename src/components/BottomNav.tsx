@@ -5,7 +5,7 @@ import { cn } from "@/lib/utils";
 import { ImageIcon } from "./ImageIcon";
 
 const HomeIcon = ({ className }: { className?: string }) => (
-    <ImageIcon src="/lovable-uploads/5059a70b-8676-4d2d-931a-778ccd2f786b.png" alt="Home icon" className={className} />
+    <ImageIcon src="/lovable-uploads/b5ad1594-0cb2-48a7-a0a4-203f2f039029.png" alt="Home icon" className={className} />
 );
 
 const RunningIcon = ({ className }: { className?: string }) => (
@@ -46,3 +46,4 @@ const BottomNav = () => {
 };
 
 export default BottomNav;
+
