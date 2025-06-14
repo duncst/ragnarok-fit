@@ -1,4 +1,3 @@
-
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Dumbbell, Plus, ArrowRight, Calendar, TrendingUp, Zap, Target, Calculator } from "lucide-react";
@@ -16,6 +15,10 @@ import { Tables } from '@/integrations/supabase/types';
 import { subDays, format, isSameWeek, startOfDay, isWithinInterval } from 'date-fns';
 import { Skeleton } from "@/components/ui/skeleton";
 import { ImageIcon } from "@/components/ImageIcon";
+
+const VolumeIcon = ({ className }: { className?: string }) => (
+    <ImageIcon src="/lovable-uploads/0ab4b431-dd06-4b92-8335-ff454c61eb04.png" alt="Volume icon" className={className} />
+);
 
 const HomePage = () => {
   const { user } = useAuth();
@@ -194,7 +197,7 @@ const HomePage = () => {
                     <StatItem icon={Calendar} value={totalWorkouts} label="Workouts" />
                     <StatItem icon={Target} value={workoutsThisWeek} label="This Week" />
                     <StatItem icon={TrendingUp} value={totalPRs} label="PR's Set" />
-                    <StatItem icon={Zap} value={`${(totalVolume / 1000).toFixed(1)}K`} label="Total Volume (kg)" />
+                    <StatItem icon={VolumeIcon} value={`${(totalVolume / 1000).toFixed(1)}K`} label="Total Volume (kg)" />
                   </div>
                   <StrengthChart data={strengthChartData} />
                 </>
