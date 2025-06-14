@@ -20,6 +20,10 @@ const VolumeIcon = ({ className }: { className?: string }) => (
     <ImageIcon src="/lovable-uploads/0ab4b431-dd06-4b92-8335-ff454c61eb04.png" alt="Volume icon" className={className} />
 );
 
+const TargetIcon = ({ className }: { className?: string }) => (
+    <ImageIcon src="/lovable-uploads/069886d9-0f49-44aa-826f-3470ca94f1c1.png" alt="Target icon" className={className} />
+);
+
 const HomePage = () => {
   const { user } = useAuth();
 
@@ -195,7 +199,7 @@ const HomePage = () => {
                 <>
                   <div className="grid grid-cols-2 gap-4">
                     <StatItem icon={Calendar} value={totalWorkouts} label="Workouts" />
-                    <StatItem icon={Target} value={workoutsThisWeek} label="This Week" />
+                    <StatItem icon={TargetIcon} value={workoutsThisWeek} label="This Week" />
                     <StatItem icon={TrendingUp} value={totalPRs} label="PR's Set" />
                     <StatItem icon={VolumeIcon} value={`${(totalVolume / 1000).toFixed(1)}K`} label="Total Volume (kg)" />
                   </div>
@@ -227,7 +231,7 @@ const HomePage = () => {
                 <>
                   <div className="grid grid-cols-2 gap-4">
                     <StatItem icon={Calendar} value={totalRuns} label="Total Runs" />
-                    <StatItem icon={Target} value={runsThisWeek} label="This Week" />
+                    <StatItem icon={TargetIcon} value={runsThisWeek} label="This Week" />
                     <StatItem icon={Zap} value={`${totalDistance.toFixed(1)} km`} label="Total Distance" />
                     <StatItem icon={TrendingUp} value={formatPace(bestPace)} label="Best Pace (min/km)" />
                   </div>
