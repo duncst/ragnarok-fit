@@ -89,7 +89,7 @@ const OneRepMaxCalculatorPage = () => {
             </Form>
 
             {oneRepMax !== null && (
-                <div className="mt-8 text-center bg-secondary rounded-lg p-6">
+                <div className="mt-8 text-center bg-secondary text-secondary-foreground rounded-lg p-6">
                 <p className="text-muted-foreground">Estimated 1 Rep Max</p>
                 <p className="text-4xl font-bold tracking-tighter">
                     {oneRepMax.toFixed(1)} kg
@@ -103,3 +103,4 @@ const OneRepMaxCalculatorPage = () => {
 };
 
 export default OneRepMaxCalculatorPage;
+
