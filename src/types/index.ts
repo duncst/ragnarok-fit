@@ -28,6 +28,14 @@ export interface ExerciseDef {
   description: string;
 }
 
+export type TemplateExercise = ExerciseDef & { sets: number };
+
+export interface WorkoutTemplate {
+  id: string;
+  name: string;
+  exercises: TemplateExercise[];
+}
+
 export interface Run {
   id: string;
   distance: number; // in km

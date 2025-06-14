@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Plus, X, ArrowUp, ArrowDown } from "lucide-react";
+import { Plus, X, ArrowUp, ArrowDown, Play } from "lucide-react";
 import {
   Dialog,
   DialogContent,
@@ -15,9 +15,10 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { useToast } from "@/hooks/use-toast";
 import { exercises as allExercises } from "@/data/exercises";
-import type { ExerciseDef } from "@/types";
+import type { ExerciseDef, TemplateExercise, WorkoutTemplate } from "@/types";
 import { Checkbox } from "@/components/ui/checkbox";
 import { ScrollArea } from "@/components/ui/scroll-area";
+import { useNavigate } from "react-router-dom";
 
 type TemplateExercise = ExerciseDef & { sets: number };
 
@@ -28,6 +29,7 @@ type WorkoutTemplate = {
 };
 
 const WorkoutTemplatesPage = () => {
+  const navigate = useNavigate();
   const [open, setOpen] = useState(false);
   const [templateName, setTemplateName] = useState("");
   const { toast } = useToast();
@@ -125,6 +127,10 @@ const WorkoutTemplatesPage = () => {
       newExercises.splice(newIndex, 0, item);
       return newExercises;
     });
+  };
+
+  const handleStartWorkout = (template: WorkoutTemplate) => {
+    navigate("/workout/new", { state: { template } });
   };
 
   const filteredPickerExercises = allExercises.filter(ex => 
@@ -241,7 +247,9 @@ const WorkoutTemplatesPage = () => {
                   <Card key={template.id}>
                     <CardHeader className="flex flex-row items-center justify-between pb-2">
                       <CardTitle className="text-lg">{template.name}</CardTitle>
-                      {/* Placeholder for future actions */}
+                      <Button variant="ghost" size="icon" onClick={() => handleStartWorkout(template)}>
+                        <Play className="h-5 w-5 text-primary" />
+                      </Button>
                     </CardHeader>
                     <CardContent>
                       <ul className="space-y-2 text-sm">

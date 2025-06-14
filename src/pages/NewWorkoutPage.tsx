@@ -1,10 +1,11 @@
-import React, { useState } from 'react';
+
+import React, { useState, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Card, CardContent, CardHeader } from '@/components/ui/card';
 import { Plus, Trash2, Check, Loader2 } from 'lucide-react';
-import type { Exercise, WorkoutSet } from '@/types';
-import { useNavigate } from 'react-router-dom';
+import type { Exercise, WorkoutSet, WorkoutTemplate } from '@/types';
+import { useLocation, useNavigate } from 'react-router-dom';
 import { useAuth } from '@/contexts/AuthContext';
 import { supabase } from '@/integrations/supabase/client';
 import { toast as sonnerToast } from "sonner";
@@ -12,8 +13,11 @@ import { useMutation, useQueryClient } from '@tanstack/react-query';
 
 const NewWorkoutPage = () => {
   const navigate = useNavigate();
+  const location = useLocation();
   const { user } = useAuth();
   const queryClient = useQueryClient();
+  const template = location.state?.template as WorkoutTemplate | undefined;
+
   const [exercises, setExercises] = useState<Exercise[]>([
     {
       id: `ex-${Date.now()}`,
@@ -22,6 +26,23 @@ const NewWorkoutPage = () => {
     }
   ]);
   const [workoutName, setWorkoutName] = useState('');
+
+  useEffect(() => {
+    if (template) {
+      setWorkoutName(template.name);
+      const exercisesFromTemplate: Exercise[] = template.exercises.map((templateEx, exIndex) => ({
+        id: `ex-${Date.now()}-${exIndex}`,
+        name: templateEx.name,
+        sets: Array.from({ length: templateEx.sets }, (_, setIndex) => ({
+          id: `set-${Date.now()}-${exIndex}-${setIndex}`,
+          reps: 8,
+          weight: 20,
+          completed: false,
+        })),
+      }));
+      setExercises(exercisesFromTemplate);
+    }
+  }, [template]);
 
   const addExercise = () => {
     const newExercise: Exercise = {
