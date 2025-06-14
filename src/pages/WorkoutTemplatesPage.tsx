@@ -5,6 +5,8 @@ import type { WorkoutTemplate } from "@/types";
 import { useNavigate } from "react-router-dom";
 import { NewTemplateDialog } from "@/components/workout-templates/NewTemplateDialog";
 import { TemplateList } from "@/components/workout-templates/TemplateList";
+import { Button } from "@/components/ui/button";
+import { Zap } from "lucide-react";
 
 const WorkoutTemplatesPage = () => {
   const navigate = useNavigate();
@@ -22,7 +24,12 @@ const WorkoutTemplatesPage = () => {
     <div className="space-y-4">
       <div className="flex justify-between items-center">
         <h1 className="text-2xl font-bold">Workout Templates</h1>
-        <NewTemplateDialog onTemplateCreated={handleTemplateCreated} />
+        <div className="flex items-center gap-2">
+          <Button onClick={() => navigate('/workout/new')}>
+            <Zap className="mr-2 h-4 w-4" /> Start Workout
+          </Button>
+          <NewTemplateDialog onTemplateCreated={handleTemplateCreated} />
+        </div>
       </div>
       <Card>
         <CardHeader>
