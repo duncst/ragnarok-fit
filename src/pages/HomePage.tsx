@@ -1,4 +1,3 @@
-
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Dumbbell, Footprints, Plus, ArrowRight, Calendar, TrendingUp, Zap, Target, Calculator } from "lucide-react";
@@ -15,13 +14,6 @@ import type { Workout, Run } from '@/types';
 import { Tables } from '@/integrations/supabase/types';
 import { subDays, format, isSameWeek, startOfDay, isWithinInterval } from 'date-fns';
 import { Skeleton } from "@/components/ui/skeleton";
-
-const oneRepMaxes = [
-    { exercise: "Bench Press", weight: "100 kg", date: "2025-06-10" },
-    { exercise: "Squat", weight: "140 kg", date: "2025-06-01" },
-    { exercise: "Deadlift", weight: "180 kg", date: "2025-05-25" },
-    { exercise: "Overhead Press", weight: "60 kg", date: "2025-06-12" },
-];
 
 const HomePage = () => {
   const { user } = useAuth();
@@ -124,6 +116,38 @@ const HomePage = () => {
     }
   });
 
+  const calculate1RM = (weight: number, reps: number) => {
+    if (reps === 1) return weight;
+    // Epley formula
+    return weight * (1 + reps / 30);
+  };
+
+  const oneRepMaxesMap = new Map<string, { oneRepMax: number; date: Date }>();
+
+  workoutHistory?.forEach(workout => {
+    workout.exercises.forEach(exercise => {
+      exercise.sets.forEach(set => {
+        if (set.completed && set.weight > 0 && set.reps > 0) {
+          const current1RM = calculate1RM(set.weight, set.reps);
+          const existingPR = oneRepMaxesMap.get(exercise.name);
+          if (!existingPR || current1RM > existingPR.oneRepMax) {
+            oneRepMaxesMap.set(exercise.name, { oneRepMax: current1RM, date: workout.startTime });
+          }
+        }
+      });
+    });
+  });
+
+  const oneRepMaxList = Array.from(oneRepMaxesMap.entries())
+    .map(([exercise, pr]) => ({
+      exercise,
+      weight: `${pr.oneRepMax.toFixed(1)} kg`,
+      date: format(pr.date, 'yyyy-MM-dd'),
+    }))
+    .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
+
+  const totalPRs = oneRepMaxList.length;
+
   return (
     <div className="space-y-6">
       <div className="grid grid-cols-2 gap-4">
@@ -167,7 +191,7 @@ const HomePage = () => {
                   <div className="grid grid-cols-2 gap-4">
                     <StatItem icon={Calendar} value={totalWorkouts} label="Workouts" />
                     <StatItem icon={Target} value={workoutsThisWeek} label="This Week" />
-                    <StatItem icon={TrendingUp} value={12} label="PR's Set" />
+                    <StatItem icon={TrendingUp} value={totalPRs} label="PR's Set" />
                     <StatItem icon={Zap} value={`${(totalVolume / 1000).toFixed(1)}K`} label="Total Volume (kg)" />
                   </div>
                   <StrengthChart data={strengthChartData} />
@@ -224,6 +248,13 @@ const HomePage = () => {
                 </div>
             </CardHeader>
             <CardContent className="pt-0">
+              {isLoading ? (
+                <div className="space-y-2 pt-4">
+                  <Skeleton className="h-8 w-full" />
+                  <Skeleton className="h-8 w-full" />
+                  <Skeleton className="h-8 w-full" />
+                </div>
+              ) : (
                 <Table>
                     <TableHeader>
                         <TableRow>
@@ -233,15 +264,24 @@ const HomePage = () => {
                         </TableRow>
                     </TableHeader>
                     <TableBody>
-                        {oneRepMaxes.map(item => (
-                            <TableRow key={item.exercise}>
-                                <TableCell className="font-medium">{item.exercise}</TableCell>
-                                <TableCell className="text-right">{item.weight}</TableCell>
-                                <TableCell className="text-right text-muted-foreground text-xs">{item.date}</TableCell>
-                            </TableRow>
-                        ))}
+                        {oneRepMaxList.length > 0 ? (
+                          oneRepMaxList.slice(0, 4).map(item => (
+                              <TableRow key={item.exercise}>
+                                  <TableCell className="font-medium">{item.exercise}</TableCell>
+                                  <TableCell className="text-right">{item.weight}</TableCell>
+                                  <TableCell className="text-right text-muted-foreground text-xs">{item.date}</TableCell>
+                              </TableRow>
+                          ))
+                        ) : (
+                          <TableRow>
+                            <TableCell colSpan={3} className="text-center text-muted-foreground">
+                              No 1 Rep Max records yet.
+                            </TableCell>
+                          </TableRow>
+                        )}
                     </TableBody>
                 </Table>
+              )}
             </CardContent>
           </Card>
         </div>
