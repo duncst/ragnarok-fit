@@ -7,7 +7,7 @@ import type { Workout, Run } from '@/types';
 import { Tables } from '@/integrations/supabase/types';
 import { formatDistanceStrict, formatDistanceToNow } from 'date-fns';
 import { Card, CardContent } from "@/components/ui/card";
-import { Dumbbell, Footprints, ArrowRight } from "lucide-react";
+import { Dumbbell, ArrowRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Link } from "react-router-dom";
@@ -86,7 +86,7 @@ export const RecentActivity = () => {
                 <CardContent className="p-4 flex justify-between items-center">
                     <div className="flex items-center gap-4">
                         <div className="bg-secondary p-3 rounded-full">
-                            {activity.type === 'workout' ? <Dumbbell className="h-5 w-5 text-primary" /> : <Footprints className="h-5 w-5 text-primary" />}
+                            {activity.type === 'workout' ? <Dumbbell className="h-5 w-5 text-primary" /> : <img src="/lovable-uploads/a03dd493-1d83-4a15-bb1b-e275ad3debf1.png" alt="Running icon" className="h-5 w-5" />}
                         </div>
                         <div>
                             <p className="font-semibold">{name}</p>

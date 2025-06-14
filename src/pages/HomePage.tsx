@@ -1,7 +1,6 @@
-
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Dumbbell, Footprints, Plus, ArrowRight, Calendar, TrendingUp, Zap, Target, Calculator } from "lucide-react";
+import { Dumbbell, Plus, ArrowRight, Calendar, TrendingUp, Zap, Target, Calculator } from "lucide-react";
 import { Link } from "react-router-dom";
 import { StrengthChart } from "@/components/StrengthChart";
 import { RunChart } from "@/components/RunChart";
@@ -154,7 +153,7 @@ const HomePage = () => {
       <div className="grid grid-cols-2 gap-4">
         <Button asChild variant="secondary">
           <Link to="/run">
-            <Footprints className="mr-2 h-5 w-5" /> Start Run
+            <img src="/lovable-uploads/a03dd493-1d83-4a15-bb1b-e275ad3debf1.png" alt="Running icon" className="mr-2 h-5 w-5 rounded-sm" /> Start Run
           </Link>
         </Button>
         <Button asChild>
@@ -204,7 +203,7 @@ const HomePage = () => {
           <Card>
             <CardHeader>
               <CardTitle className="flex items-center gap-2 text-lg font-semibold">
-                <Footprints className="text-primary" />
+                <img src="/lovable-uploads/a03dd493-1d83-4a15-bb1b-e275ad3debf1.png" alt="Running icon" className="h-6 w-6 rounded-sm" />
                 Running
               </CardTitle>
             </CardHeader>
