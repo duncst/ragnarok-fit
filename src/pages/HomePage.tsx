@@ -180,7 +180,7 @@ const HomePage = () => {
           <Card>
             <CardHeader>
               <CardTitle className="flex items-center gap-2 text-lg font-semibold">
-                <Dumbbell className="h-7 w-7 text-primary" />
+                <Zap className="h-7 w-7 text-primary" />
                 Strength Training
               </CardTitle>
             </CardHeader>
