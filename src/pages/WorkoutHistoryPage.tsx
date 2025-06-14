@@ -24,47 +24,6 @@ import { supabase } from '@/integrations/supabase/client';
 import { Skeleton } from '@/components/ui/skeleton';
 import { Tables } from '@/integrations/supabase/types';
 
-// Hardcoded run history will remain for now
-const runHistory: Run[] = [
-  {
-    id: 'run-1',
-    distance: 12.9,
-    duration: 4320, // 1h 12m
-    runType: 'Long Run',
-    date: new Date('2025-06-10T08:00:00'),
-    notes: 'Felt strong throughout, negative split',
-    elevation: 75,
-    avgHr: 155,
-  },
-  {
-    id: 'run-2',
-    distance: 8.0,
-    duration: 2520, // 42m
-    runType: 'Tempo Run',
-    date: new Date('2025-06-08T08:00:00'),
-    elevation: 37,
-    avgHr: 168,
-  },
-  {
-    id: 'run-3',
-    distance: 5.6,
-    duration: 1875, // 31m 15s
-    runType: 'Easy Run',
-    date: new Date('2025-06-06T18:00:00'),
-    elevation: 26,
-    avgHr: 145,
-  },
-  {
-    id: 'run-4',
-    distance: 6.8,
-    duration: 2100, // 35m
-    runType: 'Interval Training',
-    date: new Date('2025-06-04T19:00:00'),
-    elevation: 29,
-    avgHr: 175,
-  }
-];
-
 const StatItem = ({
   icon: Icon,
   value,
