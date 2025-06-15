@@ -6,6 +6,8 @@ import { ExerciseCard } from '@/components/workout/ExerciseCard';
 import { WorkoutActions } from '@/components/workout/WorkoutActions';
 import { EquipmentSelector } from '@/components/workout/EquipmentSelector';
 import { FocusAreaSelector } from '@/components/workout/FocusAreaSelector';
+import { Button } from '@/components/ui/button';
+import { Loader2, Sparkles } from 'lucide-react';
 
 const NewWorkoutPage = () => {
   const {
@@ -53,22 +55,33 @@ const NewWorkoutPage = () => {
         />
       ))}
 
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-        <EquipmentSelector 
-          selectedEquipment={selectedEquipment}
-          onEquipmentChange={setSelectedEquipment}
-        />
-        <FocusAreaSelector
-          selectedFocus={focusArea}
-          onFocusChange={setFocusArea}
-        />
-      </div>
+      <WorkoutActions onAddExercise={addExercise} />
 
-      <WorkoutActions
-        onAddExercise={addExercise}
-        onGenerateAI={() => generateWorkoutMutation.mutate({ equipment: selectedEquipment, focus: focusArea })}
-        isGenerating={generateWorkoutMutation.isPending}
-      />
+      <div className="p-4 border rounded-lg space-y-4">
+        <Button
+          variant="outline"
+          className="w-full"
+          onClick={() => generateWorkoutMutation.mutate({ equipment: selectedEquipment, focus: focusArea })}
+          disabled={generateWorkoutMutation.isPending}
+        >
+          {generateWorkoutMutation.isPending ? (
+            <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+          ) : (
+            <Sparkles className="mr-2 h-4 w-4" />
+          )}
+          Generate with AI
+        </Button>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <EquipmentSelector
+            selectedEquipment={selectedEquipment}
+            onEquipmentChange={setSelectedEquipment}
+          />
+          <FocusAreaSelector
+            selectedFocus={focusArea}
+            onFocusChange={setFocusArea}
+          />
+        </div>
+      </div>
     </div>
   );
 };
