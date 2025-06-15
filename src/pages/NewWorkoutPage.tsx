@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -10,6 +9,7 @@ import { useAuth } from '@/contexts/AuthContext';
 import { supabase } from '@/integrations/supabase/client';
 import { toast as sonnerToast } from "sonner";
 import { useMutation, useQueryClient } from '@tanstack/react-query';
+import { ExerciseSelector } from '@/components/ExerciseSelector';
 
 const NewWorkoutPage = () => {
   const navigate = useNavigate();
@@ -213,11 +213,10 @@ const NewWorkoutPage = () => {
         <Card key={exercise.id}>
           <CardHeader>
             <div className="flex justify-between items-center">
-              <Input
+              <ExerciseSelector
                 placeholder={`Exercise ${exerciseIndex + 1}`}
                 value={exercise.name}
-                onChange={(e) => updateExerciseName(exercise.id, e.target.value)}
-                className="text-lg font-semibold border-none focus-visible:ring-0 focus-visible:ring-offset-0 p-0 h-auto"
+                onChange={(name) => updateExerciseName(exercise.id, name)}
               />
               <Button variant="ghost" size="icon" onClick={() => removeExercise(exercise.id)}>
                 <Trash2 className="h-4 w-4 text-muted-foreground" />
