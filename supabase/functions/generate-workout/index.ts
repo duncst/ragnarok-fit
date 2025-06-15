@@ -33,7 +33,10 @@ The JSON object should have the following structure:
     }
   ]
 }
-- Generate a creative and motivational viking-themed workout name that reflects the available equipment (e.g. "Thor's Thunderous Thursdays", "Loki's Leg Day", "Valhalla Back & Biceps").
+- Generate a highly creative, epic, and unique viking-themed workout name. The name should be motivational and reflect the available equipment.
+- **AVOID REPETITIVE NAMES**. Be original and do not use generic templates.
+- Draw inspiration from a wide range of Norse mythology figures (e.g., gods, giants, monsters), places (e.g., Asgard, Midgard, Valhalla), and artifacts (e.g., Mjölnir, Gungnir).
+- For example, you could create names like "Fenrir's Frenzy", "The Bifröst Bridge Builder", or "Einherjar's Endurance", but DO NOT use these exact examples.
 - Include 4 to 6 exercises for a balanced, full-body workout, using ONLY the provided equipment.
 - Each exercise should have 3 sets.
 - Reps should be between 8 and 15.
