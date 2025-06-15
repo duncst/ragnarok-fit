@@ -9,6 +9,33 @@ export type Json =
 export type Database = {
   public: {
     Tables: {
+      body_metrics: {
+        Row: {
+          created_at: string
+          date: string
+          id: string
+          user_id: string
+          vo2_max: number | null
+          weight: number | null
+        }
+        Insert: {
+          created_at?: string
+          date?: string
+          id?: string
+          user_id?: string
+          vo2_max?: number | null
+          weight?: number | null
+        }
+        Update: {
+          created_at?: string
+          date?: string
+          id?: string
+          user_id?: string
+          vo2_max?: number | null
+          weight?: number | null
+        }
+        Relationships: []
+      }
       personal_records: {
         Row: {
           created_at: string

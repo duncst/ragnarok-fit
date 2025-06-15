@@ -16,6 +16,7 @@ import WorkoutHistoryPage from "./pages/WorkoutHistoryPage";
 import { AuthProvider } from "./contexts/AuthContext";
 import AuthPage from "./pages/AuthPage";
 import WorkoutTemplatesPage from "./pages/WorkoutTemplatesPage";
+import LogBodyMetricsPage from "./pages/LogBodyMetricsPage";
 
 const queryClient = new QueryClient();
 
@@ -37,6 +38,7 @@ const App = () => (
               <Route path="/log-run" element={<LogRunPage />} />
               <Route path="/workout/new" element={<NewWorkoutPage />} />
               <Route path="/1rm-calculator" element={<OneRepMaxCalculatorPage />} />
+              <Route path="/log-body-metrics" element={<LogBodyMetricsPage />} />
             </Route>
             <Route path="*" element={<NotFound />} />
           </Routes>

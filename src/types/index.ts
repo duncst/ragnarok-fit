@@ -58,3 +58,12 @@ export interface PersonalRecord {
   date: string;
   created_at: string;
 }
+
+export interface BodyMetrics {
+  id: string;
+  user_id: string;
+  date: string;
+  weight: number | null;
+  vo2_max: number | null;
+  created_at: string;
+}
