@@ -1,3 +1,4 @@
+
 import { NavLink } from "react-router-dom";
 import { cn } from "@/lib/utils";
 import { ImageIcon } from "./ImageIcon";
@@ -15,7 +16,7 @@ const TemplateIcon = ({ className }: { className?: string }) => (
 );
 
 const ExerciseIcon = ({ className }: { className?: string }) => (
-    <ImageIcon src="/lovable-uploads/47435613-6561-4730-b88f-82873e439b73.png" alt="Exercise icon" className={className} />
+    <ImageIcon src="/lovable-uploads/59098dd1-6550-4f60-bc29-d0c1165a7d3c.png" alt="Exercise icon" className={className} />
 );
 
 const HistoryIcon = ({ className }: { className?: string }) => (
