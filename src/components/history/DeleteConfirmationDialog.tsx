@@ -12,7 +12,7 @@ import {
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
 import { Button } from '@/components/ui/button';
-import { ImageIcon } from '@/components/ImageIcon';
+import { Trash2 } from 'lucide-react';
 
 interface DeleteConfirmationDialogProps {
   onConfirm: () => void;
@@ -23,8 +23,8 @@ const DeleteConfirmationDialog: React.FC<DeleteConfirmationDialogProps> = ({ onC
   return (
     <AlertDialog>
       <AlertDialogTrigger asChild>
-        <Button variant="ghost" size="icon" className="group hover:bg-destructive/10">
-          <ImageIcon src="/lovable-uploads/ff7ba995-91be-4979-bee9-5f6183d0571.png" alt="Delete" className="h-4 w-4 bg-foreground group-hover:bg-destructive" />
+        <Button variant="ghost" size="icon" className="text-destructive hover:text-destructive hover:bg-destructive/10">
+          <Trash2 className="h-4 w-4" />
           <span className="sr-only">Delete</span>
         </Button>
       </AlertDialogTrigger>

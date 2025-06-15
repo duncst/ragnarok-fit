@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Plus, X, ArrowUp, ArrowDown, Play } from "lucide-react";
+import { Plus, X, ArrowUp, ArrowDown, Play, Trash2 } from "lucide-react";
 import {
   Dialog,
   DialogContent,
@@ -24,7 +24,6 @@ import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/contexts/AuthContext";
 import { Switch } from "@/components/ui/switch";
 import { Skeleton } from "@/components/ui/skeleton";
-import DeleteConfirmationDialog from "@/components/history/DeleteConfirmationDialog";
 
 const WorkoutTemplatesPage = () => {
   const navigate = useNavigate();
@@ -365,10 +364,9 @@ const WorkoutTemplatesPage = () => {
                           <Play className="h-5 w-5 text-primary" />
                         </Button>
                         {template.user_id === user?.id && (
-                          <DeleteConfirmationDialog
-                            onConfirm={() => handleDeleteTemplate(template.id)}
-                            isLoading={deleteTemplateMutation.isPending && deleteTemplateMutation.variables === template.id}
-                          />
+                          <Button variant="ghost" size="icon" onClick={() => handleDeleteTemplate(template.id)} disabled={deleteTemplateMutation.isPending && deleteTemplateMutation.variables === template.id}>
+                            <Trash2 className="h-5 w-5 text-destructive" />
+                          </Button>
                         )}
                       </div>
                     </CardHeader>
