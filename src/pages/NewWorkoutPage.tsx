@@ -8,6 +8,9 @@ import { EquipmentSelector } from '@/components/workout/EquipmentSelector';
 import { FocusAreaSelector } from '@/components/workout/FocusAreaSelector';
 import { Button } from '@/components/ui/button';
 import { Loader2, Sparkles } from 'lucide-react';
+import { RestTimerSettings } from '@/components/workout/RestTimerSettings';
+import { RestTimerToast } from '@/components/workout/RestTimerToast';
+import { toast as sonnerToast } from 'sonner';
 
 const NewWorkoutPage = () => {
   const {
@@ -19,7 +22,7 @@ const NewWorkoutPage = () => {
     updateExerciseName,
     addSet,
     updateSet,
-    handleToggleSet,
+    handleToggleSet: originalHandleToggleSet,
     finishWorkout,
     saveWorkoutMutation,
     generateWorkoutMutation,
@@ -29,7 +32,20 @@ const NewWorkoutPage = () => {
     saveAsTemplateMutation,
     focusArea,
     setFocusArea,
+    restDuration,
+    setRestDuration,
   } = useNewWorkoutForm();
+
+  const handleToggleSet = (exerciseId: string, setId: string) => {
+    originalHandleToggleSet(exerciseId, setId, (isCompleted) => {
+      if (isCompleted) {
+        sonnerToast.custom(
+          (t) => <RestTimerToast duration={restDuration} toastId={t} />,
+          { duration: restDuration * 1000 + 5000, position: 'top-center' }
+        );
+      }
+    });
+  };
 
   return (
     <div className="space-y-4 pb-16">
@@ -72,6 +88,10 @@ const NewWorkoutPage = () => {
           )}
           Generate with AI
         </Button>
+        <RestTimerSettings
+          restDuration={restDuration}
+          onRestDurationChange={setRestDuration}
+        />
         <FocusAreaSelector
           selectedFocus={focusArea}
           onFocusChange={setFocusArea}

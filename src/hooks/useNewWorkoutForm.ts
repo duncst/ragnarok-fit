@@ -1,4 +1,3 @@
-
 import { useWorkoutState } from './useWorkoutState';
 import { useSaveWorkout } from './useSaveWorkout';
 import { useSaveAsTemplate } from './useSaveAsTemplate';
@@ -20,6 +19,8 @@ export const useNewWorkoutForm = () => {
     setSelectedEquipment,
     focusArea,
     setFocusArea,
+    restDuration,
+    setRestDuration,
   } = useWorkoutState();
 
   const { saveWorkoutMutation, finishWorkout } = useSaveWorkout();
@@ -45,5 +46,7 @@ export const useNewWorkoutForm = () => {
     setFocusArea,
     saveAsTemplate: () => saveAsTemplate({ exercises, name: workoutName }),
     saveAsTemplateMutation,
+    restDuration,
+    setRestDuration,
   };
 };

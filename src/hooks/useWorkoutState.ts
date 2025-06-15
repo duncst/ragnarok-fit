@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from 'react';
 import { useLocation } from 'react-router-dom';
 import type { Exercise, WorkoutSet, WorkoutTemplate, Workout } from '@/types';
@@ -12,6 +11,7 @@ export const useWorkoutState = () => {
   const [workoutName, setWorkoutName] = useState('');
   const [selectedEquipment, setSelectedEquipment] = useState<string[]>(['Bodyweight']);
   const [focusArea, setFocusArea] = useState('Full Body');
+  const [restDuration, setRestDuration] = useState(90);
 
   useEffect(() => {
     if (template) {
@@ -104,7 +104,11 @@ export const useWorkoutState = () => {
     );
   };
 
-  const handleToggleSet = (exerciseId: string, setId: string) => {
+  const handleToggleSet = (
+    exerciseId: string,
+    setId: string,
+    onToggleCallback?: (isCompleted: boolean) => void
+  ) => {
     setExercises((prev) =>
       prev.map((ex) => {
         if (ex.id === exerciseId) {
@@ -112,7 +116,9 @@ export const useWorkoutState = () => {
             ...ex,
             sets: ex.sets.map((set) => {
               if (set.id === setId) {
-                return { ...set, completed: !set.completed };
+                const isCompleted = !set.completed;
+                onToggleCallback?.(isCompleted);
+                return { ...set, completed: isCompleted };
               }
               return set;
             }),
@@ -138,5 +144,7 @@ export const useWorkoutState = () => {
     setSelectedEquipment,
     focusArea,
     setFocusArea,
+    restDuration,
+    setRestDuration,
   };
 };
