@@ -186,7 +186,16 @@ export const useNewWorkoutForm = () => {
   const generateWorkoutMutation = useMutation({
     mutationFn: async () => {
       const { data, error } = await supabase.functions.invoke('generate-workout');
-      if (error) throw new Error(error.message);
+      if (error) {
+        if (error.context && error.context.error) {
+          const detailedError = error.context.error as { message: string; type?: string };
+          if (detailedError.type === 'insufficient_quota') {
+            throw new Error("You've exceeded your OpenAI API quota. Please check your plan and billing details on the OpenAI website.");
+          }
+          throw new Error(detailedError.message || 'An unknown error occurred while generating the workout.');
+        }
+        throw new Error(error.message);
+      }
       if (!data) throw new Error("No data returned from the function.");
       return data as { name: string; exercises: { name: string; sets: { reps: number; weight: number }[] }[] };
     },

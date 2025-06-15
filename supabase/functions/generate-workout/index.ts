@@ -70,9 +70,16 @@ serve(async (req) => {
     })
   } catch (error) {
     console.error('Error generating workout:', error)
-    return new Response(JSON.stringify({ error: error.message }), {
+    
+    const errorResponse = {
+      message: error.message || 'An unknown error occurred.',
+      type: error.type,
+    }
+
+    return new Response(JSON.stringify({ error: errorResponse }), {
       headers: { ...corsHeaders, 'Content-Type': 'application/json' },
       status: 500,
     })
   }
 })
+
