@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
@@ -22,6 +21,7 @@ export const useNewWorkoutForm = () => {
     }
   ]);
   const [workoutName, setWorkoutName] = useState('');
+  const [selectedEquipment, setSelectedEquipment] = useState<string[]>(['Bodyweight']);
 
   useEffect(() => {
     if (template) {
@@ -184,8 +184,10 @@ export const useNewWorkoutForm = () => {
   });
 
   const generateWorkoutMutation = useMutation({
-    mutationFn: async () => {
-      const { data, error } = await supabase.functions.invoke('generate-workout');
+    mutationFn: async ({ equipment }: { equipment: string[] }) => {
+      const { data, error } = await supabase.functions.invoke('generate-workout', {
+        body: { equipment },
+      });
       if (error) {
         if (error.context && error.context.error) {
           const detailedError = error.context.error as { message: string; type?: string };
@@ -237,6 +239,7 @@ export const useNewWorkoutForm = () => {
     finishWorkout,
     saveWorkoutMutation,
     generateWorkoutMutation,
+    selectedEquipment,
+    setSelectedEquipment,
   };
 };
-

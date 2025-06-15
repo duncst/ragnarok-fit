@@ -4,6 +4,7 @@ import { useNewWorkoutForm } from '@/hooks/useNewWorkoutForm';
 import { WorkoutHeader } from '@/components/workout/WorkoutHeader';
 import { ExerciseCard } from '@/components/workout/ExerciseCard';
 import { WorkoutActions } from '@/components/workout/WorkoutActions';
+import { EquipmentSelector } from '@/components/workout/EquipmentSelector';
 
 const NewWorkoutPage = () => {
   const {
@@ -19,6 +20,8 @@ const NewWorkoutPage = () => {
     finishWorkout,
     saveWorkoutMutation,
     generateWorkoutMutation,
+    selectedEquipment,
+    setSelectedEquipment,
   } = useNewWorkoutForm();
 
   return (
@@ -43,9 +46,14 @@ const NewWorkoutPage = () => {
         />
       ))}
 
+      <EquipmentSelector 
+        selectedEquipment={selectedEquipment}
+        onEquipmentChange={setSelectedEquipment}
+      />
+
       <WorkoutActions
         onAddExercise={addExercise}
-        onGenerateAI={() => generateWorkoutMutation.mutate()}
+        onGenerateAI={() => generateWorkoutMutation.mutate({ equipment: selectedEquipment })}
         isGenerating={generateWorkoutMutation.isPending}
       />
     </div>

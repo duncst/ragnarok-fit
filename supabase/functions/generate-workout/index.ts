@@ -12,9 +12,12 @@ const corsHeaders = {
 const openAIApiKey = Deno.env.get('OPENAI_API_KEY')
 const openai = new OpenAI({ apiKey: openAIApiKey });
 
-const PROMPT = `
+const PROMPT_TEMPLATE = (equipmentList: string) => `
 You are a world-class fitness expert and personal trainer.
-Generate a complete workout plan for a user.
+Generate a complete workout plan for a user based on the equipment they have available.
+The user has the following equipment: ${equipmentList}.
+If the list is empty or only contains 'Bodyweight', generate a bodyweight-only workout.
+
 The response MUST be a valid JSON object ONLY. Do not include any other text or markdown formatting.
 The JSON object should have the following structure:
 {
@@ -30,13 +33,13 @@ The JSON object should have the following structure:
     }
   ]
 }
-- Generate a creative and motivational workout name.
-- Include 4 to 6 exercises for a balanced, full-body workout.
+- Generate a creative and motivational workout name that reflects the available equipment.
+- Include 4 to 6 exercises for a balanced, full-body workout, using ONLY the provided equipment.
 - Each exercise should have 3 sets.
 - Reps should be between 8 and 15.
 - The "weight" for each set should initially be 0. The application will populate this with historical data.
 - Use common and recognizable exercise names.
-`
+`;
 
 serve(async (req) => {
   // Handle CORS preflight requests
@@ -48,6 +51,11 @@ serve(async (req) => {
     if (!openAIApiKey) {
         throw new Error("OPENAI_API_KEY is not set in Supabase secrets.");
     }
+
+    const body = await req.json();
+    const equipment = body?.equipment;
+    const equipmentList = Array.isArray(equipment) && equipment.length > 0 ? equipment.join(', ') : 'Bodyweight';
+    const finalPrompt = PROMPT_TEMPLATE(equipmentList);
     
     const supabaseClient = createClient(
       Deno.env.get('SUPABASE_URL') ?? '',
@@ -59,8 +67,8 @@ serve(async (req) => {
     const completion = await openai.chat.completions.create({
       model: 'gpt-4o-mini',
       messages: [
-        { role: 'system', content: PROMPT },
-        { role: 'user', content: 'Generate a new full-body workout for me.' },
+        { role: 'system', content: finalPrompt },
+        { role: 'user', content: `Generate a new full-body workout for me using only the following equipment: ${equipmentList}.` },
       ],
       response_format: { type: "json_object" },
     })
