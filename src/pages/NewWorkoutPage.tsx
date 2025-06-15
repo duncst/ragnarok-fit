@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { useNewWorkoutForm } from '@/hooks/useNewWorkoutForm';
 import { WorkoutHeader } from '@/components/workout/WorkoutHeader';
@@ -71,16 +70,14 @@ const NewWorkoutPage = () => {
           )}
           Generate with AI
         </Button>
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          <EquipmentSelector
-            selectedEquipment={selectedEquipment}
-            onEquipmentChange={setSelectedEquipment}
-          />
-          <FocusAreaSelector
-            selectedFocus={focusArea}
-            onFocusChange={setFocusArea}
-          />
-        </div>
+        <FocusAreaSelector
+          selectedFocus={focusArea}
+          onFocusChange={setFocusArea}
+        />
+        <EquipmentSelector
+          selectedEquipment={selectedEquipment}
+          onEquipmentChange={setSelectedEquipment}
+        />
       </div>
     </div>
   );

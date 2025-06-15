@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { Checkbox } from "@/components/ui/checkbox";
 import { Label } from "@/components/ui/label";
@@ -23,7 +22,7 @@ export const EquipmentSelector = ({ selectedEquipment, onEquipmentChange }: Equi
   };
 
   return (
-    <div className="p-4 border rounded-lg space-y-4">
+    <div className="space-y-4">
         <div>
             <h3 className="text-lg font-semibold">Available Equipment</h3>
             <p className="text-sm text-muted-foreground">Select your equipment to help the AI generate a suitable workout.</p>
