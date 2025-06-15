@@ -4,7 +4,7 @@ import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { toast as sonnerToast } from "sonner";
 import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/contexts/AuthContext';
-import type { Exercise, WorkoutSet, WorkoutTemplate } from '@/types';
+import type { Exercise, WorkoutSet, WorkoutTemplate, Workout } from '@/types';
 
 export const useNewWorkoutForm = () => {
   const navigate = useNavigate();
@@ -12,6 +12,7 @@ export const useNewWorkoutForm = () => {
   const { user } = useAuth();
   const queryClient = useQueryClient();
   const template = location.state?.template as WorkoutTemplate | undefined;
+  const workout = location.state?.workout as Workout | undefined;
 
   const [exercises, setExercises] = useState<Exercise[]>([]);
   const [workoutName, setWorkoutName] = useState('');
@@ -31,8 +32,21 @@ export const useNewWorkoutForm = () => {
         })),
       }));
       setExercises(exercisesFromTemplate);
+    } else if (workout) {
+      setWorkoutName(workout.name);
+      const exercisesFromWorkout: Exercise[] = workout.exercises.map((workoutEx, exIndex) => ({
+          id: `ex-${Date.now()}-${exIndex}`,
+          name: workoutEx.name,
+          sets: workoutEx.sets.map((set, setIndex) => ({
+              id: `set-${Date.now()}-${exIndex}-${setIndex}`,
+              reps: set.reps,
+              weight: set.weight,
+              completed: false,
+          })),
+      }));
+      setExercises(exercisesFromWorkout);
     }
-  }, [template]);
+  }, [template, workout]);
 
   const addExercise = () => {
     const newExercise: Exercise = {

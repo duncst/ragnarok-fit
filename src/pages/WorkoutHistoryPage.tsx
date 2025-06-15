@@ -1,7 +1,7 @@
 import React from 'react';
 import { Card, CardContent } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
-import { Calendar, Clock, Dumbbell, BarChart2, MapPin, Heart } from 'lucide-react';
+import { Calendar, Clock, Dumbbell, BarChart2, MapPin, Heart, Repeat } from 'lucide-react';
 import type { Workout, Run } from '@/types';
 import { format, formatDistanceStrict } from 'date-fns';
 import {
@@ -23,6 +23,7 @@ import { useAuth } from '@/contexts/AuthContext';
 import { supabase } from '@/integrations/supabase/client';
 import { Skeleton } from '@/components/ui/skeleton';
 import { Tables } from '@/integrations/supabase/types';
+import { useNavigate } from 'react-router-dom';
 
 const StatItem = ({
   icon: Icon,
@@ -81,10 +82,15 @@ const getRunDuration = (durationInSeconds: number) => {
 
 const WorkoutCard = ({ workout }: { workout: Workout }) => {
   const [isOpen, setIsOpen] = React.useState(false);
+  const navigate = useNavigate();
   const totalSets = getTotalSets(workout);
   const totalVolume = getTotalVolume(workout);
   const avgPerSet = totalSets > 0 ? totalVolume / totalSets : 0;
   const duration = getWorkoutDuration(workout);
+
+  const handleRepeatWorkout = () => {
+    navigate('/workout/new', { state: { workout } });
+  };
 
   return (
     <Card>
@@ -98,9 +104,15 @@ const WorkoutCard = ({ workout }: { workout: Workout }) => {
                 <span>{format(workout.startTime, 'MMM d, yyyy')}</span>
               </div>
             </div>
-            <div className="flex items-center gap-2 text-sm text-muted-foreground">
-              <Clock className="h-4 w-4" />
-              <span>{duration}</span>
+            <div className="flex items-center gap-2">
+              <Button variant="ghost" size="icon" onClick={handleRepeatWorkout}>
+                <Repeat className="h-4 w-4" />
+                <span className="sr-only">Repeat workout</span>
+              </Button>
+              <div className="flex items-center gap-2 text-sm text-muted-foreground">
+                <Clock className="h-4 w-4" />
+                <span>{duration}</span>
+              </div>
             </div>
           </div>
 
