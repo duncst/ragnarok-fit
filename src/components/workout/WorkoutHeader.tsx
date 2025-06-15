@@ -20,7 +20,7 @@ export const WorkoutHeader = ({ workoutName, onNameChange, onFinish, isSaving, o
         placeholder="Workout Name (e.g. Push Day)"
         value={workoutName}
         onChange={(e) => onNameChange(e.target.value)}
-        className="text-2xl font-bold border-none focus-visible:ring-0 focus-visible:ring-offset-0 p-0 h-auto"
+        className="text-2xl font-bold h-auto"
       />
       <div className="flex items-center gap-2">
         <Button variant="outline" size="icon" onClick={onSaveAsTemplate} disabled={isSavingAsTemplate || isSaving}>
