@@ -24,7 +24,7 @@ const DeleteConfirmationDialog: React.FC<DeleteConfirmationDialogProps> = ({ onC
     <AlertDialog>
       <AlertDialogTrigger asChild>
         <Button variant="ghost" size="icon" className="text-destructive hover:text-destructive hover:bg-destructive/10">
-          <ImageIcon src="/lovable-uploads/7f0b8abe-1e70-4931-93c4-f0f7d3c2022a.png" alt="Delete" className="h-4 w-4" />
+          <ImageIcon src="/lovable-uploads/7f0b8abe-1e70-4931-93c4-f0f7d3c2022a.png" alt="Delete" className="h-5 w-5" />
           <span className="sr-only">Delete</span>
         </Button>
       </AlertDialogTrigger>
