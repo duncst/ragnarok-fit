@@ -13,13 +13,7 @@ export const useNewWorkoutForm = () => {
   const queryClient = useQueryClient();
   const template = location.state?.template as WorkoutTemplate | undefined;
 
-  const [exercises, setExercises] = useState<Exercise[]>([
-    {
-      id: `ex-${Date.now()}`,
-      name: 'Bench Press',
-      sets: [{ id: `set-${Date.now()}`, reps: 8, weight: 60, completed: false }],
-    }
-  ]);
+  const [exercises, setExercises] = useState<Exercise[]>([]);
   const [workoutName, setWorkoutName] = useState('');
   const [selectedEquipment, setSelectedEquipment] = useState<string[]>(['Bodyweight']);
 
