@@ -1,8 +1,9 @@
+
 import React, { useState, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Card, CardContent, CardHeader } from '@/components/ui/card';
-import { Plus, Trash2, Check, Loader2 } from 'lucide-react';
+import { Plus, Trash2, Check, Loader2, Sparkles } from 'lucide-react';
 import type { Exercise, WorkoutSet, WorkoutTemplate } from '@/types';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { useAuth } from '@/contexts/AuthContext';
@@ -189,6 +190,41 @@ const NewWorkoutPage = () => {
     }
   });
 
+  const generateWorkoutMutation = useMutation({
+    mutationFn: async () => {
+      const { data, error } = await supabase.functions.invoke('generate-workout');
+
+      if (error) {
+        throw new Error(error.message);
+      }
+
+      if (!data) {
+        throw new Error("No data returned from the function.");
+      }
+      
+      return data as { name: string; exercises: { name: string; sets: { reps: number; weight: number }[] }[] };
+    },
+    onSuccess: (data) => {
+      sonnerToast.success("AI workout generated successfully!");
+      setWorkoutName(data.name);
+
+      const exercisesFromAI: Exercise[] = data.exercises.map((templateEx, exIndex) => ({
+        id: `ex-${Date.now()}-${exIndex}`,
+        name: templateEx.name,
+        sets: templateEx.sets.map((set, setIndex) => ({
+          id: `set-${Date.now()}-${exIndex}-${setIndex}`,
+          reps: set.reps,
+          weight: set.weight,
+          completed: false,
+        })),
+      }));
+      setExercises(exercisesFromAI);
+    },
+    onError: (error) => {
+      sonnerToast.error("Failed to generate workout", { description: (error as Error).message });
+    }
+  });
+
   const finishWorkout = () => {
     const workoutNameOrDefault = workoutName.trim() || `Workout - ${new Date().toLocaleDateString()}`;
     saveWorkoutMutation.mutate({ exercises, name: workoutNameOrDefault });
@@ -272,9 +308,24 @@ const NewWorkoutPage = () => {
         </Card>
       ))}
 
-      <Button variant="secondary" className="w-full" onClick={addExercise}>
-        <Plus className="h-4 w-4 mr-2" /> Add Exercise
-      </Button>
+      <div className="flex gap-2">
+        <Button variant="secondary" className="w-full" onClick={addExercise}>
+          <Plus className="h-4 w-4 mr-2" /> Add Exercise
+        </Button>
+        <Button 
+          variant="outline" 
+          className="w-full" 
+          onClick={() => generateWorkoutMutation.mutate()}
+          disabled={generateWorkoutMutation.isPending}
+        >
+          {generateWorkoutMutation.isPending ? (
+            <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+          ) : (
+            <Sparkles className="mr-2 h-4 w-4" />
+          )}
+          Generate with AI
+        </Button>
+      </div>
     </div>
   );
 };
