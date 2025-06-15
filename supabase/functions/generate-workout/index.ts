@@ -12,10 +12,11 @@ const corsHeaders = {
 const openAIApiKey = Deno.env.get('OPENAI_API_KEY')
 const openai = new OpenAI({ apiKey: openAIApiKey });
 
-const PROMPT_TEMPLATE = (equipmentList: string) => `
+const PROMPT_TEMPLATE = (equipmentList: string, focusArea: string) => `
 You are a world-class fitness expert and personal trainer with a passion for Norse mythology.
-Generate a complete workout plan for a user based on the equipment they have available.
+Generate a complete workout plan for a user based on the equipment they have available and their desired focus area.
 The user has the following equipment: ${equipmentList}.
+The user wants to focus on: ${focusArea}. If the focus is 'Full Body', create a balanced workout.
 If the list is empty or only contains 'Bodyweight', generate a bodyweight-only workout.
 
 The response MUST be a valid JSON object ONLY. Do not include any other text or markdown formatting.
@@ -33,11 +34,11 @@ The JSON object should have the following structure:
     }
   ]
 }
-- Generate a highly creative, epic, and unique viking-themed workout name. The name should be motivational and reflect the available equipment.
+- Generate a highly creative, epic, and unique viking-themed workout name. The name should be motivational and reflect the available equipment and focus area.
 - **AVOID REPETITIVE NAMES**. Be original and do not use generic templates.
 - Draw inspiration from a wide range of Norse mythology figures (e.g., gods, giants, monsters), places (e.g., Asgard, Midgard, Valhalla), and artifacts (e.g., Mjölnir, Gungnir).
 - For example, you could create names like "Fenrir's Frenzy", "The Bifröst Bridge Builder", or "Einherjar's Endurance", but DO NOT use these exact examples.
-- Include 4 to 6 exercises for a balanced, full-body workout, using ONLY the provided equipment.
+- Include 4 to 6 exercises for a balanced workout targeting the specified focus area, using ONLY the provided equipment. If the focus is 'Full Body', provide a full body workout.
 - Each exercise should have 3 sets.
 - Reps should be between 8 and 15.
 - The "weight" for each set should initially be 0. The application will populate this with historical data.
@@ -57,8 +58,9 @@ serve(async (req) => {
 
     const body = await req.json();
     const equipment = body?.equipment;
+    const focusArea = body?.focusArea || 'Full Body';
     const equipmentList = Array.isArray(equipment) && equipment.length > 0 ? equipment.join(', ') : 'Bodyweight';
-    const finalPrompt = PROMPT_TEMPLATE(equipmentList);
+    const finalPrompt = PROMPT_TEMPLATE(equipmentList, focusArea);
     
     const supabaseClient = createClient(
       Deno.env.get('SUPABASE_URL') ?? '',
@@ -71,7 +73,7 @@ serve(async (req) => {
       model: 'gpt-4o-mini',
       messages: [
         { role: 'system', content: finalPrompt },
-        { role: 'user', content: `Generate a new viking-themed full-body workout for me using only the following equipment: ${equipmentList}.` },
+        { role: 'user', content: `Generate a new viking-themed workout for me with a focus on ${focusArea}, using only the following equipment: ${equipmentList}.` },
       ],
       response_format: { type: "json_object" },
     })

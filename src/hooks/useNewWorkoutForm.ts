@@ -17,6 +17,7 @@ export const useNewWorkoutForm = () => {
   const [exercises, setExercises] = useState<Exercise[]>([]);
   const [workoutName, setWorkoutName] = useState('');
   const [selectedEquipment, setSelectedEquipment] = useState<string[]>(['Bodyweight']);
+  const [focusArea, setFocusArea] = useState('Full Body');
 
   useEffect(() => {
     if (template) {
@@ -241,9 +242,9 @@ export const useNewWorkoutForm = () => {
   });
 
   const generateWorkoutMutation = useMutation({
-    mutationFn: async ({ equipment }: { equipment: string[] }) => {
+    mutationFn: async ({ equipment, focus }: { equipment: string[], focus: string }) => {
       const { data, error } = await supabase.functions.invoke('generate-workout', {
-        body: { equipment },
+        body: { equipment, focusArea: focus },
       });
       if (error) {
         if (error.context && error.context.error) {
@@ -311,6 +312,8 @@ export const useNewWorkoutForm = () => {
     generateWorkoutMutation,
     selectedEquipment,
     setSelectedEquipment,
+    focusArea,
+    setFocusArea,
     saveAsTemplate,
     saveAsTemplateMutation,
   };

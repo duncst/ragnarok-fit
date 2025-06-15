@@ -5,6 +5,7 @@ import { WorkoutHeader } from '@/components/workout/WorkoutHeader';
 import { ExerciseCard } from '@/components/workout/ExerciseCard';
 import { WorkoutActions } from '@/components/workout/WorkoutActions';
 import { EquipmentSelector } from '@/components/workout/EquipmentSelector';
+import { FocusAreaSelector } from '@/components/workout/FocusAreaSelector';
 
 const NewWorkoutPage = () => {
   const {
@@ -24,6 +25,8 @@ const NewWorkoutPage = () => {
     setSelectedEquipment,
     saveAsTemplate,
     saveAsTemplateMutation,
+    focusArea,
+    setFocusArea,
   } = useNewWorkoutForm();
 
   return (
@@ -50,14 +53,20 @@ const NewWorkoutPage = () => {
         />
       ))}
 
-      <EquipmentSelector 
-        selectedEquipment={selectedEquipment}
-        onEquipmentChange={setSelectedEquipment}
-      />
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <EquipmentSelector 
+          selectedEquipment={selectedEquipment}
+          onEquipmentChange={setSelectedEquipment}
+        />
+        <FocusAreaSelector
+          selectedFocus={focusArea}
+          onFocusChange={setFocusArea}
+        />
+      </div>
 
       <WorkoutActions
         onAddExercise={addExercise}
-        onGenerateAI={() => generateWorkoutMutation.mutate({ equipment: selectedEquipment })}
+        onGenerateAI={() => generateWorkoutMutation.mutate({ equipment: selectedEquipment, focus: focusArea })}
         isGenerating={generateWorkoutMutation.isPending}
       />
     </div>
