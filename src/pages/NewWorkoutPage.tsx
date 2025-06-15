@@ -22,6 +22,8 @@ const NewWorkoutPage = () => {
     generateWorkoutMutation,
     selectedEquipment,
     setSelectedEquipment,
+    saveAsTemplate,
+    saveAsTemplateMutation,
   } = useNewWorkoutForm();
 
   return (
@@ -31,6 +33,8 @@ const NewWorkoutPage = () => {
         onNameChange={setWorkoutName}
         onFinish={finishWorkout}
         isSaving={saveWorkoutMutation.isPending}
+        onSaveAsTemplate={saveAsTemplate}
+        isSavingAsTemplate={saveAsTemplateMutation.isPending}
       />
 
       {exercises.map((exercise, exerciseIndex) => (
