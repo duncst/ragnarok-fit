@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Plus, X, ArrowUp, ArrowDown, Play } from "lucide-react";
+import { Plus, X, ArrowUp, ArrowDown, Play, Trash2 } from "lucide-react";
 import {
   Dialog,
   DialogContent,
@@ -19,22 +19,65 @@ import type { TemplateExercise, WorkoutTemplate } from "@/types";
 import { Checkbox } from "@/components/ui/checkbox";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { useNavigate } from "react-router-dom";
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
+import { supabase } from "@/integrations/supabase/client";
+import { useAuth } from "@/contexts/AuthContext";
+import { Switch } from "@/components/ui/switch";
+import { Skeleton } from "@/components/ui/skeleton";
 
 const WorkoutTemplatesPage = () => {
   const navigate = useNavigate();
+  const { user } = useAuth();
+  const queryClient = useQueryClient();
+
   const [open, setOpen] = useState(false);
   const [templateName, setTemplateName] = useState("");
   const { toast } = useToast();
   const [selectedExercises, setSelectedExercises] = useState<TemplateExercise[]>([]);
-  const [templates, setTemplates] = useState<WorkoutTemplate[]>([]);
   const [isExercisePickerOpen, setExercisePickerOpen] = useState(false);
   const [pickerSelectedExercises, setPickerSelectedExercises] = useState<Set<string>>(new Set());
   const [exerciseSearchTerm, setExerciseSearchTerm] = useState("");
+  const [isPublic, setIsPublic] = useState(false);
+
+  const { data: templates, isLoading: isLoadingTemplates } = useQuery<WorkoutTemplate[]>({
+    queryKey: ['workout-templates', user?.id],
+    queryFn: async () => {
+      const { data: templatesData, error: templatesError } = await supabase
+        .from('workout_templates')
+        .select('*, workout_template_exercises(*)')
+        .order('created_at', { ascending: false })
+        .order('order', { foreignTable: 'workout_template_exercises', ascending: true });
+
+      if (templatesError) throw templatesError;
+
+      const populatedTemplates: WorkoutTemplate[] = templatesData.map(template => {
+        const exercises: TemplateExercise[] = template.workout_template_exercises
+          .map((ex: any) => {
+            const exerciseDef = allExercises.find(e => e.name === ex.exercise_name);
+            if (!exerciseDef) return null;
+            return { ...exerciseDef, sets: ex.sets };
+          })
+          .filter((ex): ex is TemplateExercise => ex !== null);
+
+        return {
+          id: template.id,
+          name: template.name,
+          is_public: template.is_public,
+          user_id: template.user_id,
+          created_at: template.created_at,
+          exercises: exercises,
+        };
+      });
+      return populatedTemplates;
+    },
+    enabled: !!user,
+  });
 
   useEffect(() => {
     if (!open) {
       setTemplateName("");
       setSelectedExercises([]);
+      setIsPublic(false);
     }
   }, [open]);
 
@@ -44,6 +87,40 @@ const WorkoutTemplatesPage = () => {
       setExerciseSearchTerm("");
     }
   }, [isExercisePickerOpen, selectedExercises]);
+
+  const createTemplateMutation = useMutation({
+    mutationFn: async ({ name, exercises, isPublic: is_public }: { name: string, exercises: TemplateExercise[], isPublic: boolean }) => {
+      const { data: templateData, error: templateError } = await supabase
+        .from('workout_templates')
+        .insert({ name, is_public })
+        .select()
+        .single();
+      if (templateError) throw templateError;
+
+      const exercisesToInsert = exercises.map((ex, index) => ({
+        workout_template_id: templateData.id,
+        exercise_name: ex.name,
+        sets: ex.sets,
+        order: index,
+      }));
+      const { error: exercisesError } = await supabase
+        .from('workout_template_exercises')
+        .insert(exercisesToInsert);
+      if (exercisesError) {
+        await supabase.from('workout_templates').delete().eq('id', templateData.id); // Rollback
+        throw exercisesError;
+      }
+      return templateData;
+    },
+    onSuccess: () => {
+      toast({ title: "Success", description: "Template created." });
+      queryClient.invalidateQueries({ queryKey: ['workout-templates'] });
+      setOpen(false);
+    },
+    onError: (error: any) => {
+      toast({ title: "Error creating template", description: error.message, variant: "destructive" });
+    },
+  });
 
   const handleCreateTemplate = () => {
     if (!templateName.trim()) {
@@ -62,22 +139,9 @@ const WorkoutTemplatesPage = () => {
       });
       return;
     }
-    const newTemplate: WorkoutTemplate = {
-      id: new Date().toISOString(),
-      name: templateName,
-      exercises: selectedExercises,
-    };
-    setTemplates((prev) => [...prev, newTemplate]);
-
-    // In a real app, you'd save this to a database.
-    console.log("Creating template:", templateName, "with exercises:", selectedExercises.map(e => ({ name: e.name, sets: e.sets })));
-    toast({
-      title: "Success",
-      description: `Template "${templateName}" created.`,
-    });
-    setOpen(false);
+    createTemplateMutation.mutate({ name: templateName, exercises: selectedExercises, isPublic });
   };
-  
+
   const handleRemoveExercise = (exerciseName: string) => {
     setSelectedExercises(prev => prev.filter(ex => ex.name !== exerciseName));
   };
@@ -125,6 +189,43 @@ const WorkoutTemplatesPage = () => {
     navigate("/workout/new", { state: { template } });
   };
 
+  const updateTemplateMutation = useMutation({
+    mutationFn: async ({ id, is_public }: { id: string, is_public: boolean }) => {
+      const { error } = await supabase.from('workout_templates').update({ is_public }).eq('id', id);
+      if (error) throw error;
+    },
+    onSuccess: (_, variables) => {
+      toast({ title: "Success", description: `Template is now ${variables.is_public ? 'public' : 'private'}.` });
+      queryClient.invalidateQueries({ queryKey: ['workout-templates'] });
+    },
+    onError: (error: any) => {
+      toast({ title: "Error updating template", description: error.message, variant: "destructive" });
+    }
+  });
+
+  const deleteTemplateMutation = useMutation({
+    mutationFn: async (id: string) => {
+      const { error } = await supabase.from('workout_templates').delete().eq('id', id);
+      if (error) throw error;
+    },
+    onSuccess: () => {
+      toast({ title: "Success", description: "Template deleted." });
+      queryClient.invalidateQueries({ queryKey: ['workout-templates'] });
+    },
+    onError: (error: any) => {
+      toast({ title: "Error deleting template", description: error.message, variant: "destructive" });
+    }
+  });
+
+  const handleTogglePublic = (template: WorkoutTemplate) => {
+    updateTemplateMutation.mutate({ id: template.id, is_public: !template.is_public });
+  };
+
+  const handleDeleteTemplate = (id: string) => {
+    // In a real app, you might want a confirmation dialog here.
+    deleteTemplateMutation.mutate(id);
+  };
+
   const filteredPickerExercises = allExercises.filter(ex => 
     ex.name.toLowerCase().includes(exerciseSearchTerm.toLowerCase())
   );
@@ -156,6 +257,10 @@ const WorkoutTemplatesPage = () => {
                     className="col-span-3"
                     placeholder="e.g. Push Day"
                   />
+                </div>
+                <div className="flex items-center space-x-2">
+                  <Switch id="is-public" checked={isPublic} onCheckedChange={setIsPublic} />
+                  <Label htmlFor="is-public">Make this template public</Label>
                 </div>
                 <div className="space-y-2 pt-2">
                   <Label>Exercises</Label>
@@ -221,8 +326,8 @@ const WorkoutTemplatesPage = () => {
                     Cancel
                   </Button>
                 </DialogClose>
-                <Button type="submit" onClick={handleCreateTemplate}>
-                  Create
+                <Button type="submit" onClick={handleCreateTemplate} disabled={createTemplateMutation.isPending}>
+                  {createTemplateMutation.isPending ? "Creating..." : "Create"}
                 </Button>
               </DialogFooter>
             </DialogContent>
@@ -233,18 +338,40 @@ const WorkoutTemplatesPage = () => {
             <CardTitle>My Templates</CardTitle>
           </CardHeader>
           <CardContent>
-            {templates.length > 0 ? (
+            {isLoadingTemplates ? (
+              <div className="space-y-4">
+                {[...Array(3)].map((_, i) => (
+                  <Card key={i}>
+                    <CardHeader><Skeleton className="h-6 w-1/2" /></CardHeader>
+                    <CardContent className="space-y-2">
+                      <Skeleton className="h-4 w-3/4" />
+                      <Skeleton className="h-4 w-1/2" />
+                    </CardContent>
+                  </Card>
+                ))}
+              </div>
+            ) : templates && templates.length > 0 ? (
               <div className="space-y-4">
                 {templates.map((template) => (
                   <Card key={template.id}>
-                    <CardHeader className="flex flex-row items-center justify-between pb-2">
-                      <CardTitle className="text-lg">{template.name}</CardTitle>
-                      <Button variant="ghost" size="icon" onClick={() => handleStartWorkout(template)}>
-                        <Play className="h-5 w-5 text-primary" />
-                      </Button>
+                    <CardHeader className="flex flex-row items-start justify-between pb-2 gap-4">
+                      <div>
+                        <CardTitle className="text-lg">{template.name}</CardTitle>
+                        {template.user_id !== user?.id && <p className="text-xs text-muted-foreground">Shared template</p>}
+                      </div>
+                      <div className="flex items-center space-x-2">
+                         <Button variant="ghost" size="icon" onClick={() => handleStartWorkout(template)}>
+                          <Play className="h-5 w-5 text-primary" />
+                        </Button>
+                        {template.user_id === user?.id && (
+                          <Button variant="ghost" size="icon" onClick={() => handleDeleteTemplate(template.id)} disabled={deleteTemplateMutation.isPending && deleteTemplateMutation.variables === template.id}>
+                            <Trash2 className="h-5 w-5 text-destructive" />
+                          </Button>
+                        )}
+                      </div>
                     </CardHeader>
                     <CardContent>
-                      <ul className="space-y-2 text-sm">
+                      <ul className="space-y-2 text-sm mb-4">
                         {template.exercises.map((ex) => (
                           <li key={ex.name} className="flex justify-between">
                             <span>{ex.name}</span>
@@ -252,13 +379,26 @@ const WorkoutTemplatesPage = () => {
                           </li>
                         ))}
                       </ul>
+                      {template.user_id === user?.id && (
+                        <div className="flex items-center space-x-2 pt-4 border-t">
+                          <Switch
+                            id={`is-public-${template.id}`}
+                            checked={template.is_public}
+                            onCheckedChange={() => handleTogglePublic(template)}
+                            disabled={updateTemplateMutation.isPending && updateTemplateMutation.variables?.id === template.id}
+                          />
+                          <Label htmlFor={`is-public-${template.id}`}>
+                            {template.is_public ? "Public (shared)" : "Private"}
+                          </Label>
+                        </div>
+                      )}
                     </CardContent>
                   </Card>
                 ))}
               </div>
             ) : (
               <p className="text-muted-foreground">
-                You don't have any workout templates yet.
+                You don't have any workout templates yet. Create one to get started!
               </p>
             )}
           </CardContent>

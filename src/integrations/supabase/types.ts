@@ -112,6 +112,62 @@ export type Database = {
           },
         ]
       }
+      workout_template_exercises: {
+        Row: {
+          exercise_name: string
+          id: string
+          order: number
+          sets: number
+          workout_template_id: string
+        }
+        Insert: {
+          exercise_name: string
+          id?: string
+          order: number
+          sets: number
+          workout_template_id: string
+        }
+        Update: {
+          exercise_name?: string
+          id?: string
+          order?: number
+          sets?: number
+          workout_template_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "workout_template_exercises_workout_template_id_fkey"
+            columns: ["workout_template_id"]
+            isOneToOne: false
+            referencedRelation: "workout_templates"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      workout_templates: {
+        Row: {
+          created_at: string
+          id: string
+          is_public: boolean
+          name: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          is_public?: boolean
+          name: string
+          user_id?: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          is_public?: boolean
+          name?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       workouts: {
         Row: {
           created_at: string
@@ -147,9 +203,17 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
+      can_view_template: {
+        Args: { template_id: string }
+        Returns: boolean
+      }
       get_user_workouts: {
         Args: Record<PropertyKey, never>
         Returns: Json
+      }
+      is_template_owner: {
+        Args: { template_id: string }
+        Returns: boolean
       }
     }
     Enums: {

@@ -34,6 +34,9 @@ export interface WorkoutTemplate {
   id: string;
   name: string;
   exercises: TemplateExercise[];
+  user_id: string;
+  is_public: boolean;
+  created_at: string;
 }
 
 export interface Run {
