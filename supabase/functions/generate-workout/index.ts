@@ -13,7 +13,7 @@ const openAIApiKey = Deno.env.get('OPENAI_API_KEY')
 const openai = new OpenAI({ apiKey: openAIApiKey });
 
 const PROMPT_TEMPLATE = (equipmentList: string) => `
-You are a world-class fitness expert and personal trainer.
+You are a world-class fitness expert and personal trainer with a passion for Norse mythology.
 Generate a complete workout plan for a user based on the equipment they have available.
 The user has the following equipment: ${equipmentList}.
 If the list is empty or only contains 'Bodyweight', generate a bodyweight-only workout.
@@ -33,7 +33,7 @@ The JSON object should have the following structure:
     }
   ]
 }
-- Generate a creative and motivational workout name that reflects the available equipment.
+- Generate a creative and motivational viking-themed workout name that reflects the available equipment (e.g. "Thor's Thunderous Thursdays", "Loki's Leg Day", "Valhalla Back & Biceps").
 - Include 4 to 6 exercises for a balanced, full-body workout, using ONLY the provided equipment.
 - Each exercise should have 3 sets.
 - Reps should be between 8 and 15.
@@ -68,7 +68,7 @@ serve(async (req) => {
       model: 'gpt-4o-mini',
       messages: [
         { role: 'system', content: finalPrompt },
-        { role: 'user', content: `Generate a new full-body workout for me using only the following equipment: ${equipmentList}.` },
+        { role: 'user', content: `Generate a new viking-themed full-body workout for me using only the following equipment: ${equipmentList}.` },
       ],
       response_format: { type: "json_object" },
     })
