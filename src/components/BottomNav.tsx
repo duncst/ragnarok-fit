@@ -1,5 +1,4 @@
 
-import { History } from "lucide-react";
 import { NavLink } from "react-router-dom";
 import { cn } from "@/lib/utils";
 import { ImageIcon } from "./ImageIcon";
@@ -20,11 +19,15 @@ const ExerciseIcon = ({ className }: { className?: string }) => (
     <ImageIcon src="/lovable-uploads/59098dd1-6550-4f60-bc29-d0c1165a7d3c.png" alt="Exercise icon" className={className} />
 );
 
+const HistoryIcon = ({ className }: { className?: string }) => (
+    <ImageIcon src="/lovable-uploads/0567b95e-46c3-4a2c-8526-2cd6c62d1522.png" alt="History icon" className={className} />
+);
+
 const navItems = [
   { to: "/", icon: HomeIcon, label: "Home" },
   { to: "/exercises", icon: ExerciseIcon, label: "Exercises" },
   { to: "/templates", icon: TemplateIcon, label: "Templates" },
-  { to: "/history", icon: History, label: "History" },
+  { to: "/history", icon: HistoryIcon, label: "History" },
   { to: "/run", icon: RunningIcon, label: "Running" },
 ];
 
@@ -54,4 +57,3 @@ const BottomNav = () => {
 };
 
 export default BottomNav;
-
