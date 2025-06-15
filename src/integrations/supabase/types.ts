@@ -9,6 +9,33 @@ export type Json =
 export type Database = {
   public: {
     Tables: {
+      personal_records: {
+        Row: {
+          created_at: string
+          date: string
+          exercise_name: string
+          id: string
+          one_rep_max: number
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          date: string
+          exercise_name: string
+          id?: string
+          one_rep_max: number
+          user_id?: string
+        }
+        Update: {
+          created_at?: string
+          date?: string
+          exercise_name?: string
+          id?: string
+          one_rep_max?: number
+          user_id?: string
+        }
+        Relationships: []
+      }
       runs: {
         Row: {
           avg_hr: number | null
@@ -218,6 +245,10 @@ export type Database = {
       is_template_owner: {
         Args: { template_id: string }
         Returns: boolean
+      }
+      upsert_personal_record: {
+        Args: { p_exercise_name: string; p_one_rep_max: number }
+        Returns: string
       }
     }
     Enums: {
