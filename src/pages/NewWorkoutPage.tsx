@@ -1,3 +1,4 @@
+
 import React from 'react';
 import { useNewWorkoutForm } from '@/hooks/useNewWorkoutForm';
 import { WorkoutHeader } from '@/components/workout/WorkoutHeader';
@@ -32,6 +33,7 @@ const NewWorkoutPage = () => {
 
   return (
     <div className="space-y-4 pb-16">
+      <h1 className="text-3xl font-bold tracking-tight">Create new workout</h1>
       <WorkoutHeader
         workoutName={workoutName}
         onNameChange={setWorkoutName}
