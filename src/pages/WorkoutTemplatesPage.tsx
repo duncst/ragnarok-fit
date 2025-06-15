@@ -1,3 +1,4 @@
+
 import { useState, useEffect } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -25,6 +26,12 @@ import { useAuth } from "@/contexts/AuthContext";
 import { Switch } from "@/components/ui/switch";
 import { Skeleton } from "@/components/ui/skeleton";
 import DeleteConfirmationDialog from "@/components/history/DeleteConfirmationDialog";
+import {
+  Accordion,
+  AccordionContent,
+  AccordionItem,
+  AccordionTrigger,
+} from "@/components/ui/accordion";
 
 const WorkoutTemplatesPage = () => {
   const navigate = useNavigate();
@@ -352,52 +359,58 @@ const WorkoutTemplatesPage = () => {
                 ))}
               </div>
             ) : templates && templates.length > 0 ? (
-              <div className="space-y-4">
+              <Accordion type="single" collapsible className="w-full space-y-4">
                 {templates.map((template) => (
-                  <Card key={template.id}>
-                    <CardHeader className="flex flex-row items-start justify-between pb-2 gap-4">
-                      <div>
-                        <CardTitle className="text-lg">{template.name}</CardTitle>
-                        {template.user_id !== user?.id && <p className="text-xs text-muted-foreground">Shared template</p>}
-                      </div>
-                      <div className="flex items-center space-x-2">
-                         <Button variant="ghost" size="icon" onClick={() => handleStartWorkout(template)}>
-                          <Play className="h-5 w-5 text-primary" />
-                        </Button>
-                        {template.user_id === user?.id && (
-                          <DeleteConfirmationDialog
-                            onConfirm={() => handleDeleteTemplate(template.id)}
-                            isLoading={deleteTemplateMutation.isPending && deleteTemplateMutation.variables === template.id}
-                          />
-                        )}
-                      </div>
-                    </CardHeader>
-                    <CardContent>
-                      <ul className="space-y-2 text-sm mb-4">
-                        {template.exercises.map((ex) => (
-                          <li key={ex.name} className="flex justify-between">
-                            <span>{ex.name}</span>
-                            <span className="text-muted-foreground">{ex.sets} sets</span>
-                          </li>
-                        ))}
-                      </ul>
-                      {template.user_id === user?.id && (
-                        <div className="flex items-center space-x-2 pt-4 border-t">
-                          <Switch
-                            id={`is-public-${template.id}`}
-                            checked={template.is_public}
-                            onCheckedChange={() => handleTogglePublic(template)}
-                            disabled={updateTemplateMutation.isPending && updateTemplateMutation.variables?.id === template.id}
-                          />
-                          <Label htmlFor={`is-public-${template.id}`}>
-                            {template.is_public ? "Public (shared)" : "Private"}
-                          </Label>
+                  <AccordionItem value={template.id} key={template.id} className="border-0">
+                    <Card>
+                      <AccordionTrigger className="p-4 hover:no-underline w-full rounded-t-lg data-[state=open]:rounded-b-none [&[data-state=closed]]:rounded-b-lg">
+                        <div className="flex justify-between items-center w-full">
+                          <div>
+                            <p className="text-lg font-semibold text-left">{template.name}</p>
+                            {template.user_id !== user?.id && <p className="text-xs text-muted-foreground text-left">Shared template</p>}
+                          </div>
+                          <div className="flex items-center space-x-2" onClick={e => e.stopPropagation()}>
+                            <Button variant="ghost" size="icon" onClick={() => handleStartWorkout(template)}>
+                              <Play className="h-5 w-5 text-primary" />
+                            </Button>
+                            {template.user_id === user?.id && (
+                              <DeleteConfirmationDialog
+                                onConfirm={() => handleDeleteTemplate(template.id)}
+                                isLoading={deleteTemplateMutation.isPending && deleteTemplateMutation.variables === template.id}
+                              />
+                            )}
+                          </div>
                         </div>
-                      )}
-                    </CardContent>
-                  </Card>
+                      </AccordionTrigger>
+                      <AccordionContent>
+                        <CardContent>
+                          <ul className="space-y-2 text-sm mb-4">
+                            {template.exercises.map((ex) => (
+                              <li key={ex.name} className="flex justify-between">
+                                <span>{ex.name}</span>
+                                <span className="text-muted-foreground">{ex.sets} sets</span>
+                              </li>
+                            ))}
+                          </ul>
+                          {template.user_id === user?.id && (
+                            <div className="flex items-center space-x-2 pt-4 border-t">
+                              <Switch
+                                id={`is-public-${template.id}`}
+                                checked={template.is_public}
+                                onCheckedChange={() => handleTogglePublic(template)}
+                                disabled={updateTemplateMutation.isPending && updateTemplateMutation.variables?.id === template.id}
+                              />
+                              <Label htmlFor={`is-public-${template.id}`}>
+                                {template.is_public ? "Public (shared)" : "Private"}
+                              </Label>
+                            </div>
+                          )}
+                        </CardContent>
+                      </AccordionContent>
+                    </Card>
+                  </AccordionItem>
                 ))}
-              </div>
+              </Accordion>
             ) : (
               <p className="text-muted-foreground">
                 You don't have any workout templates yet. Create one to get started!
