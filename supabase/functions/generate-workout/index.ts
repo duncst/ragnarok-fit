@@ -2,6 +2,7 @@
 import 'https://deno.land/x/xhr@0.1.0/mod.ts'
 import { serve } from 'https://deno.land/std@0.168.0/http/server.ts'
 import { OpenAI } from "https://deno.land/x/openai@v4.52.7/mod.ts";
+import { createClient } from 'https://esm.sh/@supabase/supabase-js@2'
 
 const corsHeaders = {
   'Access-Control-Allow-Origin': '*',
@@ -22,9 +23,9 @@ The JSON object should have the following structure:
     {
       "name": "Exercise Name",
       "sets": [
-        { "reps": 8, "weight": 60 },
-        { "reps": 8, "weight": 60 },
-        { "reps": 8, "weight": 60 }
+        { "reps": 8, "weight": 0 },
+        { "reps": 8, "weight": 0 },
+        { "reps": 8, "weight": 0 }
       ]
     }
   ]
@@ -33,7 +34,7 @@ The JSON object should have the following structure:
 - Include 4 to 6 exercises for a balanced, full-body workout.
 - Each exercise should have 3 sets.
 - Reps should be between 8 and 15.
-- Suggest a reasonable starting weight in kilograms (kg) for a beginner to intermediate lifter.
+- The "weight" for each set should initially be 0. The application will populate this with historical data.
 - Use common and recognizable exercise names.
 `
 
@@ -47,6 +48,13 @@ serve(async (req) => {
     if (!openAIApiKey) {
         throw new Error("OPENAI_API_KEY is not set in Supabase secrets.");
     }
+    
+    const supabaseClient = createClient(
+      Deno.env.get('SUPABASE_URL') ?? '',
+      Deno.env.get('SUPABASE_ANON_KEY') ?? '',
+      // Create a Supabase client with the user's token
+      { global: { headers: { Authorization: req.headers.get('Authorization')! } } }
+    )
 
     const completion = await openai.chat.completions.create({
       model: 'gpt-4o-mini',
@@ -63,6 +71,25 @@ serve(async (req) => {
     }
     
     const workoutJson = JSON.parse(content);
+
+    // For each exercise, get the last used weight and update the plan
+    for (const exercise of workoutJson.exercises) {
+      const { data: lastWeight, error: rpcError } = await supabaseClient.rpc('get_last_exercise_weight', {
+        p_exercise_name: exercise.name,
+      });
+
+      if (rpcError) {
+        console.error(`Error fetching last weight for "${exercise.name}":`, rpcError.message);
+        // If there's an error, we'll just proceed with the default weight of 0.
+      }
+      
+      const weightToSet = lastWeight > 0 ? lastWeight : 0;
+
+      for (const set of exercise.sets) {
+        set.weight = weightToSet;
+      }
+    }
+
 
     return new Response(JSON.stringify(workoutJson), {
       headers: { ...corsHeaders, 'Content-Type': 'application/json' },
@@ -82,4 +109,3 @@ serve(async (req) => {
     })
   }
 })
-

@@ -207,6 +207,10 @@ export type Database = {
         Args: { template_id: string }
         Returns: boolean
       }
+      get_last_exercise_weight: {
+        Args: { p_exercise_name: string }
+        Returns: number
+      }
       get_user_workouts: {
         Args: Record<PropertyKey, never>
         Returns: Json
