@@ -22,10 +22,14 @@ import { Button } from "@/components/ui/button"
 import { useNavigate } from 'react-router-dom';
 import StatItem from './StatItem';
 import { getWorkoutDuration, getTotalSets, getTotalVolume } from '@/lib/historyUtils';
+import { useDeleteActivity } from '@/hooks/useDeleteActivity';
+import DeleteConfirmationDialog from './DeleteConfirmationDialog';
 
 const WorkoutCard = ({ workout }: { workout: Workout }) => {
   const [isOpen, setIsOpen] = React.useState(false);
   const navigate = useNavigate();
+  const { deleteWorkout, isDeletingWorkout } = useDeleteActivity();
+
   const totalSets = getTotalSets(workout);
   const totalVolume = getTotalVolume(workout);
   const avgPerSet = totalSets > 0 ? totalVolume / totalSets : 0;
@@ -33,6 +37,10 @@ const WorkoutCard = ({ workout }: { workout: Workout }) => {
 
   const handleRepeatWorkout = () => {
     navigate('/workout/new', { state: { workout } });
+  };
+
+  const handleDeleteWorkout = () => {
+    deleteWorkout(workout.id);
   };
 
   return (
@@ -47,12 +55,13 @@ const WorkoutCard = ({ workout }: { workout: Workout }) => {
                 <span>{format(workout.startTime, 'MMM d, yyyy')}</span>
               </div>
             </div>
-            <div className="flex items-center gap-2">
+            <div className="flex items-center gap-0.5">
               <Button variant="ghost" size="icon" onClick={handleRepeatWorkout}>
                 <Repeat className="h-4 w-4" />
                 <span className="sr-only">Repeat workout</span>
               </Button>
-              <div className="flex items-center gap-2 text-sm text-muted-foreground">
+              <DeleteConfirmationDialog onConfirm={handleDeleteWorkout} isLoading={isDeletingWorkout} />
+              <div className="flex items-center gap-2 text-sm text-muted-foreground ml-2">
                 <Clock className="h-4 w-4" />
                 <span>{duration}</span>
               </div>

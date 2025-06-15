@@ -7,11 +7,18 @@ import type { Run } from '@/types';
 import { format } from 'date-fns';
 import StatItem from './StatItem';
 import { getRunDuration } from '@/lib/historyUtils';
+import DeleteConfirmationDialog from './DeleteConfirmationDialog';
+import { useDeleteActivity } from '@/hooks/useDeleteActivity';
 
 const RunCard = ({ run }: { run: Run }) => {
+    const { deleteRun, isDeletingRun } = useDeleteActivity();
     const avgPace = run.distance > 0 ? run.duration / run.distance : 0;
     const paceMinutes = Math.floor(avgPace / 60);
     const paceSeconds = Math.round(avgPace % 60).toString().padStart(2, '0');
+
+    const handleDeleteRun = () => {
+        deleteRun(run.id);
+    };
 
     return (
         <Card>
@@ -24,9 +31,12 @@ const RunCard = ({ run }: { run: Run }) => {
                             <span>{format(run.date, 'MMM d, yyyy')}</span>
                         </div>
                     </div>
-                    <div className="flex items-center gap-2 text-sm text-muted-foreground">
-                        <Clock className="h-4 w-4" />
-                        <span>{getRunDuration(run.duration)}</span>
+                    <div className="flex items-center gap-0.5">
+                        <div className="flex items-center gap-2 text-sm text-muted-foreground">
+                            <Clock className="h-4 w-4" />
+                            <span>{getRunDuration(run.duration)}</span>
+                        </div>
+                        <DeleteConfirmationDialog onConfirm={handleDeleteRun} isLoading={isDeletingRun} />
                     </div>
                 </div>
 
