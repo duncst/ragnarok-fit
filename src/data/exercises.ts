@@ -239,5 +239,47 @@ export const exercises: ExerciseDef[] = [
     equipment: "Barbell",
     targetMuscles: ["Glutes", "Hamstrings"],
     description: "Sit on the floor with your upper back against a bench. Place a barbell across your hips. Drive your hips up towards the ceiling, squeezing your glutes at the top. Lower with control.",
+  },
+  {
+    name: "Chin-ups",
+    bodyPart: "Back",
+    equipment: "Pull-up Bar",
+    targetMuscles: ["Lats", "Biceps", "Forearms"],
+    description: "Hang from a pull-up bar with an underhand grip (palms facing you). Pull your body up until your chin is over the bar. Lower your body back to the starting position with control.",
+  },
+  {
+    name: "Bodyweight Squat",
+    bodyPart: "Legs",
+    equipment: "Bodyweight",
+    targetMuscles: ["Quadriceps", "Glutes", "Hamstrings"],
+    description: "Stand with your feet shoulder-width apart. Lower your hips as if sitting in a chair, keeping your chest up and back straight. Go as low as you can comfortably, then return to the start.",
+  },
+  {
+    name: "Bodyweight Lunges",
+    bodyPart: "Legs",
+    equipment: "Bodyweight",
+    targetMuscles: ["Quadriceps", "Glutes", "Hamstrings"],
+    description: "Step forward with one leg and lower your hips until both knees are bent at a 90-degree angle. Push back to the starting position and repeat with the other leg.",
+  },
+  {
+    name: "Burpees",
+    bodyPart: "Core",
+    equipment: "Bodyweight",
+    targetMuscles: ["Pectorals", "Quadriceps", "Glutes", "Core", "Shoulders"],
+    description: "Start in a standing position. Drop into a squat, place your hands on the ground, kick your feet back into a plank position, do a push-up, return to the plank, bring your feet back to the squat position, and jump up explosively.",
+  },
+  {
+    name: "Pistol Squat",
+    bodyPart: "Legs",
+    equipment: "Bodyweight",
+    targetMuscles: ["Quadriceps", "Glutes", "Hamstrings", "Core"],
+    description: "Balance on one leg and extend the other leg straight out in front of you. Lower your body down into a full squat on the supporting leg, keeping the other leg off the floor. Push back up to the starting position.",
+  },
+  {
+    name: "Muscle-up",
+    bodyPart: "Back",
+    equipment: "Pull-up Bar",
+    targetMuscles: ["Lats", "Biceps", "Triceps", "Chest", "Shoulders"],
+    description: "An advanced move. Start with an explosive pull-up, and as the bar reaches your chest, transition your wrists to get on top of the bar. Finish by pressing up, similar to a dip.",
   }
 ];
