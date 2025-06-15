@@ -1,6 +1,7 @@
 import { useState, useEffect, useCallback } from 'react';
 import { useLocation } from 'react-router-dom';
 import type { Exercise, WorkoutSet, WorkoutTemplate, Workout } from '@/types';
+import { useOneRepMax } from './useOneRepMax';
 
 export const useWorkoutState = () => {
   const location = useLocation();
@@ -12,6 +13,8 @@ export const useWorkoutState = () => {
   const [selectedEquipment, setSelectedEquipment] = useState<string[]>(['Bodyweight']);
   const [focusArea, setFocusArea] = useState('Full Body');
   const [restDuration, setRestDuration] = useState(90);
+
+  const { checkAndSave1RM } = useOneRepMax();
 
   useEffect(() => {
     if (template) {
@@ -118,7 +121,11 @@ export const useWorkoutState = () => {
               if (set.id === setId) {
                 const isCompleted = !set.completed;
                 onToggleCallback?.(isCompleted);
-                return { ...set, completed: isCompleted };
+                const updatedSet = { ...set, completed: isCompleted };
+                if (updatedSet.completed) {
+                  checkAndSave1RM(ex, updatedSet);
+                }
+                return updatedSet;
               }
               return set;
             }),
@@ -127,7 +134,7 @@ export const useWorkoutState = () => {
         return ex;
       })
     );
-  }, []);
+  }, [checkAndSave1RM]);
   
   return {
     workoutName,

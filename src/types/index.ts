@@ -49,3 +49,12 @@ export interface Run {
   elevation?: number; // in meters
   avgHr?: number; // in bpm
 }
+
+export interface PersonalRecord {
+  id: string;
+  user_id: string;
+  exercise_name: string;
+  one_rep_max: number;
+  date: string;
+  created_at: string;
+}

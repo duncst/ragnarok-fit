@@ -10,7 +10,7 @@ import { RecentActivity } from "@/components/RecentActivity";
 import { useQuery } from '@tanstack/react-query';
 import { useAuth } from '@/contexts/AuthContext';
 import { supabase } from '@/integrations/supabase/client';
-import type { Workout, Run } from '@/types';
+import type { Workout, Run, PersonalRecord } from '@/types';
 import { Tables } from '@/integrations/supabase/types';
 import { subDays, format, isSameWeek, startOfDay, isWithinInterval } from 'date-fns';
 import { Skeleton } from "@/components/ui/skeleton";
@@ -64,7 +64,21 @@ const HomePage = () => {
       enabled: !!user,
   });
 
-  const isLoading = isLoadingWorkouts || isLoadingRuns;
+  const { data: personalRecords, isLoading: isLoadingPRs } = useQuery<PersonalRecord[]>({
+    queryKey: ['personal_records', user?.id],
+    queryFn: async () => {
+        if (!user) return [];
+        const { data, error } = await supabase
+            .from('personal_records')
+            .select('*')
+            .order('date', { ascending: false });
+        if (error) throw new Error('Failed to fetch personal records.');
+        return data || [];
+    },
+    enabled: !!user,
+  });
+
+  const isLoading = isLoadingWorkouts || isLoadingRuns || isLoadingPRs;
 
   const today = new Date();
   const last7DaysInterval = { start: startOfDay(subDays(today, 6)), end: new Date() };
@@ -147,13 +161,11 @@ const HomePage = () => {
     });
   });
 
-  const oneRepMaxList = Array.from(oneRepMaxesMap.entries())
-    .map(([exercise, pr]) => ({
-      exercise,
-      weight: `${pr.oneRepMax.toFixed(1)} kg`,
-      date: format(pr.date, 'yyyy-MM-dd'),
-    }))
-    .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
+  const oneRepMaxList = personalRecords?.map(pr => ({
+      exercise: pr.exercise_name,
+      weight: `${Number(pr.one_rep_max).toFixed(1)} kg`,
+      date: format(new Date(pr.date), 'yyyy-MM-dd'),
+  })) || [];
 
   const totalPRs = oneRepMaxList.length;
 
