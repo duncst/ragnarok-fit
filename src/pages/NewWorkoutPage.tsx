@@ -59,6 +59,13 @@ const NewWorkoutPage = () => {
         isSavingAsTemplate={saveAsTemplateMutation.isPending}
       />
 
+      <div className="p-4 border rounded-lg">
+        <RestTimerSettings
+          restDuration={restDuration}
+          onRestDurationChange={setRestDuration}
+        />
+      </div>
+
       {exercises.map((exercise, exerciseIndex) => (
         <ExerciseCard
           key={exercise.id}
@@ -88,10 +95,6 @@ const NewWorkoutPage = () => {
           )}
           Generate with AI
         </Button>
-        <RestTimerSettings
-          restDuration={restDuration}
-          onRestDurationChange={setRestDuration}
-        />
         <FocusAreaSelector
           selectedFocus={focusArea}
           onFocusChange={setFocusArea}
