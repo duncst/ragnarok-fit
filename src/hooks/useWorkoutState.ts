@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { useLocation } from 'react-router-dom';
 import type { Exercise, WorkoutSet, WorkoutTemplate, Workout } from '@/types';
 
@@ -104,7 +104,7 @@ export const useWorkoutState = () => {
     );
   };
 
-  const handleToggleSet = (
+  const handleToggleSet = useCallback((
     exerciseId: string,
     setId: string,
     onToggleCallback?: (isCompleted: boolean) => void
@@ -127,7 +127,7 @@ export const useWorkoutState = () => {
         return ex;
       })
     );
-  };
+  }, []);
   
   return {
     workoutName,

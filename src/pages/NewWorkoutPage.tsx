@@ -1,5 +1,5 @@
 
-import React from 'react';
+import React, { useCallback } from 'react';
 import { useNewWorkoutForm } from '@/hooks/useNewWorkoutForm';
 import { WorkoutHeader } from '@/components/workout/WorkoutHeader';
 import { ExerciseCard } from '@/components/workout/ExerciseCard';
@@ -36,7 +36,7 @@ const NewWorkoutPage = () => {
     setRestDuration,
   } = useNewWorkoutForm();
 
-  const handleToggleSet = (exerciseId: string, setId: string) => {
+  const handleToggleSet = useCallback((exerciseId: string, setId: string) => {
     originalHandleToggleSet(exerciseId, setId, (isCompleted) => {
       if (isCompleted) {
         sonnerToast.custom(
@@ -45,7 +45,7 @@ const NewWorkoutPage = () => {
         );
       }
     });
-  };
+  }, [originalHandleToggleSet, restDuration]);
 
   return (
     <div className="space-y-4 pb-16">
