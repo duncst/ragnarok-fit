@@ -42,7 +42,8 @@ The JSON object should have the following structure:
 - Each exercise should have 3 sets.
 - Reps should be between 8 and 15.
 - The "weight" for each set should initially be 0. The application will populate this with historical data.
-- Use common and recognizable exercise names.
+- **IMPORTANT: Use standard, recognizable exercise names only. Do NOT create fantasy or creative names for exercises.** Examples of correct exercise names: "Bench Press", "Squat", "Deadlift", "Push-ups", "Pull-ups", "Bicep Curls", "Overhead Press", "Lunges", "Plank", etc.
+- If you want to add flavor, you can optionally add the Norse-themed name in brackets after the standard name, like "Bench Press (Mjölnir's Might)", but the standard name must come first.
 `;
 
 serve(async (req) => {
