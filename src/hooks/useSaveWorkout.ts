@@ -65,19 +65,39 @@ export const useSaveWorkout = () => {
             }
             return workoutData;
         },
-        onSuccess: () => {
+        onSuccess: (workoutData, { name }) => {
             sonnerToast.success("Workout saved successfully!");
             queryClient.invalidateQueries({ queryKey: ['workouts'] });
-            navigate('/history');
+            
+            // Return workout data and name for potential Valhalla score recording
+            return { workoutData, name };
         },
         onError: (error) => {
             sonnerToast.error("Failed to save workout", { description: (error as Error).message });
         }
     });
 
-    const finishWorkout = ({ exercises, name }: { exercises: Exercise[], name: string }) => {
+    const finishWorkout = ({ exercises, name, onValhallaScorePrompt }: { 
+        exercises: Exercise[], 
+        name: string,
+        onValhallaScorePrompt?: (workoutName: string) => void 
+    }) => {
         const workoutNameOrDefault = name.trim() || `Workout - ${new Date().toLocaleDateString()}`;
-        saveWorkoutMutation.mutate({ exercises, name: workoutNameOrDefault });
+        
+        // Check if this is a Valhalla workout
+        const isValhallaWorkout = workoutNameOrDefault.match(/^(THOR|FENRIR|HEL|NJORD|ODIN)$/i);
+        
+        saveWorkoutMutation.mutate({ exercises, name: workoutNameOrDefault }, {
+            onSuccess: () => {
+                if (isValhallaWorkout && onValhallaScorePrompt) {
+                    // Prompt user to record their Valhalla score
+                    onValhallaScorePrompt(workoutNameOrDefault);
+                } else {
+                    // Navigate to history for non-Valhalla workouts
+                    navigate('/history');
+                }
+            }
+        });
     };
 
     return { saveWorkoutMutation, finishWorkout };

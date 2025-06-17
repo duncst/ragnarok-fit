@@ -8,6 +8,7 @@ import { WorkoutActions } from '@/components/workout/WorkoutActions';
 import { EquipmentSelector } from '@/components/workout/EquipmentSelector';
 import { FocusAreaSelector } from '@/components/workout/FocusAreaSelector';
 import { WorkoutCookMode } from '@/components/workout/WorkoutCookMode';
+import { ValhallaScoreDialog } from '@/components/workout/ValhallaScoreDialog';
 import { Button } from '@/components/ui/button';
 import { Toggle } from '@/components/ui/toggle';
 import { ImageIcon } from '@/components/ImageIcon';
@@ -46,6 +47,9 @@ const NewWorkoutPage = () => {
     setFocusArea,
     restDuration,
     setRestDuration,
+    showValhallaScoreDialog,
+    currentValhallaWorkout,
+    onCloseValhallaDialog,
   } = useNewWorkoutForm();
 
   const handleToggleSet = useCallback((exerciseId: string, setId: string) => {
@@ -87,76 +91,84 @@ const NewWorkoutPage = () => {
   }
 
   return (
-    <div className="space-y-4 pb-16">
-      <div className="flex justify-between items-center">
-        <h1 className="text-3xl font-bold tracking-tight">Create new workout</h1>
-        {isWorkoutActive && (
-          <div className="text-lg font-semibold text-green-600">
-            {formattedDuration}
-          </div>
-        )}
-      </div>
-      
-      <WorkoutHeader
-        workoutName={workoutName}
-        onNameChange={setWorkoutName}
-        onFinish={finishWorkout}
-        onCancel={cancelWorkout}
-        isSaving={saveWorkoutMutation.isPending}
-        onSaveAsTemplate={saveAsTemplate}
-        isSavingAsTemplate={saveAsTemplateMutation.isPending}
-        isWorkoutActive={isWorkoutActive}
-        onToggleWorkout={toggleWorkout}
-        isCookMode={isCookMode}
-        onToggleCookMode={setIsCookMode}
-      />
-
-      <WorkoutActions onAddExercise={addExercise} />
-
-      <div className="p-4 border rounded-lg">
-        <RestTimerSettings
-          restDuration={restDuration}
-          onRestDurationChange={setRestDuration}
-        />
-      </div>
-
-      {exercises.map((exercise, exerciseIndex) => (
-        <ExerciseCard
-          key={exercise.id}
-          exercise={exercise}
-          exerciseIndex={exerciseIndex}
-          onRemove={removeExercise}
-          onUpdateName={updateExerciseName}
-          onAddSet={addSet}
-          onUpdateSet={updateSet}
-          onToggleSet={handleToggleSet}
-        />
-      ))}
-
-      <div className="p-4 border rounded-lg space-y-4">
-        <Button
-          variant="outline"
-          className="w-full"
-          onClick={() => generateWorkoutMutation.mutate({ equipment: selectedEquipment, focus: focusArea })}
-          disabled={generateWorkoutMutation.isPending}
-        >
-          {generateWorkoutMutation.isPending ? (
-            <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-          ) : (
-            <Sparkles className="mr-2 h-4 w-4" />
+    <>
+      <div className="space-y-4 pb-16">
+        <div className="flex justify-between items-center">
+          <h1 className="text-3xl font-bold tracking-tight">Create new workout</h1>
+          {isWorkoutActive && (
+            <div className="text-lg font-semibold text-green-600">
+              {formattedDuration}
+            </div>
           )}
-          Generate with AI
-        </Button>
-        <FocusAreaSelector
-          selectedFocus={focusArea}
-          onFocusChange={setFocusArea}
+        </div>
+        
+        <WorkoutHeader
+          workoutName={workoutName}
+          onNameChange={setWorkoutName}
+          onFinish={finishWorkout}
+          onCancel={cancelWorkout}
+          isSaving={saveWorkoutMutation.isPending}
+          onSaveAsTemplate={saveAsTemplate}
+          isSavingAsTemplate={saveAsTemplateMutation.isPending}
+          isWorkoutActive={isWorkoutActive}
+          onToggleWorkout={toggleWorkout}
+          isCookMode={isCookMode}
+          onToggleCookMode={setIsCookMode}
         />
-        <EquipmentSelector
-          selectedEquipment={selectedEquipment}
-          onEquipmentChange={setSelectedEquipment}
-        />
+
+        <WorkoutActions onAddExercise={addExercise} />
+
+        <div className="p-4 border rounded-lg">
+          <RestTimerSettings
+            restDuration={restDuration}
+            onRestDurationChange={setRestDuration}
+          />
+        </div>
+
+        {exercises.map((exercise, exerciseIndex) => (
+          <ExerciseCard
+            key={exercise.id}
+            exercise={exercise}
+            exerciseIndex={exerciseIndex}
+            onRemove={removeExercise}
+            onUpdateName={updateExerciseName}
+            onAddSet={addSet}
+            onUpdateSet={updateSet}
+            onToggleSet={handleToggleSet}
+          />
+        ))}
+
+        <div className="p-4 border rounded-lg space-y-4">
+          <Button
+            variant="outline"
+            className="w-full"
+            onClick={() => generateWorkoutMutation.mutate({ equipment: selectedEquipment, focus: focusArea })}
+            disabled={generateWorkoutMutation.isPending}
+          >
+            {generateWorkoutMutation.isPending ? (
+              <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+            ) : (
+              <Sparkles className="mr-2 h-4 w-4" />
+            )}
+            Generate with AI
+          </Button>
+          <FocusAreaSelector
+            selectedFocus={focusArea}
+            onFocusChange={setFocusArea}
+          />
+          <EquipmentSelector
+            selectedEquipment={selectedEquipment}
+            onEquipmentChange={setSelectedEquipment}
+          />
+        </div>
       </div>
-    </div>
+
+      <ValhallaScoreDialog
+        isOpen={showValhallaScoreDialog}
+        onClose={onCloseValhallaDialog}
+        workoutName={currentValhallaWorkout}
+      />
+    </>
   );
 };
 

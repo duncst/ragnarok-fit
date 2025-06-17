@@ -5,9 +5,12 @@ import { useSaveAsTemplate } from './useSaveAsTemplate';
 import { useGenerateWorkout } from './useGenerateWorkout';
 import { useNavigate } from 'react-router-dom';
 import { toast as sonnerToast } from 'sonner';
+import { useState } from 'react';
 
 export const useNewWorkoutForm = () => {
   const navigate = useNavigate();
+  const [showValhallaScoreDialog, setShowValhallaScoreDialog] = useState(false);
+  const [currentValhallaWorkout, setCurrentValhallaWorkout] = useState<string>('');
   
   const {
     workoutName,
@@ -33,8 +36,23 @@ export const useNewWorkoutForm = () => {
   const { saveAsTemplateMutation, saveAsTemplate } = useSaveAsTemplate();
   const { generateWorkoutMutation } = useGenerateWorkout({ setWorkoutName, setExercises });
 
+  const handleValhallaScorePrompt = (workoutName: string) => {
+    setCurrentValhallaWorkout(workoutName);
+    setShowValhallaScoreDialog(true);
+  };
+
+  const handleCloseValhallaDialog = () => {
+    setShowValhallaScoreDialog(false);
+    setCurrentValhallaWorkout('');
+    navigate('/history');
+  };
+
   const handleFinishWorkout = () => {
-    finishWorkout({ exercises, name: workoutName });
+    finishWorkout({ 
+      exercises, 
+      name: workoutName,
+      onValhallaScorePrompt: handleValhallaScorePrompt
+    });
     clearPersistedWorkout();
   };
 
@@ -66,5 +84,8 @@ export const useNewWorkoutForm = () => {
     saveAsTemplateMutation,
     restDuration,
     setRestDuration,
+    showValhallaScoreDialog,
+    currentValhallaWorkout,
+    onCloseValhallaDialog: handleCloseValhallaDialog,
   };
 };
