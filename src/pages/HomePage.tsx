@@ -277,7 +277,7 @@ const HomePage = () => {
                         <TableRow>
                         <TableHead>Exercise</TableHead>
                         <TableHead className="text-center">Type</TableHead>
-                        <TableHead className="text-right">Value</TableHead>
+                        <TableHead className="text-right">Score</TableHead>
                         <TableHead className="text-right">Date</TableHead>
                         </TableRow>
                     </TableHeader>
