@@ -1,4 +1,3 @@
-
 import { useState, useEffect, useCallback } from 'react';
 import { useLocation } from 'react-router-dom';
 import type { Exercise, WorkoutSet, WorkoutTemplate, Workout } from '@/types';
@@ -33,7 +32,7 @@ export const useWorkoutState = () => {
         type: templateEx.type,
         sets: Array.from({ length: templateEx.sets }, (_, setIndex) => ({
           id: `set-${Date.now()}-${exIndex}-${setIndex}`,
-          reps: 8,
+          reps: templateEx.suggestedReps || 8,
           weight: 20,
           completed: false,
           duration: ['time', 'distance', 'weight_distance_time'].includes(templateEx.type || '') ? 60 : undefined,

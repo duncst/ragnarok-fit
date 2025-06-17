@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -161,7 +160,7 @@ const WorkoutTemplatesPage = () => {
         const existingExercise = selectedExercises.find(
           (selectedEx) => selectedEx.name === ex.name
         );
-        return existingExercise || { ...ex, sets: 3 };
+        return existingExercise || { ...ex, sets: 3, suggestedReps: 8 };
       });
     
     // This logic ensures that unselected exercises are removed, and the order is preserved for existing ones.
@@ -174,6 +173,14 @@ const WorkoutTemplatesPage = () => {
     setSelectedExercises(currentExercises =>
       currentExercises.map(ex =>
         ex.name === exerciseName ? { ...ex, sets: isNaN(sets) || sets < 1 ? 1 : sets } : ex
+      )
+    );
+  };
+
+  const handleSuggestedRepsChange = (exerciseName: string, suggestedReps: number) => {
+    setSelectedExercises(currentExercises =>
+      currentExercises.map(ex =>
+        ex.name === exerciseName ? { ...ex, suggestedReps: isNaN(suggestedReps) || suggestedReps < 1 ? 1 : suggestedReps } : ex
       )
     );
   };
@@ -309,7 +316,16 @@ const WorkoutTemplatesPage = () => {
                               className="w-16 h-8 text-center"
                               aria-label={`Sets for ${exercise.name}`}
                             />
-                            <span className="text-muted-foreground">sets</span>
+                            <span className="text-muted-foreground text-xs">sets</span>
+                            <Input
+                              type="number"
+                              min="1"
+                              value={exercise.suggestedReps || 8}
+                              onChange={(e) => handleSuggestedRepsChange(exercise.name, parseInt(e.target.value, 10))}
+                              className="w-16 h-8 text-center"
+                              aria-label={`Suggested reps for ${exercise.name}`}
+                            />
+                            <span className="text-muted-foreground text-xs">reps</span>
                             <Button variant="ghost" size="icon" className="h-6 w-6" onClick={() => handleRemoveExercise(exercise.name)}>
                               <X className="h-4 w-4" />
                             </Button>
@@ -388,7 +404,9 @@ const WorkoutTemplatesPage = () => {
                             {template.exercises.map((ex) => (
                               <li key={ex.name} className="flex justify-between">
                                 <span>{ex.name}</span>
-                                <span className="text-muted-foreground">{ex.sets} sets</span>
+                                <span className="text-muted-foreground">
+                                  {ex.sets} sets{ex.suggestedReps ? ` × ${ex.suggestedReps} reps` : ''}
+                                </span>
                               </li>
                             ))}
                           </ul>

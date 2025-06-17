@@ -1,3 +1,4 @@
+
 export interface WorkoutSet {
   id: string;
   reps: number;
@@ -32,7 +33,10 @@ export interface ExerciseDef {
   type?: 'weight' | 'time' | 'reps' | 'distance' | 'weight_distance_time';
 }
 
-export type TemplateExercise = ExerciseDef & { sets: number };
+export type TemplateExercise = ExerciseDef & { 
+  sets: number;
+  suggestedReps?: number;
+};
 
 export interface WorkoutTemplate {
   id: string;
