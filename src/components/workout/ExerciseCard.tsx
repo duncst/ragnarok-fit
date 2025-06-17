@@ -1,8 +1,7 @@
-
 import React from 'react';
 import { Card, CardContent, CardHeader } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { Plus, Trash2 } from 'lucide-react';
+import { Plus, Trash2, Clock, Weight, Repeat } from 'lucide-react';
 import { ExerciseSelector } from '@/components/ExerciseSelector';
 import { SetRow } from './SetRow';
 import { getExerciseType } from '@/utils/exerciseTypes';
@@ -40,17 +39,47 @@ export const ExerciseCard = ({
     }
   };
 
+  const getExerciseTypeIcon = () => {
+    switch (exerciseType) {
+      case 'time':
+        return <Clock className="h-4 w-4 text-blue-500" />;
+      case 'reps':
+        return <Repeat className="h-4 w-4 text-green-500" />;
+      default:
+        return <Weight className="h-4 w-4 text-orange-500" />;
+    }
+  };
+
+  const getExerciseTypeLabel = () => {
+    switch (exerciseType) {
+      case 'time':
+        return 'Time-based';
+      case 'reps':
+        return 'Reps only';
+      default:
+        return 'Weight + reps';
+    }
+  };
+
   const headerLabels = getHeaderLabels();
 
   return (
     <Card>
       <CardHeader>
         <div className="flex justify-between items-center">
-          <ExerciseSelector
-            placeholder={`Exercise ${exerciseIndex + 1}`}
-            value={exercise.name}
-            onChange={(name) => onUpdateName(exercise.id, name)}
-          />
+          <div className="flex-1">
+            <ExerciseSelector
+              placeholder={`Exercise ${exerciseIndex + 1}`}
+              value={exercise.name}
+              onChange={(name) => onUpdateName(exercise.id, name)}
+            />
+            {exercise.name && (
+              <div className="flex items-center gap-1 mt-1 text-xs text-muted-foreground">
+                {getExerciseTypeIcon()}
+                <span>{getExerciseTypeLabel()}</span>
+              </div>
+            )}
+          </div>
           <Button variant="ghost" size="icon" onClick={() => onRemove(exercise.id)}>
             <Trash2 className="h-4 w-4 text-muted-foreground" />
           </Button>
