@@ -3,8 +3,12 @@ import { useWorkoutState } from './useWorkoutState';
 import { useSaveWorkout } from './useSaveWorkout';
 import { useSaveAsTemplate } from './useSaveAsTemplate';
 import { useGenerateWorkout } from './useGenerateWorkout';
+import { useNavigate } from 'react-router-dom';
+import { toast as sonnerToast } from 'sonner';
 
 export const useNewWorkoutForm = () => {
+  const navigate = useNavigate();
+  
   const {
     workoutName,
     setWorkoutName,
@@ -34,6 +38,12 @@ export const useNewWorkoutForm = () => {
     clearPersistedWorkout();
   };
 
+  const handleCancelWorkout = () => {
+    clearPersistedWorkout();
+    sonnerToast.success("Workout cancelled");
+    navigate('/');
+  };
+
   return {
     workoutName,
     setWorkoutName,
@@ -45,6 +55,7 @@ export const useNewWorkoutForm = () => {
     updateSet,
     handleToggleSet,
     finishWorkout: handleFinishWorkout,
+    cancelWorkout: handleCancelWorkout,
     saveWorkoutMutation,
     generateWorkoutMutation,
     selectedEquipment,

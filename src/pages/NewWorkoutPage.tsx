@@ -24,6 +24,7 @@ const NewWorkoutPage = () => {
     updateSet,
     handleToggleSet: originalHandleToggleSet,
     finishWorkout,
+    cancelWorkout,
     saveWorkoutMutation,
     generateWorkoutMutation,
     selectedEquipment,
@@ -54,6 +55,7 @@ const NewWorkoutPage = () => {
         workoutName={workoutName}
         onNameChange={setWorkoutName}
         onFinish={finishWorkout}
+        onCancel={cancelWorkout}
         isSaving={saveWorkoutMutation.isPending}
         onSaveAsTemplate={saveAsTemplate}
         isSavingAsTemplate={saveAsTemplateMutation.isPending}
