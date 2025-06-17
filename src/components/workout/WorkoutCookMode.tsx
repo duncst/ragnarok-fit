@@ -56,37 +56,52 @@ export const WorkoutCookMode = ({
     <div className="fixed inset-0 bg-background z-50 overflow-y-auto">
       <div className="min-h-screen p-4 space-y-6">
         {/* Header */}
-        <div className="flex items-center justify-between sticky top-4 bg-background/95 backdrop-blur-sm z-10 p-4 rounded-lg border">
-          <div className="flex items-center gap-3">
-            <img 
-              src="/lovable-uploads/38b9fb87-79d2-4f6f-a531-145b342ab186.png" 
-              alt="Horn icon" 
-              className="h-8 w-8"
-            />
-            <h1 className="text-2xl font-bold">{workoutName || 'Workout Mode'}</h1>
+        <div className="sticky top-4 bg-background/95 backdrop-blur-sm z-10 p-4 rounded-lg border">
+          {/* Title Row */}
+          <div className="flex items-center justify-between mb-3">
+            <div className="flex items-center gap-3 flex-1 min-w-0">
+              <img 
+                src="/lovable-uploads/38b9fb87-79d2-4f6f-a531-145b342ab186.png" 
+                alt="Horn icon" 
+                className="h-8 w-8 flex-shrink-0"
+              />
+              <h1 className="text-xl sm:text-2xl font-bold truncate">
+                {workoutName || 'Workout Mode'}
+              </h1>
+            </div>
+            <Button variant="outline" size="icon" onClick={onExitCookMode} className="flex-shrink-0">
+              <X className="h-5 w-5" />
+            </Button>
           </div>
-          <div className="flex items-center gap-4">
+          
+          {/* Controls Row */}
+          <div className="flex items-center gap-2 flex-wrap">
             {formattedDuration && (
-              <div className="text-lg font-semibold text-white">
+              <div className="text-lg font-semibold text-white bg-green-600 px-3 py-1 rounded-md">
                 {formattedDuration}
               </div>
             )}
             {onToggleWorkout && (
               <Button 
                 variant="outline" 
-                size="lg" 
+                size="sm"
                 onClick={onToggleWorkout}
                 disabled={isSaving}
+                className="flex items-center gap-2"
               >
-                {isWorkoutActive ? <Pause className="h-5 w-5 mr-2" /> : <Play className="h-5 w-5 mr-2" />}
-                {isWorkoutActive ? 'Pause' : 'Start'}
+                {isWorkoutActive ? <Pause className="h-4 w-4" /> : <Play className="h-4 w-4" />}
+                <span className="hidden sm:inline">
+                  {isWorkoutActive ? 'Pause' : 'Start'}
+                </span>
               </Button>
             )}
-            <Button onClick={onFinishWorkout} disabled={isSaving} size="lg">
-              Finish Workout
-            </Button>
-            <Button variant="outline" size="icon" onClick={onExitCookMode}>
-              <X className="h-5 w-5" />
+            <Button 
+              onClick={onFinishWorkout} 
+              disabled={isSaving} 
+              size="sm"
+              className="flex items-center gap-2"
+            >
+              <span>Finish</span>
             </Button>
           </div>
         </div>
