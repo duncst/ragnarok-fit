@@ -35,7 +35,7 @@ export const WorkoutHeader = ({
 }: WorkoutHeaderProps) => {
   return (
     <div className="space-y-2">
-      {/* Top row: Workout name and finish button */}
+      {/* Top row: Workout name and save as template button */}
       <div className="flex justify-between items-center gap-2">
         <Input
           placeholder="Workout Name (e.g. Push Day)"
@@ -43,13 +43,13 @@ export const WorkoutHeader = ({
           onChange={(e) => onNameChange(e.target.value)}
           className="text-2xl font-bold h-auto"
         />
-        <Button onClick={onFinish} disabled={isSaving || isSavingAsTemplate}>
-          {isSaving && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
-          Finish
+        <Button variant="outline" size="icon" onClick={onSaveAsTemplate} disabled={isSavingAsTemplate || isSaving}>
+          {isSavingAsTemplate ? <Loader2 className="h-4 w-4 animate-spin" /> : <Save className="h-4 w-4" />}
+          <span className="sr-only">Save as template</span>
         </Button>
       </div>
       
-      {/* Bottom row: All interaction buttons including workout mode */}
+      {/* Bottom row: All interaction buttons including workout mode and finish */}
       <div className="flex items-center gap-2">
         <Toggle
           pressed={isCookMode}
@@ -77,9 +77,9 @@ export const WorkoutHeader = ({
           <X className="h-4 w-4" />
           <span className="sr-only">Cancel workout</span>
         </Button>
-        <Button variant="outline" size="icon" onClick={onSaveAsTemplate} disabled={isSavingAsTemplate || isSaving}>
-          {isSavingAsTemplate ? <Loader2 className="h-4 w-4 animate-spin" /> : <Save className="h-4 w-4" />}
-          <span className="sr-only">Save as template</span>
+        <Button onClick={onFinish} disabled={isSaving || isSavingAsTemplate}>
+          {isSaving && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
+          Finish
         </Button>
       </div>
     </div>
