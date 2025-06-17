@@ -182,7 +182,7 @@ const NewWorkoutPage = () => {
 
         {isCookMode ? (
           <WorkoutCookMode
-            workout={workout}
+            exercises={workout.exercises}
             updateSet={updateSet}
             addSet={addSet}
             onFinish={handleFinishWorkout}
@@ -194,15 +194,17 @@ const NewWorkoutPage = () => {
         ) : (
           <>
             <WorkoutHeader
-              workout={workout}
+              workoutName={workout.name}
               onNameChange={setWorkoutName}
-              onNotesChange={setWorkoutNotes}
-              startTime={startTime}
-              endTime={endTime}
-              isRunning={isRunning}
-              onStart={startTimer}
-              onStop={stopTimer}
-              elapsedTime={elapsedTime}
+              onFinish={handleFinishWorkout}
+              onCancel={() => navigate("/templates")}
+              isSaving={isSaving}
+              onSaveAsTemplate={() => saveAsTemplate(workout)}
+              isSavingAsTemplate={isSavingTemplate}
+              isWorkoutActive={isRunning}
+              onToggleWorkout={isRunning ? stopTimer : startTimer}
+              isCookMode={isCookMode}
+              onToggleCookMode={setIsCookMode}
             />
 
             <RestTimerSettings restTime={restTime} onRestTimeChange={setRestTime} />
@@ -215,7 +217,7 @@ const NewWorkoutPage = () => {
                   exerciseIndex={index}
                   onAddSet={addSet}
                   onUpdateSet={updateSet}
-                  onRemoveSet={removeSet}
+                  onRemove={removeSet}
                   onRemoveExercise={removeExercise}
                   onMoveExercise={moveExercise}
                   onStartRestTimer={handleStartRestTimer}
@@ -242,14 +244,14 @@ const NewWorkoutPage = () => {
               onFinish={handleFinishWorkout}
               onSaveAsTemplate={() => saveAsTemplate(workout)}
               isSaving={isSaving}
-              isSavingTemplate={isSavingTemplate}
+              isSavingAsTemplate={isSavingTemplate}
               hasExercises={workout.exercises.length > 0}
             />
           </>
         )}
 
         <ExerciseSelector
-          open={showExerciseSelector}
+          isOpen={showExerciseSelector}
           onOpenChange={setShowExerciseSelector}
           onExerciseSelect={addExercise}
         />

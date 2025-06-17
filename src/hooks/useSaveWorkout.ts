@@ -4,7 +4,7 @@ import { useNavigate } from 'react-router-dom';
 import { toast as sonnerToast } from "sonner";
 import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/contexts/AuthContext';
-import type { Exercise } from '@/types';
+import type { Exercise, Workout } from '@/types';
 
 export const useSaveWorkout = () => {
     const { user } = useAuth();
@@ -12,24 +12,30 @@ export const useSaveWorkout = () => {
     const navigate = useNavigate();
 
     const saveWorkoutMutation = useMutation({
-        mutationFn: async ({ exercises, name }: { exercises: Exercise[], name: string }) => {
+        mutationFn: async (workoutData: Workout) => {
             if (!user) throw new Error("You must be logged in to save a workout.");
 
-            const { data: workoutData, error: workoutError } = await supabase
+            const { data: workoutDbData, error: workoutError } = await supabase
                 .from('workouts')
-                .insert({ user_id: user.id, name: name || null, end_time: new Date().toISOString() })
+                .insert({ 
+                    user_id: user.id, 
+                    name: workoutData.name || null, 
+                    start_time: workoutData.startTime.toISOString(),
+                    end_time: workoutData.endTime?.toISOString() || new Date().toISOString(),
+                    notes: workoutData.notes || null
+                })
                 .select()
                 .single();
 
             if (workoutError) throw workoutError;
 
-            for (const [exerciseIndex, exercise] of exercises.entries()) {
+            for (const [exerciseIndex, exercise] of workoutData.exercises.entries()) {
                 if (!exercise.name) continue;
 
                 const { data: exerciseData, error: exerciseError } = await supabase
                     .from('workout_exercises')
                     .insert({
-                        workout_id: workoutData.id,
+                        workout_id: workoutDbData.id,
                         name: exercise.name,
                         "order": exerciseIndex,
                     })
@@ -38,9 +44,9 @@ export const useSaveWorkout = () => {
                 
                 if (exerciseError) {
                     console.error('Error inserting exercise, rolling back workout');
-                    await supabase.from('workouts').delete().eq('id', workoutData.id);
+                    await supabase.from('workouts').delete().eq('id', workoutDbData.id);
                     throw exerciseError;
-                };
+                }
 
                 if (exercise.sets.length > 0) {
                     const setsToInsert = exercise.sets.map((set, setIndex) => ({
@@ -49,7 +55,6 @@ export const useSaveWorkout = () => {
                         weight: set.weight,
                         completed: set.completed,
                         "order": setIndex,
-                        // Note: duration is not stored in the database yet, but the UI supports it
                     }));
                     
                     const { error: setsError } = await supabase
@@ -58,27 +63,38 @@ export const useSaveWorkout = () => {
                         
                     if (setsError) {
                         console.error('Error inserting sets, rolling back workout');
-                        await supabase.from('workouts').delete().eq('id', workoutData.id);
+                        await supabase.from('workouts').delete().eq('id', workoutDbData.id);
                         throw setsError;
-                    };
+                    }
                 }
             }
-            return workoutData;
+            return workoutDbData;
         },
         onSuccess: () => {
             sonnerToast.success("Workout saved successfully!");
             queryClient.invalidateQueries({ queryKey: ['workouts'] });
-            navigate('/history');
         },
         onError: (error) => {
             sonnerToast.error("Failed to save workout", { description: (error as Error).message });
         }
     });
 
-    const finishWorkout = ({ exercises, name }: { exercises: Exercise[], name: string }) => {
-        const workoutNameOrDefault = name.trim() || `Workout - ${new Date().toLocaleDateString()}`;
-        saveWorkoutMutation.mutate({ exercises, name: workoutNameOrDefault });
+    const saveWorkout = async (workout: Workout, startTime?: Date, endTime?: Date) => {
+        try {
+            const workoutToSave = {
+                ...workout,
+                startTime: startTime || workout.startTime,
+                endTime: endTime || workout.endTime || new Date(),
+            };
+            await saveWorkoutMutation.mutateAsync(workoutToSave);
+            return true;
+        } catch (error) {
+            return false;
+        }
     };
 
-    return { saveWorkoutMutation, finishWorkout };
+    return { 
+        saveWorkout, 
+        isSaving: saveWorkoutMutation.isPending 
+    };
 };
