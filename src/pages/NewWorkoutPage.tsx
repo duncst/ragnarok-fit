@@ -9,6 +9,8 @@ import { EquipmentSelector } from '@/components/workout/EquipmentSelector';
 import { FocusAreaSelector } from '@/components/workout/FocusAreaSelector';
 import { WorkoutCookMode } from '@/components/workout/WorkoutCookMode';
 import { Button } from '@/components/ui/button';
+import { Toggle } from '@/components/ui/toggle';
+import { ImageIcon } from '@/components/ImageIcon';
 import { Loader2, Sparkles } from 'lucide-react';
 import { RestTimerSettings } from '@/components/workout/RestTimerSettings';
 import { RestTimerToast } from '@/components/workout/RestTimerToast';
@@ -100,10 +102,25 @@ const NewWorkoutPage = () => {
         isSaving={saveWorkoutMutation.isPending}
         onSaveAsTemplate={saveAsTemplate}
         isSavingAsTemplate={saveAsTemplateMutation.isPending}
-        onEnterCookMode={handleEnterCookMode}
         isWorkoutActive={isWorkoutActive}
         onToggleWorkout={toggleWorkout}
       />
+
+      <div className="flex items-center gap-2">
+        <Toggle
+          pressed={isCookMode}
+          onPressedChange={setIsCookMode}
+          variant="outline"
+          className="flex items-center gap-2 px-3 py-2 h-auto"
+        >
+          <ImageIcon 
+            src="/lovable-uploads/6ace109c-b935-4cbe-ae24-b2adfe21bde8.png"
+            alt="Workout Mode"
+            className="w-5 h-5"
+          />
+          <span className="text-sm font-medium">Workout Mode</span>
+        </Toggle>
+      </div>
 
       <div className="p-4 border rounded-lg">
         <RestTimerSettings
