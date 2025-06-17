@@ -2,7 +2,7 @@
 import React from 'react';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
-import { Loader2, Save, X, ChefHat } from 'lucide-react';
+import { Loader2, Save, X, ChefHat, Play, Pause } from 'lucide-react';
 
 interface WorkoutHeaderProps {
   workoutName: string;
@@ -13,6 +13,8 @@ interface WorkoutHeaderProps {
   onSaveAsTemplate: () => void;
   isSavingAsTemplate: boolean;
   onEnterCookMode?: () => void;
+  isWorkoutActive: boolean;
+  onToggleWorkout: () => void;
 }
 
 export const WorkoutHeader = ({ 
@@ -23,7 +25,9 @@ export const WorkoutHeader = ({
   isSaving, 
   onSaveAsTemplate, 
   isSavingAsTemplate,
-  onEnterCookMode
+  onEnterCookMode,
+  isWorkoutActive,
+  onToggleWorkout
 }: WorkoutHeaderProps) => {
   return (
     <div className="flex justify-between items-center gap-2">
@@ -34,6 +38,16 @@ export const WorkoutHeader = ({
         className="text-2xl font-bold h-auto"
       />
       <div className="flex items-center gap-2">
+        <Button 
+          variant="outline" 
+          size="icon" 
+          onClick={onToggleWorkout} 
+          disabled={isSaving || isSavingAsTemplate}
+          className={isWorkoutActive ? "bg-red-50 hover:bg-red-100" : "bg-green-50 hover:bg-green-100"}
+        >
+          {isWorkoutActive ? <Pause className="h-4 w-4" /> : <Play className="h-4 w-4" />}
+          <span className="sr-only">{isWorkoutActive ? 'Pause workout' : 'Start workout'}</span>
+        </Button>
         <Button variant="outline" size="icon" onClick={onCancel} disabled={isSaving || isSavingAsTemplate}>
           <X className="h-4 w-4" />
           <span className="sr-only">Cancel workout</span>

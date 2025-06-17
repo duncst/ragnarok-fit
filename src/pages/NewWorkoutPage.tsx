@@ -1,6 +1,7 @@
 
 import React, { useCallback, useState } from 'react';
 import { useNewWorkoutForm } from '@/hooks/useNewWorkoutForm';
+import { useWorkoutTimer } from '@/hooks/useWorkoutTimer';
 import { WorkoutHeader } from '@/components/workout/WorkoutHeader';
 import { ExerciseCard } from '@/components/workout/ExerciseCard';
 import { WorkoutActions } from '@/components/workout/WorkoutActions';
@@ -15,6 +16,11 @@ import { toast as sonnerToast } from 'sonner';
 
 const NewWorkoutPage = () => {
   const [isCookMode, setIsCookMode] = useState(false);
+  const {
+    isActive: isWorkoutActive,
+    formattedDuration,
+    toggleWorkout,
+  } = useWorkoutTimer();
   
   const {
     workoutName,
@@ -77,7 +83,15 @@ const NewWorkoutPage = () => {
 
   return (
     <div className="space-y-4 pb-16">
-      <h1 className="text-3xl font-bold tracking-tight">Create new workout</h1>
+      <div className="flex justify-between items-center">
+        <h1 className="text-3xl font-bold tracking-tight">Create new workout</h1>
+        {isWorkoutActive && (
+          <div className="text-lg font-semibold text-green-600">
+            {formattedDuration}
+          </div>
+        )}
+      </div>
+      
       <WorkoutHeader
         workoutName={workoutName}
         onNameChange={setWorkoutName}
@@ -87,6 +101,8 @@ const NewWorkoutPage = () => {
         onSaveAsTemplate={saveAsTemplate}
         isSavingAsTemplate={saveAsTemplateMutation.isPending}
         onEnterCookMode={handleEnterCookMode}
+        isWorkoutActive={isWorkoutActive}
+        onToggleWorkout={toggleWorkout}
       />
 
       <div className="p-4 border rounded-lg">
