@@ -140,35 +140,28 @@ const HomePage = () => {
     }
   });
 
-  const calculate1RM = (weight: number, reps: number) => {
-    if (reps === 1) return weight;
-    // Epley formula
-    return weight * (1 + reps / 30);
+  // Process personal records to separate 1RM and Valhalla scores
+  const oneRepMaxRecords = personalRecords?.filter(pr => !pr.exercise_name.includes('(Valhalla)')) || [];
+  const valhallaRecords = personalRecords?.filter(pr => pr.exercise_name.includes('(Valhalla)')) || [];
+  
+  const totalPRs = personalRecords?.length || 0;
+
+  // Format records for display
+  const formatPRsForDisplay = (records: PersonalRecord[], isValhalla: boolean = false) => {
+    return records.map(pr => ({
+      exercise: pr.exercise_name,
+      value: isValhalla 
+        ? `${Number(pr.one_rep_max).toFixed(1)}` 
+        : `${Number(pr.one_rep_max).toFixed(1)} kg`,
+      date: format(new Date(pr.date), 'yyyy-MM-dd'),
+      type: isValhalla ? 'valhalla' : 'weight'
+    }));
   };
 
-  const oneRepMaxesMap = new Map<string, { oneRepMax: number; date: Date }>();
-
-  workoutHistory?.forEach(workout => {
-    workout.exercises.forEach(exercise => {
-      exercise.sets.forEach(set => {
-        if (set.completed && set.weight > 0 && set.reps > 0) {
-          const current1RM = calculate1RM(set.weight, set.reps);
-          const existingPR = oneRepMaxesMap.get(exercise.name);
-          if (!existingPR || current1RM > existingPR.oneRepMax) {
-            oneRepMaxesMap.set(exercise.name, { oneRepMax: current1RM, date: workout.startTime });
-          }
-        }
-      });
-    });
-  });
-
-  const oneRepMaxList = personalRecords?.map(pr => ({
-      exercise: pr.exercise_name,
-      weight: `${Number(pr.one_rep_max).toFixed(1)} kg`,
-      date: format(new Date(pr.date), 'yyyy-MM-dd'),
-  })) || [];
-
-  const totalPRs = oneRepMaxList.length;
+  const allPRsForDisplay = [
+    ...formatPRsForDisplay(oneRepMaxRecords, false),
+    ...formatPRsForDisplay(valhallaRecords, true)
+  ].sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
 
   return (
     <div className="space-y-6">
@@ -261,7 +254,7 @@ const HomePage = () => {
                 <div className="flex justify-between items-center">
                     <CardTitle className="flex items-center gap-2 text-lg font-semibold">
                         <TrendingUp className="text-primary" />
-                        1 Rep Max PRs
+                        Personal Records
                     </CardTitle>
                     <Button asChild variant="outline" size="sm">
                         <Link to="/1rm-calculator">
@@ -283,23 +276,35 @@ const HomePage = () => {
                     <TableHeader>
                         <TableRow>
                         <TableHead>Exercise</TableHead>
-                        <TableHead className="text-right">Weight</TableHead>
+                        <TableHead className="text-center">Type</TableHead>
+                        <TableHead className="text-right">Value</TableHead>
                         <TableHead className="text-right">Date</TableHead>
                         </TableRow>
                     </TableHeader>
                     <TableBody>
-                        {oneRepMaxList.length > 0 ? (
-                          oneRepMaxList.slice(0, 4).map(item => (
-                              <TableRow key={item.exercise}>
+                        {allPRsForDisplay.length > 0 ? (
+                          allPRsForDisplay.slice(0, 5).map((item, index) => (
+                              <TableRow key={`${item.exercise}-${index}`}>
                                   <TableCell className="font-medium">{item.exercise}</TableCell>
-                                  <TableCell className="text-right">{item.weight}</TableCell>
+                                  <TableCell className="text-center">
+                                    {item.type === 'valhalla' ? (
+                                      <span className="text-xs bg-orange-100 text-orange-800 px-2 py-1 rounded-full">
+                                        ⚔️ Valhalla
+                                      </span>
+                                    ) : (
+                                      <span className="text-xs bg-blue-100 text-blue-800 px-2 py-1 rounded-full">
+                                        💪 1RM
+                                      </span>
+                                    )}
+                                  </TableCell>
+                                  <TableCell className="text-right">{item.value}</TableCell>
                                   <TableCell className="text-right text-muted-foreground text-xs">{item.date}</TableCell>
                               </TableRow>
                           ))
                         ) : (
                           <TableRow>
-                            <TableCell colSpan={3} className="text-center text-muted-foreground">
-                              No 1 Rep Max records yet.
+                            <TableCell colSpan={4} className="text-center text-muted-foreground">
+                              No personal records yet.
                             </TableCell>
                           </TableRow>
                         )}
