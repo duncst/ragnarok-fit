@@ -7,7 +7,7 @@ import { exercises as allExercises } from '@/data/exercises';
 import { Badge } from '@/components/ui/badge';
 import { Search, Plus } from 'lucide-react';
 
-const bodyParts = ['All', 'Chest', 'Back', 'Legs', 'Shoulders', 'Arms', 'Core'];
+const bodyParts = ['All', 'Chest', 'Back', 'Legs', 'Shoulders', 'Arms', 'Core', 'Cardio', 'Full Body'];
 
 const ExercisesPage = () => {
   const [searchTerm, setSearchTerm] = useState('');
