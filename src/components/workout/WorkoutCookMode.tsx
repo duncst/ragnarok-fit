@@ -2,7 +2,7 @@
 import React from 'react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader } from '@/components/ui/card';
-import { X, Plus, Check, ChefHat, Timer } from 'lucide-react';
+import { X, Plus, Check, ChefHat } from 'lucide-react';
 import { ExerciseSelector } from '@/components/ExerciseSelector';
 import { SetRow } from './SetRow';
 import { getExerciseType } from '@/utils/exerciseTypes';
@@ -18,8 +18,6 @@ interface WorkoutCookModeProps {
   onToggleSet: (exerciseId: string, setId: string) => void;
   onFinishWorkout: () => void;
   isSaving: boolean;
-  isWorkoutActive: boolean;
-  formattedDuration: string;
 }
 
 export const WorkoutCookMode = ({
@@ -32,8 +30,6 @@ export const WorkoutCookMode = ({
   onToggleSet,
   onFinishWorkout,
   isSaving,
-  isWorkoutActive,
-  formattedDuration,
 }: WorkoutCookModeProps) => {
   const getHeaderLabels = (exerciseType: string) => {
     switch (exerciseType) {
@@ -57,13 +53,7 @@ export const WorkoutCookMode = ({
         <div className="flex items-center justify-between sticky top-4 bg-background/95 backdrop-blur-sm z-10 p-4 rounded-lg border">
           <div className="flex items-center gap-3">
             <ChefHat className="h-6 w-6 text-primary" />
-            <h1 className="text-2xl font-bold">{workoutName || 'Workout Mode'}</h1>
-            {isWorkoutActive && (
-              <div className="flex items-center gap-2 text-green-600">
-                <Timer className="h-5 w-5" />
-                <span className="text-lg font-semibold">{formattedDuration}</span>
-              </div>
-            )}
+            <h1 className="text-2xl font-bold">{workoutName || 'Cook Mode'}</h1>
           </div>
           <div className="flex items-center gap-2">
             <Button onClick={onFinishWorkout} disabled={isSaving} size="lg">
