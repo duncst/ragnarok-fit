@@ -1,91 +1,29 @@
 
-import { useState } from "react";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
-import { ArrowLeft, Plus, Timer, Save } from "lucide-react";
-import { Link, useLocation, useNavigate } from "react-router-dom";
-import { ExerciseCard } from "@/components/workout/ExerciseCard";
-import { WorkoutActions } from "@/components/workout/WorkoutActions";
-import { WorkoutHeader } from "@/components/workout/WorkoutHeader";
-import { useWorkoutState } from "@/hooks/useWorkoutState";
-import { useWorkoutTimer } from "@/hooks/useWorkoutTimer";
-import { useNewWorkoutForm } from "@/hooks/useNewWorkoutForm";
-import type { WorkoutTemplate } from "@/types";
-import { RestTimerSettings } from "@/components/workout/RestTimerSettings";
-import { RestTimerToast } from "@/components/workout/RestTimerToast";
-import { ExerciseSelector } from "@/components/ExerciseSelector";
-import { WorkoutCookMode } from "@/components/workout/WorkoutCookMode";
-import { ScoreRecordingDialog } from "@/components/workout/ScoreRecordingDialog";
-import { useValhallaScoreDialog } from "@/hooks/useValhallaScoreDialog";
-
-const valhallaWorkouts = [
-  {
-    id: "thor",
-    name: "THOR",
-    godName: "God of Thunder",
-    description: "explosive and strength-focused",
-    theme: "Like Mjölnir, short, heavy, and hammering.",
-    icon: "⚡",
-    format: "3 rounds",
-    scoreInstructions: "Record your total time to complete all 3 rounds. Faster time = better score.",
-  },
-  {
-    id: "fenrir",
-    name: "FENRIR",
-    godName: "The beast unleashed",
-    description: "raw power and endurance",
-    theme: "Designed to wear you down—then break you loose.",
-    icon: "🐺",
-    format: "For time",
-    scoreInstructions: "Record your total time to complete all exercises. Target: Under 15 minutes for elite performance.",
-  },
-  {
-    id: "hel",
-    name: "HEL",
-    godName: "Queen of the underworld",
-    description: "cold and relentless",
-    theme: "Unforgiving and creeping—no flash, all grind.",
-    icon: "🧊",
-    format: "2 rounds",
-    scoreInstructions: "Record your total time to complete both rounds. Consistency between rounds shows true grit.",
-  },
-  {
-    id: "njord",
-    name: "NJORD",
-    godName: "God of the sea",
-    description: "flow and mobility",
-    theme: "Graceful pacing with strong undertow—stamina and control.",
-    icon: "🌊",
-    format: "3 rounds",
-    scoreInstructions: "Record your total time to complete all 3 rounds. Focus on smooth transitions between exercises.",
-  },
-  {
-    id: "odin",
-    name: "ODIN",
-    godName: "The Allfather",
-    description: "balance, wisdom, pain",
-    theme: "Discipline through repetition. The wise suffer willingly.",
-    icon: "🧠",
-    format: "For time (or 2 rounds of 25)",
-    scoreInstructions: "Record your total time to complete all 50 reps of each exercise. Sub-20 minutes is worthy of Valhalla.",
-  }
-];
+import React, { useCallback, useState } from 'react';
+import { useNewWorkoutForm } from '@/hooks/useNewWorkoutForm';
+import { useWorkoutTimer } from '@/hooks/useWorkoutTimer';
+import { WorkoutHeader } from '@/components/workout/WorkoutHeader';
+import { ExerciseCard } from '@/components/workout/ExerciseCard';
+import { WorkoutActions } from '@/components/workout/WorkoutActions';
+import { EquipmentSelector } from '@/components/workout/EquipmentSelector';
+import { FocusAreaSelector } from '@/components/workout/FocusAreaSelector';
+import { WorkoutCookMode } from '@/components/workout/WorkoutCookMode';
+import { Button } from '@/components/ui/button';
+import { Toggle } from '@/components/ui/toggle';
+import { ImageIcon } from '@/components/ImageIcon';
+import { Loader2, Sparkles } from 'lucide-react';
+import { RestTimerSettings } from '@/components/workout/RestTimerSettings';
+import { RestTimerToast } from '@/components/workout/RestTimerToast';
+import { toast as sonnerToast } from 'sonner';
 
 const NewWorkoutPage = () => {
-  const location = useLocation();
-  const navigate = useNavigate();
-  const template = location.state?.template as WorkoutTemplate | undefined;
-  const isValhallaWorkout = template && valhallaWorkouts.some(vw => vw.id === template.id);
-  const valhallaWorkoutData = isValhallaWorkout ? valhallaWorkouts.find(vw => vw.id === template?.id) : null;
-
   const [isCookMode, setIsCookMode] = useState(false);
-  const [showExerciseSelector, setShowExerciseSelector] = useState(false);
-  const [restTime, setRestTime] = useState(90);
-  const [isRestTimerActive, setIsRestTimerActive] = useState(false);
-  const [restTimeRemaining, setRestTimeRemaining] = useState(90);
-
-  const { scoreDialogWorkout, hideScoreDialog } = useValhallaScoreDialog();
-
+  const {
+    isActive: isWorkoutActive,
+    formattedDuration,
+    toggleWorkout,
+  } = useWorkoutTimer();
+  
   const {
     workoutName,
     setWorkoutName,
@@ -95,187 +33,130 @@ const NewWorkoutPage = () => {
     updateExerciseName,
     addSet,
     updateSet,
-    handleToggleSet,
+    handleToggleSet: originalHandleToggleSet,
     finishWorkout,
     cancelWorkout,
     saveWorkoutMutation,
+    generateWorkoutMutation,
+    selectedEquipment,
+    setSelectedEquipment,
     saveAsTemplate,
     saveAsTemplateMutation,
+    focusArea,
+    setFocusArea,
+    restDuration,
+    setRestDuration,
   } = useNewWorkoutForm();
 
-  const { isActive, startTime, totalDuration, formattedDuration, toggleWorkout } = useWorkoutTimer();
+  const handleToggleSet = useCallback((exerciseId: string, setId: string) => {
+    originalHandleToggleSet(exerciseId, setId, (isCompleted) => {
+      if (isCompleted) {
+        sonnerToast.custom(
+          (t) => <RestTimerToast duration={restDuration} toastId={t} />,
+          { duration: restDuration * 1000 + 5000, position: 'top-center' }
+        );
+      }
+    });
+  }, [originalHandleToggleSet, restDuration]);
 
-  const handleFinishWorkout = async () => {
-    const success = await finishWorkout();
-    if (success && isValhallaWorkout && valhallaWorkoutData) {
-      // Navigate to templates page with the completed Valhalla workout data
-      navigate("/templates", { 
-        state: { completedValhallaWorkout: valhallaWorkoutData },
-        replace: true 
-      });
-    }
+  const handleEnterCookMode = () => {
+    setIsCookMode(true);
   };
 
-  const handleCookModeToggle = () => {
-    setIsCookMode(!isCookMode);
-    if (!isCookMode && !isActive) {
-      toggleWorkout();
-    }
+  const handleExitCookMode = () => {
+    setIsCookMode(false);
   };
 
-  const formatTime = (seconds: number) => {
-    const hours = Math.floor(seconds / 3600);
-    const minutes = Math.floor((seconds % 3600) / 60);
-    const secs = seconds % 60;
-    
-    if (hours > 0) {
-      return `${hours}:${minutes.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
-    }
-    return `${minutes}:${secs.toString().padStart(2, '0')}`;
-  };
-
-  const handleStartRestTimer = () => {
-    setIsRestTimerActive(true);
-    setRestTimeRemaining(restTime);
-  };
+  if (isCookMode) {
+    return (
+      <WorkoutCookMode
+        workoutName={workoutName}
+        exercises={exercises}
+        onExitCookMode={handleExitCookMode}
+        onUpdateExerciseName={updateExerciseName}
+        onAddSet={addSet}
+        onUpdateSet={updateSet}
+        onToggleSet={handleToggleSet}
+        onFinishWorkout={finishWorkout}
+        isSaving={saveWorkoutMutation.isPending}
+        isWorkoutActive={isWorkoutActive}
+        formattedDuration={formattedDuration}
+        onToggleWorkout={toggleWorkout}
+      />
+    );
+  }
 
   return (
-    <>
-      <div className="container mx-auto px-4 py-6 max-w-4xl">
-        <div className="flex items-center justify-between mb-6">
-          <div className="flex items-center gap-3">
-            <Link to="/templates">
-              <Button variant="ghost" size="icon">
-                <ArrowLeft className="h-5 w-5" />
-              </Button>
-            </Link>
-            <h1 className="text-2xl font-bold">
-              {template ? template.name : "New Workout"}
-            </h1>
-            {isValhallaWorkout && valhallaWorkoutData && (
-              <span className="text-2xl" title={valhallaWorkoutData.godName}>
-                {valhallaWorkoutData.icon}
-              </span>
-            )}
+    <div className="space-y-4 pb-16">
+      <div className="flex justify-between items-center">
+        <h1 className="text-3xl font-bold tracking-tight">Create new workout</h1>
+        {isWorkoutActive && (
+          <div className="text-lg font-semibold text-green-600">
+            {formattedDuration}
           </div>
-          
-          <div className="flex items-center gap-2">
-            <Button
-              variant="outline"
-              size="sm"
-              onClick={handleCookModeToggle}
-              className="flex items-center gap-2"
-            >
-              <Timer className="h-4 w-4" />
-              {isCookMode ? "Exit Cook Mode" : "Cook Mode"}
-            </Button>
-            <div className="flex items-center gap-2 text-sm text-muted-foreground">
-              <Timer className="h-4 w-4" />
-              <span>{formatTime(totalDuration)}</span>
-            </div>
-          </div>
-        </div>
-
-        {isCookMode ? (
-          <WorkoutCookMode
-            workoutName={workoutName}
-            exercises={exercises}
-            onExitCookMode={handleCookModeToggle}
-            onUpdateExerciseName={updateExerciseName}
-            onAddSet={addSet}
-            onUpdateSet={updateSet}
-            onToggleSet={handleToggleSet}
-            onFinishWorkout={handleFinishWorkout}
-            isSaving={saveWorkoutMutation.isPending}
-            isWorkoutActive={isActive}
-            formattedDuration={formattedDuration}
-            onToggleWorkout={toggleWorkout}
-          />
-        ) : (
-          <>
-            <WorkoutHeader
-              workoutName={workoutName}
-              onNameChange={setWorkoutName}
-              onFinish={handleFinishWorkout}
-              onCancel={cancelWorkout}
-              isSaving={saveWorkoutMutation.isPending}
-              onSaveAsTemplate={saveAsTemplate}
-              isSavingAsTemplate={saveAsTemplateMutation.isPending}
-              isWorkoutActive={isActive}
-              onToggleWorkout={toggleWorkout}
-              isCookMode={isCookMode}
-              onToggleCookMode={setIsCookMode}
-            />
-
-            <RestTimerSettings 
-              value={restTime} 
-              onChange={setRestTime} 
-            />
-
-            <div className="space-y-4">
-              {exercises.map((exercise, index) => (
-                <ExerciseCard
-                  key={exercise.id}
-                  exercise={exercise}
-                  exerciseIndex={index}
-                  onAddSet={addSet}
-                  onUpdateSet={updateSet}
-                  onRemove={() => removeExercise(exercise.id)}
-                  onToggleSet={handleToggleSet}
-                  onStartRestTimer={handleStartRestTimer}
-                  canMoveUp={index > 0}
-                  canMoveDown={index < exercises.length - 1}
-                />
-              ))}
-
-              <Card>
-                <CardContent className="p-6">
-                  <Button
-                    variant="outline"
-                    className="w-full"
-                    onClick={() => setShowExerciseSelector(true)}
-                  >
-                    <Plus className="mr-2 h-4 w-4" />
-                    Add Exercise
-                  </Button>
-                </CardContent>
-              </Card>
-            </div>
-
-            <WorkoutActions
-              onSave={handleFinishWorkout}
-              onSaveAsTemplate={saveAsTemplate}
-              isSaving={saveWorkoutMutation.isPending}
-              isSavingAsTemplate={saveAsTemplateMutation.isPending}
-              hasExercises={exercises.length > 0}
-            />
-          </>
         )}
+      </div>
+      
+      <WorkoutHeader
+        workoutName={workoutName}
+        onNameChange={setWorkoutName}
+        onFinish={finishWorkout}
+        onCancel={cancelWorkout}
+        isSaving={saveWorkoutMutation.isPending}
+        onSaveAsTemplate={saveAsTemplate}
+        isSavingAsTemplate={saveAsTemplateMutation.isPending}
+        isWorkoutActive={isWorkoutActive}
+        onToggleWorkout={toggleWorkout}
+        isCookMode={isCookMode}
+        onToggleCookMode={setIsCookMode}
+      />
 
-        <ExerciseSelector
-          isOpen={showExerciseSelector}
-          onClose={() => setShowExerciseSelector(false)}
-          onSelect={(exerciseName) => {
-            updateExerciseName('', exerciseName);
-            addExercise();
-            setShowExerciseSelector(false);
-          }}
-        />
+      <WorkoutActions onAddExercise={addExercise} />
 
-        <RestTimerToast
-          active={isRestTimerActive}
-          timeRemaining={restTimeRemaining}
-          onTimeRemainingChange={setRestTimeRemaining}
-          onComplete={() => setIsRestTimerActive(false)}
+      <div className="p-4 border rounded-lg">
+        <RestTimerSettings
+          restDuration={restDuration}
+          onRestDurationChange={setRestDuration}
         />
       </div>
 
-      <ScoreRecordingDialog
-        workout={scoreDialogWorkout}
-        isOpen={!!scoreDialogWorkout}
-        onClose={hideScoreDialog}
-      />
-    </>
+      {exercises.map((exercise, exerciseIndex) => (
+        <ExerciseCard
+          key={exercise.id}
+          exercise={exercise}
+          exerciseIndex={exerciseIndex}
+          onRemove={removeExercise}
+          onUpdateName={updateExerciseName}
+          onAddSet={addSet}
+          onUpdateSet={updateSet}
+          onToggleSet={handleToggleSet}
+        />
+      ))}
+
+      <div className="p-4 border rounded-lg space-y-4">
+        <Button
+          variant="outline"
+          className="w-full"
+          onClick={() => generateWorkoutMutation.mutate({ equipment: selectedEquipment, focus: focusArea })}
+          disabled={generateWorkoutMutation.isPending}
+        >
+          {generateWorkoutMutation.isPending ? (
+            <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+          ) : (
+            <Sparkles className="mr-2 h-4 w-4" />
+          )}
+          Generate with AI
+        </Button>
+        <FocusAreaSelector
+          selectedFocus={focusArea}
+          onFocusChange={setFocusArea}
+        />
+        <EquipmentSelector
+          selectedEquipment={selectedEquipment}
+          onEquipmentChange={setSelectedEquipment}
+        />
+      </div>
+    </div>
   );
 };
 

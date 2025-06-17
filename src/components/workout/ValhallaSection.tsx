@@ -1,7 +1,7 @@
 
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Play, ChevronDown, Trophy } from "lucide-react";
+import { Play, ChevronDown } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import type { WorkoutTemplate, TemplateExercise } from "@/types";
 import { Badge } from "@/components/ui/badge";
@@ -11,7 +11,6 @@ import {
   CollapsibleTrigger,
 } from "@/components/ui/collapsible";
 import { useState } from "react";
-import { ScoreRecordingDialog } from "./ScoreRecordingDialog";
 
 interface ValhallaWorkout {
   id: string;
@@ -22,7 +21,6 @@ interface ValhallaWorkout {
   icon: string;
   exercises: TemplateExercise[];
   format: string;
-  scoreInstructions: string;
 }
 
 const valhallaWorkouts: ValhallaWorkout[] = [
@@ -34,7 +32,6 @@ const valhallaWorkouts: ValhallaWorkout[] = [
     theme: "Like Mjölnir, short, heavy, and hammering.",
     icon: "⚡",
     format: "3 rounds",
-    scoreInstructions: "Record your total time to complete all 3 rounds. Faster time = better score.",
     exercises: [
       { name: "Jump Squats", bodyPart: "legs", equipment: "bodyweight", targetMuscles: ["quadriceps", "glutes"], description: "Explosive squat jumps", sets: 3, suggestedReps: 40, type: "reps" },
       { name: "Clap Push-ups", bodyPart: "chest", equipment: "bodyweight", targetMuscles: ["chest", "triceps"], description: "Explosive push-ups with clap", sets: 3, suggestedReps: 30, type: "reps" },
@@ -50,7 +47,6 @@ const valhallaWorkouts: ValhallaWorkout[] = [
     theme: "Designed to wear you down—then break you loose.",
     icon: "🐺",
     format: "For time",
-    scoreInstructions: "Record your total time to complete all exercises. Target: Under 15 minutes for elite performance.",
     exercises: [
       { name: "Mountain Climbers", bodyPart: "core", equipment: "bodyweight", targetMuscles: ["core", "shoulders"], description: "High-intensity mountain climbers", sets: 1, suggestedReps: 100, type: "reps" },
       { name: "Burpees", bodyPart: "full body", equipment: "bodyweight", targetMuscles: ["full body"], description: "Standard burpees", sets: 1, suggestedReps: 50, type: "reps" },
@@ -66,7 +62,6 @@ const valhallaWorkouts: ValhallaWorkout[] = [
     theme: "Unforgiving and creeping—no flash, all grind.",
     icon: "🧊",
     format: "2 rounds",
-    scoreInstructions: "Record your total time to complete both rounds. Consistency between rounds shows true grit.",
     exercises: [
       { name: "Pike Push-ups", bodyPart: "shoulders", equipment: "bodyweight", targetMuscles: ["shoulders", "triceps"], description: "Pike position push-ups", sets: 2, suggestedReps: 20, type: "reps" },
       { name: "Sit-ups", bodyPart: "core", equipment: "bodyweight", targetMuscles: ["abs"], description: "Standard sit-ups", sets: 2, suggestedReps: 40, type: "reps" },
@@ -83,7 +78,6 @@ const valhallaWorkouts: ValhallaWorkout[] = [
     theme: "Graceful pacing with strong undertow—stamina and control.",
     icon: "🌊",
     format: "3 rounds",
-    scoreInstructions: "Record your total time to complete all 3 rounds. Focus on smooth transitions between exercises.",
     exercises: [
       { name: "Jump Rope", bodyPart: "cardio", equipment: "jump rope", targetMuscles: ["calves", "shoulders"], description: "Jump rope for time", sets: 3, suggestedReps: 1, type: "time" },
       { name: "Push-ups", bodyPart: "chest", equipment: "bodyweight", targetMuscles: ["chest", "triceps"], description: "Standard push-ups", sets: 3, suggestedReps: 30, type: "reps" },
@@ -100,7 +94,6 @@ const valhallaWorkouts: ValhallaWorkout[] = [
     theme: "Discipline through repetition. The wise suffer willingly.",
     icon: "🧠",
     format: "For time (or 2 rounds of 25)",
-    scoreInstructions: "Record your total time to complete all 50 reps of each exercise. Sub-20 minutes is worthy of Valhalla.",
     exercises: [
       { name: "Push-ups", bodyPart: "chest", equipment: "bodyweight", targetMuscles: ["chest", "triceps"], description: "Standard push-ups", sets: 1, suggestedReps: 50, type: "reps" },
       { name: "Air Squats", bodyPart: "legs", equipment: "bodyweight", targetMuscles: ["quadriceps", "glutes"], description: "Bodyweight squats", sets: 1, suggestedReps: 50, type: "reps" },
@@ -115,7 +108,6 @@ export const ValhallaSection = () => {
   const navigate = useNavigate();
   const [isOpen, setIsOpen] = useState(false);
   const [expandedWorkouts, setExpandedWorkouts] = useState<Set<string>>(new Set());
-  const [scoreDialogWorkout, setScoreDialogWorkout] = useState<ValhallaWorkout | null>(null);
 
   const handleStartWorkout = (valhallaWorkout: ValhallaWorkout) => {
     const template: WorkoutTemplate = {
@@ -141,124 +133,97 @@ export const ValhallaSection = () => {
     });
   };
 
-  const handleRecordScore = (workout: ValhallaWorkout) => {
-    setScoreDialogWorkout(workout);
-  };
-
   return (
-    <>
-      <Collapsible open={isOpen} onOpenChange={setIsOpen}>
-        <Card className="border-2 border-primary/20 bg-gradient-to-br from-background to-muted/20">
-          <CollapsibleTrigger asChild>
-            <CardHeader className="cursor-pointer hover:bg-muted/10 transition-colors">
-              <div className="flex items-center justify-between">
-                <div className="flex items-center gap-3">
-                  <span className="text-3xl">⚔️</span>
-                  <div>
-                    <CardTitle className="text-2xl font-bold text-primary">
-                      Valhalla
-                    </CardTitle>
-                    <Badge variant="secondary" className="bg-primary/10 text-primary border-primary/20 mt-1">
-                      Norse Gods Collection
-                    </Badge>
-                  </div>
+    <Collapsible open={isOpen} onOpenChange={setIsOpen}>
+      <Card className="border-2 border-primary/20 bg-gradient-to-br from-background to-muted/20">
+        <CollapsibleTrigger asChild>
+          <CardHeader className="cursor-pointer hover:bg-muted/10 transition-colors">
+            <div className="flex items-center justify-between">
+              <div className="flex items-center gap-3">
+                <span className="text-3xl">⚔️</span>
+                <div>
+                  <CardTitle className="text-2xl font-bold text-primary">
+                    Valhalla
+                  </CardTitle>
+                  <Badge variant="secondary" className="bg-primary/10 text-primary border-primary/20 mt-1">
+                    Norse Gods Collection
+                  </Badge>
                 </div>
-                <ChevronDown className={`h-6 w-6 text-primary transition-transform duration-200 ${isOpen ? 'rotate-180' : ''}`} />
               </div>
-              <p className="text-muted-foreground mt-2">Epic workouts named after the Norse Gods. Prove your worth.</p>
-            </CardHeader>
-          </CollapsibleTrigger>
-          
-          <CollapsibleContent>
-            <CardContent className="space-y-3">
-              {valhallaWorkouts.map((workout) => (
-                <Collapsible 
-                  key={workout.id} 
-                  open={expandedWorkouts.has(workout.id)} 
-                  onOpenChange={() => toggleWorkout(workout.id)}
-                >
-                  <Card className="border border-primary/10 hover:border-primary/20 transition-colors">
-                    <CollapsibleTrigger asChild>
-                      <CardHeader className="pb-3 cursor-pointer hover:bg-muted/5 transition-colors">
-                        <div className="flex items-center justify-between">
-                          <div className="flex items-center gap-3">
-                            <span className="text-2xl">{workout.icon}</span>
-                            <div>
-                              <CardTitle className="text-lg text-primary">{workout.name}</CardTitle>
-                              <p className="text-sm font-medium text-muted-foreground">{workout.godName}</p>
-                              <p className="text-sm text-muted-foreground italic">{workout.description}</p>
-                            </div>
-                          </div>
-                          <div className="flex items-center gap-2">
-                            <Button
-                              variant="ghost"
-                              size="icon"
-                              onClick={(e) => {
-                                e.stopPropagation();
-                                handleRecordScore(workout);
-                              }}
-                              className="text-primary hover:text-primary hover:bg-primary/10"
-                            >
-                              <Trophy className="h-5 w-5" />
-                            </Button>
-                            <Button
-                              variant="ghost"
-                              size="icon"
-                              onClick={(e) => {
-                                e.stopPropagation();
-                                handleStartWorkout(workout);
-                              }}
-                              className="text-primary hover:text-primary hover:bg-primary/10"
-                            >
-                              <Play className="h-5 w-5" />
-                            </Button>
-                            <ChevronDown className={`h-5 w-5 text-muted-foreground transition-transform duration-200 ${expandedWorkouts.has(workout.id) ? 'rotate-180' : ''}`} />
+              <ChevronDown className={`h-6 w-6 text-primary transition-transform duration-200 ${isOpen ? 'rotate-180' : ''}`} />
+            </div>
+            <p className="text-muted-foreground mt-2">Epic workouts named after the Norse Gods. Prove your worth.</p>
+          </CardHeader>
+        </CollapsibleTrigger>
+        
+        <CollapsibleContent>
+          <CardContent className="space-y-3">
+            {valhallaWorkouts.map((workout) => (
+              <Collapsible 
+                key={workout.id} 
+                open={expandedWorkouts.has(workout.id)} 
+                onOpenChange={() => toggleWorkout(workout.id)}
+              >
+                <Card className="border border-primary/10 hover:border-primary/20 transition-colors">
+                  <CollapsibleTrigger asChild>
+                    <CardHeader className="pb-3 cursor-pointer hover:bg-muted/5 transition-colors">
+                      <div className="flex items-center justify-between">
+                        <div className="flex items-center gap-3">
+                          <span className="text-2xl">{workout.icon}</span>
+                          <div>
+                            <CardTitle className="text-lg text-primary">{workout.name}</CardTitle>
+                            <p className="text-sm font-medium text-muted-foreground">{workout.godName}</p>
+                            <p className="text-sm text-muted-foreground italic">{workout.description}</p>
                           </div>
                         </div>
-                      </CardHeader>
-                    </CollapsibleTrigger>
-                    
-                    <CollapsibleContent>
-                      <CardContent className="pt-0">
-                        <div className="space-y-3">
-                          <div className="text-sm">
-                            <Badge variant="outline" className="border-primary/30 text-primary">
-                              {workout.format}
-                            </Badge>
-                          </div>
-                          <div className="space-y-1">
-                            {workout.exercises.map((exercise, index) => (
-                              <div key={index} className="flex justify-between text-sm py-1">
-                                <span className="truncate">{exercise.name}</span>
-                                <span className="text-muted-foreground ml-2 shrink-0">
-                                  {exercise.suggestedReps}{exercise.type === 'time' ? ' min' : exercise.type === 'distance' ? 'm' : ''}
-                                </span>
-                              </div>
-                            ))}
-                          </div>
-                          <div className="pt-2 border-t border-border space-y-2">
-                            <p className="text-xs italic text-muted-foreground">{workout.theme}</p>
-                            <div className="bg-muted/50 p-3 rounded-md">
-                              <p className="text-xs font-medium text-foreground mb-1">Score Instructions:</p>
-                              <p className="text-xs text-muted-foreground">{workout.scoreInstructions}</p>
-                            </div>
-                          </div>
+                        <div className="flex items-center gap-2">
+                          <Button
+                            variant="ghost"
+                            size="icon"
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              handleStartWorkout(workout);
+                            }}
+                            className="text-primary hover:text-primary hover:bg-primary/10"
+                          >
+                            <Play className="h-5 w-5" />
+                          </Button>
+                          <ChevronDown className={`h-5 w-5 text-muted-foreground transition-transform duration-200 ${expandedWorkouts.has(workout.id) ? 'rotate-180' : ''}`} />
                         </div>
-                      </CardContent>
-                    </CollapsibleContent>
-                  </Card>
-                </Collapsible>
-              ))}
-            </CardContent>
-          </CollapsibleContent>
-        </Card>
-      </Collapsible>
-
-      <ScoreRecordingDialog
-        workout={scoreDialogWorkout}
-        isOpen={!!scoreDialogWorkout}
-        onClose={() => setScoreDialogWorkout(null)}
-      />
-    </>
+                      </div>
+                    </CardHeader>
+                  </CollapsibleTrigger>
+                  
+                  <CollapsibleContent>
+                    <CardContent className="pt-0">
+                      <div className="space-y-3">
+                        <div className="text-sm">
+                          <Badge variant="outline" className="border-primary/30 text-primary">
+                            {workout.format}
+                          </Badge>
+                        </div>
+                        <div className="space-y-1">
+                          {workout.exercises.map((exercise, index) => (
+                            <div key={index} className="flex justify-between text-sm py-1">
+                              <span className="truncate">{exercise.name}</span>
+                              <span className="text-muted-foreground ml-2 shrink-0">
+                                {exercise.suggestedReps}{exercise.type === 'time' ? ' min' : exercise.type === 'distance' ? 'm' : ''}
+                              </span>
+                            </div>
+                          ))}
+                        </div>
+                        <div className="pt-2 border-t border-border">
+                          <p className="text-xs italic text-muted-foreground">{workout.theme}</p>
+                        </div>
+                      </div>
+                    </CardContent>
+                  </CollapsibleContent>
+                </Card>
+              </Collapsible>
+            ))}
+          </CardContent>
+        </CollapsibleContent>
+      </Card>
+    </Collapsible>
   );
 };
