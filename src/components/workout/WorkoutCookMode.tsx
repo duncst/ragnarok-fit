@@ -53,7 +53,7 @@ export const WorkoutCookMode = ({
         <div className="flex items-center justify-between sticky top-4 bg-background/95 backdrop-blur-sm z-10 p-4 rounded-lg border">
           <div className="flex items-center gap-3">
             <ChefHat className="h-6 w-6 text-primary" />
-            <h1 className="text-2xl font-bold">{workoutName || 'Cook Mode'}</h1>
+            <h1 className="text-2xl font-bold">{workoutName || 'Workout Mode'}</h1>
           </div>
           <div className="flex items-center gap-2">
             <Button onClick={onFinishWorkout} disabled={isSaving} size="lg">
