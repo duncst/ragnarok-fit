@@ -1,3 +1,4 @@
+
 import React, { useCallback, useState } from 'react';
 import { useNewWorkoutForm } from '@/hooks/useNewWorkoutForm';
 import { useWorkoutTimer } from '@/hooks/useWorkoutTimer';
@@ -78,8 +79,6 @@ const NewWorkoutPage = () => {
         onToggleSet={handleToggleSet}
         onFinishWorkout={finishWorkout}
         isSaving={saveWorkoutMutation.isPending}
-        isWorkoutActive={isWorkoutActive}
-        formattedDuration={formattedDuration}
       />
     );
   }
