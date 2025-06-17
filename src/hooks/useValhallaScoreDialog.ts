@@ -1,5 +1,6 @@
 
-import { useState } from 'react';
+import { useState, useEffect } from "react";
+import { useLocation } from "react-router-dom";
 
 interface ValhallaWorkout {
   id: string;
@@ -13,23 +14,30 @@ interface ValhallaWorkout {
 }
 
 export const useValhallaScoreDialog = () => {
-  const [isOpen, setIsOpen] = useState(false);
-  const [currentWorkout, setCurrentWorkout] = useState<ValhallaWorkout | null>(null);
+  const [scoreDialogWorkout, setScoreDialogWorkout] = useState<ValhallaWorkout | null>(null);
+  const location = useLocation();
 
-  const openDialog = (workout: ValhallaWorkout) => {
-    setCurrentWorkout(workout);
-    setIsOpen(true);
+  const showScoreDialog = (workout: ValhallaWorkout) => {
+    setScoreDialogWorkout(workout);
   };
 
-  const closeDialog = () => {
-    setIsOpen(false);
-    setCurrentWorkout(null);
+  const hideScoreDialog = () => {
+    setScoreDialogWorkout(null);
   };
+
+  // Check if we're finishing a Valhalla workout by looking at the location state
+  useEffect(() => {
+    if (location.state?.completedValhallaWorkout) {
+      setScoreDialogWorkout(location.state.completedValhallaWorkout);
+      
+      // Clear the state to prevent showing the dialog again on refresh
+      window.history.replaceState(null, '', location.pathname);
+    }
+  }, [location.state]);
 
   return {
-    isOpen,
-    currentWorkout,
-    openDialog,
-    closeDialog,
+    scoreDialogWorkout,
+    showScoreDialog,
+    hideScoreDialog,
   };
 };

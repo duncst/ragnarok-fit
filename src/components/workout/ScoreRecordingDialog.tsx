@@ -45,28 +45,16 @@ export const ScoreRecordingDialog = ({ workout, isOpen, onClose }: ScoreRecordin
     mutationFn: async ({ workoutId, score, notes }: { workoutId: string, score: number, notes: string }) => {
       if (!user) throw new Error("User not authenticated");
       
-      // Use raw SQL query since the table might not be in TypeScript types yet
-      const { error } = await supabase.rpc('execute_sql', {
-        query: `
-          INSERT INTO valhalla_scores (user_id, workout_id, score_seconds, notes)
-          VALUES ($1, $2, $3, $4)
-        `,
-        params: [user.id, workoutId, score, notes || null]
-      });
+      const { error } = await supabase
+        .from('valhalla_scores')
+        .insert({
+          user_id: user.id,
+          workout_id: workoutId,
+          score_seconds: score,
+          notes: notes || null,
+        });
       
-      if (error) {
-        // Fallback to direct table insert
-        const { error: insertError } = await supabase
-          .from('valhalla_scores' as any)
-          .insert({
-            user_id: user.id,
-            workout_id: workoutId,
-            score_seconds: score,
-            notes: notes || null,
-          });
-        
-        if (insertError) throw insertError;
-      }
+      if (error) throw error;
     },
     onSuccess: () => {
       toast({
@@ -74,6 +62,7 @@ export const ScoreRecordingDialog = ({ workout, isOpen, onClose }: ScoreRecordin
         description: "Your Valhalla score has been saved.",
       });
       queryClient.invalidateQueries({ queryKey: ['valhalla-scores'] });
+      queryClient.invalidateQueries({ queryKey: ['recent-activity'] });
       handleClose();
     },
     onError: (error: any) => {
