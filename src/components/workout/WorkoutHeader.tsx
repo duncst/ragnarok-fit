@@ -43,7 +43,10 @@ export const WorkoutHeader = ({
           size="icon" 
           onClick={onToggleWorkout} 
           disabled={isSaving || isSavingAsTemplate}
-          className={isWorkoutActive ? "bg-red-50 hover:bg-red-100" : "bg-green-50 hover:bg-green-100"}
+          className={isWorkoutActive ? 
+            "bg-red-500 hover:bg-red-600 border-red-500 text-white" : 
+            "bg-green-500 hover:bg-green-600 border-green-500 text-white"
+          }
         >
           {isWorkoutActive ? <Pause className="h-4 w-4" /> : <Play className="h-4 w-4" />}
           <span className="sr-only">{isWorkoutActive ? 'Pause workout' : 'Start workout'}</span>
