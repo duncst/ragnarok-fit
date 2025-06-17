@@ -49,6 +49,7 @@ export const useSaveWorkout = () => {
                         weight: set.weight,
                         completed: set.completed,
                         "order": setIndex,
+                        // Note: duration is not stored in the database yet, but the UI supports it
                     }));
                     
                     const { error: setsError } = await supabase

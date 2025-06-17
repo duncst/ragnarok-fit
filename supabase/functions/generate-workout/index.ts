@@ -39,10 +39,12 @@ The JSON object should have the following structure:
 - Draw inspiration from a wide range of Norse mythology figures (e.g., gods, giants, monsters), places (e.g., Asgard, Midgard, Valhalla), and artifacts (e.g., Mjölnir, Gungnir).
 - For example, you could create names like "Fenrir's Frenzy", "The Bifröst Bridge Builder", or "Einherjar's Endurance", but DO NOT use these exact examples.
 - Include 4 to 6 exercises for a balanced workout targeting the specified focus area, using ONLY the provided equipment. If the focus is 'Full Body', provide a full body workout.
+- Feel free to include time-based exercises like Running, Rowing, Ski Erg, Skipping, Indoor Bike, Assault Bike, or Planks when appropriate.
 - Each exercise should have 3 sets.
-- Reps should be between 8 and 15.
-- The "weight" for each set should initially be 0. The application will populate this with historical data.
-- **CRITICAL: Use ONLY standard, recognizable exercise names. Do NOT add any creative, fantasy, or Norse-themed modifications to exercise names.** Examples of correct exercise names: "Bench Press", "Squat", "Deadlift", "Push-ups", "Pull-ups", "Bicep Curls", "Overhead Press", "Lunges", "Plank", etc.
+- For weight-based exercises: Reps should be between 8 and 15, weight should initially be 0.
+- For time-based exercises: Include a "duration" field in seconds (typically 30-120 seconds), and set reps to 1.
+- For bodyweight exercises without weight: Set weight to 0, reps between 8 and 20.
+- **CRITICAL: Use ONLY standard, recognizable exercise names. Do NOT add any creative, fantasy, or Norse-themed modifications to exercise names.** Examples of correct exercise names: "Bench Press", "Squat", "Deadlift", "Push-ups", "Pull-ups", "Bicep Curls", "Overhead Press", "Lunges", "Plank", "Running", "Rowing", "Ski Erg", "Skipping", etc.
 - Keep exercise names simple, standard, and exactly as they would appear in any fitness app or gym.
 `;
 

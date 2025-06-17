@@ -5,6 +5,7 @@ import { Button } from '@/components/ui/button';
 import { Plus, Trash2 } from 'lucide-react';
 import { ExerciseSelector } from '@/components/ExerciseSelector';
 import { SetRow } from './SetRow';
+import { getExerciseType } from '@/utils/exerciseTypes';
 import type { Exercise } from '@/types';
 
 interface ExerciseCardProps {
@@ -13,7 +14,7 @@ interface ExerciseCardProps {
   onRemove: (exerciseId: string) => void;
   onUpdateName: (exerciseId: string, name: string) => void;
   onAddSet: (exerciseId: string) => void;
-  onUpdateSet: (exerciseId: string, setId: string, field: 'reps' | 'weight', value: number) => void;
+  onUpdateSet: (exerciseId: string, setId: string, field: 'reps' | 'weight' | 'duration', value: number) => void;
   onToggleSet: (exerciseId: string, setId: string) => void;
 }
 
@@ -26,6 +27,21 @@ export const ExerciseCard = ({
   onUpdateSet,
   onToggleSet,
 }: ExerciseCardProps) => {
+  const exerciseType = exercise.type || getExerciseType(exercise.name);
+
+  const getHeaderLabels = () => {
+    switch (exerciseType) {
+      case 'time':
+        return ['Set', 'Duration', 'Reps', 'Done'];
+      case 'reps':
+        return ['Set', '', 'Reps', 'Done'];
+      default:
+        return ['Set', 'Weight (kg)', 'Reps', 'Done'];
+    }
+  };
+
+  const headerLabels = getHeaderLabels();
+
   return (
     <Card>
       <CardHeader>
@@ -42,10 +58,10 @@ export const ExerciseCard = ({
       </CardHeader>
       <CardContent className="space-y-2">
         <div className="grid grid-cols-4 gap-2 text-sm text-muted-foreground font-medium text-center">
-          <span className="text-left">Set</span>
-          <span>Weight (kg)</span>
-          <span>Reps</span>
-          <span>Done</span>
+          <span className="text-left">{headerLabels[0]}</span>
+          <span>{headerLabels[1]}</span>
+          <span>{headerLabels[2]}</span>
+          <span>{headerLabels[3]}</span>
         </div>
         {exercise.sets.map((set, setIndex) => (
           <SetRow
@@ -54,6 +70,7 @@ export const ExerciseCard = ({
             setIndex={setIndex}
             onUpdate={(field, value) => onUpdateSet(exercise.id, set.id, field, value)}
             onToggle={() => onToggleSet(exercise.id, set.id)}
+            exerciseType={exerciseType}
           />
         ))}
         <Button variant="outline" size="sm" onClick={() => onAddSet(exercise.id)}>

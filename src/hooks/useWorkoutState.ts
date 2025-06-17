@@ -1,9 +1,9 @@
-
 import { useState, useEffect, useCallback } from 'react';
 import { useLocation } from 'react-router-dom';
 import type { Exercise, WorkoutSet, WorkoutTemplate, Workout } from '@/types';
 import { useOneRepMax } from './useOneRepMax';
 import { useWorkoutPersistence } from './useWorkoutPersistence';
+import { getExerciseType } from '@/utils/exerciseTypes';
 
 export const useWorkoutState = () => {
   const location = useLocation();
@@ -29,11 +29,13 @@ export const useWorkoutState = () => {
       const exercisesFromTemplate: Exercise[] = template.exercises.map((templateEx, exIndex) => ({
         id: `ex-${Date.now()}-${exIndex}`,
         name: templateEx.name,
+        type: templateEx.type,
         sets: Array.from({ length: templateEx.sets }, (_, setIndex) => ({
           id: `set-${Date.now()}-${exIndex}-${setIndex}`,
           reps: 8,
           weight: 20,
           completed: false,
+          duration: templateEx.type === 'time' ? 60 : undefined,
         })),
       }));
       setExercises(exercisesFromTemplate);
@@ -42,11 +44,13 @@ export const useWorkoutState = () => {
       const exercisesFromWorkout: Exercise[] = workout.exercises.map((workoutEx, exIndex) => ({
           id: `ex-${Date.now()}-${exIndex}`,
           name: workoutEx.name,
+          type: workoutEx.type,
           sets: workoutEx.sets.map((set, setIndex) => ({
               id: `set-${Date.now()}-${exIndex}-${setIndex}`,
               reps: set.reps,
               weight: set.weight,
               completed: false,
+              duration: set.duration,
           })),
       }));
       setExercises(exercisesFromWorkout);
@@ -96,7 +100,13 @@ export const useWorkoutState = () => {
 
   const updateExerciseName = (exerciseId: string, name: string) => {
     setExercises((prev) =>
-      prev.map((ex) => (ex.id === exerciseId ? { ...ex, name } : ex))
+      prev.map((ex) => {
+        if (ex.id === exerciseId) {
+          const exerciseType = getExerciseType(name);
+          return { ...ex, name, type: exerciseType };
+        }
+        return ex;
+      })
     );
   };
 
@@ -104,12 +114,14 @@ export const useWorkoutState = () => {
     setExercises((prev) =>
       prev.map((ex) => {
         if (ex.id === exerciseId) {
-          const lastSet = ex.sets[ex.sets.length - 1] || { reps: 8, weight: 20 };
+          const lastSet = ex.sets[ex.sets.length - 1] || { reps: 8, weight: 20, duration: 60 };
+          const exerciseType = ex.type || getExerciseType(ex.name);
           const newSet: WorkoutSet = {
             id: `set-${Date.now()}`,
             reps: lastSet.reps,
-            weight: lastSet.weight,
+            weight: exerciseType === 'weight' ? lastSet.weight : 0,
             completed: false,
+            duration: exerciseType === 'time' ? (lastSet.duration || 60) : undefined,
           };
           return { ...ex, sets: [...ex.sets, newSet] };
         }
@@ -121,7 +133,7 @@ export const useWorkoutState = () => {
   const updateSet = (
     exerciseId: string,
     setId: string,
-    field: 'reps' | 'weight',
+    field: 'reps' | 'weight' | 'duration',
     value: number
   ) => {
     setExercises((prev) =>
