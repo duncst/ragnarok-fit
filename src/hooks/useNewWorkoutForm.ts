@@ -1,4 +1,3 @@
-
 import { useWorkoutState } from './useWorkoutState';
 import { useSaveWorkout } from './useSaveWorkout';
 import { useSaveAsTemplate } from './useSaveAsTemplate';
@@ -22,18 +21,11 @@ export const useNewWorkoutForm = () => {
     setFocusArea,
     restDuration,
     setRestDuration,
-    workoutStartTime,
-    clearSession,
   } = useWorkoutState();
 
   const { saveWorkoutMutation, finishWorkout } = useSaveWorkout();
   const { saveAsTemplateMutation, saveAsTemplate } = useSaveAsTemplate();
   const { generateWorkoutMutation } = useGenerateWorkout({ setWorkoutName, setExercises });
-
-  const handleFinishWorkout = () => {
-    finishWorkout({ exercises, name: workoutName, startTime: workoutStartTime });
-    clearSession();
-  };
 
   return {
     workoutName,
@@ -45,7 +37,7 @@ export const useNewWorkoutForm = () => {
     addSet,
     updateSet,
     handleToggleSet,
-    finishWorkout: handleFinishWorkout,
+    finishWorkout: () => finishWorkout({ exercises, name: workoutName }),
     saveWorkoutMutation,
     generateWorkoutMutation,
     selectedEquipment,
