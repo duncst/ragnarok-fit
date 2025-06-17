@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
@@ -43,10 +42,6 @@ export const WorkoutHeader = ({
           size="icon" 
           onClick={onToggleWorkout} 
           disabled={isSaving || isSavingAsTemplate}
-          className={isWorkoutActive ? 
-            "bg-red-500 hover:bg-red-600 border-red-500 text-white" : 
-            "bg-green-500 hover:bg-green-600 border-green-500 text-white"
-          }
         >
           {isWorkoutActive ? <Pause className="h-4 w-4" /> : <Play className="h-4 w-4" />}
           <span className="sr-only">{isWorkoutActive ? 'Pause workout' : 'Start workout'}</span>
