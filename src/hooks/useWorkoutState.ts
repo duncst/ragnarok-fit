@@ -1,7 +1,9 @@
+
 import { useState, useEffect, useCallback } from 'react';
 import { useLocation } from 'react-router-dom';
 import type { Exercise, WorkoutSet, WorkoutTemplate, Workout } from '@/types';
 import { useOneRepMax } from './useOneRepMax';
+import { useWorkoutPersistence } from './useWorkoutPersistence';
 
 export const useWorkoutState = () => {
   const location = useLocation();
@@ -13,10 +15,22 @@ export const useWorkoutState = () => {
   const [selectedEquipment, setSelectedEquipment] = useState<string[]>(['Bodyweight']);
   const [focusArea, setFocusArea] = useState('Full Body');
   const [restDuration, setRestDuration] = useState(90);
+  const [workoutStartTime, setWorkoutStartTime] = useState<Date>(new Date());
 
   const { checkAndSave1RM } = useOneRepMax();
+  const { saveWorkoutSession, loadWorkoutSession, clearWorkoutSession } = useWorkoutPersistence();
 
+  // Load persisted workout session on mount
   useEffect(() => {
+    const savedSession = loadWorkoutSession();
+    if (savedSession && !template && !workout) {
+      setWorkoutName(savedSession.name);
+      setExercises(savedSession.exercises);
+      setWorkoutStartTime(savedSession.startTime);
+      setRestDuration(savedSession.restDuration);
+      return;
+    }
+
     if (template) {
       setWorkoutName(template.name);
       const exercisesFromTemplate: Exercise[] = template.exercises.map((templateEx, exIndex) => ({
@@ -44,7 +58,21 @@ export const useWorkoutState = () => {
       }));
       setExercises(exercisesFromWorkout);
     }
-  }, [template, workout]);
+  }, [template, workout, loadWorkoutSession]);
+
+  // Save workout session whenever state changes
+  useEffect(() => {
+    if (exercises.length > 0 && workoutName) {
+      const session = {
+        id: `workout-${Date.now()}`,
+        name: workoutName,
+        exercises,
+        startTime: workoutStartTime,
+        restDuration,
+      };
+      saveWorkoutSession(session);
+    }
+  }, [exercises, workoutName, workoutStartTime, restDuration, saveWorkoutSession]);
 
   const addExercise = () => {
     const newExercise: Exercise = {
@@ -135,6 +163,10 @@ export const useWorkoutState = () => {
       })
     );
   }, [checkAndSave1RM]);
+
+  const clearSession = useCallback(() => {
+    clearWorkoutSession();
+  }, [clearWorkoutSession]);
   
   return {
     workoutName,
@@ -153,5 +185,7 @@ export const useWorkoutState = () => {
     setFocusArea,
     restDuration,
     setRestDuration,
+    workoutStartTime,
+    clearSession,
   };
 };
