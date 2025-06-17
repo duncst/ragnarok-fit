@@ -1,7 +1,8 @@
+
 import React from 'react';
 import { Card, CardContent, CardHeader } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { Plus, Trash2, Clock, Weight, Repeat } from 'lucide-react';
+import { Plus, Trash2, Clock, Weight, Repeat, MapPin, Dumbbell } from 'lucide-react';
 import { ExerciseSelector } from '@/components/ExerciseSelector';
 import { SetRow } from './SetRow';
 import { getExerciseType } from '@/utils/exerciseTypes';
@@ -13,7 +14,7 @@ interface ExerciseCardProps {
   onRemove: (exerciseId: string) => void;
   onUpdateName: (exerciseId: string, name: string) => void;
   onAddSet: (exerciseId: string) => void;
-  onUpdateSet: (exerciseId: string, setId: string, field: 'reps' | 'weight' | 'duration', value: number) => void;
+  onUpdateSet: (exerciseId: string, setId: string, field: 'reps' | 'weight' | 'duration' | 'distance', value: number) => void;
   onToggleSet: (exerciseId: string, setId: string) => void;
 }
 
@@ -32,6 +33,10 @@ export const ExerciseCard = ({
     switch (exerciseType) {
       case 'time':
         return ['Set', 'Duration', 'Reps', 'Done'];
+      case 'distance':
+        return ['Set', 'Duration', 'Distance', 'Done'];
+      case 'weight_distance_time':
+        return ['Set', 'Weight (kg)', 'Time/Distance', 'Done'];
       case 'reps':
         return ['Set', '', 'Reps', 'Done'];
       default:
@@ -43,6 +48,10 @@ export const ExerciseCard = ({
     switch (exerciseType) {
       case 'time':
         return <Clock className="h-4 w-4 text-blue-500" />;
+      case 'distance':
+        return <MapPin className="h-4 w-4 text-purple-500" />;
+      case 'weight_distance_time':
+        return <Dumbbell className="h-4 w-4 text-red-500" />;
       case 'reps':
         return <Repeat className="h-4 w-4 text-green-500" />;
       default:
@@ -54,6 +63,10 @@ export const ExerciseCard = ({
     switch (exerciseType) {
       case 'time':
         return 'Time-based';
+      case 'distance':
+        return 'Time + distance';
+      case 'weight_distance_time':
+        return 'Weight + time + distance';
       case 'reps':
         return 'Reps only';
       default:

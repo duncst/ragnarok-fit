@@ -1,17 +1,6 @@
 
 // Time-based exercises that should be measured by duration instead of weight
 export const TIME_BASED_EXERCISES = [
-  'Running',
-  'Treadmill',
-  'Rowing',
-  'Ski Erg',
-  'Skipping',
-  'Jump Rope',
-  'Indoor Bike',
-  'Stationary Bike',
-  'Assault Bike',
-  'Air Bike',
-  'Bike',
   'Plank',
   'Side Plank',
   'Wall Sit',
@@ -22,6 +11,31 @@ export const TIME_BASED_EXERCISES = [
   'High Knees',
   'Butt Kicks',
   'Jumping Jacks',
+];
+
+// Distance-based exercises (time + distance)
+export const DISTANCE_BASED_EXERCISES = [
+  'Running',
+  'Run',
+  'Treadmill',
+  'Rowing',
+  'Ski Erg',
+  'Skipping',
+  'Jump Rope',
+  'Indoor Bike',
+  'Stationary Bike',
+  'Assault Bike',
+  'Air Bike',
+  'Bike',
+];
+
+// Weight + distance + time exercises
+export const WEIGHT_DISTANCE_TIME_EXERCISES = [
+  'Sled Push',
+  'Sled Pull',
+  'Weighted Carry',
+  'Farmer\'s Walk',
+  'Farmer Walk',
 ];
 
 // Reps-only exercises (no weight, just reps)
@@ -39,8 +53,16 @@ export const REPS_ONLY_EXERCISES = [
   'Step-ups',
 ];
 
-export const getExerciseType = (exerciseName: string): 'weight' | 'time' | 'reps' => {
+export const getExerciseType = (exerciseName: string): 'weight' | 'time' | 'reps' | 'distance' | 'weight_distance_time' => {
   const normalizedName = exerciseName.trim();
+  
+  if (DISTANCE_BASED_EXERCISES.some(ex => normalizedName.toLowerCase().includes(ex.toLowerCase()))) {
+    return 'distance';
+  }
+  
+  if (WEIGHT_DISTANCE_TIME_EXERCISES.some(ex => normalizedName.toLowerCase().includes(ex.toLowerCase()))) {
+    return 'weight_distance_time';
+  }
   
   if (TIME_BASED_EXERCISES.some(ex => normalizedName.toLowerCase().includes(ex.toLowerCase()))) {
     return 'time';
@@ -76,4 +98,24 @@ export const parseDurationInput = (input: string): number => {
   
   // If it's a whole number > 10, assume seconds, otherwise minutes
   return num > 10 ? num : num * 60;
+};
+
+export const formatDistance = (meters: number): string => {
+  if (meters >= 1000) {
+    return `${(meters / 1000).toFixed(2)}km`;
+  }
+  return `${meters}m`;
+};
+
+export const parseDistanceInput = (input: string): number => {
+  const cleanInput = input.toLowerCase().replace(/[^\d.]/g, '');
+  const num = parseFloat(cleanInput);
+  if (isNaN(num)) return 0;
+  
+  // If the original input contained 'km', convert to meters
+  if (input.toLowerCase().includes('km')) {
+    return num * 1000;
+  }
+  
+  return num; // assume meters
 };

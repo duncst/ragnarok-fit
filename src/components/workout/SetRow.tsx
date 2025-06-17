@@ -4,20 +4,25 @@ import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { Check } from 'lucide-react';
 import type { WorkoutSet } from '@/types';
-import { formatDuration, parseDurationInput } from '@/utils/exerciseTypes';
+import { formatDuration, parseDurationInput, formatDistance, parseDistanceInput } from '@/utils/exerciseTypes';
 
 interface SetRowProps {
   set: WorkoutSet;
   setIndex: number;
-  onUpdate: (field: 'reps' | 'weight' | 'duration', value: number) => void;
+  onUpdate: (field: 'reps' | 'weight' | 'duration' | 'distance', value: number) => void;
   onToggle: () => void;
-  exerciseType?: 'weight' | 'time' | 'reps';
+  exerciseType?: 'weight' | 'time' | 'reps' | 'distance' | 'weight_distance_time';
 }
 
 export const SetRow = ({ set, setIndex, onUpdate, onToggle, exerciseType = 'weight' }: SetRowProps) => {
   const handleDurationChange = (value: string) => {
     const seconds = parseDurationInput(value);
     onUpdate('duration', seconds);
+  };
+
+  const handleDistanceChange = (value: string) => {
+    const meters = parseDistanceInput(value);
+    onUpdate('distance', meters);
   };
 
   return (
@@ -59,6 +64,53 @@ export const SetRow = ({ set, setIndex, onUpdate, onToggle, exerciseType = 'weig
             className="w-full text-center"
             placeholder="Reps"
           />
+        </>
+      )}
+      
+      {exerciseType === 'distance' && (
+        <>
+          <Input
+            type="text"
+            value={set.duration ? formatDuration(set.duration) : ''}
+            onChange={(e) => handleDurationChange(e.target.value)}
+            className="w-full text-center"
+            placeholder="MM:SS"
+          />
+          <Input
+            type="text"
+            value={set.distance ? `${set.distance}` : ''}
+            onChange={(e) => handleDistanceChange(e.target.value)}
+            className="w-full text-center"
+            placeholder="Distance (m)"
+          />
+        </>
+      )}
+      
+      {exerciseType === 'weight_distance_time' && (
+        <>
+          <Input
+            type="number"
+            value={set.weight}
+            onChange={(e) => onUpdate('weight', parseInt(e.target.value) || 0)}
+            className="w-full text-center"
+            placeholder="Weight"
+          />
+          <div className="flex flex-col gap-1">
+            <Input
+              type="text"
+              value={set.duration ? formatDuration(set.duration) : ''}
+              onChange={(e) => handleDurationChange(e.target.value)}
+              className="w-full text-center text-xs"
+              placeholder="MM:SS"
+            />
+            <Input
+              type="text"
+              value={set.distance ? `${set.distance}` : ''}
+              onChange={(e) => handleDistanceChange(e.target.value)}
+              className="w-full text-center text-xs"
+              placeholder="Distance"
+            />
+          </div>
         </>
       )}
       

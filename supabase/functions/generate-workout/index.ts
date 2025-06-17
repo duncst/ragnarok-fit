@@ -39,12 +39,16 @@ The JSON object should have the following structure:
 - Draw inspiration from a wide range of Norse mythology figures (e.g., gods, giants, monsters), places (e.g., Asgard, Midgard, Valhalla), and artifacts (e.g., Mjölnir, Gungnir).
 - For example, you could create names like "Fenrir's Frenzy", "The Bifröst Bridge Builder", or "Einherjar's Endurance", but DO NOT use these exact examples.
 - Include 4 to 6 exercises for a balanced workout targeting the specified focus area, using ONLY the provided equipment. If the focus is 'Full Body', provide a full body workout.
-- Feel free to include time-based exercises like Running, Rowing, Ski Erg, Skipping, Indoor Bike, Assault Bike, Bike, Wall Balls, or Planks when appropriate.
+- Feel free to include time-based exercises like Planks, Wall Sit, Wall Balls when appropriate.
+- Feel free to include distance-based exercises like Running, Rowing, Ski Erg, Skipping, Indoor Bike, Assault Bike, Bike when appropriate.
+- Feel free to include weight+distance+time exercises like Sled Push, Sled Pull, Weighted Carry when appropriate.
 - Each exercise should have 3 sets.
 - For weight-based exercises: Reps should be between 8 and 15, weight should initially be 0.
 - For time-based exercises: Include a "duration" field in seconds (typically 30-120 seconds), and set reps to 1.
+- For distance-based exercises: Include both "duration" field in seconds and "distance" field in meters, and set reps to 1.
+- For weight+distance+time exercises: Include "weight", "duration" in seconds, and "distance" in meters fields, and set reps to 1.
 - For bodyweight exercises without weight: Set weight to 0, reps between 8 and 20.
-- **CRITICAL: Use ONLY standard, recognizable exercise names. Do NOT add any creative, fantasy, or Norse-themed modifications to exercise names.** Examples of correct exercise names: "Bench Press", "Squat", "Deadlift", "Push-ups", "Pull-ups", "Bicep Curls", "Overhead Press", "Lunges", "Plank", "Running", "Rowing", "Ski Erg", "Skipping", "Wall Balls", "Bike", etc.
+- **CRITICAL: Use ONLY standard, recognizable exercise names. Do NOT add any creative, fantasy, or Norse-themed modifications to exercise names.** Examples of correct exercise names: "Bench Press", "Squat", "Deadlift", "Push-ups", "Pull-ups", "Bicep Curls", "Overhead Press", "Lunges", "Plank", "Running", "Rowing", "Ski Erg", "Skipping", "Wall Balls", "Bike", "Sled Push", "Sled Pull", "Weighted Carry", etc.
 - Keep exercise names simple, standard, and exactly as they would appear in any fitness app or gym.
 `;
 

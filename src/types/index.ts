@@ -1,17 +1,17 @@
-
 export interface WorkoutSet {
   id: string;
   reps: number;
   weight: number;
   completed: boolean;
   duration?: number; // in seconds, for time-based exercises
+  distance?: number; // in meters, for distance-based exercises
 }
 
 export interface Exercise {
   id: string;
   name: string;
   sets: WorkoutSet[];
-  type?: 'weight' | 'time' | 'reps'; // default to 'weight' for backward compatibility
+  type?: 'weight' | 'time' | 'reps' | 'distance' | 'weight_distance_time'; // default to 'weight' for backward compatibility
 }
 
 export interface Workout {
@@ -29,7 +29,7 @@ export interface ExerciseDef {
   equipment: string;
   targetMuscles: string[];
   description: string;
-  type?: 'weight' | 'time' | 'reps';
+  type?: 'weight' | 'time' | 'reps' | 'distance' | 'weight_distance_time';
 }
 
 export type TemplateExercise = ExerciseDef & { sets: number };
