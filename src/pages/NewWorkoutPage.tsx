@@ -8,10 +8,8 @@ import { ExerciseCard } from "@/components/workout/ExerciseCard";
 import { WorkoutActions } from "@/components/workout/WorkoutActions";
 import { WorkoutHeader } from "@/components/workout/WorkoutHeader";
 import { useWorkoutState } from "@/hooks/useWorkoutState";
-import { useWorkoutPersistence } from "@/hooks/useWorkoutPersistence";
 import { useWorkoutTimer } from "@/hooks/useWorkoutTimer";
-import { useSaveWorkout } from "@/hooks/useSaveWorkout";
-import { useSaveAsTemplate } from "@/hooks/useSaveAsTemplate";
+import { useNewWorkoutForm } from "@/hooks/useNewWorkoutForm";
 import type { WorkoutTemplate } from "@/types";
 import { RestTimerSettings } from "@/components/workout/RestTimerSettings";
 import { RestTimerToast } from "@/components/workout/RestTimerToast";
@@ -89,41 +87,39 @@ const NewWorkoutPage = () => {
   const { scoreDialogWorkout, hideScoreDialog } = useValhallaScoreDialog();
 
   const {
-    workout,
+    workoutName,
+    setWorkoutName,
+    exercises,
     addExercise,
+    removeExercise,
+    updateExerciseName,
     addSet,
     updateSet,
-    removeSet,
-    removeExercise,
-    setWorkoutName,
-    setWorkoutNotes,
-    moveExercise,
-  } = useWorkoutState(template);
+    handleToggleSet,
+    finishWorkout,
+    cancelWorkout,
+    saveWorkoutMutation,
+    saveAsTemplate,
+    saveAsTemplateMutation,
+  } = useNewWorkoutForm();
 
-  useWorkoutPersistence(workout);
-  const { elapsedTime, startTime, endTime, isRunning, startTimer, stopTimer } = useWorkoutTimer();
-  const { saveWorkout, isSaving } = useSaveWorkout();
-  const { saveAsTemplate, isSavingTemplate } = useSaveAsTemplate();
+  const { isActive, startTime, totalDuration, formattedDuration, toggleWorkout } = useWorkoutTimer();
 
   const handleFinishWorkout = async () => {
-    const success = await saveWorkout(workout, startTime, endTime);
-    if (success) {
-      if (isValhallaWorkout && valhallaWorkoutData) {
-        // Navigate to templates page with the completed Valhalla workout data
-        navigate("/templates", { 
-          state: { completedValhallaWorkout: valhallaWorkoutData },
-          replace: true 
-        });
-      } else {
-        navigate("/history");
-      }
+    const success = await finishWorkout();
+    if (success && isValhallaWorkout && valhallaWorkoutData) {
+      // Navigate to templates page with the completed Valhalla workout data
+      navigate("/templates", { 
+        state: { completedValhallaWorkout: valhallaWorkoutData },
+        replace: true 
+      });
     }
   };
 
   const handleCookModeToggle = () => {
     setIsCookMode(!isCookMode);
-    if (!isCookMode && !isRunning) {
-      startTimer();
+    if (!isCookMode && !isActive) {
+      toggleWorkout();
     }
   };
 
@@ -175,52 +171,60 @@ const NewWorkoutPage = () => {
             </Button>
             <div className="flex items-center gap-2 text-sm text-muted-foreground">
               <Timer className="h-4 w-4" />
-              <span>{formatTime(elapsedTime)}</span>
+              <span>{formatTime(totalDuration)}</span>
             </div>
           </div>
         </div>
 
         {isCookMode ? (
           <WorkoutCookMode
-            workout={workout}
-            updateSet={updateSet}
-            addSet={addSet}
-            onFinish={handleFinishWorkout}
-            isSaving={isSaving}
-            elapsedTime={elapsedTime}
-            restTime={restTime}
-            onStartRestTimer={handleStartRestTimer}
+            workoutName={workoutName}
+            exercises={exercises}
+            onExitCookMode={handleCookModeToggle}
+            onUpdateExerciseName={updateExerciseName}
+            onAddSet={addSet}
+            onUpdateSet={updateSet}
+            onToggleSet={handleToggleSet}
+            onFinishWorkout={handleFinishWorkout}
+            isSaving={saveWorkoutMutation.isPending}
+            isWorkoutActive={isActive}
+            formattedDuration={formattedDuration}
+            onToggleWorkout={toggleWorkout}
           />
         ) : (
           <>
             <WorkoutHeader
-              workout={workout}
+              workoutName={workoutName}
               onNameChange={setWorkoutName}
-              onNotesChange={setWorkoutNotes}
-              startTime={startTime}
-              endTime={endTime}
-              isRunning={isRunning}
-              onStart={startTimer}
-              onStop={stopTimer}
-              elapsedTime={elapsedTime}
+              onFinish={handleFinishWorkout}
+              onCancel={cancelWorkout}
+              isSaving={saveWorkoutMutation.isPending}
+              onSaveAsTemplate={saveAsTemplate}
+              isSavingAsTemplate={saveAsTemplateMutation.isPending}
+              isWorkoutActive={isActive}
+              onToggleWorkout={toggleWorkout}
+              isCookMode={isCookMode}
+              onToggleCookMode={setIsCookMode}
             />
 
-            <RestTimerSettings restTime={restTime} onRestTimeChange={setRestTime} />
+            <RestTimerSettings 
+              value={restTime} 
+              onChange={setRestTime} 
+            />
 
             <div className="space-y-4">
-              {workout.exercises.map((exercise, index) => (
+              {exercises.map((exercise, index) => (
                 <ExerciseCard
                   key={exercise.id}
                   exercise={exercise}
                   exerciseIndex={index}
                   onAddSet={addSet}
                   onUpdateSet={updateSet}
-                  onRemoveSet={removeSet}
-                  onRemoveExercise={removeExercise}
-                  onMoveExercise={moveExercise}
+                  onRemove={() => removeExercise(exercise.id)}
+                  onToggleSet={handleToggleSet}
                   onStartRestTimer={handleStartRestTimer}
                   canMoveUp={index > 0}
-                  canMoveDown={index < workout.exercises.length - 1}
+                  canMoveDown={index < exercises.length - 1}
                 />
               ))}
 
@@ -239,23 +243,27 @@ const NewWorkoutPage = () => {
             </div>
 
             <WorkoutActions
-              onFinish={handleFinishWorkout}
-              onSaveAsTemplate={() => saveAsTemplate(workout)}
-              isSaving={isSaving}
-              isSavingTemplate={isSavingTemplate}
-              hasExercises={workout.exercises.length > 0}
+              onSave={handleFinishWorkout}
+              onSaveAsTemplate={saveAsTemplate}
+              isSaving={saveWorkoutMutation.isPending}
+              isSavingAsTemplate={saveAsTemplateMutation.isPending}
+              hasExercises={exercises.length > 0}
             />
           </>
         )}
 
         <ExerciseSelector
-          open={showExerciseSelector}
-          onOpenChange={setShowExerciseSelector}
-          onExerciseSelect={addExercise}
+          isOpen={showExerciseSelector}
+          onClose={() => setShowExerciseSelector(false)}
+          onSelect={(exerciseName) => {
+            updateExerciseName('', exerciseName);
+            addExercise();
+            setShowExerciseSelector(false);
+          }}
         />
 
         <RestTimerToast
-          isActive={isRestTimerActive}
+          active={isRestTimerActive}
           timeRemaining={restTimeRemaining}
           onTimeRemainingChange={setRestTimeRemaining}
           onComplete={() => setIsRestTimerActive(false)}
