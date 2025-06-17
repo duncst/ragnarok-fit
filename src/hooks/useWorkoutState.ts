@@ -1,34 +1,31 @@
-
 import { useState, useEffect, useCallback } from 'react';
 import { useLocation } from 'react-router-dom';
 import type { Exercise, WorkoutSet, WorkoutTemplate, Workout } from '@/types';
 import { useOneRepMax } from './useOneRepMax';
+import { useWorkoutPersistence } from './useWorkoutPersistence';
 import { getExerciseType } from '@/utils/exerciseTypes';
 
-export const useWorkoutState = (template?: WorkoutTemplate) => {
+export const useWorkoutState = () => {
   const location = useLocation();
+  const template = location.state?.template as WorkoutTemplate | undefined;
   const workout = location.state?.workout as Workout | undefined;
+  const { loadWorkout, saveWorkout, clearWorkout } = useWorkoutPersistence();
 
-  const [workoutData, setWorkoutData] = useState<{
-    id: string;
-    name: string;
-    startTime: Date;
-    endTime?: Date;
-    exercises: Exercise[];
-    notes?: string;
-  }>({
-    id: `workout-${Date.now()}`,
-    name: template?.name || '',
-    startTime: new Date(),
-    exercises: [],
-    notes: '',
-  });
+  const [exercises, setExercises] = useState<Exercise[]>([]);
+  const [workoutName, setWorkoutName] = useState('');
+  const [selectedEquipment, setSelectedEquipment] = useState<string[]>(['Bodyweight']);
+  const [focusArea, setFocusArea] = useState('Full Body');
+  const [restDuration, setRestDuration] = useState(90);
+  const [isInitialized, setIsInitialized] = useState(false);
 
   const { checkAndSave1RM } = useOneRepMax();
 
-  // Initialize workout state from template or workout
+  // Initialize workout state from template, workout, or persisted data
   useEffect(() => {
+    if (isInitialized) return;
+
     if (template) {
+      setWorkoutName(template.name);
       const exercisesFromTemplate: Exercise[] = template.exercises.map((templateEx, exIndex) => ({
         id: `ex-${Date.now()}-${exIndex}`,
         name: templateEx.name,
@@ -42,50 +39,82 @@ export const useWorkoutState = (template?: WorkoutTemplate) => {
           distance: ['distance', 'weight_distance_time'].includes(templateEx.type || '') ? 1000 : undefined,
         })),
       }));
-      setWorkoutData(prev => ({
-        ...prev,
-        name: template.name,
-        exercises: exercisesFromTemplate,
-      }));
+      setExercises(exercisesFromTemplate);
     } else if (workout) {
+      setWorkoutName(workout.name);
       const exercisesFromWorkout: Exercise[] = workout.exercises.map((workoutEx, exIndex) => ({
-        id: `ex-${Date.now()}-${exIndex}`,
-        name: workoutEx.name,
-        type: workoutEx.type,
-        sets: workoutEx.sets.map((set, setIndex) => ({
-          id: `set-${Date.now()}-${exIndex}-${setIndex}`,
-          reps: set.reps,
-          weight: set.weight,
-          completed: false,
-          duration: set.duration,
-          distance: set.distance,
-        })),
+          id: `ex-${Date.now()}-${exIndex}`,
+          name: workoutEx.name,
+          type: workoutEx.type,
+          sets: workoutEx.sets.map((set, setIndex) => ({
+              id: `set-${Date.now()}-${exIndex}-${setIndex}`,
+              reps: set.reps,
+              weight: set.weight,
+              completed: false,
+              duration: set.duration,
+              distance: set.distance,
+          })),
       }));
-      setWorkoutData(prev => ({
-        ...prev,
-        name: workout.name,
-        exercises: exercisesFromWorkout,
-      }));
+      setExercises(exercisesFromWorkout);
+    } else {
+      // Try to load persisted workout
+      const persistedWorkout = loadWorkout();
+      if (persistedWorkout) {
+        setWorkoutName(persistedWorkout.workoutName);
+        setExercises(persistedWorkout.exercises);
+        setSelectedEquipment(persistedWorkout.selectedEquipment);
+        setFocusArea(persistedWorkout.focusArea);
+        setRestDuration(persistedWorkout.restDuration);
+      }
     }
-  }, [template, workout]);
+    
+    setIsInitialized(true);
+  }, [template, workout, loadWorkout, isInitialized]);
 
-  const addExercise = (exerciseName?: string) => {
+  // Auto-save workout state when it changes
+  useEffect(() => {
+    if (!isInitialized) return;
+    
+    // Only persist if there's meaningful workout data
+    if (exercises.length > 0 || workoutName.trim() !== '') {
+      saveWorkout({
+        workoutName,
+        exercises,
+        selectedEquipment,
+        focusArea,
+        restDuration,
+      });
+    }
+  }, [exercises, workoutName, selectedEquipment, focusArea, restDuration, isInitialized, saveWorkout]);
+
+  const addExercise = () => {
     const newExercise: Exercise = {
       id: `ex-${Date.now()}`,
-      name: exerciseName || '',
-      type: exerciseName ? getExerciseType(exerciseName) : undefined,
+      name: '',
       sets: [{ id: `set-${Date.now()}`, reps: 8, weight: 20, completed: false }],
     };
-    setWorkoutData(prev => ({
-      ...prev,
-      exercises: [...prev.exercises, newExercise],
-    }));
+    setExercises((prev) => [...prev, newExercise]);
+  };
+
+  const removeExercise = (exerciseId: string) => {
+    setExercises((prev) => prev.filter((ex) => ex.id !== exerciseId));
+  };
+
+  const updateExerciseName = (exerciseId: string, name: string) => {
+    setExercises((prev) =>
+      prev.map((ex) => {
+        if (ex.id === exerciseId) {
+          const exerciseType = getExerciseType(name);
+          return { ...ex, name, type: exerciseType };
+        }
+        return ex;
+      })
+    );
   };
 
   const addSet = (exerciseId: string) => {
-    setWorkoutData(prev => ({
-      ...prev,
-      exercises: prev.exercises.map((ex) => {
+    setExercises((prev) =>
+      prev.map((ex) => {
         if (ex.id === exerciseId) {
           const lastSet = ex.sets[ex.sets.length - 1] || { reps: 8, weight: 20, duration: 60, distance: 1000 };
           const exerciseType = ex.type || getExerciseType(ex.name);
@@ -100,8 +129,8 @@ export const useWorkoutState = (template?: WorkoutTemplate) => {
           return { ...ex, sets: [...ex.sets, newSet] };
         }
         return ex;
-      }),
-    }));
+      })
+    );
   };
 
   const updateSet = (
@@ -110,9 +139,8 @@ export const useWorkoutState = (template?: WorkoutTemplate) => {
     field: 'reps' | 'weight' | 'duration' | 'distance',
     value: number
   ) => {
-    setWorkoutData(prev => ({
-      ...prev,
-      exercises: prev.exercises.map((ex) => {
+    setExercises((prev) =>
+      prev.map((ex) => {
         if (ex.id === exerciseId) {
           return {
             ...ex,
@@ -125,66 +153,60 @@ export const useWorkoutState = (template?: WorkoutTemplate) => {
           };
         }
         return ex;
-      }),
-    }));
+      })
+    );
   };
 
-  const removeSet = (exerciseId: string, setId: string) => {
-    setWorkoutData(prev => ({
-      ...prev,
-      exercises: prev.exercises.map((ex) => {
+  const handleToggleSet = useCallback((
+    exerciseId: string,
+    setId: string,
+    onToggleCallback?: (isCompleted: boolean) => void
+  ) => {
+    setExercises((prev) =>
+      prev.map((ex) => {
         if (ex.id === exerciseId) {
           return {
             ...ex,
-            sets: ex.sets.filter(set => set.id !== setId),
+            sets: ex.sets.map((set) => {
+              if (set.id === setId) {
+                const isCompleted = !set.completed;
+                onToggleCallback?.(isCompleted);
+                const updatedSet = { ...set, completed: isCompleted };
+                if (updatedSet.completed) {
+                  checkAndSave1RM(ex, updatedSet);
+                }
+                return updatedSet;
+              }
+              return set;
+            }),
           };
         }
         return ex;
-      }),
-    }));
-  };
+      })
+    );
+  }, [checkAndSave1RM]);
 
-  const removeExercise = (exerciseId: string) => {
-    setWorkoutData(prev => ({
-      ...prev,
-      exercises: prev.exercises.filter((ex) => ex.id !== exerciseId),
-    }));
+  const clearPersistedWorkout = () => {
+    clearWorkout();
   };
-
-  const setWorkoutName = (name: string) => {
-    setWorkoutData(prev => ({ ...prev, name }));
-  };
-
-  const setWorkoutNotes = (notes: string) => {
-    setWorkoutData(prev => ({ ...prev, notes }));
-  };
-
-  const moveExercise = (exerciseId: string, direction: 'up' | 'down') => {
-    setWorkoutData(prev => {
-      const exercises = [...prev.exercises];
-      const index = exercises.findIndex(ex => ex.id === exerciseId);
-      
-      if (index === -1) return prev;
-      
-      const newIndex = direction === 'up' ? index - 1 : index + 1;
-      
-      if (newIndex < 0 || newIndex >= exercises.length) return prev;
-      
-      [exercises[index], exercises[newIndex]] = [exercises[newIndex], exercises[index]];
-      
-      return { ...prev, exercises };
-    });
-  };
-
+  
   return {
-    workout: workoutData,
+    workoutName,
+    setWorkoutName,
+    exercises,
+    setExercises,
     addExercise,
+    removeExercise,
+    updateExerciseName,
     addSet,
     updateSet,
-    removeSet,
-    removeExercise,
-    setWorkoutName,
-    setWorkoutNotes,
-    moveExercise,
+    handleToggleSet,
+    selectedEquipment,
+    setSelectedEquipment,
+    focusArea,
+    setFocusArea,
+    restDuration,
+    setRestDuration,
+    clearPersistedWorkout,
   };
 };
