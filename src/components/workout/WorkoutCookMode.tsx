@@ -2,7 +2,7 @@
 import React from 'react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader } from '@/components/ui/card';
-import { X, Plus, Check, ChefHat } from 'lucide-react';
+import { X, Plus, Check } from 'lucide-react';
 import { ExerciseSelector } from '@/components/ExerciseSelector';
 import { SetRow } from './SetRow';
 import { getExerciseType } from '@/utils/exerciseTypes';
@@ -52,8 +52,12 @@ export const WorkoutCookMode = ({
         {/* Header */}
         <div className="flex items-center justify-between sticky top-4 bg-background/95 backdrop-blur-sm z-10 p-4 rounded-lg border">
           <div className="flex items-center gap-3">
-            <ChefHat className="h-6 w-6 text-primary" />
-            <h1 className="text-2xl font-bold">{workoutName || 'Cook Mode'}</h1>
+            <img 
+              src="/lovable-uploads/38b9fb87-79d2-4f6f-a531-145b342ab186.png" 
+              alt="Horn icon" 
+              className="h-6 w-6"
+            />
+            <h1 className="text-2xl font-bold">{workoutName || 'Workout Mode'}</h1>
           </div>
           <div className="flex items-center gap-2">
             <Button onClick={onFinishWorkout} disabled={isSaving} size="lg">
