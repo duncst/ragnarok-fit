@@ -1,3 +1,4 @@
+
 import React, { useCallback, useState } from 'react';
 import { useNewWorkoutForm } from '@/hooks/useNewWorkoutForm';
 import { useWorkoutTimer } from '@/hooks/useWorkoutTimer';
@@ -110,6 +111,8 @@ const NewWorkoutPage = () => {
         onToggleCookMode={setIsCookMode}
       />
 
+      <WorkoutActions onAddExercise={addExercise} />
+
       <div className="p-4 border rounded-lg">
         <RestTimerSettings
           restDuration={restDuration}
@@ -129,8 +132,6 @@ const NewWorkoutPage = () => {
           onToggleSet={handleToggleSet}
         />
       ))}
-
-      <WorkoutActions onAddExercise={addExercise} />
 
       <div className="p-4 border rounded-lg space-y-4">
         <Button
