@@ -1,11 +1,12 @@
 
-import React, { useCallback } from 'react';
+import React, { useCallback, useState } from 'react';
 import { useNewWorkoutForm } from '@/hooks/useNewWorkoutForm';
 import { WorkoutHeader } from '@/components/workout/WorkoutHeader';
 import { ExerciseCard } from '@/components/workout/ExerciseCard';
 import { WorkoutActions } from '@/components/workout/WorkoutActions';
 import { EquipmentSelector } from '@/components/workout/EquipmentSelector';
 import { FocusAreaSelector } from '@/components/workout/FocusAreaSelector';
+import { WorkoutCookMode } from '@/components/workout/WorkoutCookMode';
 import { Button } from '@/components/ui/button';
 import { Loader2, Sparkles } from 'lucide-react';
 import { RestTimerSettings } from '@/components/workout/RestTimerSettings';
@@ -13,6 +14,8 @@ import { RestTimerToast } from '@/components/workout/RestTimerToast';
 import { toast as sonnerToast } from 'sonner';
 
 const NewWorkoutPage = () => {
+  const [isCookMode, setIsCookMode] = useState(false);
+  
   const {
     workoutName,
     setWorkoutName,
@@ -48,6 +51,30 @@ const NewWorkoutPage = () => {
     });
   }, [originalHandleToggleSet, restDuration]);
 
+  const handleEnterCookMode = () => {
+    setIsCookMode(true);
+  };
+
+  const handleExitCookMode = () => {
+    setIsCookMode(false);
+  };
+
+  if (isCookMode) {
+    return (
+      <WorkoutCookMode
+        workoutName={workoutName}
+        exercises={exercises}
+        onExitCookMode={handleExitCookMode}
+        onUpdateExerciseName={updateExerciseName}
+        onAddSet={addSet}
+        onUpdateSet={updateSet}
+        onToggleSet={handleToggleSet}
+        onFinishWorkout={finishWorkout}
+        isSaving={saveWorkoutMutation.isPending}
+      />
+    );
+  }
+
   return (
     <div className="space-y-4 pb-16">
       <h1 className="text-3xl font-bold tracking-tight">Create new workout</h1>
@@ -59,6 +86,7 @@ const NewWorkoutPage = () => {
         isSaving={saveWorkoutMutation.isPending}
         onSaveAsTemplate={saveAsTemplate}
         isSavingAsTemplate={saveAsTemplateMutation.isPending}
+        onEnterCookMode={handleEnterCookMode}
       />
 
       <div className="p-4 border rounded-lg">

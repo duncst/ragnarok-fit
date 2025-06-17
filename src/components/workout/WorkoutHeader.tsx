@@ -2,7 +2,7 @@
 import React from 'react';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
-import { Loader2, Save, X } from 'lucide-react';
+import { Loader2, Save, X, ChefHat } from 'lucide-react';
 
 interface WorkoutHeaderProps {
   workoutName: string;
@@ -12,6 +12,7 @@ interface WorkoutHeaderProps {
   isSaving: boolean;
   onSaveAsTemplate: () => void;
   isSavingAsTemplate: boolean;
+  onEnterCookMode?: () => void;
 }
 
 export const WorkoutHeader = ({ 
@@ -21,7 +22,8 @@ export const WorkoutHeader = ({
   onCancel,
   isSaving, 
   onSaveAsTemplate, 
-  isSavingAsTemplate 
+  isSavingAsTemplate,
+  onEnterCookMode
 }: WorkoutHeaderProps) => {
   return (
     <div className="flex justify-between items-center gap-2">
@@ -40,6 +42,12 @@ export const WorkoutHeader = ({
           {isSavingAsTemplate ? <Loader2 className="h-4 w-4 animate-spin" /> : <Save className="h-4 w-4" />}
           <span className="sr-only">Save as template</span>
         </Button>
+        {onEnterCookMode && (
+          <Button variant="outline" size="icon" onClick={onEnterCookMode} disabled={isSaving || isSavingAsTemplate}>
+            <ChefHat className="h-4 w-4" />
+            <span className="sr-only">Enter cook mode</span>
+          </Button>
+        )}
         <Button onClick={onFinish} disabled={isSaving || isSavingAsTemplate}>
           {isSaving && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
           Finish
