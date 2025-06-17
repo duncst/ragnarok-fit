@@ -28,13 +28,22 @@ export const WorkoutHeader = ({
   onToggleWorkout
 }: WorkoutHeaderProps) => {
   return (
-    <div className="flex justify-between items-center gap-2">
-      <Input
-        placeholder="Workout Name (e.g. Push Day)"
-        value={workoutName}
-        onChange={(e) => onNameChange(e.target.value)}
-        className="text-2xl font-bold h-auto"
-      />
+    <div className="space-y-2">
+      {/* Top row: Workout name and finish button */}
+      <div className="flex justify-between items-center gap-2">
+        <Input
+          placeholder="Workout Name (e.g. Push Day)"
+          value={workoutName}
+          onChange={(e) => onNameChange(e.target.value)}
+          className="text-2xl font-bold h-auto"
+        />
+        <Button onClick={onFinish} disabled={isSaving || isSavingAsTemplate}>
+          {isSaving && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
+          Finish
+        </Button>
+      </div>
+      
+      {/* Bottom row: All interaction buttons */}
       <div className="flex items-center gap-2">
         <Button 
           variant="outline" 
@@ -52,10 +61,6 @@ export const WorkoutHeader = ({
         <Button variant="outline" size="icon" onClick={onSaveAsTemplate} disabled={isSavingAsTemplate || isSaving}>
           {isSavingAsTemplate ? <Loader2 className="h-4 w-4 animate-spin" /> : <Save className="h-4 w-4" />}
           <span className="sr-only">Save as template</span>
-        </Button>
-        <Button onClick={onFinish} disabled={isSaving || isSavingAsTemplate}>
-          {isSaving && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
-          Finish
         </Button>
       </div>
     </div>
