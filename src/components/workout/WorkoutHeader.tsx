@@ -2,6 +2,8 @@
 import React from 'react';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
+import { Toggle } from '@/components/ui/toggle';
+import { ImageIcon } from '@/components/ImageIcon';
 import { Loader2, Save, X, Play, Pause } from 'lucide-react';
 
 interface WorkoutHeaderProps {
@@ -14,6 +16,8 @@ interface WorkoutHeaderProps {
   isSavingAsTemplate: boolean;
   isWorkoutActive: boolean;
   onToggleWorkout: () => void;
+  isCookMode: boolean;
+  onToggleCookMode: (pressed: boolean) => void;
 }
 
 export const WorkoutHeader = ({ 
@@ -25,7 +29,9 @@ export const WorkoutHeader = ({
   onSaveAsTemplate, 
   isSavingAsTemplate,
   isWorkoutActive,
-  onToggleWorkout
+  onToggleWorkout,
+  isCookMode,
+  onToggleCookMode
 }: WorkoutHeaderProps) => {
   return (
     <div className="space-y-2">
@@ -43,8 +49,21 @@ export const WorkoutHeader = ({
         </Button>
       </div>
       
-      {/* Bottom row: All interaction buttons */}
+      {/* Bottom row: All interaction buttons including workout mode */}
       <div className="flex items-center gap-2">
+        <Toggle
+          pressed={isCookMode}
+          onPressedChange={onToggleCookMode}
+          variant="outline"
+          className="flex items-center gap-2 px-3 py-2 h-auto"
+        >
+          <ImageIcon 
+            src="/lovable-uploads/6ace109c-b935-4cbe-ae24-b2adfe21bde8.png"
+            alt="Workout Mode"
+            className="w-5 h-5"
+          />
+          <span className="text-sm font-medium">Workout Mode</span>
+        </Toggle>
         <Button 
           variant="outline" 
           size="icon" 

@@ -104,23 +104,9 @@ const NewWorkoutPage = () => {
         isSavingAsTemplate={saveAsTemplateMutation.isPending}
         isWorkoutActive={isWorkoutActive}
         onToggleWorkout={toggleWorkout}
+        isCookMode={isCookMode}
+        onToggleCookMode={setIsCookMode}
       />
-
-      <div className="flex items-center gap-2">
-        <Toggle
-          pressed={isCookMode}
-          onPressedChange={setIsCookMode}
-          variant="outline"
-          className="flex items-center gap-2 px-3 py-2 h-auto"
-        >
-          <ImageIcon 
-            src="/lovable-uploads/6ace109c-b935-4cbe-ae24-b2adfe21bde8.png"
-            alt="Workout Mode"
-            className="w-5 h-5"
-          />
-          <span className="text-sm font-medium">Workout Mode</span>
-        </Toggle>
-      </div>
 
       <div className="p-4 border rounded-lg">
         <RestTimerSettings
