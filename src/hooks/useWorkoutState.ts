@@ -33,7 +33,7 @@ export const useWorkoutState = () => {
         type: templateEx.type,
         sets: Array.from({ length: templateEx.sets }, (_, setIndex) => ({
           id: `set-${Date.now()}-${exIndex}-${setIndex}`,
-          reps: templateEx.suggestedReps || 8, // Use suggested reps from template or default to 8
+          reps: 8,
           weight: 20,
           completed: false,
           duration: ['time', 'distance', 'weight_distance_time'].includes(templateEx.type || '') ? 60 : undefined,
