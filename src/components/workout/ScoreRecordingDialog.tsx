@@ -62,7 +62,6 @@ export const ScoreRecordingDialog = ({ workout, isOpen, onClose }: ScoreRecordin
         description: "Your Valhalla score has been saved.",
       });
       queryClient.invalidateQueries({ queryKey: ['valhalla-scores'] });
-      queryClient.invalidateQueries({ queryKey: ['recent-activity'] });
       handleClose();
     },
     onError: (error: any) => {
@@ -100,6 +99,12 @@ export const ScoreRecordingDialog = ({ workout, isOpen, onClose }: ScoreRecordin
       score: totalSeconds,
       notes,
     });
+  };
+
+  const formatTime = (totalSeconds: number) => {
+    const mins = Math.floor(totalSeconds / 60);
+    const secs = totalSeconds % 60;
+    return `${mins}:${secs.toString().padStart(2, '0')}`;
   };
 
   if (!workout) return null;
