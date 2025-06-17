@@ -31,6 +31,7 @@ import {
   AccordionItem,
   AccordionTrigger,
 } from "@/components/ui/accordion";
+import { ValhallaSection } from "@/components/workout/ValhallaSection";
 
 const WorkoutTemplatesPage = () => {
   const navigate = useNavigate();
@@ -357,6 +358,9 @@ const WorkoutTemplatesPage = () => {
             </DialogContent>
           </Dialog>
         </div>
+        
+        <ValhallaSection />
+        
         <Card>
           <CardHeader>
             <CardTitle>My Templates</CardTitle>
