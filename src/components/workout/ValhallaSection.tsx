@@ -1,10 +1,16 @@
 
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Play, Zap, Brain } from "lucide-react";
+import { Play, ChevronDown } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import type { WorkoutTemplate, TemplateExercise } from "@/types";
 import { Badge } from "@/components/ui/badge";
+import {
+  Collapsible,
+  CollapsibleContent,
+  CollapsibleTrigger,
+} from "@/components/ui/collapsible";
+import { useState } from "react";
 
 interface ValhallaWorkout {
   id: string;
@@ -100,6 +106,8 @@ const valhallaWorkouts: ValhallaWorkout[] = [
 
 export const ValhallaSection = () => {
   const navigate = useNavigate();
+  const [isOpen, setIsOpen] = useState(false);
+  const [expandedWorkouts, setExpandedWorkouts] = useState<Set<string>>(new Set());
 
   const handleStartWorkout = (valhallaWorkout: ValhallaWorkout) => {
     const template: WorkoutTemplate = {
@@ -113,65 +121,109 @@ export const ValhallaSection = () => {
     navigate("/workout/new", { state: { template } });
   };
 
+  const toggleWorkout = (workoutId: string) => {
+    setExpandedWorkouts(prev => {
+      const newSet = new Set(prev);
+      if (newSet.has(workoutId)) {
+        newSet.delete(workoutId);
+      } else {
+        newSet.add(workoutId);
+      }
+      return newSet;
+    });
+  };
+
   return (
-    <Card className="border-2 border-orange-200 bg-gradient-to-br from-orange-50 to-amber-50">
-      <CardHeader>
-        <CardTitle className="flex items-center gap-2 text-2xl font-bold text-orange-800">
-          ⚔️ Valhalla
-          <Badge variant="secondary" className="bg-orange-100 text-orange-800">Norse Gods Collection</Badge>
-        </CardTitle>
-        <p className="text-orange-700">Epic workouts named after the Norse Gods. Enter Valhalla and prove your worth.</p>
-      </CardHeader>
-      <CardContent className="space-y-4">
-        <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
-          {valhallaWorkouts.map((workout) => (
-            <Card key={workout.id} className="border border-orange-200 hover:border-orange-300 transition-colors">
-              <CardHeader className="pb-3">
-                <div className="flex items-start justify-between">
-                  <div className="space-y-1">
-                    <CardTitle className="text-lg flex items-center gap-2">
-                      <span className="text-2xl">{workout.icon}</span>
-                      <span className="text-orange-800">{workout.name}</span>
-                    </CardTitle>
-                    <p className="text-sm font-medium text-orange-600">{workout.godName}</p>
-                    <p className="text-sm text-muted-foreground">{workout.description}</p>
-                  </div>
-                  <Button
-                    variant="ghost"
-                    size="icon"
-                    onClick={() => handleStartWorkout(workout)}
-                    className="text-orange-600 hover:text-orange-800 hover:bg-orange-100"
-                  >
-                    <Play className="h-5 w-5" />
-                  </Button>
+    <Collapsible open={isOpen} onOpenChange={setIsOpen}>
+      <Card className="border-2 border-primary/20 bg-gradient-to-br from-background to-muted/20">
+        <CollapsibleTrigger asChild>
+          <CardHeader className="cursor-pointer hover:bg-muted/10 transition-colors">
+            <div className="flex items-center justify-between">
+              <div className="flex items-center gap-3">
+                <span className="text-3xl">⚔️</span>
+                <div>
+                  <CardTitle className="text-2xl font-bold text-primary">
+                    Valhalla
+                  </CardTitle>
+                  <Badge variant="secondary" className="bg-primary/10 text-primary border-primary/20 mt-1">
+                    Norse Gods Collection
+                  </Badge>
                 </div>
-              </CardHeader>
-              <CardContent className="pt-0">
-                <div className="space-y-3">
-                  <div className="text-sm">
-                    <Badge variant="outline" className="border-orange-300 text-orange-700">
-                      {workout.format}
-                    </Badge>
-                  </div>
-                  <div className="space-y-1">
-                    {workout.exercises.map((exercise, index) => (
-                      <div key={index} className="flex justify-between text-sm">
-                        <span className="truncate">{exercise.name}</span>
-                        <span className="text-muted-foreground ml-2 shrink-0">
-                          {exercise.suggestedReps}{exercise.type === 'time' ? ' min' : exercise.type === 'distance' ? 'm' : ''}
-                        </span>
+              </div>
+              <ChevronDown className={`h-6 w-6 text-primary transition-transform duration-200 ${isOpen ? 'rotate-180' : ''}`} />
+            </div>
+            <p className="text-muted-foreground mt-2">Epic workouts named after the Norse Gods. Enter Valhalla and prove your worth.</p>
+          </CardHeader>
+        </CollapsibleTrigger>
+        
+        <CollapsibleContent>
+          <CardContent className="space-y-3">
+            {valhallaWorkouts.map((workout) => (
+              <Collapsible 
+                key={workout.id} 
+                open={expandedWorkouts.has(workout.id)} 
+                onOpenChange={() => toggleWorkout(workout.id)}
+              >
+                <Card className="border border-primary/10 hover:border-primary/20 transition-colors">
+                  <CollapsibleTrigger asChild>
+                    <CardHeader className="pb-3 cursor-pointer hover:bg-muted/5 transition-colors">
+                      <div className="flex items-center justify-between">
+                        <div className="flex items-center gap-3">
+                          <span className="text-2xl">{workout.icon}</span>
+                          <div>
+                            <CardTitle className="text-lg text-primary">{workout.name}</CardTitle>
+                            <p className="text-sm font-medium text-muted-foreground">{workout.godName}</p>
+                            <p className="text-sm text-muted-foreground">{workout.description}</p>
+                          </div>
+                        </div>
+                        <div className="flex items-center gap-2">
+                          <Button
+                            variant="ghost"
+                            size="icon"
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              handleStartWorkout(workout);
+                            }}
+                            className="text-primary hover:text-primary hover:bg-primary/10"
+                          >
+                            <Play className="h-5 w-5" />
+                          </Button>
+                          <ChevronDown className={`h-5 w-5 text-muted-foreground transition-transform duration-200 ${expandedWorkouts.has(workout.id) ? 'rotate-180' : ''}`} />
+                        </div>
                       </div>
-                    ))}
-                  </div>
-                  <div className="pt-2 border-t border-orange-100">
-                    <p className="text-xs italic text-orange-600">{workout.theme}</p>
-                  </div>
-                </div>
-              </CardContent>
-            </Card>
-          ))}
-        </div>
-      </CardContent>
-    </Card>
+                    </CardHeader>
+                  </CollapsibleTrigger>
+                  
+                  <CollapsibleContent>
+                    <CardContent className="pt-0">
+                      <div className="space-y-3">
+                        <div className="text-sm">
+                          <Badge variant="outline" className="border-primary/30 text-primary">
+                            {workout.format}
+                          </Badge>
+                        </div>
+                        <div className="space-y-1">
+                          {workout.exercises.map((exercise, index) => (
+                            <div key={index} className="flex justify-between text-sm py-1">
+                              <span className="truncate">{exercise.name}</span>
+                              <span className="text-muted-foreground ml-2 shrink-0">
+                                {exercise.suggestedReps}{exercise.type === 'time' ? ' min' : exercise.type === 'distance' ? 'm' : ''}
+                              </span>
+                            </div>
+                          ))}
+                        </div>
+                        <div className="pt-2 border-t border-border">
+                          <p className="text-xs italic text-muted-foreground">{workout.theme}</p>
+                        </div>
+                      </div>
+                    </CardContent>
+                  </CollapsibleContent>
+                </Card>
+              </Collapsible>
+            ))}
+          </CardContent>
+        </CollapsibleContent>
+      </Card>
+    </Collapsible>
   );
 };
