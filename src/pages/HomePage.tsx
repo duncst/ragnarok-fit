@@ -288,11 +288,11 @@ const HomePage = () => {
                                   <TableCell className="font-medium">{item.exercise}</TableCell>
                                   <TableCell className="text-center">
                                     {item.type === 'valhalla' ? (
-                                      <span className="text-xs bg-orange-100 text-orange-800 px-2 py-1 rounded-full">
+                                      <span className="inline-flex items-center text-xs bg-orange-100 text-orange-800 px-2 py-1 rounded-full">
                                         ⚔️ Valhalla
                                       </span>
                                     ) : (
-                                      <span className="text-xs bg-blue-100 text-blue-800 px-2 py-1 rounded-full">
+                                      <span className="inline-flex items-center text-xs bg-blue-100 text-blue-800 px-2 py-1 rounded-full">
                                         💪 1RM
                                       </span>
                                     )}
