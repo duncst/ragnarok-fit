@@ -2,7 +2,7 @@
 import React from 'react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader } from '@/components/ui/card';
-import { X, Plus, Check } from 'lucide-react';
+import { X, Plus, Check, Play, Pause } from 'lucide-react';
 import { ExerciseSelector } from '@/components/ExerciseSelector';
 import { SetRow } from './SetRow';
 import { getExerciseType } from '@/utils/exerciseTypes';
@@ -20,6 +20,7 @@ interface WorkoutCookModeProps {
   isSaving: boolean;
   isWorkoutActive?: boolean;
   formattedDuration?: string;
+  onToggleWorkout?: () => void;
 }
 
 export const WorkoutCookMode = ({
@@ -34,6 +35,7 @@ export const WorkoutCookMode = ({
   isSaving,
   isWorkoutActive,
   formattedDuration,
+  onToggleWorkout,
 }: WorkoutCookModeProps) => {
   const getHeaderLabels = (exerciseType: string) => {
     switch (exerciseType) {
@@ -64,10 +66,21 @@ export const WorkoutCookMode = ({
             <h1 className="text-2xl font-bold">{workoutName || 'Workout Mode'}</h1>
           </div>
           <div className="flex items-center gap-4">
-            {isWorkoutActive && formattedDuration && (
-              <div className="text-lg font-semibold text-green-600">
+            {formattedDuration && (
+              <div className="text-lg font-semibold text-white">
                 {formattedDuration}
               </div>
+            )}
+            {onToggleWorkout && (
+              <Button 
+                variant="outline" 
+                size="lg" 
+                onClick={onToggleWorkout}
+                disabled={isSaving}
+              >
+                {isWorkoutActive ? <Pause className="h-5 w-5 mr-2" /> : <Play className="h-5 w-5 mr-2" />}
+                {isWorkoutActive ? 'Pause' : 'Start'}
+              </Button>
             )}
             <Button onClick={onFinishWorkout} disabled={isSaving} size="lg">
               Finish Workout

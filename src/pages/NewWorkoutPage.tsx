@@ -80,6 +80,7 @@ const NewWorkoutPage = () => {
         isSaving={saveWorkoutMutation.isPending}
         isWorkoutActive={isWorkoutActive}
         formattedDuration={formattedDuration}
+        onToggleWorkout={toggleWorkout}
       />
     );
   }
