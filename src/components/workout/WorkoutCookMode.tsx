@@ -18,6 +18,8 @@ interface WorkoutCookModeProps {
   onToggleSet: (exerciseId: string, setId: string) => void;
   onFinishWorkout: () => void;
   isSaving: boolean;
+  isWorkoutActive: boolean;
+  formattedDuration: string;
 }
 
 export const WorkoutCookMode = ({
@@ -30,6 +32,8 @@ export const WorkoutCookMode = ({
   onToggleSet,
   onFinishWorkout,
   isSaving,
+  isWorkoutActive,
+  formattedDuration,
 }: WorkoutCookModeProps) => {
   const getHeaderLabels = (exerciseType: string) => {
     switch (exerciseType) {
@@ -55,9 +59,16 @@ export const WorkoutCookMode = ({
             <img 
               src="/lovable-uploads/38b9fb87-79d2-4f6f-a531-145b342ab186.png" 
               alt="Horn icon" 
-              className="h-6 w-6"
+              className="h-18 w-18"
             />
-            <h1 className="text-2xl font-bold">{workoutName || 'Workout Mode'}</h1>
+            <div className="flex flex-col">
+              <h1 className="text-2xl font-bold">{workoutName || 'Workout Mode'}</h1>
+              {isWorkoutActive && (
+                <div className="text-lg font-semibold text-green-600">
+                  {formattedDuration}
+                </div>
+              )}
+            </div>
           </div>
           <div className="flex items-center gap-2">
             <Button onClick={onFinishWorkout} disabled={isSaving} size="lg">
