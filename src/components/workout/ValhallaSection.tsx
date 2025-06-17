@@ -30,7 +30,7 @@ const valhallaWorkouts: ValhallaWorkout[] = [
     godName: "God of Thunder",
     description: "explosive and strength-focused",
     theme: "Like Mjölnir, short, heavy, and hammering.",
-    icon: "🔥",
+    icon: "⚡",
     format: "3 rounds",
     exercises: [
       { name: "Jump Squats", bodyPart: "legs", equipment: "bodyweight", targetMuscles: ["quadriceps", "glutes"], description: "Explosive squat jumps", sets: 3, suggestedReps: 40, type: "reps" },
@@ -152,7 +152,7 @@ export const ValhallaSection = () => {
               </div>
               <ChevronDown className={`h-6 w-6 text-primary transition-transform duration-200 ${isOpen ? 'rotate-180' : ''}`} />
             </div>
-            <p className="text-muted-foreground mt-2">Epic workouts named after the Norse Gods. Enter Valhalla and prove your worth.</p>
+            <p className="text-muted-foreground mt-2">Epic workouts named after the Norse Gods. Prove your worth.</p>
           </CardHeader>
         </CollapsibleTrigger>
         
@@ -173,7 +173,7 @@ export const ValhallaSection = () => {
                           <div>
                             <CardTitle className="text-lg text-primary">{workout.name}</CardTitle>
                             <p className="text-sm font-medium text-muted-foreground">{workout.godName}</p>
-                            <p className="text-sm text-muted-foreground">{workout.description}</p>
+                            <p className="text-sm text-muted-foreground italic">{workout.description}</p>
                           </div>
                         </div>
                         <div className="flex items-center gap-2">
