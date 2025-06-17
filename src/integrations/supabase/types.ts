@@ -102,6 +102,33 @@ export type Database = {
         }
         Relationships: []
       }
+      valhalla_scores: {
+        Row: {
+          created_at: string
+          id: string
+          notes: string | null
+          score_seconds: number
+          user_id: string
+          workout_id: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          notes?: string | null
+          score_seconds: number
+          user_id?: string
+          workout_id: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          notes?: string | null
+          score_seconds?: number
+          user_id?: string
+          workout_id?: string
+        }
+        Relationships: []
+      }
       workout_exercises: {
         Row: {
           id: string

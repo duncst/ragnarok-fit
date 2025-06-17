@@ -45,16 +45,28 @@ export const ScoreRecordingDialog = ({ workout, isOpen, onClose }: ScoreRecordin
     mutationFn: async ({ workoutId, score, notes }: { workoutId: string, score: number, notes: string }) => {
       if (!user) throw new Error("User not authenticated");
       
-      const { error } = await supabase
-        .from('valhalla_scores')
-        .insert({
-          user_id: user.id,
-          workout_id: workoutId,
-          score_seconds: score,
-          notes: notes || null,
-        });
+      // Use raw SQL query since the table might not be in TypeScript types yet
+      const { error } = await supabase.rpc('execute_sql', {
+        query: `
+          INSERT INTO valhalla_scores (user_id, workout_id, score_seconds, notes)
+          VALUES ($1, $2, $3, $4)
+        `,
+        params: [user.id, workoutId, score, notes || null]
+      });
       
-      if (error) throw error;
+      if (error) {
+        // Fallback to direct table insert
+        const { error: insertError } = await supabase
+          .from('valhalla_scores' as any)
+          .insert({
+            user_id: user.id,
+            workout_id: workoutId,
+            score_seconds: score,
+            notes: notes || null,
+          });
+        
+        if (insertError) throw insertError;
+      }
     },
     onSuccess: () => {
       toast({
@@ -99,12 +111,6 @@ export const ScoreRecordingDialog = ({ workout, isOpen, onClose }: ScoreRecordin
       score: totalSeconds,
       notes,
     });
-  };
-
-  const formatTime = (totalSeconds: number) => {
-    const mins = Math.floor(totalSeconds / 60);
-    const secs = totalSeconds % 60;
-    return `${mins}:${secs.toString().padStart(2, '0')}`;
   };
 
   if (!workout) return null;
