@@ -1,22 +1,29 @@
+
 import { useState, useEffect, useCallback } from 'react';
 import { useLocation } from 'react-router-dom';
 import type { Exercise, WorkoutSet, WorkoutTemplate, Workout } from '@/types';
 import { useOneRepMax } from './useOneRepMax';
+import { useWorkoutPersistence } from './useWorkoutPersistence';
 
 export const useWorkoutState = () => {
   const location = useLocation();
   const template = location.state?.template as WorkoutTemplate | undefined;
   const workout = location.state?.workout as Workout | undefined;
+  const { loadWorkout, saveWorkout, clearWorkout } = useWorkoutPersistence();
 
   const [exercises, setExercises] = useState<Exercise[]>([]);
   const [workoutName, setWorkoutName] = useState('');
   const [selectedEquipment, setSelectedEquipment] = useState<string[]>(['Bodyweight']);
   const [focusArea, setFocusArea] = useState('Full Body');
   const [restDuration, setRestDuration] = useState(90);
+  const [isInitialized, setIsInitialized] = useState(false);
 
   const { checkAndSave1RM } = useOneRepMax();
 
+  // Initialize workout state from template, workout, or persisted data
   useEffect(() => {
+    if (isInitialized) return;
+
     if (template) {
       setWorkoutName(template.name);
       const exercisesFromTemplate: Exercise[] = template.exercises.map((templateEx, exIndex) => ({
@@ -43,8 +50,36 @@ export const useWorkoutState = () => {
           })),
       }));
       setExercises(exercisesFromWorkout);
+    } else {
+      // Try to load persisted workout
+      const persistedWorkout = loadWorkout();
+      if (persistedWorkout) {
+        setWorkoutName(persistedWorkout.workoutName);
+        setExercises(persistedWorkout.exercises);
+        setSelectedEquipment(persistedWorkout.selectedEquipment);
+        setFocusArea(persistedWorkout.focusArea);
+        setRestDuration(persistedWorkout.restDuration);
+      }
     }
-  }, [template, workout]);
+    
+    setIsInitialized(true);
+  }, [template, workout, loadWorkout, isInitialized]);
+
+  // Auto-save workout state when it changes
+  useEffect(() => {
+    if (!isInitialized) return;
+    
+    // Only persist if there's meaningful workout data
+    if (exercises.length > 0 || workoutName.trim() !== '') {
+      saveWorkout({
+        workoutName,
+        exercises,
+        selectedEquipment,
+        focusArea,
+        restDuration,
+      });
+    }
+  }, [exercises, workoutName, selectedEquipment, focusArea, restDuration, isInitialized, saveWorkout]);
 
   const addExercise = () => {
     const newExercise: Exercise = {
@@ -135,6 +170,10 @@ export const useWorkoutState = () => {
       })
     );
   }, [checkAndSave1RM]);
+
+  const clearPersistedWorkout = () => {
+    clearWorkout();
+  };
   
   return {
     workoutName,
@@ -153,5 +192,6 @@ export const useWorkoutState = () => {
     setFocusArea,
     restDuration,
     setRestDuration,
+    clearPersistedWorkout,
   };
 };
