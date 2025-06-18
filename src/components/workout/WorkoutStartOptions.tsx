@@ -68,7 +68,7 @@ export const WorkoutStartOptions = ({
               <ImageIcon 
                 src="/lovable-uploads/99083c33-ce99-4041-8791-0d26ae1fbf22.png" 
                 alt="Template icon"
-                className="h-8 w-8 text-white"
+                className="h-6 w-6 text-white"
               />
               <span className="font-medium">Select a Template</span>
             </div>
@@ -87,7 +87,7 @@ export const WorkoutStartOptions = ({
           <AccordionTrigger className="px-4 py-3 hover:no-underline">
             <div className="flex items-center gap-3">
               <Sparkles className="h-5 w-5" />
-              <span className="font-medium">Generate with AI</span>
+              <span className="font-medium">Generate Workout with AI</span>
             </div>
           </AccordionTrigger>
           <AccordionContent className="px-4 pb-4">
