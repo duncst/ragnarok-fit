@@ -1,4 +1,3 @@
-
 import React, { useCallback, useState } from 'react';
 import { useNewWorkoutForm } from '@/hooks/useNewWorkoutForm';
 import { useWorkoutTimer } from '@/hooks/useWorkoutTimer';
@@ -54,6 +53,9 @@ const NewWorkoutPage = () => {
     onCloseValhallaDialog,
     isValhallaWorkout,
   } = useNewWorkoutForm();
+
+  // Check if there's meaningful workout data
+  const hasWorkoutData = workoutName.trim() !== '' || exercises.some(ex => ex.name.trim() !== '' || ex.sets.length > 0);
 
   const handleToggleSet = useCallback((exerciseId: string, setId: string) => {
     originalHandleToggleSet(exerciseId, setId, (isCompleted) => {
@@ -121,6 +123,7 @@ const NewWorkoutPage = () => {
           onToggleWorkout={toggleWorkout}
           isCookMode={isCookMode}
           onToggleCookMode={setIsCookMode}
+          hasWorkoutData={hasWorkoutData}
         />
 
         <WorkoutActions onAddExercise={addExercise} />

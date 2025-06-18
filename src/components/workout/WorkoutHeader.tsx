@@ -18,6 +18,7 @@ interface WorkoutHeaderProps {
   onToggleWorkout: () => void;
   isCookMode: boolean;
   onToggleCookMode: (pressed: boolean) => void;
+  hasWorkoutData?: boolean;
 }
 
 export const WorkoutHeader = ({ 
@@ -31,7 +32,8 @@ export const WorkoutHeader = ({
   isWorkoutActive,
   onToggleWorkout,
   isCookMode,
-  onToggleCookMode
+  onToggleCookMode,
+  hasWorkoutData = false
 }: WorkoutHeaderProps) => {
   return (
     <div className="space-y-2">
@@ -73,14 +75,18 @@ export const WorkoutHeader = ({
           {isWorkoutActive ? <Pause className="h-4 w-4" /> : <Play className="h-4 w-4" />}
           <span className="sr-only">{isWorkoutActive ? 'Pause workout' : 'Start workout'}</span>
         </Button>
-        <Button variant="outline" size="icon" onClick={onCancel} disabled={isSaving || isSavingAsTemplate}>
-          <X className="h-4 w-4" />
-          <span className="sr-only">Cancel workout</span>
-        </Button>
-        <Button onClick={onFinish} disabled={isSaving || isSavingAsTemplate}>
-          {isSaving && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
-          Finish
-        </Button>
+        {hasWorkoutData && (
+          <>
+            <Button variant="outline" size="icon" onClick={onCancel} disabled={isSaving || isSavingAsTemplate}>
+              <X className="h-4 w-4" />
+              <span className="sr-only">Cancel workout</span>
+            </Button>
+            <Button onClick={onFinish} disabled={isSaving || isSavingAsTemplate}>
+              {isSaving && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
+              Finish
+            </Button>
+          </>
+        )}
       </div>
     </div>
   );
