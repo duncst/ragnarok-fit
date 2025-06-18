@@ -21,6 +21,7 @@ export default {
 		extend: {
 			fontFamily: {
         sans: ['"Titillium Web"', 'sans-serif'],
+        norse: ['"Cinzel"', 'serif'],
       },
 			colors: {
 				border: 'hsl(var(--border))',

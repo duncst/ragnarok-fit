@@ -38,7 +38,7 @@ const Layout = () => {
         <div className="flex items-center justify-between p-4 border-b">
             <div className="flex items-center gap-2">
               <Mountain className="h-6 w-6 text-primary" />
-              <h1 className="font-bold text-lg tracking-tight">Ragnarok Fit</h1>
+              <h1 className="font-norse font-bold text-lg tracking-tight">Ragnarok Fit</h1>
             </div>
             <Button variant="ghost" size="icon" onClick={handleLogout} aria-label="Log out">
               <LogOut className="h-5 w-5" />
