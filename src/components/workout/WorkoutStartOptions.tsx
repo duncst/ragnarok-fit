@@ -6,7 +6,7 @@ import { EquipmentSelector } from './EquipmentSelector';
 import { FocusAreaSelector } from './FocusAreaSelector';
 import { ValhallaSection } from './ValhallaSection';
 import { ImageIcon } from '@/components/ImageIcon';
-import { Loader2, Sparkles, Plus, FileText, Zap, template } from 'lucide-react';
+import { Loader2, Sparkles, Plus, FileText, Zap } from 'lucide-react';
 
 interface WorkoutStartOptionsProps {
   workoutName: string;
@@ -63,7 +63,7 @@ export const WorkoutStartOptions = ({
       <AccordionItem value="select-template" className="border rounded-lg">
         <AccordionTrigger className="px-4 py-3 hover:no-underline">
           <div className="flex items-center gap-3">
-            {React.createElement(template, { className: "h-5 w-5" })}
+            <FileText className="h-5 w-5" />
             <span className="font-medium">Select a Template</span>
           </div>
         </AccordionTrigger>
