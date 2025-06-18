@@ -22,6 +22,7 @@ const NewWorkoutPage = () => {
   const {
     isActive: isWorkoutActive,
     formattedDuration,
+    totalDuration,
     toggleWorkout,
   } = useWorkoutTimer();
   
@@ -49,19 +50,21 @@ const NewWorkoutPage = () => {
     setRestDuration,
     showValhallaScoreDialog,
     currentValhallaWorkout,
+    workoutDuration,
     onCloseValhallaDialog,
+    isValhallaWorkout,
   } = useNewWorkoutForm();
 
   const handleToggleSet = useCallback((exerciseId: string, setId: string) => {
     originalHandleToggleSet(exerciseId, setId, (isCompleted) => {
-      if (isCompleted) {
+      if (isCompleted && !isValhallaWorkout) {
         sonnerToast.custom(
           (t) => <RestTimerToast duration={restDuration} toastId={t} />,
           { duration: restDuration * 1000 + 5000, position: 'top-center' }
         );
       }
     });
-  }, [originalHandleToggleSet, restDuration]);
+  }, [originalHandleToggleSet, restDuration, isValhallaWorkout]);
 
   const handleEnterCookMode = () => {
     setIsCookMode(true);
@@ -69,6 +72,10 @@ const NewWorkoutPage = () => {
 
   const handleExitCookMode = () => {
     setIsCookMode(false);
+  };
+
+  const handleFinishWorkout = () => {
+    finishWorkout(totalDuration);
   };
 
   if (isCookMode) {
@@ -81,7 +88,7 @@ const NewWorkoutPage = () => {
         onAddSet={addSet}
         onUpdateSet={updateSet}
         onToggleSet={handleToggleSet}
-        onFinishWorkout={finishWorkout}
+        onFinishWorkout={handleFinishWorkout}
         isSaving={saveWorkoutMutation.isPending}
         isWorkoutActive={isWorkoutActive}
         formattedDuration={formattedDuration}
@@ -105,7 +112,7 @@ const NewWorkoutPage = () => {
         <WorkoutHeader
           workoutName={workoutName}
           onNameChange={setWorkoutName}
-          onFinish={finishWorkout}
+          onFinish={handleFinishWorkout}
           onCancel={cancelWorkout}
           isSaving={saveWorkoutMutation.isPending}
           onSaveAsTemplate={saveAsTemplate}
@@ -118,12 +125,14 @@ const NewWorkoutPage = () => {
 
         <WorkoutActions onAddExercise={addExercise} />
 
-        <div className="p-4 border rounded-lg">
-          <RestTimerSettings
-            restDuration={restDuration}
-            onRestDurationChange={setRestDuration}
-          />
-        </div>
+        {!isValhallaWorkout && (
+          <div className="p-4 border rounded-lg">
+            <RestTimerSettings
+              restDuration={restDuration}
+              onRestDurationChange={setRestDuration}
+            />
+          </div>
+        )}
 
         {exercises.map((exercise, exerciseIndex) => (
           <ExerciseCard
@@ -167,6 +176,7 @@ const NewWorkoutPage = () => {
         isOpen={showValhallaScoreDialog}
         onClose={onCloseValhallaDialog}
         workoutName={currentValhallaWorkout}
+        workoutDuration={workoutDuration}
       />
     </>
   );

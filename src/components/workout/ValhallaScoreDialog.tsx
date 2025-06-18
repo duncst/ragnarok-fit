@@ -1,5 +1,5 @@
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   Dialog,
   DialogContent,
@@ -19,16 +19,46 @@ interface ValhallaScoreDialogProps {
   isOpen: boolean;
   onClose: () => void;
   workoutName: string;
+  workoutDuration?: number;
 }
 
-export const ValhallaScoreDialog = ({ isOpen, onClose, workoutName }: ValhallaScoreDialogProps) => {
+export const ValhallaScoreDialog = ({ isOpen, onClose, workoutName, workoutDuration = 0 }: ValhallaScoreDialogProps) => {
   const [score, setScore] = useState('');
   const [notes, setNotes] = useState('');
   const queryClient = useQueryClient();
 
+  // Format duration from milliseconds to HH:MM:SS
+  const formatDurationToTime = (ms: number) => {
+    const totalSeconds = Math.floor(ms / 1000);
+    const hours = Math.floor(totalSeconds / 3600);
+    const minutes = Math.floor((totalSeconds % 3600) / 60);
+    const seconds = totalSeconds % 60;
+    
+    return `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+  };
+
+  // Convert HH:MM:SS to minutes for storage
+  const timeToMinutes = (timeString: string) => {
+    const parts = timeString.split(':');
+    if (parts.length === 3) {
+      const hours = parseInt(parts[0]) || 0;
+      const minutes = parseInt(parts[1]) || 0;
+      const seconds = parseInt(parts[2]) || 0;
+      return hours * 60 + minutes + seconds / 60;
+    }
+    return parseFloat(timeString) || 0;
+  };
+
+  // Auto-populate score when dialog opens with workout duration
+  useEffect(() => {
+    if (isOpen && workoutDuration > 0) {
+      setScore(formatDurationToTime(workoutDuration));
+    }
+  }, [isOpen, workoutDuration]);
+
   const saveScoreMutation = useMutation({
     mutationFn: async () => {
-      const scoreValue = parseFloat(score);
+      const scoreValue = timeToMinutes(score);
       if (isNaN(scoreValue) || scoreValue <= 0) {
         throw new Error('Please enter a valid score');
       }
@@ -90,20 +120,18 @@ export const ValhallaScoreDialog = ({ isOpen, onClose, workoutName }: ValhallaSc
           
           <div className="space-y-2">
             <Label htmlFor="score">
-              Score <span className="text-destructive">*</span>
+              Time <span className="text-destructive">*</span>
             </Label>
             <Input
               id="score"
-              type="number"
-              step="0.1"
-              min="0"
-              placeholder="Enter your score (time in minutes or reps completed)"
+              type="text"
+              placeholder="HH:MM:SS or minutes"
               value={score}
               onChange={(e) => setScore(e.target.value)}
               required
             />
             <p className="text-sm text-muted-foreground">
-              For time-based workouts: enter completion time in minutes. For rep-based workouts: enter total reps completed.
+              Enter completion time in HH:MM:SS format or as decimal minutes (e.g., 12.5 for 12 minutes 30 seconds).
             </p>
           </div>
 

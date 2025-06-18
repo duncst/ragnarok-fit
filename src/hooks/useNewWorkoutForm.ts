@@ -11,6 +11,7 @@ export const useNewWorkoutForm = () => {
   const navigate = useNavigate();
   const [showValhallaScoreDialog, setShowValhallaScoreDialog] = useState(false);
   const [currentValhallaWorkout, setCurrentValhallaWorkout] = useState<string>('');
+  const [workoutDuration, setWorkoutDuration] = useState<number>(0);
   
   const {
     workoutName,
@@ -36,22 +37,28 @@ export const useNewWorkoutForm = () => {
   const { saveAsTemplateMutation, saveAsTemplate } = useSaveAsTemplate();
   const { generateWorkoutMutation } = useGenerateWorkout({ setWorkoutName, setExercises });
 
-  const handleValhallaScorePrompt = (workoutName: string) => {
+  const isValhallaWorkout = (name: string) => {
+    return name.match(/^(THOR|FENRIR|HEL|NJORD|ODIN)$/i);
+  };
+
+  const handleValhallaScorePrompt = (workoutName: string, duration: number) => {
     setCurrentValhallaWorkout(workoutName);
+    setWorkoutDuration(duration);
     setShowValhallaScoreDialog(true);
   };
 
   const handleCloseValhallaDialog = () => {
     setShowValhallaScoreDialog(false);
     setCurrentValhallaWorkout('');
+    setWorkoutDuration(0);
     navigate('/history');
   };
 
-  const handleFinishWorkout = () => {
+  const handleFinishWorkout = (totalDuration: number) => {
     finishWorkout({ 
       exercises, 
       name: workoutName,
-      onValhallaScorePrompt: handleValhallaScorePrompt
+      onValhallaScorePrompt: (name) => handleValhallaScorePrompt(name, totalDuration)
     });
     clearPersistedWorkout();
   };
@@ -71,7 +78,9 @@ export const useNewWorkoutForm = () => {
     updateExerciseName,
     addSet,
     updateSet,
-    handleToggleSet,
+    handleToggleSet: isValhallaWorkout(workoutName) ? 
+      (exerciseId: string, setId: string) => handleToggleSet(exerciseId, setId) : 
+      handleToggleSet,
     finishWorkout: handleFinishWorkout,
     cancelWorkout: handleCancelWorkout,
     saveWorkoutMutation,
@@ -86,6 +95,8 @@ export const useNewWorkoutForm = () => {
     setRestDuration,
     showValhallaScoreDialog,
     currentValhallaWorkout,
+    workoutDuration,
     onCloseValhallaDialog: handleCloseValhallaDialog,
+    isValhallaWorkout: isValhallaWorkout(workoutName),
   };
 };
