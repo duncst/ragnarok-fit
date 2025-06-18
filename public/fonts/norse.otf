@@ -1,7 +1,11 @@
 
-[Font file - This needs to be the actual Norse.otf font file downloaded from DaFont. Since I cannot download files directly, you'll need to download the Norse font from https://www.dafont.com/norse.font and place the .otf file here]
-ABCDEFGHIJKLM
-NOPQRSTUVWXYZ
-abcdefghijklm
-nopqrstuvwxyz
-1234567890
+This is a placeholder file. Please replace this with the actual Norse.otf font file downloaded from DaFont.
+
+To do this:
+1. Download the Norse font from https://www.dafont.com/norse.font
+2. Extract the .otf file from the download
+3. In Lovable's file explorer (Dev Mode), navigate to public/fonts/norse.otf
+4. Delete this placeholder file
+5. Upload your actual norse.otf file in its place
+
+The font is already configured in index.html and tailwind.config.ts to work once you upload the real font file.
