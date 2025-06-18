@@ -107,7 +107,7 @@ const NewWorkoutPage = () => {
     <>
       <div className="space-y-4 pb-16">
         <div className="flex justify-between items-center">
-          <h1 className="text-3xl font-bold tracking-tight">Start a Workout</h1>
+          <h1 className="text-3xl font-bold tracking-tight">Choose your Destiny</h1>
           {isWorkoutActive && (
             <div className="text-lg font-semibold text-green-600">
               {formattedDuration}
