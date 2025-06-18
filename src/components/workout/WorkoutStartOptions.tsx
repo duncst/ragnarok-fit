@@ -5,8 +5,9 @@ import { Input } from '@/components/ui/input';
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion';
 import { EquipmentSelector } from './EquipmentSelector';
 import { FocusAreaSelector } from './FocusAreaSelector';
+import { ValhallaSection } from './ValhallaSection';
 import { ImageIcon } from '@/components/ImageIcon';
-import { Loader2, Sparkles, Plus, FileText, Zap } from 'lucide-react';
+import { Loader2, Sparkles, Plus, FileText, Zap, Template } from 'lucide-react';
 
 interface WorkoutStartOptionsProps {
   workoutName: string;
@@ -33,8 +34,6 @@ export const WorkoutStartOptions = ({
   isGenerating,
   onStartValhalla,
 }: WorkoutStartOptionsProps) => {
-  const valhallaWorkouts = ['THOR', 'FENRIR', 'HEL', 'NJORD', 'ODIN'];
-
   return (
     <Accordion type="single" collapsible className="space-y-4">
       <AccordionItem value="create-own" className="border rounded-lg">
@@ -65,7 +64,7 @@ export const WorkoutStartOptions = ({
       <AccordionItem value="select-template" className="border rounded-lg">
         <AccordionTrigger className="px-4 py-3 hover:no-underline">
           <div className="flex items-center gap-3">
-            <FileText className="h-5 w-5" />
+            <Template className="h-5 w-5" />
             <span className="font-medium">Select a Template</span>
           </div>
         </AccordionTrigger>
@@ -120,23 +119,7 @@ export const WorkoutStartOptions = ({
           </div>
         </AccordionTrigger>
         <AccordionContent className="px-4 pb-4">
-          <div className="space-y-4">
-            <p className="text-sm text-muted-foreground">
-              Choose a Valhalla workout for a timed challenge. Complete as fast as possible!
-            </p>
-            <div className="grid grid-cols-2 gap-2">
-              {valhallaWorkouts.map((workout) => (
-                <Button
-                  key={workout}
-                  variant="outline"
-                  onClick={() => onStartValhalla(workout)}
-                  className="h-12"
-                >
-                  {workout}
-                </Button>
-              ))}
-            </div>
-          </div>
+          <ValhallaSection />
         </AccordionContent>
       </AccordionItem>
     </Accordion>
