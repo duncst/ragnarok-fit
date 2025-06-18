@@ -2,12 +2,16 @@
 import React from 'react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
+import { Toggle } from '@/components/ui/toggle';
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion';
 import { EquipmentSelector } from './EquipmentSelector';
 import { FocusAreaSelector } from './FocusAreaSelector';
+import { RestTimerSettings } from './RestTimerSettings';
+import { ExerciseCard } from './ExerciseCard';
 import { ImageIcon } from '@/components/ImageIcon';
 import { ValhallaSection } from './ValhallaSection';
-import { Loader2, Sparkles, Plus } from 'lucide-react';
+import { Loader2, Sparkles, Plus, Play, Trash2 } from 'lucide-react';
+import type { Exercise } from '@/types';
 
 interface WorkoutStartOptionsProps {
   workoutName: string;
@@ -20,6 +24,20 @@ interface WorkoutStartOptionsProps {
   onGenerateWorkout: () => void;
   isGenerating: boolean;
   onStartValhalla: (workoutName: string) => void;
+  exercises: Exercise[];
+  onRemoveExercise: (exerciseId: string) => void;
+  onUpdateExerciseName: (exerciseId: string, name: string) => void;
+  onAddSet: (exerciseId: string) => void;
+  onUpdateSet: (exerciseId: string, setId: string, field: 'reps' | 'weight' | 'duration' | 'distance', value: number) => void;
+  onToggleSet: (exerciseId: string, setId: string) => void;
+  restDuration: number;
+  onRestDurationChange: (duration: number) => void;
+  isCookMode: boolean;
+  onToggleCookMode: (pressed: boolean) => void;
+  onStartWorkout: () => void;
+  onCancel: () => void;
+  isWorkoutActive: boolean;
+  onToggleWorkout: () => void;
 }
 
 export const WorkoutStartOptions = ({
@@ -33,6 +51,20 @@ export const WorkoutStartOptions = ({
   onGenerateWorkout,
   isGenerating,
   onStartValhalla,
+  exercises,
+  onRemoveExercise,
+  onUpdateExerciseName,
+  onAddSet,
+  onUpdateSet,
+  onToggleSet,
+  restDuration,
+  onRestDurationChange,
+  isCookMode,
+  onToggleCookMode,
+  onStartWorkout,
+  onCancel,
+  isWorkoutActive,
+  onToggleWorkout,
 }: WorkoutStartOptionsProps) => {
   return (
     <div className="space-y-4">
@@ -46,6 +78,7 @@ export const WorkoutStartOptions = ({
           </AccordionTrigger>
           <AccordionContent className="px-4 pb-4">
             <div className="space-y-4">
+              {/* Workout Name */}
               <div>
                 <label className="text-sm font-medium mb-2 block">Workout Name</label>
                 <Input
@@ -54,9 +87,59 @@ export const WorkoutStartOptions = ({
                   onChange={(e) => onNameChange(e.target.value)}
                 />
               </div>
-              <Button onClick={onAddExercise} className="w-full">
+
+              {/* Rest Timer */}
+              <RestTimerSettings
+                restDuration={restDuration}
+                onRestDurationChange={onRestDurationChange}
+              />
+
+              {/* Control Buttons Row */}
+              <div className="flex items-center gap-2 flex-wrap">
+                <Button 
+                  onClick={onStartWorkout} 
+                  className="flex items-center gap-2"
+                  disabled={exercises.length === 0}
+                >
+                  <Play className="h-4 w-4" />
+                  Start
+                </Button>
+                <Button variant="outline" onClick={onCancel}>
+                  <Trash2 className="h-4 w-4" />
+                </Button>
+                <Toggle
+                  pressed={isCookMode}
+                  onPressedChange={onToggleCookMode}
+                  variant="outline"
+                  className="flex items-center gap-2 px-3 py-2 h-auto"
+                >
+                  <ImageIcon 
+                    src="/lovable-uploads/6ace109c-b935-4cbe-ae24-b2adfe21bde8.png"
+                    alt="Workout Mode"
+                    className="w-4 h-4"
+                  />
+                  <span className="text-sm">Workout Mode</span>
+                </Toggle>
+              </div>
+
+              {/* Exercises */}
+              {exercises.map((exercise, exerciseIndex) => (
+                <ExerciseCard
+                  key={exercise.id}
+                  exercise={exercise}
+                  exerciseIndex={exerciseIndex}
+                  onRemove={onRemoveExercise}
+                  onUpdateName={onUpdateExerciseName}
+                  onAddSet={onAddSet}
+                  onUpdateSet={onUpdateSet}
+                  onToggleSet={onToggleSet}
+                />
+              ))}
+
+              {/* Add Exercise Button */}
+              <Button onClick={onAddExercise} variant="outline" className="w-full">
                 <Plus className="mr-2 h-4 w-4" />
-                Add First Exercise
+                Add Exercise {exercises.length + 1}
               </Button>
             </div>
           </AccordionContent>

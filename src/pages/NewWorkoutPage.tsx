@@ -1,3 +1,4 @@
+
 import React, { useCallback, useState } from 'react';
 import { useNewWorkoutForm } from '@/hooks/useNewWorkoutForm';
 import { useWorkoutTimer } from '@/hooks/useWorkoutTimer';
@@ -12,6 +13,7 @@ import { toast as sonnerToast } from 'sonner';
 
 const NewWorkoutPage = () => {
   const [isCookMode, setIsCookMode] = useState(false);
+  const [isInWorkoutFlow, setIsInWorkoutFlow] = useState(false);
   const {
     isActive: isWorkoutActive,
     formattedDuration,
@@ -68,10 +70,12 @@ const NewWorkoutPage = () => {
 
   const handleExitCookMode = () => {
     setIsCookMode(false);
+    setIsInWorkoutFlow(false);
   };
 
   const handleFinishWorkout = () => {
     finishWorkout(totalDuration);
+    setIsInWorkoutFlow(false);
   };
 
   const handleGenerateWorkout = () => {
@@ -83,7 +87,19 @@ const NewWorkoutPage = () => {
     // Valhalla workouts will be loaded from templates automatically
   };
 
-  if (isCookMode) {
+  const handleStartWorkout = () => {
+    setIsInWorkoutFlow(true);
+    if (isCookMode) {
+      handleEnterCookMode();
+    }
+  };
+
+  const handleCancelWorkout = () => {
+    setIsInWorkoutFlow(false);
+    cancelWorkout();
+  };
+
+  if (isCookMode && isInWorkoutFlow) {
     return (
       <WorkoutCookMode
         workoutName={workoutName}
@@ -102,6 +118,67 @@ const NewWorkoutPage = () => {
     );
   }
 
+  if (isInWorkoutFlow) {
+    return (
+      <>
+        <div className="space-y-4 pb-16">
+          <div className="flex justify-between items-center">
+            <h1 className="text-3xl font-bold tracking-tight">Workout in Progress</h1>
+            {isWorkoutActive && (
+              <div className="text-lg font-semibold text-green-600">
+                {formattedDuration}
+              </div>
+            )}
+          </div>
+
+          <WorkoutHeader
+            workoutName={workoutName}
+            onNameChange={setWorkoutName}
+            onFinish={handleFinishWorkout}
+            onCancel={handleCancelWorkout}
+            isSaving={saveWorkoutMutation.isPending}
+            onSaveAsTemplate={saveAsTemplate}
+            isSavingAsTemplate={saveAsTemplateMutation.isPending}
+            isWorkoutActive={isWorkoutActive}
+            onToggleWorkout={toggleWorkout}
+            isCookMode={isCookMode}
+            onToggleCookMode={setIsCookMode}
+            hasWorkoutData={hasWorkoutData}
+          />
+
+          {!isValhallaWorkout && (
+            <div className="p-4 border rounded-lg">
+              <RestTimerSettings
+                restDuration={restDuration}
+                onRestDurationChange={setRestDuration}
+              />
+            </div>
+          )}
+
+          {exercises.map((exercise, exerciseIndex) => (
+            <ExerciseCard
+              key={exercise.id}
+              exercise={exercise}
+              exerciseIndex={exerciseIndex}
+              onRemove={removeExercise}
+              onUpdateName={updateExerciseName}
+              onAddSet={addSet}
+              onUpdateSet={updateSet}
+              onToggleSet={handleToggleSet}
+            />
+          ))}
+        </div>
+
+        <ValhallaScoreDialog
+          isOpen={showValhallaScoreDialog}
+          onClose={onCloseValhallaDialog}
+          workoutName={currentValhallaWorkout}
+          workoutDuration={workoutDuration}
+        />
+      </>
+    );
+  }
+
   return (
     <>
       <div className="space-y-4 pb-16">
@@ -114,59 +191,32 @@ const NewWorkoutPage = () => {
           )}
         </div>
 
-        {hasWorkoutData ? (
-          <>
-            <WorkoutHeader
-              workoutName={workoutName}
-              onNameChange={setWorkoutName}
-              onFinish={handleFinishWorkout}
-              onCancel={cancelWorkout}
-              isSaving={saveWorkoutMutation.isPending}
-              onSaveAsTemplate={saveAsTemplate}
-              isSavingAsTemplate={saveAsTemplateMutation.isPending}
-              isWorkoutActive={isWorkoutActive}
-              onToggleWorkout={toggleWorkout}
-              isCookMode={isCookMode}
-              onToggleCookMode={setIsCookMode}
-              hasWorkoutData={hasWorkoutData}
-            />
-
-            {!isValhallaWorkout && (
-              <div className="p-4 border rounded-lg">
-                <RestTimerSettings
-                  restDuration={restDuration}
-                  onRestDurationChange={setRestDuration}
-                />
-              </div>
-            )}
-
-            {exercises.map((exercise, exerciseIndex) => (
-              <ExerciseCard
-                key={exercise.id}
-                exercise={exercise}
-                exerciseIndex={exerciseIndex}
-                onRemove={removeExercise}
-                onUpdateName={updateExerciseName}
-                onAddSet={addSet}
-                onUpdateSet={updateSet}
-                onToggleSet={handleToggleSet}
-              />
-            ))}
-          </>
-        ) : (
-          <WorkoutStartOptions
-            workoutName={workoutName}
-            onNameChange={setWorkoutName}
-            onAddExercise={addExercise}
-            selectedEquipment={selectedEquipment}
-            onEquipmentChange={setSelectedEquipment}
-            focusArea={focusArea}
-            onFocusChange={setFocusArea}
-            onGenerateWorkout={handleGenerateWorkout}
-            isGenerating={generateWorkoutMutation.isPending}
-            onStartValhalla={handleStartValhalla}
-          />
-        )}
+        <WorkoutStartOptions
+          workoutName={workoutName}
+          onNameChange={setWorkoutName}
+          onAddExercise={addExercise}
+          selectedEquipment={selectedEquipment}
+          onEquipmentChange={setSelectedEquipment}
+          focusArea={focusArea}
+          onFocusChange={setFocusArea}
+          onGenerateWorkout={handleGenerateWorkout}
+          isGenerating={generateWorkoutMutation.isPending}
+          onStartValhalla={handleStartValhalla}
+          exercises={exercises}
+          onRemoveExercise={removeExercise}
+          onUpdateExerciseName={updateExerciseName}
+          onAddSet={addSet}
+          onUpdateSet={updateSet}
+          onToggleSet={handleToggleSet}
+          restDuration={restDuration}
+          onRestDurationChange={setRestDuration}
+          isCookMode={isCookMode}
+          onToggleCookMode={setIsCookMode}
+          onStartWorkout={handleStartWorkout}
+          onCancel={handleCancelWorkout}
+          isWorkoutActive={isWorkoutActive}
+          onToggleWorkout={toggleWorkout}
+        />
       </div>
 
       <ValhallaScoreDialog
