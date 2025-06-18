@@ -66,6 +66,14 @@ export const WorkoutStartOptions = ({
   isWorkoutActive,
   onToggleWorkout,
 }: WorkoutStartOptionsProps) => {
+  const handleToggleCookMode = (pressed: boolean) => {
+    onToggleCookMode(pressed);
+    // If turning on cook mode, immediately start the workout
+    if (pressed) {
+      onStartWorkout();
+    }
+  };
+
   return (
     <div className="space-y-4">
       <Accordion type="single" collapsible className="space-y-4">
@@ -109,7 +117,7 @@ export const WorkoutStartOptions = ({
                 </Button>
                 <Toggle
                   pressed={isCookMode}
-                  onPressedChange={onToggleCookMode}
+                  onPressedChange={handleToggleCookMode}
                   variant="outline"
                   className="flex items-center gap-2 px-3 py-2 h-auto"
                 >
@@ -122,25 +130,35 @@ export const WorkoutStartOptions = ({
                 </Toggle>
               </div>
 
-              {/* Exercises */}
-              {exercises.map((exercise, exerciseIndex) => (
-                <ExerciseCard
-                  key={exercise.id}
-                  exercise={exercise}
-                  exerciseIndex={exerciseIndex}
-                  onRemove={onRemoveExercise}
-                  onUpdateName={onUpdateExerciseName}
-                  onAddSet={onAddSet}
-                  onUpdateSet={onUpdateSet}
-                  onToggleSet={onToggleSet}
-                />
-              ))}
+              {/* Add Exercise Button or Exercises */}
+              {exercises.length === 0 ? (
+                <Button onClick={onAddExercise} variant="outline" className="w-full">
+                  <Plus className="mr-2 h-4 w-4" />
+                  Add Exercise 1
+                </Button>
+              ) : (
+                <div className="space-y-4">
+                  {/* Exercises */}
+                  {exercises.map((exercise, exerciseIndex) => (
+                    <ExerciseCard
+                      key={exercise.id}
+                      exercise={exercise}
+                      exerciseIndex={exerciseIndex}
+                      onRemove={onRemoveExercise}
+                      onUpdateName={onUpdateExerciseName}
+                      onAddSet={onAddSet}
+                      onUpdateSet={onUpdateSet}
+                      onToggleSet={onToggleSet}
+                    />
+                  ))}
 
-              {/* Add Exercise Button */}
-              <Button onClick={onAddExercise} variant="outline" className="w-full">
-                <Plus className="mr-2 h-4 w-4" />
-                Add Exercise {exercises.length + 1}
-              </Button>
+                  {/* Add Next Exercise Button */}
+                  <Button onClick={onAddExercise} variant="outline" className="w-full">
+                    <Plus className="mr-2 h-4 w-4" />
+                    Add Exercise {exercises.length + 1}
+                  </Button>
+                </div>
+              )}
             </div>
           </AccordionContent>
         </AccordionItem>
