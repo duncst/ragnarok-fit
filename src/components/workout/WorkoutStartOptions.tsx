@@ -10,8 +10,9 @@ import { RestTimerSettings } from './RestTimerSettings';
 import { ExerciseCard } from './ExerciseCard';
 import { ImageIcon } from '@/components/ImageIcon';
 import { ValhallaSection } from './ValhallaSection';
+import { TemplateSelector } from './TemplateSelector';
 import { Loader2, Sparkles, Plus, Play, Trash2 } from 'lucide-react';
-import type { Exercise } from '@/types';
+import type { Exercise, WorkoutTemplate } from '@/types';
 
 interface WorkoutStartOptionsProps {
   workoutName: string;
@@ -68,10 +69,15 @@ export const WorkoutStartOptions = ({
 }: WorkoutStartOptionsProps) => {
   const handleToggleCookMode = (pressed: boolean) => {
     onToggleCookMode(pressed);
-    // If turning on cook mode, immediately start the workout
     if (pressed) {
       onStartWorkout();
     }
+  };
+
+  const handleStartFromTemplate = (template: WorkoutTemplate) => {
+    onNameChange(template.name);
+    // Template loading logic will be handled by the parent component
+    onStartWorkout();
   };
 
   return (
@@ -86,7 +92,6 @@ export const WorkoutStartOptions = ({
           </AccordionTrigger>
           <AccordionContent className="px-4 pb-4">
             <div className="space-y-4">
-              {/* Workout Name */}
               <div>
                 <label className="text-sm font-medium mb-2 block">Workout Name</label>
                 <Input
@@ -96,13 +101,11 @@ export const WorkoutStartOptions = ({
                 />
               </div>
 
-              {/* Rest Timer */}
               <RestTimerSettings
                 restDuration={restDuration}
                 onRestDurationChange={onRestDurationChange}
               />
 
-              {/* Control Buttons Row */}
               <div className="flex items-center gap-2 flex-wrap">
                 <Button 
                   onClick={onStartWorkout} 
@@ -130,7 +133,6 @@ export const WorkoutStartOptions = ({
                 </Toggle>
               </div>
 
-              {/* Add Exercise Button or Exercises */}
               {exercises.length === 0 ? (
                 <Button onClick={onAddExercise} variant="outline" className="w-full">
                   <Plus className="mr-2 h-4 w-4" />
@@ -138,7 +140,6 @@ export const WorkoutStartOptions = ({
                 </Button>
               ) : (
                 <div className="space-y-4">
-                  {/* Exercises */}
                   {exercises.map((exercise, exerciseIndex) => (
                     <ExerciseCard
                       key={exercise.id}
@@ -152,7 +153,6 @@ export const WorkoutStartOptions = ({
                     />
                   ))}
 
-                  {/* Add Next Exercise Button */}
                   <Button onClick={onAddExercise} variant="outline" className="w-full">
                     <Plus className="mr-2 h-4 w-4" />
                     Add Exercise {exercises.length + 1}
@@ -175,12 +175,7 @@ export const WorkoutStartOptions = ({
             </div>
           </AccordionTrigger>
           <AccordionContent className="px-4 pb-4">
-            <div className="text-center py-4">
-              <p className="text-muted-foreground mb-4">Choose from your saved workout templates</p>
-              <Button variant="outline" onClick={() => window.location.href = '/templates'}>
-                Browse Templates
-              </Button>
-            </div>
+            <TemplateSelector onStartWorkout={handleStartFromTemplate} />
           </AccordionContent>
         </AccordionItem>
 
