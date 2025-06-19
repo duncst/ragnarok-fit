@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
@@ -59,7 +58,7 @@ const OnboardingFlow = ({ onComplete }: OnboardingFlowProps) => {
               <Sparkles className="h-6 w-6 text-primary" />
               <div>
                 <h4 className="font-semibold">AI Generation</h4>
-                <p className="text-sm text-muted-foreground">Let AI create the perfect workout</p>
+                <p className="text-sm text-muted-foreground">Let our digital seer design your ideal session</p>
               </div>
             </div>
           </div>
@@ -68,7 +67,7 @@ const OnboardingFlow = ({ onComplete }: OnboardingFlowProps) => {
     },
     {
       title: "Track Your Progress",
-      subtitle: "Every rep brings you closer to Valhalla",
+      subtitle: "Every rep carved into your saga",
       content: (
         <div className="space-y-4">
           <div className="grid grid-cols-2 gap-3">
@@ -80,21 +79,21 @@ const OnboardingFlow = ({ onComplete }: OnboardingFlowProps) => {
             <div className="text-center p-4 bg-muted rounded-lg">
               <Target className="h-8 w-8 text-primary mx-auto mb-2" />
               <h4 className="font-semibold text-sm">Analytics</h4>
-              <p className="text-xs text-muted-foreground">See your growth</p>
+              <p className="text-xs text-muted-foreground">See your progress</p>
             </div>
           </div>
           <div className="p-4 bg-gradient-to-r from-orange-100 to-orange-200 rounded-lg">
             <h4 className="font-semibold text-orange-800 mb-2">⚔️ Valhalla Mode</h4>
             <p className="text-sm text-orange-700">
-              Push your limits with our signature high-intensity workouts and earn warrior scores!
+              Push your limits with our most intense challenges and earn your place
             </p>
           </div>
         </div>
       )
     },
     {
-      title: "Ready for Battle?",
-      subtitle: "Your fitness journey awaits",
+      title: "Begin Your Saga",
+      subtitle: "Your path is yours to shape",
       content: (
         <div className="text-center space-y-6">
           <div className="flex justify-center">
@@ -108,14 +107,14 @@ const OnboardingFlow = ({ onComplete }: OnboardingFlowProps) => {
             </div>
           </div>
           <div className="space-y-2">
-            <p className="text-lg font-semibold">You're ready to begin your legend!</p>
+            <p className="text-lg font-semibold">You're ready to write your legend!</p>
             <p className="text-muted-foreground">
-              Start with your first workout and join the ranks of modern Vikings
+              Step into the world of Ragnarok Fit and rise stronger every day.
             </p>
           </div>
           <Button onClick={onComplete} size="lg" className="w-full">
             <Mountain className="mr-2 h-5 w-5" />
-            Enter Ragnarok Fit
+            Become Ragnarok Fit
           </Button>
         </div>
       )
