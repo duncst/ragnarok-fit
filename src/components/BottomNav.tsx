@@ -12,11 +12,11 @@ const RunningIcon = ({ className }: { className?: string }) => (
 );
 
 const StartWorkoutIcon = ({ className }: { className?: string }) => (
-    <ImageIcon src="/lovable-uploads/59098dd1-6550-4f60-bc29-d0c1165a7d3c.png" alt="Start Workout icon" className={className} />
+    <ImageIcon src="/lovable-uploads/1283fc3a-3186-4200-86ce-e6e99c46f46d.png" alt="Start Workout icon" className={className} />
 );
 
 const ExerciseIcon = ({ className }: { className?: string }) => (
-    <ImageIcon src="/lovable-uploads/1283fc3a-3186-4200-86ce-e6e99c46f46d.png" alt="Exercise icon" className={className} />
+    <ImageIcon src="/lovable-uploads/59098dd1-6550-4f60-bc29-d0c1165a7d3c.png" alt="Exercise icon" className={className} />
 );
 
 const HistoryIcon = ({ className }: { className?: string }) => (
@@ -25,8 +25,8 @@ const HistoryIcon = ({ className }: { className?: string }) => (
 
 const navItems = [
   { to: "/", icon: HomeIcon, label: "Home" },
-  { to: "/exercises", icon: StartWorkoutIcon, label: "Exercises" },
-  { to: "/workout/new", icon: ExerciseIcon, label: "Start Workout" },
+  { to: "/exercises", icon: ExerciseIcon, label: "Exercises" },
+  { to: "/workout/new", icon: StartWorkoutIcon, label: "Start Workout" },
   { to: "/history", icon: HistoryIcon, label: "History" },
   { to: "/run", icon: RunningIcon, label: "Running" },
 ];
