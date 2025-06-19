@@ -16,14 +16,8 @@ export const useOnboarding = () => {
     setHasCompletedOnboarding(true);
   };
 
-  const resetOnboarding = () => {
-    localStorage.removeItem(ONBOARDING_COMPLETED_KEY);
-    setHasCompletedOnboarding(false);
-  };
-
   return {
     hasCompletedOnboarding,
     completeOnboarding,
-    resetOnboarding,
   };
 };
