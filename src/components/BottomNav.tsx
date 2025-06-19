@@ -12,11 +12,11 @@ const RunningIcon = ({ className }: { className?: string }) => (
 );
 
 const StartWorkoutIcon = ({ className }: { className?: string }) => (
-    <ImageIcon src="/lovable-uploads/1283fc3a-3186-4200-86ce-e6e99c46f46d.png" alt="Start Workout icon" className={className} />
+    <ImageIcon src="/lovable-uploads/59098dd1-6550-4f60-bc29-d0c1165a7d3c.png" alt="Exercise icon" className={className} />
 );
 
 const ExerciseIcon = ({ className }: { className?: string }) => (
-    <ImageIcon src="/lovable-uploads/59098dd1-6550-4f60-bc29-d0c1165a7d3c.png" alt="Exercise icon" className={className} />
+    <ImageIcon src="/lovable-uploads/1283fc3a-3186-4200-86ce-e6e99c46f46d.png" alt="Start Workout icon" className={className} />
 );
 
 const HistoryIcon = ({ className }: { className?: string }) => (
