@@ -7,10 +7,13 @@ import { useEffect } from "react";
 import { Button } from "./ui/button";
 import { supabase } from "@/integrations/supabase/client";
 import { toast as sonnerToast } from "sonner";
+import { useOnboarding } from "@/hooks/useOnboarding";
+import OnboardingFlow from "./onboarding/OnboardingFlow";
 
 const Layout = () => {
   const { session } = useAuth();
   const navigate = useNavigate();
+  const { hasCompletedOnboarding, completeOnboarding } = useOnboarding();
 
   useEffect(() => {
     if (!session) {
@@ -30,6 +33,20 @@ const Layout = () => {
 
   if (!session) {
     return null; // or a loading spinner while redirecting
+  }
+
+  // Show onboarding if not completed
+  if (hasCompletedOnboarding === false) {
+    return <OnboardingFlow onComplete={completeOnboarding} />;
+  }
+
+  // Show loading while checking onboarding status
+  if (hasCompletedOnboarding === null) {
+    return (
+      <div className="flex items-center justify-center min-h-screen">
+        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary"></div>
+      </div>
+    );
   }
 
   return (

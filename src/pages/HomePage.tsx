@@ -16,6 +16,7 @@ import { subDays, format, isSameWeek, startOfDay, isWithinInterval } from 'date-
 import { Skeleton } from "@/components/ui/skeleton";
 import { ImageIcon } from "@/components/ImageIcon";
 import { BodyMetricsTracker } from "@/components/BodyMetricsTracker";
+import OnboardingSettings from "@/components/onboarding/OnboardingSettings";
 
 const VolumeIcon = ({ className }: { className?: string }) => (
     <ImageIcon src="/lovable-uploads/0ab4b431-dd06-4b92-8335-ff454c61eb04.png" alt="Volume icon" className={className} />
@@ -179,6 +180,8 @@ const HomePage = () => {
       </div>
       
       <RecentActivity />
+
+      <OnboardingSettings />
 
       <div>
         <h2 className="text-2xl font-bold mb-4">Analytics</h2>
