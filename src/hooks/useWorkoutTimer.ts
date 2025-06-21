@@ -28,6 +28,16 @@ export const useWorkoutTimer = () => {
     }
   };
 
+  const resetTimer = () => {
+    setIsActive(false);
+    setStartTime(null);
+    setTotalDuration(0);
+    if (intervalRef.current) {
+      clearInterval(intervalRef.current);
+      intervalRef.current = null;
+    }
+  };
+
   useEffect(() => {
     if (isActive && startTime) {
       intervalRef.current = setInterval(() => {
@@ -66,5 +76,6 @@ export const useWorkoutTimer = () => {
     toggleWorkout,
     startWorkout,
     pauseWorkout,
+    resetTimer,
   };
 };
