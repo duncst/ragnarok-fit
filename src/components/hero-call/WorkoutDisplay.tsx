@@ -12,6 +12,19 @@ interface WorkoutDisplayProps {
   onLevelChange: (level: 'easy' | 'medium' | 'hard') => void;
 }
 
+const getIcon = (iconName: string) => {
+  switch (iconName) {
+    case 'Swords':
+      return <Swords className="h-4 w-4" />;
+    case 'Shield':
+      return <Shield className="h-4 w-4" />;
+    case 'Flame':
+      return <Flame className="h-4 w-4" />;
+    default:
+      return <Swords className="h-4 w-4" />;
+  }
+};
+
 export const WorkoutDisplay = ({ workout, selectedLevel, onLevelChange }: WorkoutDisplayProps) => {
   return (
     <>
@@ -44,7 +57,7 @@ export const WorkoutDisplay = ({ workout, selectedLevel, onLevelChange }: Workou
           <TabsContent key={level.difficulty} value={level.difficulty} className="space-y-3">
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-2">
-                {level.icon}
+                {getIcon(level.icon)}
                 <Badge variant="outline" className="font-medium">
                   {level.label}
                 </Badge>

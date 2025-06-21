@@ -3,7 +3,7 @@ import { Swords, Shield, Flame } from 'lucide-react';
 
 export interface WorkoutLevel {
   difficulty: 'easy' | 'medium' | 'hard';
-  icon: React.ReactNode;
+  icon: string;
   label: string;
   duration: string;
   exercises: string[];
@@ -25,7 +25,7 @@ export const workoutTemplates: HeroCallWorkout[] = [
     levels: [
       {
         difficulty: 'easy',
-        icon: <Swords className="h-4 w-4" />,
+        icon: 'Swords',
         label: 'Pup\'s Path',
         duration: '10-15 min',
         exercises: [
@@ -40,7 +40,7 @@ export const workoutTemplates: HeroCallWorkout[] = [
       },
       {
         difficulty: 'medium',
-        icon: <Shield className="h-4 w-4" />,
+        icon: 'Shield',
         label: 'Wolf\'s Hunt',
         duration: '15-20 min',
         exercises: [
@@ -56,7 +56,7 @@ export const workoutTemplates: HeroCallWorkout[] = [
       },
       {
         difficulty: 'hard',
-        icon: <Flame className="h-4 w-4" />,
+        icon: 'Flame',
         label: 'Alpha\'s Dominion',
         duration: '20-30 min',
         exercises: [
@@ -80,7 +80,7 @@ export const workoutTemplates: HeroCallWorkout[] = [
     levels: [
       {
         difficulty: 'easy',
-        icon: <Swords className="h-4 w-4" />,
+        icon: 'Swords',
         label: 'Apprentice Smith',
         duration: '12-15 min',
         exercises: [
@@ -96,7 +96,7 @@ export const workoutTemplates: HeroCallWorkout[] = [
       },
       {
         difficulty: 'medium',
-        icon: <Shield className="h-4 w-4" />,
+        icon: 'Shield',
         label: 'Thunder Striker',
         duration: '18-22 min',
         exercises: [
@@ -113,7 +113,7 @@ export const workoutTemplates: HeroCallWorkout[] = [
       },
       {
         difficulty: 'hard',
-        icon: <Flame className="h-4 w-4" />,
+        icon: 'Flame',
         label: 'Mjölnir\'s Might',
         duration: '25-30 min',
         exercises: [
@@ -138,7 +138,7 @@ export const workoutTemplates: HeroCallWorkout[] = [
     levels: [
       {
         difficulty: 'easy',
-        icon: <Swords className="h-4 w-4" />,
+        icon: 'Swords',
         label: 'Seeker\'s Path',
         duration: '10-12 min',
         exercises: [
@@ -154,7 +154,7 @@ export const workoutTemplates: HeroCallWorkout[] = [
       },
       {
         difficulty: 'medium',
-        icon: <Shield className="h-4 w-4" />,
+        icon: 'Shield',
         label: 'Raven\'s Flight',
         duration: '16-20 min',
         exercises: [
@@ -171,7 +171,7 @@ export const workoutTemplates: HeroCallWorkout[] = [
       },
       {
         difficulty: 'hard',
-        icon: <Flame className="h-4 w-4" />,
+        icon: 'Flame',
         label: 'All-Father\'s Trial',
         duration: '22-28 min',
         exercises: [
@@ -196,7 +196,7 @@ export const workoutTemplates: HeroCallWorkout[] = [
     levels: [
       {
         difficulty: 'easy',
-        icon: <Swords className="h-4 w-4" />,
+        icon: 'Swords',
         label: 'Shield Maiden',
         duration: '12-15 min',
         exercises: [
@@ -213,7 +213,7 @@ export const workoutTemplates: HeroCallWorkout[] = [
       },
       {
         difficulty: 'medium',
-        icon: <Shield className="h-4 w-4" />,
+        icon: 'Shield',
         label: 'Battle Dancer',
         duration: '18-22 min',
         exercises: [
@@ -231,7 +231,7 @@ export const workoutTemplates: HeroCallWorkout[] = [
       },
       {
         difficulty: 'hard',
-        icon: <Flame className="h-4 w-4" />,
+        icon: 'Flame',
         label: 'Chooser of the Slain',
         duration: '24-30 min',
         exercises: [
@@ -257,7 +257,7 @@ export const workoutTemplates: HeroCallWorkout[] = [
     levels: [
       {
         difficulty: 'easy',
-        icon: <Swords className="h-4 w-4" />,
+        icon: 'Swords',
         label: 'Hatchling\'s Writhe',
         duration: '10-14 min',
         exercises: [
@@ -274,7 +274,7 @@ export const workoutTemplates: HeroCallWorkout[] = [
       },
       {
         difficulty: 'medium',
-        icon: <Shield className="h-4 w-4" />,
+        icon: 'Shield',
         label: 'Serpent\'s Flow',
         duration: '16-20 min',
         exercises: [
@@ -292,7 +292,7 @@ export const workoutTemplates: HeroCallWorkout[] = [
       },
       {
         difficulty: 'hard',
-        icon: <Flame className="h-4 w-4" />,
+        icon: 'Flame',
         label: 'World Serpent\'s Grasp',
         duration: '22-28 min',
         exercises: [
@@ -318,7 +318,7 @@ export const workoutTemplates: HeroCallWorkout[] = [
     levels: [
       {
         difficulty: 'easy',
-        icon: <Swords className="h-4 w-4" />,
+        icon: 'Swords',
         label: 'Gate Keeper',
         duration: '10-12 min',
         exercises: [
@@ -334,7 +334,7 @@ export const workoutTemplates: HeroCallWorkout[] = [
       },
       {
         difficulty: 'medium',
-        icon: <Shield className="h-4 w-4" />,
+        icon: 'Shield',
         label: 'Bridge Guardian',
         duration: '16-18 min',
         exercises: [
@@ -351,7 +351,7 @@ export const workoutTemplates: HeroCallWorkout[] = [
       },
       {
         difficulty: 'hard',
-        icon: <Flame className="h-4 w-4" />,
+        icon: 'Flame',
         label: 'All-Seeing Sentinel',
         duration: '22-26 min',
         exercises: [
@@ -376,7 +376,7 @@ export const workoutTemplates: HeroCallWorkout[] = [
     levels: [
       {
         difficulty: 'easy',
-        icon: <Swords className="h-4 w-4" />,
+        icon: 'Swords',
         label: 'Royal Maiden',
         duration: '12-14 min',
         exercises: [
@@ -392,7 +392,7 @@ export const workoutTemplates: HeroCallWorkout[] = [
       },
       {
         difficulty: 'medium',
-        icon: <Shield className="h-4 w-4" />,
+        icon: 'Shield',
         label: 'Throne Protector',
         duration: '18-20 min',
         exercises: [
@@ -409,7 +409,7 @@ export const workoutTemplates: HeroCallWorkout[] = [
       },
       {
         difficulty: 'hard',
-        icon: <Flame className="h-4 w-4" />,
+        icon: 'Flame',
         label: 'Queen\'s Command',
         duration: '24-28 min',
         exercises: [
@@ -434,7 +434,7 @@ export const workoutTemplates: HeroCallWorkout[] = [
     levels: [
       {
         difficulty: 'easy',
-        icon: <Swords className="h-4 w-4" />,
+        icon: 'Swords',
         label: 'Clever Apprentice',
         duration: '10-14 min',
         exercises: [
@@ -451,7 +451,7 @@ export const workoutTemplates: HeroCallWorkout[] = [
       },
       {
         difficulty: 'medium',
-        icon: <Shield className="h-4 w-4" />,
+        icon: 'Shield',
         label: 'Shapeshifter',
         duration: '16-22 min',
         exercises: [
@@ -469,7 +469,7 @@ export const workoutTemplates: HeroCallWorkout[] = [
       },
       {
         difficulty: 'hard',
-        icon: <Flame className="h-4 w-4" />,
+        icon: 'Flame',
         label: 'Trickster\'s Gambit',
         duration: '20-30 min',
         exercises: [
@@ -495,7 +495,7 @@ export const workoutTemplates: HeroCallWorkout[] = [
     levels: [
       {
         difficulty: 'easy',
-        icon: <Swords className="h-4 w-4" />,
+        icon: 'Swords',
         label: 'Dawn\'s First Ray',
         duration: '12-15 min',
         exercises: [
@@ -511,7 +511,7 @@ export const workoutTemplates: HeroCallWorkout[] = [
       },
       {
         difficulty: 'medium',
-        icon: <Shield className="h-4 w-4" />,
+        icon: 'Shield',
         label: 'Midday Radiance',
         duration: '18-22 min',
         exercises: [
@@ -528,7 +528,7 @@ export const workoutTemplates: HeroCallWorkout[] = [
       },
       {
         difficulty: 'hard',
-        icon: <Flame className="h-4 w-4" />,
+        icon: 'Flame',
         label: 'Eternal Brilliance',
         duration: '24-30 min',
         exercises: [
@@ -553,7 +553,7 @@ export const workoutTemplates: HeroCallWorkout[] = [
     levels: [
       {
         difficulty: 'easy',
-        icon: <Swords className="h-4 w-4" />,
+        icon: 'Swords',
         label: 'Fair Judgment',
         duration: '10-14 min',
         exercises: [
@@ -569,7 +569,7 @@ export const workoutTemplates: HeroCallWorkout[] = [
       },
       {
         difficulty: 'medium',
-        icon: <Shield className="h-4 w-4" />,
+        icon: 'Shield',
         label: 'Scales of War',
         duration: '16-20 min',
         exercises: [
@@ -586,7 +586,7 @@ export const workoutTemplates: HeroCallWorkout[] = [
       },
       {
         difficulty: 'hard',
-        icon: <Flame className="h-4 w-4" />,
+        icon: 'Flame',
         label: 'One-Handed Warrior',
         duration: '22-28 min',
         exercises: [
@@ -611,7 +611,7 @@ export const workoutTemplates: HeroCallWorkout[] = [
     levels: [
       {
         difficulty: 'easy',
-        icon: <Swords className="h-4 w-4" />,
+        icon: 'Swords',
         label: 'Seidr Apprentice',
         duration: '12-15 min',
         exercises: [
@@ -628,7 +628,7 @@ export const workoutTemplates: HeroCallWorkout[] = [
       },
       {
         difficulty: 'medium',
-        icon: <Shield className="h-4 w-4" />,
+        icon: 'Shield',
         label: 'Battle Maiden',
         duration: '18-22 min',
         exercises: [
@@ -646,7 +646,7 @@ export const workoutTemplates: HeroCallWorkout[] = [
       },
       {
         difficulty: 'hard',
-        icon: <Flame className="h-4 w-4" />,
+        icon: 'Flame',
         label: 'Goddess of War',
         duration: '24-30 min',
         exercises: [
@@ -672,7 +672,7 @@ export const workoutTemplates: HeroCallWorkout[] = [
     levels: [
       {
         difficulty: 'easy',
-        icon: <Swords className="h-4 w-4" />,
+        icon: 'Swords',
         label: 'Silent Stalker',
         duration: '10-14 min',
         exercises: [
@@ -688,7 +688,7 @@ export const workoutTemplates: HeroCallWorkout[] = [
       },
       {
         difficulty: 'medium',
-        icon: <Shield className="h-4 w-4" />,
+        icon: 'Shield',
         label: 'Vengeance Seeker',
         duration: '16-20 min',
         exercises: [
@@ -705,7 +705,7 @@ export const workoutTemplates: HeroCallWorkout[] = [
       },
       {
         difficulty: 'hard',
-        icon: <Flame className="h-4 w-4" />,
+        icon: 'Flame',
         label: 'Father\'s Avenger',
         duration: '22-28 min',
         exercises: [
@@ -730,7 +730,7 @@ export const workoutTemplates: HeroCallWorkout[] = [
     levels: [
       {
         difficulty: 'easy',
-        icon: <Swords className="h-4 w-4" />,
+        icon: 'Swords',
         label: 'Border Walker',
         duration: '12-15 min',
         exercises: [
@@ -745,7 +745,7 @@ export const workoutTemplates: HeroCallWorkout[] = [
       },
       {
         difficulty: 'medium',
-        icon: <Shield className="h-4 w-4" />,
+        icon: 'Shield',
         label: 'Realm Guardian',
         duration: '18-22 min',
         exercises: [
@@ -761,7 +761,7 @@ export const workoutTemplates: HeroCallWorkout[] = [
       },
       {
         difficulty: 'hard',
-        icon: <Flame className="h-4 w-4" />,
+        icon: 'Flame',
         label: 'Death\'s Daughter',
         duration: '24-30 min',
         exercises: [
