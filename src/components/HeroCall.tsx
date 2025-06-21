@@ -3,7 +3,7 @@ import React, { useState, useEffect } from 'react';
 import { Card, CardContent } from '@/components/ui/card';
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion';
 import { Swords } from 'lucide-react';
-import { WorkoutTemplates } from './hero-call/WorkoutTemplates';
+import { workoutTemplates } from './hero-call/WorkoutTemplates';
 import { StreakTracker } from './hero-call/StreakTracker';
 import { WorkoutDisplay } from './hero-call/WorkoutDisplay';
 import { getDailyWorkout, getStreakData, updateStreak } from './hero-call/utils';
