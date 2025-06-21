@@ -24,6 +24,7 @@ import StatItem from './StatItem';
 import { getWorkoutDuration, getTotalSets, getTotalVolume } from '@/lib/historyUtils';
 import { useDeleteActivity } from '@/hooks/useDeleteActivity';
 import DeleteConfirmationDialog from './DeleteConfirmationDialog';
+import { getWorkoutBadge } from '@/lib/workoutUtils';
 
 const WorkoutCard = ({ workout }: { workout: Workout }) => {
   const [isOpen, setIsOpen] = React.useState(false);
@@ -34,6 +35,7 @@ const WorkoutCard = ({ workout }: { workout: Workout }) => {
   const totalVolume = getTotalVolume(workout);
   const avgPerSet = totalSets > 0 ? totalVolume / totalSets : 0;
   const duration = getWorkoutDuration(workout);
+  const workoutBadge = getWorkoutBadge(workout.name);
 
   const handleRepeatWorkout = () => {
     navigate('/workout/new', { state: { workout } });
@@ -49,8 +51,15 @@ const WorkoutCard = ({ workout }: { workout: Workout }) => {
         <CardContent className="p-4 space-y-4">
           <div className="flex justify-between items-start">
             <div>
-              <Badge variant="outline" className="font-semibold text-card-foreground">{workout.name}</Badge>
-              <div className="flex items-center gap-2 text-sm text-muted-foreground mt-2">
+              <div className="flex items-center gap-2 mb-2">
+                <Badge variant="outline" className="font-semibold text-card-foreground">{workout.name}</Badge>
+                {workoutBadge && (
+                  <Badge variant={workoutBadge.variant} className="text-xs">
+                    {workoutBadge.icon} {workoutBadge.text}
+                  </Badge>
+                )}
+              </div>
+              <div className="flex items-center gap-2 text-sm text-muted-foreground">
                 <Calendar className="h-4 w-4" />
                 <span>{format(workout.startTime, 'MMM d, yyyy')}</span>
               </div>

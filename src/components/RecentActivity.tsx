@@ -12,6 +12,8 @@ import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Link } from "react-router-dom";
 import { ImageIcon } from "./ImageIcon";
+import { Badge } from "@/components/ui/badge";
+import { getWorkoutBadge } from "@/lib/workoutUtils";
 
 const getWorkoutDuration = (workout: Workout) => {
     if (!workout.endTime) return 'N/A';
@@ -82,6 +84,8 @@ export const RecentActivity = () => {
             ? `${activity.exercises.length} exercises • ${getWorkoutDuration(activity)}`
             : `${activity.distance.toFixed(1)} km • ${getRunDuration(activity.duration)}`;
         
+        const workoutBadge = activity.type === 'workout' ? getWorkoutBadge(activity.name) : null;
+        
         return (
             <Card key={activity.id}>
                 <CardContent className="p-4 flex justify-between items-center">
@@ -90,7 +94,14 @@ export const RecentActivity = () => {
                             {activity.type === 'workout' ? <Zap className="h-6 w-6 text-primary" /> : <ImageIcon src="/lovable-uploads/ce6da73b-d67b-4c6a-9101-65cfa425f67a.png" alt="Running icon" className="h-7 w-7 text-primary" />}
                         </div>
                         <div>
-                            <p className="font-semibold">{name}</p>
+                            <div className="flex items-center gap-2">
+                                <p className="font-semibold">{name}</p>
+                                {workoutBadge && (
+                                    <Badge variant={workoutBadge.variant} className="text-xs">
+                                        {workoutBadge.icon} {workoutBadge.text}
+                                    </Badge>
+                                )}
+                            </div>
                             <p className="text-sm text-muted-foreground">{details}</p>
                         </div>
                     </div>

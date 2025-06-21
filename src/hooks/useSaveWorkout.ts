@@ -87,13 +87,16 @@ export const useSaveWorkout = () => {
         // Check if this is a Valhalla workout
         const isValhallaWorkout = workoutNameOrDefault.match(/^(THOR|FENRIR|HEL|NJORD|ODIN)$/i);
         
+        // Check if this is a Hero's Call workout
+        const isHeroCallWorkout = workoutNameOrDefault.startsWith("Hero's Call:");
+        
         saveWorkoutMutation.mutate({ exercises, name: workoutNameOrDefault }, {
             onSuccess: () => {
                 if (isValhallaWorkout && onValhallaScorePrompt) {
                     // Prompt user to record their Valhalla score
                     onValhallaScorePrompt(workoutNameOrDefault);
                 } else {
-                    // Navigate to history for non-Valhalla workouts
+                    // Navigate to history for non-Valhalla workouts (including Hero's Call)
                     navigate('/history');
                 }
             }
