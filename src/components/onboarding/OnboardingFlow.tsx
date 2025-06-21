@@ -1,8 +1,9 @@
+
 import React, { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import { Progress } from '@/components/ui/progress';
-import { Mountain, ArrowRight, ArrowLeft, Sparkles, Play, TrendingUp, Target } from 'lucide-react';
+import { Mountain, ArrowRight, ArrowLeft, Sparkles, Play, TrendingUp, Target, Swords } from 'lucide-react';
 import { ImageIcon } from '@/components/ImageIcon';
 
 interface OnboardingFlowProps {
@@ -27,6 +28,34 @@ const OnboardingFlow = ({ onComplete }: OnboardingFlowProps) => {
           <p className="text-lg text-muted-foreground">
             Forge your strength like the Norse gods and track your epic fitness journey
           </p>
+        </div>
+      )
+    },
+    {
+      title: "Daily Hero's Call",
+      subtitle: "A new challenge awaits each dawn",
+      content: (
+        <div className="space-y-4">
+          <div className="flex justify-center">
+            <div className="relative">
+              <Swords className="h-16 w-16 text-primary mx-auto" />
+              <div className="absolute -inset-1 bg-gradient-to-r from-primary/20 to-primary/40 rounded-full blur animate-pulse"></div>
+            </div>
+          </div>
+          <div className="space-y-3">
+            <div className="text-center p-3 bg-muted rounded-lg">
+              <h4 className="font-semibold text-primary mb-1">🗡️ Fresh Challenge Daily</h4>
+              <p className="text-sm text-muted-foreground">Each day brings a new workout designed to test your mettle</p>
+            </div>
+            <div className="text-center p-3 bg-muted rounded-lg">
+              <h4 className="font-semibold text-primary mb-1">⚔️ Three Difficulty Levels</h4>
+              <p className="text-sm text-muted-foreground">Choose Easy, Medium, or Hard to match your current strength</p>
+            </div>
+            <div className="text-center p-3 bg-muted rounded-lg">
+              <h4 className="font-semibold text-primary mb-1">🔥 Weekly Progress</h4>
+              <p className="text-sm text-muted-foreground">Complete 5 out of 7 days to forge your week</p>
+            </div>
+          </div>
         </div>
       )
     },
