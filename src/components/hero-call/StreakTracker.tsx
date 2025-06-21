@@ -2,7 +2,8 @@
 import React from 'react';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
-import { Calendar, CalendarCheck } from 'lucide-react';
+import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '@/components/ui/collapsible';
+import { Calendar, CalendarCheck, ChevronDown } from 'lucide-react';
 
 interface StreakTrackerProps {
   streakData: {
@@ -35,41 +36,55 @@ export const StreakTracker = ({
   }
 
   return (
-    <div className="bg-muted/50 p-4 rounded-lg space-y-3">
-      <div className="flex items-center justify-between">
-        <div className="space-y-1">
-          <p className="text-sm font-medium">Weekly Progress</p>
-          <p className="text-xs text-muted-foreground">Complete 5 days out of 7 to forge your week</p>
+    <Collapsible className="w-full">
+      <CollapsibleTrigger className="flex items-center justify-between w-full p-2 bg-muted/30 rounded-lg hover:bg-muted/50 transition-colors">
+        <div className="flex items-center gap-2">
+          <Badge variant={completedToday ? "default" : "outline"} className="flex items-center gap-1">
+            {completedToday ? <CalendarCheck className="h-3 w-3" /> : <Calendar className="h-3 w-3" />}
+            Weekly Progress: {streakData.weeklyCount}/5
+          </Badge>
         </div>
-        <div className="text-right">
-          <p className="text-2xl font-bold text-primary">{streakData.weeklyCount}/5</p>
-          <p className="text-xs text-muted-foreground">days this week</p>
+        <ChevronDown className="h-4 w-4 transition-transform duration-200 ui-state-open:rotate-180" />
+      </CollapsibleTrigger>
+
+      <CollapsibleContent className="mt-2">
+        <div className="bg-muted/50 p-4 rounded-lg space-y-3">
+          <div className="flex items-center justify-between">
+            <div className="space-y-1">
+              <p className="text-sm font-medium">Weekly Progress</p>
+              <p className="text-xs text-muted-foreground">Complete 5 days out of 7 to forge your week</p>
+            </div>
+            <div className="text-right">
+              <p className="text-2xl font-bold text-primary">{streakData.weeklyCount}/5</p>
+              <p className="text-xs text-muted-foreground">days this week</p>
+            </div>
+          </div>
+          
+          <div className="w-full bg-muted rounded-full h-2">
+            <div 
+              className="bg-primary h-2 rounded-full transition-all duration-300" 
+              style={{ width: `${progressPercentage}%` }}
+            />
+          </div>
+          
+          {!completedToday && onMarkComplete && (
+            <Button 
+              onClick={onMarkComplete}
+              size="sm" 
+              className="w-full"
+            >
+              Mark Today's Challenge Complete
+            </Button>
+          )}
+          
+          {completedToday && (
+            <div className="flex items-center justify-center gap-2 text-sm text-green-600">
+              <CalendarCheck className="h-4 w-4" />
+              Today's challenge completed! 🔥
+            </div>
+          )}
         </div>
-      </div>
-      
-      <div className="w-full bg-muted rounded-full h-2">
-        <div 
-          className="bg-primary h-2 rounded-full transition-all duration-300" 
-          style={{ width: `${progressPercentage}%` }}
-        />
-      </div>
-      
-      {!completedToday && onMarkComplete && (
-        <Button 
-          onClick={onMarkComplete}
-          size="sm" 
-          className="w-full"
-        >
-          Mark Today's Challenge Complete
-        </Button>
-      )}
-      
-      {completedToday && (
-        <div className="flex items-center justify-center gap-2 text-sm text-green-600">
-          <CalendarCheck className="h-4 w-4" />
-          Today's challenge completed! 🔥
-        </div>
-      )}
-    </div>
+      </CollapsibleContent>
+    </Collapsible>
   );
 };
