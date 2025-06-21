@@ -13,7 +13,7 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { Link } from "react-router-dom";
 import { ImageIcon } from "./ImageIcon";
 import { Badge } from "@/components/ui/badge";
-import { getWorkoutBadge } from "@/lib/workoutUtils";
+import { getWorkoutBadge, isHeroCallWorkout } from "@/lib/workoutUtils";
 
 const getWorkoutDuration = (workout: Workout) => {
     if (!workout.endTime) return 'N/A';
@@ -79,7 +79,13 @@ export const RecentActivity = () => {
     ].sort((a, b) => b.date.getTime() - a.date.getTime()).slice(0, 3);
 
     const renderActivity = (activity: (Workout & {type: 'workout', date: Date}) | (Run & {type: 'run'})) => {
-        const name = activity.type === 'workout' ? activity.name : activity.runType;
+        // Clean up the name for Hero's Call workouts
+        let displayName = activity.type === 'workout' ? activity.name : activity.runType;
+        if (activity.type === 'workout' && isHeroCallWorkout(activity.name)) {
+            // Remove "Hero's Call: " prefix for display since we show it in the badge
+            displayName = activity.name.replace("Hero's Call: ", "");
+        }
+        
         const details = activity.type === 'workout' 
             ? `${activity.exercises.length} exercises • ${getWorkoutDuration(activity)}`
             : `${activity.distance.toFixed(1)} km • ${getRunDuration(activity.duration)}`;
@@ -93,19 +99,20 @@ export const RecentActivity = () => {
                         <div className="bg-secondary p-3 rounded-full">
                             {activity.type === 'workout' ? <Zap className="h-6 w-6 text-primary" /> : <ImageIcon src="/lovable-uploads/ce6da73b-d67b-4c6a-9101-65cfa425f67a.png" alt="Running icon" className="h-7 w-7 text-primary" />}
                         </div>
-                        <div>
-                            <div className="flex items-center gap-2">
-                                <p className="font-semibold">{name}</p>
+                        <div className="flex-1 min-w-0">
+                            <div className="flex items-center gap-2 flex-wrap">
+                                <p className="font-semibold truncate">{displayName}</p>
                                 {workoutBadge && (
-                                    <Badge variant={workoutBadge.variant} className="text-xs">
-                                        {workoutBadge.icon} {workoutBadge.text}
+                                    <Badge variant={workoutBadge.variant} className="text-xs flex-shrink-0">
+                                        <span className="mr-1">{workoutBadge.icon}</span>
+                                        {workoutBadge.text}
                                     </Badge>
                                 )}
                             </div>
                             <p className="text-sm text-muted-foreground">{details}</p>
                         </div>
                     </div>
-                    <p className="text-sm text-muted-foreground">{formatDistanceToNow(activity.date, { addSuffix: true })}</p>
+                    <p className="text-sm text-muted-foreground flex-shrink-0 ml-2">{formatDistanceToNow(activity.date, { addSuffix: true })}</p>
                 </CardContent>
             </Card>
         );

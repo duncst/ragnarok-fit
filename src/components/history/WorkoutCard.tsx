@@ -24,7 +24,7 @@ import StatItem from './StatItem';
 import { getWorkoutDuration, getTotalSets, getTotalVolume } from '@/lib/historyUtils';
 import { useDeleteActivity } from '@/hooks/useDeleteActivity';
 import DeleteConfirmationDialog from './DeleteConfirmationDialog';
-import { getWorkoutBadge } from '@/lib/workoutUtils';
+import { getWorkoutBadge, isHeroCallWorkout } from '@/lib/workoutUtils';
 
 const WorkoutCard = ({ workout }: { workout: Workout }) => {
   const [isOpen, setIsOpen] = React.useState(false);
@@ -36,6 +36,12 @@ const WorkoutCard = ({ workout }: { workout: Workout }) => {
   const avgPerSet = totalSets > 0 ? totalVolume / totalSets : 0;
   const duration = getWorkoutDuration(workout);
   const workoutBadge = getWorkoutBadge(workout.name);
+
+  // Clean up the name for Hero's Call workouts
+  let displayName = workout.name;
+  if (isHeroCallWorkout(workout.name)) {
+    displayName = workout.name.replace("Hero's Call: ", "");
+  }
 
   const handleRepeatWorkout = () => {
     navigate('/workout/new', { state: { workout } });
@@ -50,12 +56,13 @@ const WorkoutCard = ({ workout }: { workout: Workout }) => {
       <Collapsible open={isOpen} onOpenChange={setIsOpen}>
         <CardContent className="p-4 space-y-4">
           <div className="flex justify-between items-start">
-            <div>
-              <div className="flex items-center gap-2 mb-2">
-                <Badge variant="outline" className="font-semibold text-card-foreground">{workout.name}</Badge>
+            <div className="flex-1 min-w-0">
+              <div className="flex items-center gap-2 mb-2 flex-wrap">
+                <Badge variant="outline" className="font-semibold text-card-foreground">{displayName}</Badge>
                 {workoutBadge && (
-                  <Badge variant={workoutBadge.variant} className="text-xs">
-                    {workoutBadge.icon} {workoutBadge.text}
+                  <Badge variant={workoutBadge.variant} className="text-xs flex-shrink-0">
+                    <span className="mr-1">{workoutBadge.icon}</span>
+                    {workoutBadge.text}
                   </Badge>
                 )}
               </div>
@@ -64,7 +71,7 @@ const WorkoutCard = ({ workout }: { workout: Workout }) => {
                 <span>{format(workout.startTime, 'MMM d, yyyy')}</span>
               </div>
             </div>
-            <div className="flex items-center gap-0.5">
+            <div className="flex items-center gap-0.5 flex-shrink-0">
               <Button variant="ghost" size="icon" onClick={handleRepeatWorkout}>
                 <Repeat className="h-4 w-4" />
                 <span className="sr-only">Repeat workout</span>
