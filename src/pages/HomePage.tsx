@@ -16,6 +16,7 @@ import { subDays, format, isSameWeek, startOfDay, isWithinInterval } from 'date-
 import { Skeleton } from "@/components/ui/skeleton";
 import { ImageIcon } from "@/components/ImageIcon";
 import { BodyMetricsTracker } from "@/components/BodyMetricsTracker";
+import { HeroCall } from "@/components/HeroCall";
 
 const VolumeIcon = ({ className }: { className?: string }) => (
     <ImageIcon src="/lovable-uploads/0ab4b431-dd06-4b92-8335-ff454c61eb04.png" alt="Volume icon" className={className} />
@@ -177,6 +178,8 @@ const HomePage = () => {
           </Link>
         </Button>
       </div>
+      
+      <HeroCall />
       
       <RecentActivity />
 
