@@ -5,6 +5,7 @@ import { supabase } from '@/integrations/supabase/client';
 import type { Workout, Run, PersonalRecord } from '@/types';
 import { Tables } from '@/integrations/supabase/types';
 import { subDays, format, isSameWeek, startOfDay, isWithinInterval } from 'date-fns';
+import { isHeroCallWorkout } from '@/lib/workoutUtils';
 
 export const useHomePageData = () => {
   const { user } = useAuth();
@@ -66,9 +67,16 @@ export const useHomePageData = () => {
   const today = new Date();
   const last7DaysInterval = { start: startOfDay(subDays(today, 6)), end: new Date() };
 
-  // Strength Stats
+  // Strength Stats - include Hero's Call workouts
   const workoutsThisWeek = workoutHistory?.filter(w => isSameWeek(w.startTime, today, { weekStartsOn: 1 })).length || 0;
+  
   const totalVolume = workoutHistory?.reduce((total, workout) => {
+    // For Hero's Call workouts, we don't have traditional sets/reps/weight data
+    // So we only count regular workouts for volume calculation
+    if (isHeroCallWorkout(workout.name || '')) {
+      return total;
+    }
+    
     return total + workout.exercises.reduce((workoutTotal, exercise) => {
       return workoutTotal + exercise.sets.reduce((exerciseTotal, set) => {
         return exerciseTotal + (set.completed ? set.reps * set.weight : 0);
@@ -86,9 +94,14 @@ export const useHomePageData = () => {
     const chartEntry = strengthChartData.find(d => d.date.getTime() === workoutDay.getTime());
     
     if (chartEntry) {
-      const workoutVolume = workout.exercises.reduce((acc, ex) => 
-        acc + ex.sets.reduce((setAcc, set) => setAcc + (set.completed ? set.reps * set.weight : 0), 0), 0);
-      chartEntry.volume += workoutVolume;
+      // For Hero's Call workouts, add a nominal volume to show activity on the chart
+      if (isHeroCallWorkout(workout.name || '')) {
+        chartEntry.volume += 100; // Add a base value for Hero's Call completion
+      } else {
+        const workoutVolume = workout.exercises.reduce((acc, ex) => 
+          acc + ex.sets.reduce((setAcc, set) => setAcc + (set.completed ? set.reps * set.weight : 0), 0), 0);
+        chartEntry.volume += workoutVolume;
+      }
     }
   });
   
