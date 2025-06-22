@@ -121,25 +121,20 @@ export const HeroCall = () => {
 
   return (
     <Card className="w-full">
-      <CardHeader>
-        <CardTitle className="flex items-center gap-2 text-foreground">
-          <Swords className="h-5 w-5 text-primary" />
-          Hero's Call Progress
-        </CardTitle>
-      </CardHeader>
-      <CardContent>
+      <CardContent className="p-0">
         <Accordion type="single" collapsible className="w-full">
-          <AccordionItem value="hero-call">
-            <AccordionTrigger className="text-left">
+          <AccordionItem value="hero-call" className="border-none">
+            <AccordionTrigger className="text-left px-6 py-4">
               <div className="flex items-center justify-between w-full pr-2">
                 <div className="flex items-center gap-2">
+                  <Swords className="h-5 w-5 text-primary" />
                   <span className="font-bold text-primary">Daily Hero's Call:</span>
                   <span className="font-semibold">{currentWorkout.name}</span>
                 </div>
                 <StreakTracker streakData={streakData} completedToday={completedToday} />
               </div>
             </AccordionTrigger>
-            <AccordionContent>
+            <AccordionContent className="px-6 pb-4">
               <div className="space-y-4">
                 <StreakTracker 
                   streakData={streakData} 
