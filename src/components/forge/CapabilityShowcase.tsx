@@ -33,7 +33,7 @@ const CapabilityShowcase = () => {
           return (
             <Card 
               key={path.name} 
-              className={`${path.bgColor} cursor-pointer hover:shadow-md transition-shadow`}
+              className="bg-gradient-to-br from-primary/5 to-primary/10 dark:from-primary/10 dark:to-primary/20 border-primary/30 cursor-pointer hover:shadow-md transition-shadow"
               onClick={() => handlePathClick(path, pathIndex)}
             >
               <CardContent className="p-4">
@@ -41,15 +41,15 @@ const CapabilityShowcase = () => {
                   <div className="flex items-center gap-2">
                     <span className="text-lg">{path.icon}</span>
                     <div className="flex-1 min-w-0">
-                      <h4 className="font-medium text-sm truncate text-gray-900 dark:text-gray-100">{path.name}</h4>
-                      <p className="text-xs text-gray-600 dark:text-gray-300 truncate">{path.subtitle}</p>
+                      <h4 className="font-medium text-sm truncate text-foreground">{path.name}</h4>
+                      <p className="text-xs text-muted-foreground truncate">{path.subtitle}</p>
                     </div>
                   </div>
                   
                   <div className="space-y-2">
                     <div className="flex justify-between items-center">
-                      <span className="text-xs text-gray-600 dark:text-gray-300">Progress</span>
-                      <Badge variant="secondary" className="text-xs">
+                      <span className="text-xs text-muted-foreground">Progress</span>
+                      <Badge variant="secondary" className="text-xs bg-primary/20 text-primary border-primary/30">
                         {progress.completed}/{progress.total}
                       </Badge>
                     </div>
@@ -57,15 +57,15 @@ const CapabilityShowcase = () => {
                   </div>
 
                   {nextIncomplete && (
-                    <div className="pt-1 border-t border-gray-200 dark:border-gray-700">
-                      <p className="text-xs font-medium text-gray-600 dark:text-gray-300 mb-1">Next Goal:</p>
-                      <p className="text-xs text-gray-900 dark:text-gray-100">{nextIncomplete.title}</p>
+                    <div className="pt-1 border-t border-border">
+                      <p className="text-xs font-medium text-muted-foreground mb-1">Next Goal:</p>
+                      <p className="text-xs text-foreground">{nextIncomplete.title}</p>
                     </div>
                   )}
 
                   {progress.completed === progress.total && (
-                    <div className="pt-1 border-t border-green-200 dark:border-green-800">
-                      <Badge variant="default" className="text-xs bg-green-600 hover:bg-green-700">
+                    <div className="pt-1 border-t border-primary/30">
+                      <Badge variant="default" className="text-xs bg-primary hover:bg-primary/80">
                         ✓ Complete
                       </Badge>
                     </div>
