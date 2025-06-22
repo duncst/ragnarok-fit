@@ -56,7 +56,7 @@ const ArchetypeSelector = ({ selectedArchetype }: ArchetypeSelectorProps) => {
             <div className="flex items-center gap-3">
               <selectedArchetypeData.icon className={`h-8 w-8 ${selectedArchetypeData.color}`} />
               <div className="flex-1">
-                <h3 className="font-semibold text-lg">{selectedArchetypeData.name}</h3>
+                <h3 className="font-semibold text-lg text-foreground">{selectedArchetypeData.name}</h3>
                 <p className="text-sm text-muted-foreground">{selectedArchetypeData.description}</p>
               </div>
               <Badge variant="default">Selected</Badge>
