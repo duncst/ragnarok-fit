@@ -19,15 +19,15 @@ const ExerciseIcon = ({ className }: { className?: string }) => (
     <ImageIcon src="/lovable-uploads/1283fc3a-3186-4200-86ce-e6e99c46f46d.png" alt="Start Workout icon" className={className} />
 );
 
-const HistoryIcon = ({ className }: { className?: string }) => (
-    <ImageIcon src="/lovable-uploads/0567b95e-46c3-4a2c-8526-2cd6c62d1522.png" alt="History icon" className={className} />
+const ForgeIcon = ({ className }: { className?: string }) => (
+    <ImageIcon src="/lovable-uploads/0567b95e-46c3-4a2c-8526-2cd6c62d1522.png" alt="Forge icon" className={className} />
 );
 
 const navItems = [
   { to: "/", icon: HomeIcon, label: "Home" },
   { to: "/exercises", icon: ExerciseIcon, label: "Exercises" },
   { to: "/workout/new", icon: StartWorkoutIcon, label: "Start Workout" },
-  { to: "/history", icon: HistoryIcon, label: "History" },
+  { to: "/forge", icon: ForgeIcon, label: "Forge" },
   { to: "/run", icon: RunningIcon, label: "Running" },
 ];
 

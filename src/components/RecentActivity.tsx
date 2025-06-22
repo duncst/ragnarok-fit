@@ -123,7 +123,7 @@ export const RecentActivity = () => {
             <div className="flex justify-between items-center mb-4">
                 <h2 className="text-2xl font-bold">Recent Activity</h2>
                 <Button asChild variant="ghost" size="sm">
-                    <Link to="/history">
+                    <Link to="/forge">
                         View All
                         <ArrowRight className="ml-2 h-4 w-4" />
                     </Link>
