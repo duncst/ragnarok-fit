@@ -3,6 +3,7 @@ import React from 'react';
 import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Swords, X, Axe, Flame } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
 
 interface HeroCallOnboardingProps {
   onDismiss: () => void;
@@ -10,6 +11,56 @@ interface HeroCallOnboardingProps {
 }
 
 const HeroCallOnboarding = ({ onDismiss, onStartChallenge }: HeroCallOnboardingProps) => {
+  const navigate = useNavigate();
+
+  const handleStartChallenge = () => {
+    // Set up the Trial of Embers workout in localStorage for the NewWorkoutPage to pick up
+    const trialOfEmbersWorkout = {
+      name: "Hero's Call: Trial of Embers",
+      description: "The forge is lit. The gods are watching.",
+      levels: [
+        {
+          difficulty: 'easy',
+          label: "Pup's Path",
+          icon: 'axe',
+          exercises: [
+            '2 rounds:',
+            '• 10 Squats',
+            '• 5 Push-ups', 
+            '• 20 sec Plank'
+          ]
+        },
+        {
+          difficulty: 'medium',
+          label: 'The Fire Within',
+          icon: 'sword',
+          exercises: [
+            '3 rounds:',
+            '• 15 Jump squats',
+            '• 10 Push-ups',
+            '• 30 sec Plank'
+          ]
+        },
+        {
+          difficulty: 'hard',
+          label: 'Baptized in Flame',
+          icon: 'flame',
+          exercises: [
+            '4 rounds:',
+            '• 20 Jump squats',
+            '• 15 Push-ups',
+            '• 45 sec Plank',
+            '• 10 Burpees'
+          ]
+        }
+      ]
+    };
+
+    localStorage.setItem('hero-call-trial-workout', JSON.stringify(trialOfEmbersWorkout));
+    onStartChallenge();
+    navigate('/workout');
+  };
+
   return (
     <Card className="bg-gradient-to-br from-primary/5 to-primary/10 dark:from-primary/10 dark:to-primary/20 border-primary/30">
       <CardContent className="p-6">
@@ -39,7 +90,7 @@ const HeroCallOnboarding = ({ onDismiss, onStartChallenge }: HeroCallOnboardingP
             
             <div className="flex gap-2">
               <Button 
-                onClick={onStartChallenge}
+                onClick={handleStartChallenge}
                 className="bg-primary hover:bg-primary/90 text-primary-foreground"
               >
                 Accept the Challenge

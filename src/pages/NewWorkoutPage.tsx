@@ -1,5 +1,4 @@
-
-import React, { useCallback, useState } from 'react';
+import React, { useCallback, useState, useEffect } from 'react';
 import { useNewWorkoutForm } from '@/hooks/useNewWorkoutForm';
 import { useWorkoutTimer } from '@/hooks/useWorkoutTimer';
 import { WorkoutHeader } from '@/components/workout/WorkoutHeader';
@@ -9,11 +8,15 @@ import { WorkoutCookMode } from '@/components/workout/WorkoutCookMode';
 import { ValhallaScoreDialog } from '@/components/workout/ValhallaScoreDialog';
 import { RestTimerSettings } from '@/components/workout/RestTimerSettings';
 import { RestTimerToast } from '@/components/workout/RestTimerToast';
+import { HeroCallWorkoutMode } from '@/components/hero-call/HeroCallWorkoutMode';
 import { toast as sonnerToast } from 'sonner';
 
 const NewWorkoutPage = () => {
   const [isCookMode, setIsCookMode] = useState(false);
   const [isInWorkoutFlow, setIsInWorkoutFlow] = useState(false);
+  const [trialWorkout, setTrialWorkout] = useState(null);
+  const [selectedLevel, setSelectedLevel] = useState<'easy' | 'medium' | 'hard'>('medium');
+  
   const {
     isActive: isWorkoutActive,
     formattedDuration,
@@ -50,6 +53,19 @@ const NewWorkoutPage = () => {
     isValhallaWorkout,
   } = useNewWorkoutForm();
 
+  // Check for Trial of Embers workout on component mount
+  useEffect(() => {
+    const storedTrialWorkout = localStorage.getItem('hero-call-trial-workout');
+    if (storedTrialWorkout) {
+      const parsedWorkout = JSON.parse(storedTrialWorkout);
+      setTrialWorkout(parsedWorkout);
+      setWorkoutName(parsedWorkout.name);
+      setIsInWorkoutFlow(true);
+      // Clean up the stored workout
+      localStorage.removeItem('hero-call-trial-workout');
+    }
+  }, [setWorkoutName]);
+
   // Check if there's meaningful workout data
   const hasWorkoutData = workoutName.trim() !== '' || exercises.some(ex => ex.name.trim() !== '' || ex.sets.length > 0);
 
@@ -76,6 +92,7 @@ const NewWorkoutPage = () => {
   const handleFinishWorkout = () => {
     finishWorkout(totalDuration);
     setIsInWorkoutFlow(false);
+    setTrialWorkout(null);
   };
 
   const handleGenerateWorkout = () => {
@@ -96,8 +113,30 @@ const NewWorkoutPage = () => {
 
   const handleCancelWorkout = () => {
     setIsInWorkoutFlow(false);
+    setTrialWorkout(null);
     cancelWorkout();
   };
+
+  const handleExitTrial = () => {
+    setTrialWorkout(null);
+    setIsInWorkoutFlow(false);
+    cancelWorkout();
+  };
+
+  // If we have a Trial of Embers workout, show the Hero Call workout mode
+  if (trialWorkout && isInWorkoutFlow) {
+    return (
+      <HeroCallWorkoutMode
+        workout={trialWorkout}
+        selectedLevel={selectedLevel}
+        onFinish={handleFinishWorkout}
+        onExit={handleExitTrial}
+        isWorkoutActive={isWorkoutActive}
+        formattedDuration={formattedDuration}
+        onToggleWorkout={toggleWorkout}
+      />
+    );
+  }
 
   if (isCookMode && isInWorkoutFlow) {
     return (
