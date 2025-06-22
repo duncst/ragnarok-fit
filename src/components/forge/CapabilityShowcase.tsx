@@ -38,9 +38,9 @@ const CapabilityShowcase = () => {
         
         return (
           <Collapsible key={path.name} open={isOpen} onOpenChange={() => togglePath(pathIndex)}>
-            <Card className="bg-card border-border">
+            <Card className="bg-gradient-to-r from-primary/5 to-primary/10 border-primary/20">
               <CollapsibleTrigger asChild>
-                <CardHeader className="pb-3 cursor-pointer hover:bg-muted/50 transition-colors">
+                <CardHeader className="pb-3 cursor-pointer hover:bg-primary/10 transition-colors">
                   <div className="flex items-center justify-between">
                     <div className="flex items-center gap-3">
                       <span className="text-2xl">{path.icon}</span>
@@ -50,7 +50,7 @@ const CapabilityShowcase = () => {
                       </div>
                     </div>
                     <div className="flex items-center gap-3">
-                      <Badge variant="secondary" className="bg-muted text-muted-foreground">
+                      <Badge variant="secondary" className="bg-primary/20 text-foreground border-primary/30">
                         {progress.completed}/{progress.total}
                       </Badge>
                       <div className="w-24">
@@ -75,7 +75,7 @@ const CapabilityShowcase = () => {
                         return (
                           <div
                             key={tier.tier}
-                            className="flex items-center gap-3 p-3 rounded-lg bg-card border border-border hover:bg-muted/30 transition-colors"
+                            className="flex items-center gap-3 p-3 rounded-lg bg-primary/5 border border-primary/20 hover:bg-primary/10 transition-colors"
                           >
                             <Button
                               variant="ghost"
@@ -87,7 +87,7 @@ const CapabilityShowcase = () => {
                             </Button>
                             <div className="flex-1">
                               <div className="flex items-center gap-2">
-                                <Badge variant="outline" className="text-xs bg-muted text-muted-foreground border-border">
+                                <Badge variant="outline" className="text-xs bg-primary/10 text-foreground border-primary/30">
                                   Tier {tier.tier}
                                 </Badge>
                                 <span className="font-medium text-sm text-foreground">{tier.title}</span>
