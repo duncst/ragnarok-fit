@@ -1,85 +1,93 @@
 
-import React from 'react';
+import React, { useState } from 'react';
 import { Badge } from '@/components/ui/badge';
 import { Card, CardContent } from '@/components/ui/card';
-import { Dumbbell, Heart, Shield, Building, Mountain, Waves, Lock } from 'lucide-react';
-
-const capabilities = [
-  {
-    name: 'Strength',
-    icon: Dumbbell,
-    badges: ['Iron Grip', 'Stone Lifter'],
-    color: 'text-red-500',
-    bgColor: 'bg-red-50 dark:bg-red-950/20'
-  },
-  {
-    name: 'Endurance',
-    icon: Heart,
-    badges: ['Marathon Spirit', 'Tireless'],
-    color: 'text-blue-500',
-    bgColor: 'bg-blue-50 dark:bg-blue-950/20'
-  },
-  {
-    name: 'Survival',
-    icon: Shield,
-    badges: ['Weather Walker'],
-    color: 'text-green-500',
-    bgColor: 'bg-green-50 dark:bg-green-950/20'
-  },
-  {
-    name: 'Urban',
-    icon: Building,
-    badges: ['City Conqueror'],
-    color: 'text-gray-500',
-    bgColor: 'bg-gray-50 dark:bg-gray-950/20'
-  },
-  {
-    name: 'Wild',
-    icon: Mountain,
-    badges: [],
-    color: 'text-amber-500',
-    bgColor: 'bg-amber-50 dark:bg-amber-950/20'
-  },
-  {
-    name: 'Water',
-    icon: Waves,
-    badges: [],
-    color: 'text-cyan-500',
-    bgColor: 'bg-cyan-50 dark:bg-cyan-950/20'
-  }
-];
+import { Progress } from '@/components/ui/progress';
+import { useCapabilityProgress } from '@/hooks/useCapabilityProgress';
+import CapabilityPathDialog from './CapabilityPathDialog';
+import type { CapabilityPath } from '@/types/capabilities';
 
 const CapabilityShowcase = () => {
+  const { capabilities, toggleCapability, getPathProgress } = useCapabilityProgress();
+  const [selectedPath, setSelectedPath] = useState<CapabilityPath | null>(null);
+  const [selectedPathIndex, setSelectedPathIndex] = useState<number>(-1);
+
+  const handlePathClick = (path: CapabilityPath, index: number) => {
+    setSelectedPath(path);
+    setSelectedPathIndex(index);
+  };
+
+  const handleToggleCapability = (tierIndex: number) => {
+    if (selectedPathIndex >= 0) {
+      toggleCapability(selectedPathIndex, tierIndex);
+    }
+  };
+
   return (
-    <div className="grid grid-cols-2 gap-4">
-      {capabilities.map((capability) => (
-        <Card key={capability.name} className={capability.bgColor}>
-          <CardContent className="p-4">
-            <div className="space-y-3">
-              <div className="flex items-center gap-2">
-                <capability.icon className={`h-5 w-5 ${capability.color}`} />
-                <h4 className="font-medium">{capability.name}</h4>
-              </div>
-              
-              <div className="space-y-1">
-                {capability.badges.length > 0 ? (
-                  capability.badges.map((badge) => (
-                    <Badge key={badge} variant="secondary" className="text-xs">
-                      {badge}
-                    </Badge>
-                  ))
-                ) : (
-                  <div className="flex items-center gap-1 text-muted-foreground">
-                    <Lock className="h-3 w-3" />
-                    <span className="text-xs">No badges yet</span>
+    <>
+      <div className="grid grid-cols-2 gap-4">
+        {capabilities.map((path, pathIndex) => {
+          const progress = getPathProgress(pathIndex);
+          const nextIncomplete = path.tiers.find(tier => !tier.completed);
+          
+          return (
+            <Card 
+              key={path.name} 
+              className={`${path.bgColor} cursor-pointer hover:shadow-md transition-shadow`}
+              onClick={() => handlePathClick(path, pathIndex)}
+            >
+              <CardContent className="p-4">
+                <div className="space-y-3">
+                  <div className="flex items-center gap-2">
+                    <span className="text-lg">{path.icon}</span>
+                    <div className="flex-1 min-w-0">
+                      <h4 className="font-medium text-sm truncate">{path.name}</h4>
+                      <p className="text-xs text-muted-foreground truncate">{path.subtitle}</p>
+                    </div>
                   </div>
-                )}
-              </div>
-            </div>
-          </CardContent>
-        </Card>
-      ))}
-    </div>
+                  
+                  <div className="space-y-2">
+                    <div className="flex justify-between items-center">
+                      <span className="text-xs text-muted-foreground">Progress</span>
+                      <Badge variant="secondary" className="text-xs">
+                        {progress.completed}/{progress.total}
+                      </Badge>
+                    </div>
+                    <Progress value={progress.percentage} className="h-1.5" />
+                  </div>
+
+                  {nextIncomplete && (
+                    <div className="pt-1 border-t border-border/50">
+                      <p className="text-xs font-medium text-muted-foreground mb-1">Next Goal:</p>
+                      <p className="text-xs text-foreground">{nextIncomplete.title}</p>
+                    </div>
+                  )}
+
+                  {progress.completed === progress.total && (
+                    <div className="pt-1 border-t border-green-200 dark:border-green-800">
+                      <Badge variant="default" className="text-xs bg-green-600 hover:bg-green-700">
+                        ✓ Complete
+                      </Badge>
+                    </div>
+                  )}
+                </div>
+              </CardContent>
+            </Card>
+          );
+        })}
+      </div>
+
+      <CapabilityPathDialog
+        path={selectedPath}
+        isOpen={selectedPath !== null}
+        onClose={() => {
+          setSelectedPath(null);
+          setSelectedPathIndex(-1);
+        }}
+        onToggleCapability={handleToggleCapability}
+        progress={selectedPathIndex >= 0 ? getPathProgress(selectedPathIndex) : { completed: 0, total: 0, percentage: 0 }}
+      />
+    </>
   );
 };
 
