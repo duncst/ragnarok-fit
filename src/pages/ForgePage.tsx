@@ -10,13 +10,19 @@ import ForgeWorkoutHistory from '@/components/forge/ForgeWorkoutHistory';
 import ArchetypeSelector from '@/components/forge/ArchetypeSelector';
 import CapabilityShowcase from '@/components/forge/CapabilityShowcase';
 import OnboardingCard from '@/components/forge/OnboardingCard';
+import CapabilityOnboarding from '@/components/forge/CapabilityOnboarding';
 import { useForgeOnboarding } from '@/hooks/useForgeOnboarding';
+import { CAPABILITY_PATHS } from '@/types/capabilities';
 
 const ForgePage = () => {
   const navigate = useNavigate();
   const {
     showCapabilityPathsOnboarding,
+    showCapabilityOnboarding,
+    primaryPath,
     dismissCapabilityPathsOnboarding,
+    dismissCapabilityOnboarding,
+    selectPrimaryPath,
   } = useForgeOnboarding();
 
   // Mock data - in real app this would come from user profile/progress
@@ -61,6 +67,17 @@ const ForgePage = () => {
         </CardHeader>
         <CardContent>
           <ArchetypeSelector selectedArchetype={selectedArchetype} />
+          {primaryPath !== null && (
+            <div className="mt-4 p-3 bg-gradient-to-br from-amber/10 to-amber/20 border border-amber/30 rounded-lg">
+              <div className="flex items-center gap-2">
+                <span className="text-lg">{CAPABILITY_PATHS[primaryPath].icon}</span>
+                <div>
+                  <p className="font-semibold text-amber-800 dark:text-amber-200">Primary Focus</p>
+                  <p className="text-sm text-amber-700 dark:text-amber-300">{CAPABILITY_PATHS[primaryPath].subtitle}</p>
+                </div>
+              </div>
+            </div>
+          )}
         </CardContent>
       </Card>
 
@@ -120,6 +137,13 @@ const ForgePage = () => {
           </div>
         </CardContent>
       </Card>
+
+      {/* Capability Onboarding Dialog */}
+      <CapabilityOnboarding
+        isOpen={showCapabilityOnboarding}
+        onClose={dismissCapabilityOnboarding}
+        onSelectPrimary={selectPrimaryPath}
+      />
     </div>
   );
 };
