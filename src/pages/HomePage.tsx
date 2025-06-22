@@ -5,7 +5,9 @@ import { BodyMetricsTracker } from "@/components/BodyMetricsTracker";
 import { ActionButtons } from "@/components/home/ActionButtons";
 import { AnalyticsSection } from "@/components/home/AnalyticsSection";
 import { PersonalRecordsSection } from "@/components/home/PersonalRecordsSection";
+import HeroCallOnboarding from "@/components/home/HeroCallOnboarding";
 import { useHomePageData } from "@/hooks/useHomePageData";
+import { useHeroCallOnboarding } from "@/hooks/useHeroCallOnboarding";
 
 const HomePage = () => {
   const {
@@ -23,11 +25,25 @@ const HomePage = () => {
     totalPRs
   } = useHomePageData();
 
+  const { showHeroCallOnboarding, dismissHeroCallOnboarding } = useHeroCallOnboarding();
+
+  const handleStartChallenge = () => {
+    dismissHeroCallOnboarding();
+    // The regular Hero's Call will appear after dismissing onboarding
+  };
+
   return (
     <div className="space-y-6">
       <ActionButtons />
       
-      <HeroCall />
+      {showHeroCallOnboarding ? (
+        <HeroCallOnboarding 
+          onDismiss={dismissHeroCallOnboarding}
+          onStartChallenge={handleStartChallenge}
+        />
+      ) : (
+        <HeroCall />
+      )}
       
       <RecentActivity />
 
