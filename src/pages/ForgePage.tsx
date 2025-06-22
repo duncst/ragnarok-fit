@@ -1,21 +1,40 @@
-
 import React from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Progress } from '@/components/ui/progress';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Shield, Sword, Mountain, Zap, Target, Globe, Crown, Lock } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
 import ForgeWorkoutHistory from '@/components/forge/ForgeWorkoutHistory';
 import ArchetypeSelector from '@/components/forge/ArchetypeSelector';
 import CapabilityShowcase from '@/components/forge/CapabilityShowcase';
+import OnboardingCard from '@/components/forge/OnboardingCard';
+import { useForgeOnboarding } from '@/hooks/useForgeOnboarding';
 
 const ForgePage = () => {
+  const navigate = useNavigate();
+  const {
+    showHeroCallOnboarding,
+    showCapabilityPathsOnboarding,
+    dismissHeroCallOnboarding,
+    dismissCapabilityPathsOnboarding,
+  } = useForgeOnboarding();
+
   // Mock data - in real app this would come from user profile/progress
   const progressWeeks = 4;
   const totalWeeks = 12;
   const progressPercentage = (progressWeeks / totalWeeks) * 100;
   const currentTitle = "Disciple of Flame";
   const selectedArchetype = "Tyr";
+
+  const handleStartHeroCall = () => {
+    navigate('/');
+    dismissHeroCallOnboarding();
+  };
+
+  const handleExploreCapabilities = () => {
+    dismissCapabilityPathsOnboarding();
+  };
 
   return (
     <div className="space-y-6">
@@ -38,6 +57,18 @@ const ForgePage = () => {
         </CardContent>
       </Card>
 
+      {/* Hero's Call Onboarding */}
+      {showHeroCallOnboarding && (
+        <OnboardingCard
+          title="Welcome to Hero's Call"
+          description="Start your fitness journey with quick, powerful workouts designed to build strength and endurance. Each workout is a call to action - answer the call and forge your legend."
+          actionText="Start Your First Workout"
+          onAction={handleStartHeroCall}
+          onDismiss={dismissHeroCallOnboarding}
+          icon="⚔️"
+        />
+      )}
+
       {/* Your Path - Selected Archetype */}
       <Card>
         <CardHeader>
@@ -50,6 +81,18 @@ const ForgePage = () => {
           <ArchetypeSelector selectedArchetype={selectedArchetype} />
         </CardContent>
       </Card>
+
+      {/* Capability Paths Onboarding */}
+      {showCapabilityPathsOnboarding && (
+        <OnboardingCard
+          title="Track Your Capabilities"
+          description="Build real-world skills across Endurance, Strength, Mobility, Resilience, Discipline, and Survival. Each path contains tiered achievements to guide your progress from beginner to master."
+          actionText="Explore Paths"
+          onAction={handleExploreCapabilities}
+          onDismiss={dismissCapabilityPathsOnboarding}
+          icon="🎯"
+        />
+      )}
 
       {/* Capability Showcase */}
       <Card>
