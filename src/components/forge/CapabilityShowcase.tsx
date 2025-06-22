@@ -41,14 +41,14 @@ const CapabilityShowcase = () => {
                   <div className="flex items-center gap-2">
                     <span className="text-lg">{path.icon}</span>
                     <div className="flex-1 min-w-0">
-                      <h4 className="font-medium text-sm truncate">{path.name}</h4>
-                      <p className="text-xs text-muted-foreground truncate">{path.subtitle}</p>
+                      <h4 className="font-medium text-sm truncate text-gray-900 dark:text-gray-100">{path.name}</h4>
+                      <p className="text-xs text-gray-600 dark:text-gray-300 truncate">{path.subtitle}</p>
                     </div>
                   </div>
                   
                   <div className="space-y-2">
                     <div className="flex justify-between items-center">
-                      <span className="text-xs text-muted-foreground">Progress</span>
+                      <span className="text-xs text-gray-600 dark:text-gray-300">Progress</span>
                       <Badge variant="secondary" className="text-xs">
                         {progress.completed}/{progress.total}
                       </Badge>
@@ -57,9 +57,9 @@ const CapabilityShowcase = () => {
                   </div>
 
                   {nextIncomplete && (
-                    <div className="pt-1 border-t border-border/50">
-                      <p className="text-xs font-medium text-muted-foreground mb-1">Next Goal:</p>
-                      <p className="text-xs text-foreground">{nextIncomplete.title}</p>
+                    <div className="pt-1 border-t border-gray-200 dark:border-gray-700">
+                      <p className="text-xs font-medium text-gray-600 dark:text-gray-300 mb-1">Next Goal:</p>
+                      <p className="text-xs text-gray-900 dark:text-gray-100">{nextIncomplete.title}</p>
                     </div>
                   )}
 

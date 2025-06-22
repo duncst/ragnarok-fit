@@ -56,8 +56,8 @@ const ArchetypeSelector = ({ selectedArchetype }: ArchetypeSelectorProps) => {
             <div className="flex items-center gap-3">
               <selectedArchetypeData.icon className={`h-8 w-8 ${selectedArchetypeData.color}`} />
               <div className="flex-1">
-                <h3 className="font-semibold text-lg text-foreground">{selectedArchetypeData.name}</h3>
-                <p className="text-sm text-muted-foreground">{selectedArchetypeData.description}</p>
+                <h3 className="font-semibold text-lg text-gray-900 dark:text-gray-100">{selectedArchetypeData.name}</h3>
+                <p className="text-sm text-gray-600 dark:text-gray-300">{selectedArchetypeData.description}</p>
               </div>
               <Badge variant="default">Selected</Badge>
             </div>
@@ -71,7 +71,7 @@ const ArchetypeSelector = ({ selectedArchetype }: ArchetypeSelectorProps) => {
         Change Your Path
       </Button>
 
-      <p className="text-xs text-muted-foreground text-center">
+      <p className="text-xs text-gray-500 dark:text-gray-400 text-center">
         Each archetype represents a different approach to strength and wisdom
       </p>
     </div>
