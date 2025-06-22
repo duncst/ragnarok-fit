@@ -4,7 +4,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Progress } from '@/components/ui/progress';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
-import { Shield, Sword, Mountain, Zap, Target, Globe, Crown, Lock, Settings } from 'lucide-react';
+import { Shield, Sword, Mountain, Zap, Target, Globe, Crown, Lock } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import ForgeWorkoutHistory from '@/components/forge/ForgeWorkoutHistory';
 import CapabilityShowcase from '@/components/forge/CapabilityShowcase';
@@ -34,20 +34,14 @@ const ForgePage = () => {
     dismissCapabilityPathsOnboarding();
   };
 
-  const handleChangePath = () => {
-    // This will show the capability onboarding dialog to select a new primary path
-    localStorage.removeItem('forge-capability-onboarding-dismissed');
-    window.location.reload(); // Simple way to trigger the onboarding to show again
-  };
-
   return (
     <div className="space-y-6">
       {/* Title + Progress Bar */}
-      <Card className="bg-gradient-to-r from-orange-500/10 to-red-500/10 border-orange-500/30">
+      <Card className="bg-gradient-to-r from-primary/10 to-primary/20 border-primary/30">
         <CardContent className="p-6">
           <div className="text-center space-y-4">
             <div className="flex items-center justify-center gap-2">
-              <Zap className="h-6 w-6 text-orange-500" />
+              <Zap className="h-6 w-6 text-primary" />
               <h1 className="text-2xl font-bold text-foreground">{currentTitle}</h1>
             </div>
             <p className="text-muted-foreground">{progressWeeks} Forging Weeks</p>
@@ -62,39 +56,29 @@ const ForgePage = () => {
       </Card>
 
       {/* Your Path - Primary Focus */}
-      <Card className="bg-gradient-to-r from-orange-500/10 to-red-500/10 border-orange-500/30">
+      <Card className="bg-gradient-to-r from-primary/10 to-primary/20 border-primary/30">
         <CardHeader>
           <CardTitle className="flex items-center gap-2 text-foreground">
-            <Shield className="h-5 w-5 text-orange-500" />
+            <Shield className="h-5 w-5 text-primary" />
             Your Path
           </CardTitle>
         </CardHeader>
         <CardContent>
           {primaryPath !== null ? (
-            <div className="p-4 bg-gradient-to-r from-orange-500/20 to-red-500/20 border border-orange-500/40 rounded-lg">
-              <div className="flex items-center justify-between">
-                <div className="flex items-center gap-3">
-                  <span className="text-2xl">{CAPABILITY_PATHS[primaryPath].icon}</span>
-                  <div>
-                    <p className="font-semibold text-orange-600">Primary Focus</p>
-                    <p className="text-lg font-bold text-foreground">{CAPABILITY_PATHS[primaryPath].name}</p>
-                    <p className="text-sm text-muted-foreground">{CAPABILITY_PATHS[primaryPath].subtitle}</p>
-                  </div>
+            <div className="p-4 bg-gradient-to-r from-primary/20 to-primary/30 border border-primary/40 rounded-lg">
+              <div className="flex items-center gap-3">
+                <span className="text-2xl">{CAPABILITY_PATHS[primaryPath].icon}</span>
+                <div>
+                  <p className="font-semibold text-primary">Primary Focus</p>
+                  <p className="text-lg font-bold text-foreground">{CAPABILITY_PATHS[primaryPath].name}</p>
+                  <p className="text-sm text-muted-foreground">{CAPABILITY_PATHS[primaryPath].subtitle}</p>
                 </div>
-                <Button
-                  variant="ghost"
-                  size="sm"
-                  onClick={handleChangePath}
-                  className="text-orange-600 hover:bg-orange-500/10"
-                >
-                  <Settings className="h-4 w-4" />
-                </Button>
               </div>
             </div>
           ) : (
             <div className="text-center py-6">
               <p className="text-muted-foreground mb-4">Choose your primary capability path to begin your journey</p>
-              <Button onClick={() => selectPrimaryPath(0)} variant="outline" className="border-orange-500 text-orange-600 hover:bg-orange-500 hover:text-white">
+              <Button onClick={() => selectPrimaryPath(0)} variant="outline" className="border-primary text-primary hover:bg-primary hover:text-primary-foreground">
                 Select Primary Path
               </Button>
             </div>
@@ -115,23 +99,23 @@ const ForgePage = () => {
       )}
 
       {/* Capability Paths */}
-      <Card className="bg-gradient-to-r from-orange-500/10 to-red-500/10 border-orange-500/30">
+      <Card className="bg-gradient-to-r from-primary/10 to-primary/20 border-primary/30">
         <CardHeader>
           <CardTitle className="flex items-center gap-2 text-foreground">
-            <Target className="h-5 w-5 text-orange-500" />
+            <Target className="h-5 w-5 text-primary" />
             Capability Paths
           </CardTitle>
         </CardHeader>
         <CardContent>
-          <CapabilityShowcase primaryPath={primaryPath} />
+          <CapabilityShowcase />
         </CardContent>
       </Card>
 
       {/* Workout History */}
-      <Card className="bg-gradient-to-r from-orange-500/10 to-red-500/10 border-orange-500/30">
+      <Card className="bg-gradient-to-r from-primary/10 to-primary/20 border-primary/30">
         <CardHeader>
           <CardTitle className="flex items-center gap-2 text-foreground">
-            <Sword className="h-5 w-5 text-orange-500" />
+            <Sword className="h-5 w-5 text-primary" />
             Workout History
           </CardTitle>
         </CardHeader>
@@ -141,17 +125,17 @@ const ForgePage = () => {
       </Card>
 
       {/* Halls of Valhalla - Coming Soon */}
-      <Card className="bg-gradient-to-r from-orange-500/10 to-red-500/10 border-orange-500/30">
+      <Card className="bg-gradient-to-r from-primary/10 to-primary/20 border-primary/30">
         <CardContent className="p-6 text-center">
           <div className="space-y-4">
             <div className="flex items-center justify-center gap-2">
-              <Crown className="h-6 w-6 text-orange-500" />
+              <Crown className="h-6 w-6 text-primary" />
               <h3 className="text-xl font-bold text-foreground">Halls of Valhalla</h3>
             </div>
             <p className="text-muted-foreground">
               Where elite members are recognized for their legendary achievements
             </p>
-            <Badge variant="secondary" className="bg-orange-500/20 text-foreground border-orange-500/30">
+            <Badge variant="secondary" className="bg-primary/20 text-foreground border-primary/30">
               <Lock className="h-3 w-3 mr-1" />
               Coming Soon
             </Badge>
