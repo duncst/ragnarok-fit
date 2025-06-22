@@ -1,3 +1,4 @@
+
 import React from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Progress } from '@/components/ui/progress';
@@ -14,9 +15,7 @@ import { useForgeOnboarding } from '@/hooks/useForgeOnboarding';
 const ForgePage = () => {
   const navigate = useNavigate();
   const {
-    showHeroCallOnboarding,
     showCapabilityPathsOnboarding,
-    dismissHeroCallOnboarding,
     dismissCapabilityPathsOnboarding,
   } = useForgeOnboarding();
 
@@ -27,11 +26,6 @@ const ForgePage = () => {
   const currentTitle = "Disciple of Flame";
   const selectedArchetype = "Tyr";
 
-  const handleStartHeroCall = () => {
-    navigate('/');
-    dismissHeroCallOnboarding();
-  };
-
   const handleExploreCapabilities = () => {
     dismissCapabilityPathsOnboarding();
   };
@@ -39,12 +33,12 @@ const ForgePage = () => {
   return (
     <div className="space-y-6">
       {/* Title + Progress Bar */}
-      <Card>
+      <Card className="bg-gradient-to-br from-primary/5 to-primary/10 dark:from-primary/10 dark:to-primary/20 border-primary/30">
         <CardContent className="p-6">
           <div className="text-center space-y-4">
             <div className="flex items-center justify-center gap-2">
-              <Zap className="h-6 w-6 text-orange-500" />
-              <h1 className="text-2xl font-bold">{currentTitle}</h1>
+              <Zap className="h-6 w-6 text-primary" />
+              <h1 className="text-2xl font-bold text-foreground">{currentTitle}</h1>
             </div>
             <p className="text-muted-foreground">{progressWeeks} Forging Weeks</p>
             <div className="space-y-2">
@@ -57,22 +51,10 @@ const ForgePage = () => {
         </CardContent>
       </Card>
 
-      {/* Hero's Call Onboarding */}
-      {showHeroCallOnboarding && (
-        <OnboardingCard
-          title="Welcome to Hero's Call"
-          description="Start your fitness journey with quick, powerful workouts designed to build strength and endurance. Each workout is a call to action - answer the call and forge your legend."
-          actionText="Start Your First Workout"
-          onAction={handleStartHeroCall}
-          onDismiss={dismissHeroCallOnboarding}
-          icon="⚔️"
-        />
-      )}
-
       {/* Your Path - Selected Archetype */}
-      <Card>
+      <Card className="bg-gradient-to-br from-primary/5 to-primary/10 dark:from-primary/10 dark:to-primary/20 border-primary/30">
         <CardHeader>
-          <CardTitle className="flex items-center gap-2">
+          <CardTitle className="flex items-center gap-2 text-foreground">
             <Shield className="h-5 w-5 text-primary" />
             Your Path
           </CardTitle>
@@ -95,9 +77,9 @@ const ForgePage = () => {
       )}
 
       {/* Capability Showcase */}
-      <Card>
+      <Card className="bg-gradient-to-br from-primary/5 to-primary/10 dark:from-primary/10 dark:to-primary/20 border-primary/30">
         <CardHeader>
-          <CardTitle className="flex items-center gap-2">
+          <CardTitle className="flex items-center gap-2 text-foreground">
             <Target className="h-5 w-5 text-primary" />
             Capability Showcase
           </CardTitle>
@@ -108,9 +90,9 @@ const ForgePage = () => {
       </Card>
 
       {/* Workout History */}
-      <Card>
+      <Card className="bg-gradient-to-br from-primary/5 to-primary/10 dark:from-primary/10 dark:to-primary/20 border-primary/30">
         <CardHeader>
-          <CardTitle className="flex items-center gap-2">
+          <CardTitle className="flex items-center gap-2 text-foreground">
             <Sword className="h-5 w-5 text-primary" />
             Workout History
           </CardTitle>
@@ -121,17 +103,17 @@ const ForgePage = () => {
       </Card>
 
       {/* Halls of Valhalla - Coming Soon */}
-      <Card className="bg-gradient-to-br from-amber-50 to-orange-50 dark:from-amber-950/20 dark:to-orange-950/20 border-amber-200 dark:border-amber-800">
+      <Card className="bg-gradient-to-br from-primary/5 to-primary/10 dark:from-primary/10 dark:to-primary/20 border-primary/30">
         <CardContent className="p-6 text-center">
           <div className="space-y-4">
             <div className="flex items-center justify-center gap-2">
-              <Crown className="h-6 w-6 text-amber-600" />
-              <h3 className="text-xl font-bold text-amber-800 dark:text-amber-200">Halls of Valhalla</h3>
+              <Crown className="h-6 w-6 text-primary" />
+              <h3 className="text-xl font-bold text-foreground">Halls of Valhalla</h3>
             </div>
-            <p className="text-amber-700 dark:text-amber-300">
+            <p className="text-muted-foreground">
               Where elite members are recognized for their legendary achievements
             </p>
-            <Badge variant="secondary" className="bg-amber-100 text-amber-800 dark:bg-amber-900 dark:text-amber-200">
+            <Badge variant="secondary" className="bg-primary/20 text-primary border-primary/30">
               <Lock className="h-3 w-3 mr-1" />
               Coming Soon
             </Badge>
