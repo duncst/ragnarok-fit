@@ -4,7 +4,7 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/u
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Card, CardContent } from '@/components/ui/card';
-import { ChevronRight, Lock, Sparkles } from 'lucide-react';
+import { ChevronRight, Lock, Sparkles, Target } from 'lucide-react';
 import { CAPABILITY_PATHS, type CapabilityPath } from '@/types/capabilities';
 
 interface CapabilityOnboardingProps {
@@ -24,7 +24,7 @@ const CapabilityOnboarding = ({ isOpen, onClose, onSelectPrimary }: CapabilityOn
   const handleConfirmSelection = () => {
     if (selectedPath !== null) {
       onSelectPrimary(selectedPath);
-      setStep(3);
+      setStep(4);
     }
   };
 
@@ -35,6 +35,35 @@ const CapabilityOnboarding = ({ isOpen, onClose, onSelectPrimary }: CapabilityOn
   };
 
   const renderStep1 = () => (
+    <div className="space-y-6">
+      <div className="text-center space-y-4">
+        <div className="text-3xl">🎯</div>
+        <h2 className="text-2xl font-bold text-foreground">Track Your Capabilities</h2>
+        <p className="text-muted-foreground">Build real-world skills across Endurance, Strength, Mobility, Resilience, Discipline, and Survival. Each path contains tiered achievements to guide your progress from beginner to master.</p>
+      </div>
+      
+      <div className="bg-primary/10 dark:bg-primary/20 p-4 rounded-lg space-y-3">
+        <div className="flex items-center gap-2">
+          <Target className="h-5 w-5 text-primary" />
+          <h3 className="font-semibold text-foreground">How It Works</h3>
+        </div>
+        <ul className="space-y-2 text-sm text-muted-foreground">
+          <li>• Choose your primary capability path to focus on</li>
+          <li>• Complete tiered challenges to unlock achievements</li>
+          <li>• Track your progress across all capability areas</li>
+          <li>• Build the skills that matter in the real world</li>
+        </ul>
+      </div>
+      
+      <div className="text-center">
+        <Button onClick={() => setStep(2)} className="bg-primary hover:bg-primary/80">
+          Explore Paths <ChevronRight className="h-4 w-4 ml-1" />
+        </Button>
+      </div>
+    </div>
+  );
+
+  const renderStep2 = () => (
     <div className="space-y-6">
       <div className="text-center space-y-4">
         <div className="text-3xl">🔨</div>
@@ -68,14 +97,14 @@ const CapabilityOnboarding = ({ isOpen, onClose, onSelectPrimary }: CapabilityOn
       </div>
       
       <div className="text-center">
-        <Button onClick={() => setStep(2)} className="bg-primary hover:bg-primary/80">
+        <Button onClick={() => setStep(3)} className="bg-primary hover:bg-primary/80">
           Choose Your Path <ChevronRight className="h-4 w-4 ml-1" />
         </Button>
       </div>
     </div>
   );
 
-  const renderStep2 = () => (
+  const renderStep3 = () => (
     <div className="space-y-6">
       <div className="text-center space-y-4">
         <div className="text-3xl">⚒️</div>
@@ -126,7 +155,7 @@ const CapabilityOnboarding = ({ isOpen, onClose, onSelectPrimary }: CapabilityOn
     </div>
   );
 
-  const renderStep3 = () => {
+  const renderStep4 = () => {
     if (selectedPath === null) return null;
     
     const path = CAPABILITY_PATHS[selectedPath];
@@ -198,6 +227,7 @@ const CapabilityOnboarding = ({ isOpen, onClose, onSelectPrimary }: CapabilityOn
           {step === 1 && renderStep1()}
           {step === 2 && renderStep2()}
           {step === 3 && renderStep3()}
+          {step === 4 && renderStep4()}
         </div>
       </DialogContent>
     </Dialog>

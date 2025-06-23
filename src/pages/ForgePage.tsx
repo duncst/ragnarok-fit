@@ -8,7 +8,6 @@ import { Shield, Sword, Mountain, Zap, Target, Globe, Crown, Lock } from 'lucide
 import { useNavigate } from 'react-router-dom';
 import ForgeWorkoutHistory from '@/components/forge/ForgeWorkoutHistory';
 import CapabilityShowcase from '@/components/forge/CapabilityShowcase';
-import OnboardingCard from '@/components/forge/OnboardingCard';
 import CapabilityOnboarding from '@/components/forge/CapabilityOnboarding';
 import { useForgeOnboarding } from '@/hooks/useForgeOnboarding';
 import { CAPABILITY_PATHS } from '@/types/capabilities';
@@ -16,10 +15,8 @@ import { CAPABILITY_PATHS } from '@/types/capabilities';
 const ForgePage = () => {
   const navigate = useNavigate();
   const {
-    showCapabilityPathsOnboarding,
     showCapabilityOnboarding,
     primaryPath,
-    dismissCapabilityPathsOnboarding,
     dismissCapabilityOnboarding,
     selectPrimaryPath,
   } = useForgeOnboarding();
@@ -29,10 +26,6 @@ const ForgePage = () => {
   const totalWeeks = 12;
   const progressPercentage = (progressWeeks / totalWeeks) * 100;
   const currentTitle = "Disciple of Flame";
-
-  const handleExploreCapabilities = () => {
-    dismissCapabilityPathsOnboarding();
-  };
 
   return (
     <div className="space-y-6">
@@ -86,18 +79,6 @@ const ForgePage = () => {
         </CardContent>
       </Card>
 
-      {/* Capability Paths Onboarding */}
-      {showCapabilityPathsOnboarding && (
-        <OnboardingCard
-          title="Track Your Capabilities"
-          description="Build real-world skills across Endurance, Strength, Mobility, Resilience, Discipline, and Survival. Each path contains tiered achievements to guide your progress from beginner to master."
-          actionText="Explore Paths"
-          onAction={handleExploreCapabilities}
-          onDismiss={dismissCapabilityPathsOnboarding}
-          icon="🎯"
-        />
-      )}
-
       {/* Capability Paths */}
       <Card className="bg-gradient-to-r from-primary/10 to-primary/20 border-primary/30">
         <CardHeader>
@@ -143,7 +124,7 @@ const ForgePage = () => {
         </CardContent>
       </Card>
 
-      {/* Capability Onboarding Dialog */}
+      {/* Combined Capability Onboarding Dialog */}
       <CapabilityOnboarding
         isOpen={showCapabilityOnboarding}
         onClose={dismissCapabilityOnboarding}
