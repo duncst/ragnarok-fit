@@ -15,7 +15,6 @@ import OneRepMaxCalculatorPage from "./pages/OneRepMaxCalculatorPage";
 import ForgePage from "./pages/ForgePage";
 import LandingPage from "./pages/LandingPage";
 import { AuthProvider } from "./contexts/AuthContext";
-import AuthPage from "./pages/AuthPage";
 import LogBodyMetricsPage from "./pages/LogBodyMetricsPage";
 
 const queryClient = new QueryClient();
@@ -28,10 +27,9 @@ const App = () => (
       <AuthProvider>
         <BrowserRouter>
           <Routes>
-            <Route path="/landing" element={<LandingPage />} />
-            <Route path="/auth" element={<AuthPage />} />
+            <Route path="/" element={<LandingPage />} />
             <Route element={<Layout />}>
-              <Route path="/" element={<HomePage />} />
+              <Route path="/home" element={<HomePage />} />
               <Route path="/exercises" element={<ExercisesPage />} />
               <Route path="/forge" element={<ForgePage />} />
               <Route path="/run" element={<RunPage />} />

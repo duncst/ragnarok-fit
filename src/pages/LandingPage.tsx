@@ -1,10 +1,79 @@
-
+import { useState, useEffect } from 'react';
+import { useForm, FormProvider } from 'react-hook-form';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { supabase } from '@/integrations/supabase/client';
+import { useNavigate } from 'react-router-dom';
+import { toast as sonnerToast } from 'sonner';
+import { useAuth } from '@/contexts/AuthContext';
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Mountain, Swords, Hammer, Target } from "lucide-react";
-import { Link } from "react-router-dom";
+import { authSchema, type AuthFormValues } from '@/lib/schemas/auth';
+import { AuthForm } from '@/components/auth/AuthForm';
 
 const LandingPage = () => {
+  const { session } = useAuth();
+  const navigate = useNavigate();
+  const [loading, setLoading] = useState(false);
+  const [activeTab, setActiveTab] = useState('signup');
+
+  useEffect(() => {
+    if (session) {
+      navigate('/home', { replace: true });
+    }
+  }, [session, navigate]);
+
+  const form = useForm<AuthFormValues>({
+    resolver: zodResolver(authSchema),
+    defaultValues: {
+      email: '',
+      password: '',
+    },
+  });
+  
+  const onTabChange = (value: string) => {
+    form.reset();
+    setActiveTab(value);
+  }
+
+  const handleSignIn = async (values: AuthFormValues) => {
+    setLoading(true);
+    const { error } = await supabase.auth.signInWithPassword({
+      email: values.email,
+      password: values.password,
+    });
+    if (error) {
+      sonnerToast.error('Sign In Failed', { description: error.message });
+    } else {
+      sonnerToast.success('Signed in successfully!');
+      navigate('/home');
+    }
+    setLoading(false);
+  };
+
+  const handleSignUp = async (values: AuthFormValues) => {
+    setLoading(true);
+    const { error } = await supabase.auth.signUp({
+      email: values.email,
+      password: values.password,
+      options: {
+        emailRedirectTo: window.location.origin,
+      },
+    });
+    if (error) {
+      sonnerToast.error('Sign Up Failed', { description: error.message });
+    } else {
+      sonnerToast.info('Check your email for the confirmation link.');
+      form.reset();
+    }
+    setLoading(false);
+  };
+
+  if (session) {
+    return null;
+  }
+
   return (
     <div className="min-h-screen bg-background text-foreground">
       {/* Header */}
@@ -14,13 +83,17 @@ const LandingPage = () => {
             <Mountain className="h-8 w-8 text-primary" />
             <h1 className="text-2xl font-bold">RAGNAROK FIT</h1>
           </div>
-          <Button asChild variant="outline">
-            <Link to="/auth">Login</Link>
+          <Button 
+            variant="outline" 
+            onClick={() => setActiveTab('signin')}
+            className="md:hidden"
+          >
+            Login
           </Button>
         </div>
       </header>
 
-      {/* Hero Section */}
+      {/* Hero Section with Signup */}
       <section className="py-20 px-4">
         <div className="container mx-auto max-w-6xl">
           <div className="grid md:grid-cols-2 gap-12 items-center">
@@ -34,22 +107,45 @@ const LandingPage = () => {
               <p className="text-lg text-muted-foreground">
                 The Norse-inspired fitness app that builds men – one Hero's Call at a time.
               </p>
-              <Button asChild size="lg" className="text-lg px-8 py-6">
-                <Link to="/auth">START YOUR JOURNEY</Link>
-              </Button>
             </div>
+            
+            {/* Signup Form */}
             <div className="flex justify-center">
-              <div className="relative">
-                <div className="w-80 h-80 bg-gradient-to-br from-primary/20 to-primary/5 rounded-full flex items-center justify-center">
-                  <div className="space-y-4 text-center">
-                    <Mountain className="h-20 w-20 text-primary mx-auto" />
-                    <p className="text-sm text-muted-foreground">
-                      Transform through<br />
-                      disciplined action
+              <Card className="w-full max-w-sm bg-card/50 backdrop-blur border-primary/20">
+                <CardContent className="p-6">
+                  <div className="space-y-4 text-center mb-6">
+                    <h2 className="text-2xl font-bold">Begin Your Journey</h2>
+                    <p className="text-muted-foreground text-sm">
+                      Join the ranks of modern warriors
                     </p>
                   </div>
-                </div>
-              </div>
+                  
+                  <FormProvider {...form}>
+                    <Tabs value={activeTab} onValueChange={onTabChange} className="w-full">
+                      <TabsList className="grid w-full grid-cols-2">
+                        <TabsTrigger value="signup">Sign Up</TabsTrigger>
+                        <TabsTrigger value="signin">Sign In</TabsTrigger>
+                      </TabsList>
+                      <TabsContent value="signup" className="pt-4">
+                        <AuthForm
+                          onSubmit={handleSignUp}
+                          loading={loading}
+                          submitButtonText="Start Your Legend"
+                          loadingButtonText="Creating Account..."
+                        />
+                      </TabsContent>
+                      <TabsContent value="signin" className="pt-4">
+                        <AuthForm
+                          onSubmit={handleSignIn}
+                          loading={loading}
+                          submitButtonText="Enter Valhalla"
+                          loadingButtonText="Signing In..."
+                        />
+                      </TabsContent>
+                    </Tabs>
+                  </FormProvider>
+                </CardContent>
+              </Card>
             </div>
           </div>
         </div>
@@ -275,18 +371,27 @@ const LandingPage = () => {
         </div>
       </section>
 
-      {/* CTA Section */}
+      {/* Final CTA Section */}
       <section className="py-20 px-4">
         <div className="container mx-auto max-w-2xl text-center space-y-8">
           <h2 className="text-4xl font-bold">
-            BEGIN YOUR LEGENDARY TRANSFORMATION
+            YOUR ANCESTORS AWAIT
           </h2>
           <p className="text-xl text-muted-foreground">
-            Your ancestors await. Will you answer the call?
+            Will you answer the call to greatness?
           </p>
-          <Button asChild size="lg" className="text-lg px-12 py-6">
-            <Link to="/auth">START YOUR JOURNEY</Link>
-          </Button>
+          <div className="flex justify-center">
+            <Button 
+              size="lg" 
+              className="text-lg px-12 py-6"
+              onClick={() => {
+                setActiveTab('signup');
+                document.querySelector('#hero-signup')?.scrollIntoView({ behavior: 'smooth' });
+              }}
+            >
+              JOIN THE RANKS
+            </Button>
+          </div>
         </div>
       </section>
 
