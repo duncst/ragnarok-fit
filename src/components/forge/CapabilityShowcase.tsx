@@ -5,11 +5,15 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Progress } from '@/components/ui/progress';
 import { Button } from '@/components/ui/button';
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '@/components/ui/collapsible';
-import { CheckCircle2, Circle, ChevronDown, ChevronUp } from 'lucide-react';
+import { CheckCircle2, Circle, ChevronDown, ChevronUp, Star } from 'lucide-react';
 import { useCapabilityProgress } from '@/hooks/useCapabilityProgress';
 import type { CapabilityPath } from '@/types/capabilities';
 
-const CapabilityShowcase = () => {
+interface CapabilityShowcaseProps {
+  primaryPath?: number | null;
+}
+
+const CapabilityShowcase = ({ primaryPath }: CapabilityShowcaseProps) => {
   const { capabilities, toggleCapability, getPathProgress } = useCapabilityProgress();
   const [openPaths, setOpenPaths] = useState<Record<number, boolean>>({});
 
@@ -35,22 +39,31 @@ const CapabilityShowcase = () => {
         const progress = getPathProgress(pathIndex);
         const nextChallenges = getNextThreeChallenges(path);
         const isOpen = openPaths[pathIndex] || false;
+        const isPrimary = primaryPath === pathIndex;
         
         return (
           <Collapsible key={path.name} open={isOpen} onOpenChange={() => togglePath(pathIndex)}>
-            <Card className="bg-gradient-to-r from-primary/5 to-primary/10 border-primary/20">
+            <Card className={`${isPrimary ? 'bg-gradient-to-r from-amber-500/20 to-amber-600/30 border-amber-500' : 'bg-gradient-to-r from-primary/5 to-primary/10 border-primary/20'}`}>
               <CollapsibleTrigger asChild>
                 <CardHeader className="pb-3 cursor-pointer hover:bg-primary/10 transition-colors">
                   <div className="flex items-center justify-between">
                     <div className="flex items-center gap-3">
                       <span className="text-2xl">{path.icon}</span>
                       <div>
-                        <CardTitle className="text-lg text-foreground">{path.name}</CardTitle>
+                        <div className="flex items-center gap-2">
+                          <CardTitle className="text-lg text-foreground">{path.name}</CardTitle>
+                          {isPrimary && (
+                            <Badge className="bg-amber-500 text-amber-50 hover:bg-amber-600">
+                              <Star className="h-3 w-3 mr-1" />
+                              Primary Focus
+                            </Badge>
+                          )}
+                        </div>
                         <p className="text-sm text-muted-foreground">{path.subtitle}</p>
                       </div>
                     </div>
                     <div className="flex items-center gap-3">
-                      <Badge variant="secondary" className="bg-primary/20 text-foreground border-primary/30">
+                      <Badge variant="secondary" className={`${isPrimary ? 'bg-amber-500/30 text-amber-700 dark:text-amber-300 border-amber-500/50' : 'bg-primary/20 text-foreground border-primary/30'}`}>
                         {progress.completed}/{progress.total}
                       </Badge>
                       <div className="w-24">

@@ -64,47 +64,23 @@ const ForgePage = () => {
         </CardContent>
       </Card>
 
-      {/* Your Path - Primary Focus */}
+      {/* Capability Paths with Primary Focus */}
       <Card className="bg-gradient-to-r from-primary/10 to-primary/20 border-primary/30">
         <CardHeader>
-          <CardTitle className="flex items-center gap-2 text-foreground">
-            <Shield className="h-5 w-5 text-primary" />
-            Your Path
-          </CardTitle>
-        </CardHeader>
-        <CardContent>
-          {primaryPath !== null ? (
-            <div className="p-4 bg-gradient-to-r from-primary/20 to-primary/30 border border-primary/40 rounded-lg">
-              <div className="flex items-center gap-3">
-                <span className="text-2xl">{CAPABILITY_PATHS[primaryPath].icon}</span>
-                <div>
-                  <p className="font-semibold text-primary">Primary Focus</p>
-                  <p className="text-lg font-bold text-foreground">{CAPABILITY_PATHS[primaryPath].name}</p>
-                  <p className="text-sm text-muted-foreground">{CAPABILITY_PATHS[primaryPath].subtitle}</p>
-                </div>
-              </div>
+          <CardTitle className="flex items-center justify-between">
+            <div className="flex items-center gap-2">
+              <Target className="h-5 w-5 text-primary" />
+              <span className="text-foreground">Capability Paths</span>
             </div>
-          ) : (
-            <div className="text-center py-6">
-              <p className="text-muted-foreground mb-4">Choose your primary capability path to begin your journey</p>
-              <Button onClick={() => selectPrimaryPath(0)} variant="outline" className="border-primary text-primary hover:bg-primary hover:text-primary-foreground">
-                Select Primary Path
+            {primaryPath === null && (
+              <Button onClick={() => selectPrimaryPath(0)} variant="outline" size="sm" className="border-primary text-primary hover:bg-primary hover:text-primary-foreground">
+                Choose Primary Path
               </Button>
-            </div>
-          )}
-        </CardContent>
-      </Card>
-
-      {/* Capability Paths */}
-      <Card className="bg-gradient-to-r from-primary/10 to-primary/20 border-primary/30">
-        <CardHeader>
-          <CardTitle className="flex items-center gap-2 text-foreground">
-            <Target className="h-5 w-5 text-primary" />
-            Capability Paths
+            )}
           </CardTitle>
         </CardHeader>
         <CardContent>
-          <CapabilityShowcase />
+          <CapabilityShowcase primaryPath={primaryPath} />
         </CardContent>
       </Card>
 
