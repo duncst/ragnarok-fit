@@ -43,47 +43,47 @@ const CapabilityShowcase = ({ primaryPath }: CapabilityShowcaseProps) => {
         
         return (
           <Collapsible key={path.name} open={isOpen} onOpenChange={() => togglePath(pathIndex)}>
-            <Card className={`transition-all duration-200 ${
+            <Card className={`transition-all duration-200 overflow-hidden ${
               isPrimary 
                 ? 'bg-gradient-to-r from-amber-500/10 to-amber-600/20 border-amber-500/50 shadow-lg' 
                 : 'bg-gradient-to-r from-primary/5 to-primary/10 border-primary/20 hover:border-primary/30'
             }`}>
               <CollapsibleTrigger asChild>
                 <CardHeader className="pb-3 cursor-pointer hover:bg-primary/5 transition-colors rounded-t-lg">
-                  <div className="flex items-center justify-between">
-                    <div className="flex items-center gap-4">
-                      <div className="text-3xl">{path.icon}</div>
-                      <div className="flex-1">
-                        <div className="flex items-center gap-3 mb-1">
-                          <CardTitle className={`text-xl font-bold ${
+                  <div className="flex items-center justify-between gap-4">
+                    <div className="flex items-center gap-4 min-w-0 flex-1">
+                      <div className="text-3xl flex-shrink-0">{path.icon}</div>
+                      <div className="min-w-0 flex-1">
+                        <div className="flex items-center gap-2 mb-1 flex-wrap">
+                          <CardTitle className={`text-xl font-bold truncate ${
                             isPrimary ? 'text-amber-700 dark:text-amber-300' : 'text-foreground'
                           }`}>
                             {path.name}
                           </CardTitle>
                           {isPrimary && (
-                            <Badge className="bg-amber-500 text-amber-50 hover:bg-amber-600 shadow-sm">
+                            <Badge className="bg-amber-500 text-amber-50 hover:bg-amber-600 shadow-sm flex-shrink-0">
                               <Star className="h-3 w-3 mr-1" />
                               Primary Focus
                             </Badge>
                           )}
                         </div>
-                        <p className={`text-sm ${
+                        <p className={`text-sm line-clamp-2 ${
                           isPrimary ? 'text-amber-600 dark:text-amber-400' : 'text-muted-foreground'
                         }`}>
                           {path.subtitle}
                         </p>
                       </div>
                     </div>
-                    <div className="flex items-center gap-4">
+                    <div className="flex items-center gap-3 flex-shrink-0">
                       <div className="text-center">
-                        <Badge variant="secondary" className={`mb-2 ${
+                        <Badge variant="secondary" className={`mb-2 text-xs ${
                           isPrimary 
                             ? 'bg-amber-500/20 text-amber-800 dark:text-amber-200 border-amber-500/40' 
                             : 'bg-primary/20 text-foreground border-primary/30'
                         }`}>
                           {progress.completed}/{progress.total}
                         </Badge>
-                        <div className="w-32">
+                        <div className="w-24">
                           <Progress 
                             value={progress.percentage} 
                             className={`h-2 ${
@@ -92,15 +92,15 @@ const CapabilityShowcase = ({ primaryPath }: CapabilityShowcaseProps) => {
                           />
                         </div>
                         <p className="text-xs text-muted-foreground mt-1">
-                          {progress.percentage}% Complete
+                          {progress.percentage}%
                         </p>
                       </div>
                       {isOpen ? (
-                        <ChevronUp className={`h-5 w-5 ${
+                        <ChevronUp className={`h-5 w-5 flex-shrink-0 ${
                           isPrimary ? 'text-amber-600' : 'text-muted-foreground'
                         }`} />
                       ) : (
-                        <ChevronDown className={`h-5 w-5 ${
+                        <ChevronDown className={`h-5 w-5 flex-shrink-0 ${
                           isPrimary ? 'text-amber-600' : 'text-muted-foreground'
                         }`} />
                       )}
@@ -131,7 +131,7 @@ const CapabilityShowcase = ({ primaryPath }: CapabilityShowcaseProps) => {
                             <Button
                               variant="ghost"
                               size="sm"
-                              className="p-0 h-auto hover:bg-transparent"
+                              className="p-0 h-auto hover:bg-transparent flex-shrink-0"
                               onClick={() => handleToggleChallenge(pathIndex, originalTierIndex)}
                             >
                               <Circle className={`h-4 w-4 transition-colors ${
@@ -140,18 +140,18 @@ const CapabilityShowcase = ({ primaryPath }: CapabilityShowcaseProps) => {
                                   : 'text-muted-foreground hover:text-primary'
                               }`} />
                             </Button>
-                            <div className="flex-1">
-                              <div className="flex items-center gap-2">
-                                <Badge variant="outline" className={`text-xs ${
+                            <div className="flex-1 min-w-0">
+                              <div className="flex items-center gap-2 flex-wrap mb-1">
+                                <Badge variant="outline" className={`text-xs flex-shrink-0 ${
                                   isPrimary 
                                     ? 'bg-amber-500/10 text-amber-700 dark:text-amber-300 border-amber-500/30' 
                                     : 'bg-primary/10 text-foreground border-primary/30'
                                 }`}>
                                   Tier {tier.tier}
                                 </Badge>
-                                <span className="font-medium text-sm text-foreground">{tier.title}</span>
+                                <span className="font-medium text-sm text-foreground truncate">{tier.title}</span>
                               </div>
-                              <p className="text-xs text-muted-foreground mt-1">{tier.requirement}</p>
+                              <p className="text-xs text-muted-foreground line-clamp-2">{tier.requirement}</p>
                             </div>
                           </div>
                         );
