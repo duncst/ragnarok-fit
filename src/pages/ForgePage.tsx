@@ -4,7 +4,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Progress } from '@/components/ui/progress';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
-import { Shield, Sword, Mountain, Zap, Target, Globe, Crown, Lock } from 'lucide-react';
+import { Shield, Sword, Mountain, Zap, Target, Globe, Crown, Lock, Flame } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import ForgeWorkoutHistory from '@/components/forge/ForgeWorkoutHistory';
 import CapabilityShowcase from '@/components/forge/CapabilityShowcase';
@@ -29,19 +29,35 @@ const ForgePage = () => {
 
   return (
     <div className="space-y-6">
-      {/* Title + Progress Bar */}
-      <Card className="bg-gradient-to-r from-primary/10 to-primary/20 border-primary/30">
+      {/* Daily Hero's Call Progress Tracker */}
+      <Card className="bg-gradient-to-r from-orange-500/10 to-red-500/20 border-orange-500/30">
         <CardContent className="p-6">
           <div className="text-center space-y-4">
             <div className="flex items-center justify-center gap-2">
-              <Zap className="h-6 w-6 text-primary" />
-              <h1 className="text-2xl font-bold text-foreground">{currentTitle}</h1>
+              <Flame className="h-6 w-6 text-orange-500" />
+              <div>
+                <h1 className="text-xl font-bold text-foreground">Daily Hero's Call Progress</h1>
+                <p className="text-sm text-muted-foreground">Forge yourself through daily challenges</p>
+              </div>
             </div>
-            <p className="text-muted-foreground">{progressWeeks} Forging Weeks</p>
+            
+            <div className="bg-black/10 dark:bg-white/10 rounded-lg p-4">
+              <div className="flex items-center justify-center gap-2 mb-2">
+                <Badge variant="secondary" className="bg-orange-500/20 text-orange-700 dark:text-orange-300 border-orange-500/30">
+                  Current Title
+                </Badge>
+              </div>
+              <p className="text-xl font-bold text-orange-600 dark:text-orange-400">{currentTitle}</p>
+            </div>
+            
             <div className="space-y-2">
+              <div className="flex items-center justify-between text-sm">
+                <span className="text-muted-foreground">Forging Progress</span>
+                <span className="font-medium text-foreground">{progressWeeks} of {totalWeeks} weeks</span>
+              </div>
               <Progress value={progressPercentage} className="h-3" />
-              <p className="text-sm text-muted-foreground">
-                Week {progressWeeks} of {totalWeeks} • {Math.round(progressPercentage)}% Complete
+              <p className="text-xs text-muted-foreground">
+                Complete daily challenges to advance through forging weeks and earn new titles
               </p>
             </div>
           </div>
