@@ -13,6 +13,7 @@ import ExercisesPage from "./pages/ExercisesPage";
 import LogRunPage from "./pages/LogRunPage";
 import OneRepMaxCalculatorPage from "./pages/OneRepMaxCalculatorPage";
 import ForgePage from "./pages/ForgePage";
+import LandingPage from "./pages/LandingPage";
 import { AuthProvider } from "./contexts/AuthContext";
 import AuthPage from "./pages/AuthPage";
 import LogBodyMetricsPage from "./pages/LogBodyMetricsPage";
@@ -27,6 +28,7 @@ const App = () => (
       <AuthProvider>
         <BrowserRouter>
           <Routes>
+            <Route path="/landing" element={<LandingPage />} />
             <Route path="/auth" element={<AuthPage />} />
             <Route element={<Layout />}>
               <Route path="/" element={<HomePage />} />
