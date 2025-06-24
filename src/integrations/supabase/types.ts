@@ -36,6 +36,33 @@ export type Database = {
         }
         Relationships: []
       }
+      hero_call_completions: {
+        Row: {
+          completed_at: string
+          created_at: string
+          difficulty: string
+          id: string
+          user_id: string
+          workout_name: string
+        }
+        Insert: {
+          completed_at?: string
+          created_at?: string
+          difficulty: string
+          id?: string
+          user_id: string
+          workout_name: string
+        }
+        Update: {
+          completed_at?: string
+          created_at?: string
+          difficulty?: string
+          id?: string
+          user_id?: string
+          workout_name?: string
+        }
+        Relationships: []
+      }
       personal_records: {
         Row: {
           created_at: string
@@ -261,6 +288,14 @@ export type Database = {
         Args: { template_id: string }
         Returns: boolean
       }
+      get_hero_call_streak: {
+        Args: { p_user_id: string }
+        Returns: number
+      }
+      get_hero_call_weekly_count: {
+        Args: { p_user_id: string }
+        Returns: number
+      }
       get_last_exercise_weight: {
         Args: { p_exercise_name: string }
         Returns: number
@@ -268,6 +303,10 @@ export type Database = {
       get_user_workouts: {
         Args: Record<PropertyKey, never>
         Returns: Json
+      }
+      hero_call_completed_today: {
+        Args: { p_user_id: string }
+        Returns: boolean
       }
       is_template_owner: {
         Args: { template_id: string }

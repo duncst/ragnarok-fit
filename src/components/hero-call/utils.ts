@@ -7,7 +7,10 @@ export const getDailyWorkout = (): HeroCallWorkout => {
   return workoutTemplates[dayOfYear % workoutTemplates.length];
 };
 
+// Legacy functions kept for backward compatibility but now deprecated
+// These will be replaced by the new useHeroCallData hook
 export const getStreakData = () => {
+  console.warn('getStreakData is deprecated. Use useHeroCallData hook instead.');
   const stored = localStorage.getItem('heroCallStreak');
   if (stored) {
     const data = JSON.parse(stored);
@@ -25,6 +28,7 @@ export const getStreakData = () => {
 };
 
 export const updateStreak = () => {
+  console.warn('updateStreak is deprecated. Use useHeroCallData hook instead.');
   const today = new Date();
   const streakData = getStreakData();
   const todayString = today.toDateString();

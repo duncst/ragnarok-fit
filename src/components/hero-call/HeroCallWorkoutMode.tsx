@@ -5,8 +5,6 @@ import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Swords, Shield, Flame, X, Play, Pause, Check, Clock, Target } from 'lucide-react';
 import { HeroCallWorkout } from './WorkoutTemplates';
-import { useSaveWorkout } from '@/hooks/useSaveWorkout';
-import type { Exercise } from '@/types';
 
 interface HeroCallWorkoutModeProps {
   workout: HeroCallWorkout;
@@ -41,33 +39,8 @@ export const HeroCallWorkoutMode = ({
   onToggleWorkout,
 }: HeroCallWorkoutModeProps) => {
   const currentLevel = workout.levels.find(level => level.difficulty === selectedLevel);
-  const { finishWorkout } = useSaveWorkout();
   
   if (!currentLevel) return null;
-
-  const saveHeroCallWorkout = () => {
-    // Convert Hero's Call workout to Exercise format for saving
-    const exercises: Exercise[] = [{
-      id: `hero-call-${workout.name}`,
-      name: `Hero's Call: ${workout.name} (${currentLevel.label})`,
-      sets: [{
-        id: 'completed-set',
-        reps: 1,
-        weight: 0,
-        completed: true,
-      }]
-    }];
-
-    finishWorkout({
-      exercises,
-      name: `Hero's Call: ${workout.name}`,
-    });
-  };
-
-  const handleFinish = () => {
-    saveHeroCallWorkout();
-    onFinish();
-  };
 
   return (
     <div className="fixed inset-0 bg-background z-50 overflow-y-auto">
@@ -103,7 +76,7 @@ export const HeroCallWorkoutMode = ({
               </span>
             </Button>
             <Button 
-              onClick={handleFinish}
+              onClick={onFinish}
               size="sm"
               className="flex items-center gap-2"
             >

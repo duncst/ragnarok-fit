@@ -66,6 +66,14 @@ export const StreakTracker = ({
               style={{ width: `${progressPercentage}%` }}
             />
           </div>
+
+          {streakData.currentStreak > 0 && (
+            <div className="text-center">
+              <p className="text-sm text-muted-foreground">
+                Current streak: <span className="font-bold text-primary">{streakData.currentStreak} days</span>
+              </p>
+            </div>
+          )}
           
           {!completedToday && onMarkComplete && (
             <Button 
