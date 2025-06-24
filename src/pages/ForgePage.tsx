@@ -10,7 +10,8 @@ import ForgeWorkoutHistory from '@/components/forge/ForgeWorkoutHistory';
 import CapabilityShowcase from '@/components/forge/CapabilityShowcase';
 import CapabilityOnboarding from '@/components/forge/CapabilityOnboarding';
 import { useForgeOnboarding } from '@/hooks/useForgeOnboarding';
-import { CAPABILITY_PATHS } from '@/types/capabilities';
+import { useForgeProgress } from '@/hooks/useForgeProgress';
+import { Skeleton } from '@/components/ui/skeleton';
 
 const ForgePage = () => {
   const navigate = useNavigate();
@@ -21,11 +22,7 @@ const ForgePage = () => {
     selectPrimaryPath,
   } = useForgeOnboarding();
 
-  // Mock data - in real app this would come from user profile/progress
-  const progressWeeks = 4;
-  const totalWeeks = 12;
-  const progressPercentage = (progressWeeks / totalWeeks) * 100;
-  const currentTitle = "Disciple of Flame";
+  const { forgeProgress, isLoading } = useForgeProgress();
 
   return (
     <div className="space-y-6">
@@ -47,15 +44,27 @@ const ForgePage = () => {
                   Current Title
                 </Badge>
               </div>
-              <p className="text-xl font-bold text-orange-600 dark:text-orange-400">{currentTitle}</p>
+              {isLoading ? (
+                <Skeleton className="h-6 w-32 mx-auto" />
+              ) : (
+                <p className="text-xl font-bold text-orange-600 dark:text-orange-400">{forgeProgress.currentTitle}</p>
+              )}
             </div>
             
             <div className="space-y-2">
               <div className="flex items-center justify-between text-sm">
                 <span className="text-muted-foreground">Forging Progress</span>
-                <span className="font-medium text-foreground">{progressWeeks} of {totalWeeks} weeks</span>
+                {isLoading ? (
+                  <Skeleton className="h-4 w-20" />
+                ) : (
+                  <span className="font-medium text-foreground">{forgeProgress.currentWeek} of {forgeProgress.totalWeeks} weeks</span>
+                )}
               </div>
-              <Progress value={progressPercentage} className="h-3" />
+              {isLoading ? (
+                <Skeleton className="h-3 w-full" />
+              ) : (
+                <Progress value={forgeProgress.progressPercentage} className="h-3" />
+              )}
               <p className="text-xs text-muted-foreground">
                 Complete daily challenges to advance through forging weeks and earn new titles
               </p>
