@@ -1,3 +1,4 @@
+
 import { useState, useEffect, useCallback } from 'react';
 import { useLocation } from 'react-router-dom';
 import type { Exercise, WorkoutSet, WorkoutTemplate, Workout } from '@/types';
@@ -100,6 +101,20 @@ export const useWorkoutState = () => {
     setExercises((prev) => prev.filter((ex) => ex.id !== exerciseId));
   };
 
+  const moveExercise = (exerciseId: string, direction: 'up' | 'down') => {
+    setExercises((prev) => {
+      const currentIndex = prev.findIndex(ex => ex.id === exerciseId);
+      if (currentIndex === -1) return prev;
+
+      const newIndex = direction === 'up' ? currentIndex - 1 : currentIndex + 1;
+      if (newIndex < 0 || newIndex >= prev.length) return prev;
+
+      const newExercises = [...prev];
+      [newExercises[currentIndex], newExercises[newIndex]] = [newExercises[newIndex], newExercises[currentIndex]];
+      return newExercises;
+    });
+  };
+
   const updateExerciseName = (exerciseId: string, name: string) => {
     setExercises((prev) =>
       prev.map((ex) => {
@@ -197,6 +212,7 @@ export const useWorkoutState = () => {
     setExercises,
     addExercise,
     removeExercise,
+    moveExercise,
     updateExerciseName,
     addSet,
     updateSet,

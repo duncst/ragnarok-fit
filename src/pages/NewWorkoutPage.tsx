@@ -30,6 +30,7 @@ const NewWorkoutPage = () => {
     exercises,
     addExercise,
     removeExercise,
+    moveExercise,
     updateExerciseName,
     addSet,
     updateSet,
@@ -144,6 +145,9 @@ const NewWorkoutPage = () => {
         workoutName={workoutName}
         exercises={exercises}
         onExitCookMode={handleExitCookMode}
+        onAddExercise={addExercise}
+        onRemoveExercise={removeExercise}
+        onMoveExercise={moveExercise}
         onUpdateExerciseName={updateExerciseName}
         onAddSet={addSet}
         onUpdateSet={updateSet}
@@ -199,7 +203,9 @@ const NewWorkoutPage = () => {
               key={exercise.id}
               exercise={exercise}
               exerciseIndex={exerciseIndex}
+              totalExercises={exercises.length}
               onRemove={removeExercise}
+              onMove={moveExercise}
               onUpdateName={updateExerciseName}
               onAddSet={addSet}
               onUpdateSet={updateSet}

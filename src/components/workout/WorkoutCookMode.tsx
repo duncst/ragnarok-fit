@@ -1,8 +1,7 @@
-
 import React from 'react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader } from '@/components/ui/card';
-import { X, Plus, Check, Play, Pause } from 'lucide-react';
+import { X, Plus, Check, Play, Pause, ChevronUp, ChevronDown } from 'lucide-react';
 import { ExerciseSelector } from '@/components/ExerciseSelector';
 import { SetRow } from './SetRow';
 import { getExerciseType } from '@/utils/exerciseTypes';
@@ -12,6 +11,9 @@ interface WorkoutCookModeProps {
   workoutName: string;
   exercises: Exercise[];
   onExitCookMode: () => void;
+  onAddExercise: () => void;
+  onRemoveExercise: (exerciseId: string) => void;
+  onMoveExercise: (exerciseId: string, direction: 'up' | 'down') => void;
   onUpdateExerciseName: (exerciseId: string, name: string) => void;
   onAddSet: (exerciseId: string) => void;
   onUpdateSet: (exerciseId: string, setId: string, field: 'reps' | 'weight' | 'duration' | 'distance', value: number) => void;
@@ -27,6 +29,9 @@ export const WorkoutCookMode = ({
   workoutName,
   exercises,
   onExitCookMode,
+  onAddExercise,
+  onRemoveExercise,
+  onMoveExercise,
   onUpdateExerciseName,
   onAddSet,
   onUpdateSet,
@@ -106,6 +111,18 @@ export const WorkoutCookMode = ({
           </div>
         </div>
 
+        {/* Add Exercise Button */}
+        <div className="sticky top-20 z-10">
+          <Button 
+            onClick={onAddExercise}
+            className="w-full"
+            variant="outline"
+          >
+            <Plus className="h-4 w-4 mr-2" />
+            Add Exercise
+          </Button>
+        </div>
+
         {/* Exercises */}
         <div className="space-y-6 pb-6">
           {exercises.map((exercise, exerciseIndex) => {
@@ -122,6 +139,34 @@ export const WorkoutCookMode = ({
                         value={exercise.name}
                         onChange={(name) => onUpdateExerciseName(exercise.id, name)}
                       />
+                    </div>
+                    <div className="flex items-center gap-1">
+                      <Button 
+                        variant="ghost" 
+                        size="icon" 
+                        onClick={() => onMoveExercise(exercise.id, 'up')}
+                        disabled={exerciseIndex === 0}
+                        className="h-8 w-8"
+                      >
+                        <ChevronUp className="h-4 w-4 text-muted-foreground" />
+                      </Button>
+                      <Button 
+                        variant="ghost" 
+                        size="icon" 
+                        onClick={() => onMoveExercise(exercise.id, 'down')}
+                        disabled={exerciseIndex === exercises.length - 1}
+                        className="h-8 w-8"
+                      >
+                        <ChevronDown className="h-4 w-4 text-muted-foreground" />
+                      </Button>
+                      <Button 
+                        variant="ghost" 
+                        size="icon" 
+                        onClick={() => onRemoveExercise(exercise.id)}
+                        className="h-8 w-8"
+                      >
+                        <X className="h-4 w-4 text-muted-foreground" />
+                      </Button>
                     </div>
                   </div>
                 </CardHeader>

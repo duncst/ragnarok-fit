@@ -2,7 +2,7 @@
 import React from 'react';
 import { Card, CardContent, CardHeader } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { Plus, Trash2, Clock, Weight, Repeat, MapPin, Dumbbell } from 'lucide-react';
+import { Plus, Trash2, Clock, Weight, Repeat, MapPin, Dumbbell, ChevronUp, ChevronDown } from 'lucide-react';
 import { ExerciseSelector } from '@/components/ExerciseSelector';
 import { SetRow } from './SetRow';
 import { getExerciseType } from '@/utils/exerciseTypes';
@@ -11,7 +11,9 @@ import type { Exercise } from '@/types';
 interface ExerciseCardProps {
   exercise: Exercise;
   exerciseIndex: number;
+  totalExercises: number;
   onRemove: (exerciseId: string) => void;
+  onMove?: (exerciseId: string, direction: 'up' | 'down') => void;
   onUpdateName: (exerciseId: string, name: string) => void;
   onAddSet: (exerciseId: string) => void;
   onUpdateSet: (exerciseId: string, setId: string, field: 'reps' | 'weight' | 'duration' | 'distance', value: number) => void;
@@ -21,7 +23,9 @@ interface ExerciseCardProps {
 export const ExerciseCard = ({
   exercise,
   exerciseIndex,
+  totalExercises,
   onRemove,
+  onMove,
   onUpdateName,
   onAddSet,
   onUpdateSet,
@@ -93,9 +97,33 @@ export const ExerciseCard = ({
               </div>
             )}
           </div>
-          <Button variant="ghost" size="icon" onClick={() => onRemove(exercise.id)}>
-            <Trash2 className="h-4 w-4 text-muted-foreground" />
-          </Button>
+          <div className="flex items-center gap-1">
+            {onMove && (
+              <>
+                <Button 
+                  variant="ghost" 
+                  size="icon" 
+                  onClick={() => onMove(exercise.id, 'up')}
+                  disabled={exerciseIndex === 0}
+                  className="h-8 w-8"
+                >
+                  <ChevronUp className="h-4 w-4 text-muted-foreground" />
+                </Button>
+                <Button 
+                  variant="ghost" 
+                  size="icon" 
+                  onClick={() => onMove(exercise.id, 'down')}
+                  disabled={exerciseIndex === totalExercises - 1}
+                  className="h-8 w-8"
+                >
+                  <ChevronDown className="h-4 w-4 text-muted-foreground" />
+                </Button>
+              </>
+            )}
+            <Button variant="ghost" size="icon" onClick={() => onRemove(exercise.id)} className="h-8 w-8">
+              <Trash2 className="h-4 w-4 text-muted-foreground" />
+            </Button>
+          </div>
         </div>
       </CardHeader>
       <CardContent className="space-y-2">
