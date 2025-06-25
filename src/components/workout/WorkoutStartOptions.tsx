@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -145,6 +144,7 @@ export const WorkoutStartOptions = ({
                       key={exercise.id}
                       exercise={exercise}
                       exerciseIndex={exerciseIndex}
+                      totalExercises={exercises.length}
                       onRemove={onRemoveExercise}
                       onUpdateName={onUpdateExerciseName}
                       onAddSet={onAddSet}
