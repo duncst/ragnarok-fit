@@ -32,15 +32,33 @@ export const useForgeProgress = () => {
     queryFn: async () => {
       if (!user) throw new Error('User not authenticated');
 
-      // Get all Hero's Call completions
-      const { data: completions, error } = await supabase
-        .from('hero_call_completions')
-        .select('completed_at')
-        .order('completed_at', { ascending: true });
+      // Get all completions (Hero's Call + regular workouts)
+      const [heroCallResult, workoutsResult] = await Promise.all([
+        supabase
+          .from('hero_call_completions')
+          .select('completed_at')
+          .order('completed_at', { ascending: true }),
+        supabase
+          .from('workouts')
+          .select('end_time')
+          .not('end_time', 'is', null)
+          .order('end_time', { ascending: true })
+      ]);
 
-      if (error) throw error;
+      if (heroCallResult.error) throw heroCallResult.error;
+      if (workoutsResult.error) throw workoutsResult.error;
 
-      if (!completions || completions.length === 0) {
+      // Combine all completion dates
+      const allCompletions = [
+        ...(heroCallResult.data || []).map(item => ({
+          completed_at: item.completed_at
+        })),
+        ...(workoutsResult.data || []).map(item => ({
+          completed_at: item.end_time!
+        }))
+      ];
+
+      if (allCompletions.length === 0) {
         return {
           currentWeek: 0,
           totalWeeks: TOTAL_WEEKS,
@@ -52,7 +70,7 @@ export const useForgeProgress = () => {
       // Calculate completed weeks (weeks where user completed 5+ days)
       const weekCounts = new Map<string, Set<string>>();
       
-      completions.forEach(completion => {
+      allCompletions.forEach(completion => {
         const date = new Date(completion.completed_at);
         // Get Monday of the week
         const monday = new Date(date);

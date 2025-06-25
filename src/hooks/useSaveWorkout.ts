@@ -68,6 +68,10 @@ export const useSaveWorkout = () => {
         onSuccess: (workoutData, { name }) => {
             sonnerToast.success("Workout saved successfully!");
             queryClient.invalidateQueries({ queryKey: ['workouts'] });
+            // Invalidate hero call stats since regular workouts now count towards streaks
+            queryClient.invalidateQueries({ queryKey: ['hero-call-stats', user?.id] });
+            // Invalidate forge progress since it depends on all workout completions
+            queryClient.invalidateQueries({ queryKey: ['forge-progress', user?.id] });
             
             // Return workout data and name for potential Valhalla score recording
             return { workoutData, name };
