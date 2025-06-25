@@ -4,13 +4,14 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Progress } from '@/components/ui/progress';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
-import { Shield, Sword, Mountain, Zap, Target, Globe, Crown, Lock, Flame } from 'lucide-react';
+import { Shield, Sword, Mountain, Zap, Target, Globe, Crown, Lock, Flame, Circle, CheckCircle } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import ForgeWorkoutHistory from '@/components/forge/ForgeWorkoutHistory';
 import CapabilityShowcase from '@/components/forge/CapabilityShowcase';
 import CapabilityOnboarding from '@/components/forge/CapabilityOnboarding';
 import { useForgeOnboarding } from '@/hooks/useForgeOnboarding';
 import { useForgeProgress } from '@/hooks/useForgeProgress';
+import { useHeroCallData } from '@/hooks/useHeroCallData';
 import { Skeleton } from '@/components/ui/skeleton';
 
 const ForgePage = () => {
@@ -23,6 +24,38 @@ const ForgePage = () => {
   } = useForgeOnboarding();
 
   const { forgeProgress, isLoading } = useForgeProgress();
+  const { stats } = useHeroCallData();
+
+  // Generate array for 7 days of the week (Monday to Sunday)
+  const weekDays = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
+  
+  // Get current week completion status
+  const getWeeklyCompletionStatus = () => {
+    const today = new Date();
+    const startOfWeek = new Date(today);
+    const day = today.getDay();
+    const diff = today.getDate() - day + (day === 0 ? -6 : 1); // Monday start
+    startOfWeek.setDate(diff);
+    startOfWeek.setHours(0, 0, 0, 0);
+    
+    return weekDays.map((dayName, index) => {
+      const dayDate = new Date(startOfWeek);
+      dayDate.setDate(startOfWeek.getDate() + index);
+      const isToday = dayDate.toDateString() === today.toDateString();
+      const isPast = dayDate < today;
+      const isCompleted = index < stats.weeklyCount; // Simplified - assumes consecutive days
+      
+      return {
+        name: dayName,
+        isToday,
+        isPast,
+        isCompleted,
+        isFuture: dayDate > today
+      };
+    });
+  };
+
+  const weeklyStatus = getWeeklyCompletionStatus();
 
   return (
     <div className="space-y-6">
@@ -33,8 +66,8 @@ const ForgePage = () => {
             <div className="flex items-center justify-center gap-2">
               <Flame className="h-6 w-6 text-orange-500" />
               <div>
-                <h1 className="text-xl font-bold text-foreground">Daily Hero's Call Progress</h1>
-                <p className="text-sm text-muted-foreground">Forge yourself through daily challenges</p>
+                <h1 className="text-xl font-bold text-foreground">Daily Forging Progress</h1>
+                <p className="text-sm text-muted-foreground">Complete daily challenges or your own workouts to advance</p>
               </div>
             </div>
             
@@ -49,6 +82,29 @@ const ForgePage = () => {
               ) : (
                 <p className="text-xl font-bold text-orange-600 dark:text-orange-400">{forgeProgress.currentTitle}</p>
               )}
+            </div>
+
+            {/* Weekly Progress Circles */}
+            <div className="space-y-3">
+              <div className="flex items-center justify-center gap-2 text-sm text-muted-foreground">
+                <span>This week's progress ({stats.weeklyCount}/5 days to forge the week)</span>
+              </div>
+              <div className="flex items-center justify-center gap-3">
+                {weeklyStatus.map((day, index) => (
+                  <div key={day.name} className="flex flex-col items-center gap-1">
+                    <div className="text-xs text-muted-foreground">{day.name}</div>
+                    {day.isCompleted ? (
+                      <CheckCircle className="h-6 w-6 text-green-500" />
+                    ) : day.isToday ? (
+                      <Circle className="h-6 w-6 text-orange-500" />
+                    ) : day.isPast ? (
+                      <Circle className="h-6 w-6 text-muted-foreground/50" />
+                    ) : (
+                      <Circle className="h-6 w-6 text-muted-foreground/30" />
+                    )}
+                  </div>
+                ))}
+              </div>
             </div>
             
             <div className="space-y-2">
@@ -66,7 +122,7 @@ const ForgePage = () => {
                 <Progress value={forgeProgress.progressPercentage} className="h-3" />
               )}
               <p className="text-xs text-muted-foreground">
-                Complete daily challenges to advance through forging weeks and earn new titles
+                Complete daily challenges or your own workouts to advance through forging weeks and earn new titles
               </p>
             </div>
           </div>
