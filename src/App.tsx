@@ -14,6 +14,7 @@ import LogRunPage from "./pages/LogRunPage";
 import OneRepMaxCalculatorPage from "./pages/OneRepMaxCalculatorPage";
 import ForgePage from "./pages/ForgePage";
 import LandingPage from "./pages/LandingPage";
+import WorkoutHistoryPage from "./pages/WorkoutHistoryPage";
 import { AuthProvider } from "./contexts/AuthContext";
 import LogBodyMetricsPage from "./pages/LogBodyMetricsPage";
 
@@ -32,6 +33,7 @@ const App = () => (
               <Route path="/home" element={<HomePage />} />
               <Route path="/exercises" element={<ExercisesPage />} />
               <Route path="/forge" element={<ForgePage />} />
+              <Route path="/history" element={<WorkoutHistoryPage />} />
               <Route path="/run" element={<RunPage />} />
               <Route path="/log-run" element={<LogRunPage />} />
               <Route path="/workout/new" element={<NewWorkoutPage />} />
