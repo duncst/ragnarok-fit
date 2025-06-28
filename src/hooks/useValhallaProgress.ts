@@ -40,7 +40,7 @@ export const useValhallaProgress = () => {
     queryFn: async (): Promise<ValhallaProgress> => {
       const { data, error } = await supabase.rpc('get_valhalla_progress');
       if (error) throw error;
-      return data;
+      return data as ValhallaProgress;
     },
   });
 
@@ -56,7 +56,7 @@ export const useValhallaProgress = () => {
         p_notes: params.notes,
       });
       if (error) throw error;
-      return data;
+      return data as ValhallaResult;
     },
     onSuccess: (result) => {
       queryClient.invalidateQueries({ queryKey: ['valhalla_progress'] });
@@ -64,7 +64,7 @@ export const useValhallaProgress = () => {
       // Show ceremonial completion message
       if (result.is_new_rune) {
         sonnerToast.success(`${result.rune_name} Earned!`, {
-          description: `You faced ${result.challenge_name} and did not yield. You are ${result.tier} of the Forge.`,
+          description: `You faced the challenge and did not yield. You are ${result.tier} of the Forge.`,
           duration: 5000,
         });
       } else if (result.is_tier_upgrade) {
@@ -74,7 +74,7 @@ export const useValhallaProgress = () => {
         });
       } else {
         sonnerToast.success('Challenge Complete!', {
-          description: `${result.challenge_name} completed in ${result.completion_time_minutes} minutes as ${result.tier}.`,
+          description: `Challenge completed in ${result.completion_time_minutes} minutes as ${result.tier}.`,
         });
       }
     },
