@@ -40,7 +40,7 @@ export const useValhallaProgress = () => {
     queryFn: async (): Promise<ValhallaProgress> => {
       const { data, error } = await supabase.rpc('get_valhalla_progress');
       if (error) throw error;
-      return data as ValhallaProgress;
+      return data as unknown as ValhallaProgress;
     },
   });
 
@@ -56,7 +56,7 @@ export const useValhallaProgress = () => {
         p_notes: params.notes,
       });
       if (error) throw error;
-      return data as ValhallaResult;
+      return data as unknown as ValhallaResult;
     },
     onSuccess: (result) => {
       queryClient.invalidateQueries({ queryKey: ['valhalla_progress'] });
