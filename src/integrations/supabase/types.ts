@@ -129,6 +129,75 @@ export type Database = {
         }
         Relationships: []
       }
+      valhalla_challenges: {
+        Row: {
+          challenge_name: string
+          completed_at: string
+          completion_time_minutes: number
+          created_at: string
+          id: string
+          notes: string | null
+          quarter_date: string
+          quarter_year: number
+          tier: string
+          user_id: string
+        }
+        Insert: {
+          challenge_name: string
+          completed_at?: string
+          completion_time_minutes: number
+          created_at?: string
+          id?: string
+          notes?: string | null
+          quarter_date?: string
+          quarter_year?: number
+          tier: string
+          user_id?: string
+        }
+        Update: {
+          challenge_name?: string
+          completed_at?: string
+          completion_time_minutes?: number
+          created_at?: string
+          id?: string
+          notes?: string | null
+          quarter_date?: string
+          quarter_year?: number
+          tier?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
+      valhalla_runes: {
+        Row: {
+          challenge_name: string
+          first_earned_at: string
+          highest_tier: string
+          id: string
+          last_updated_at: string
+          rune_name: string
+          user_id: string
+        }
+        Insert: {
+          challenge_name: string
+          first_earned_at?: string
+          highest_tier: string
+          id?: string
+          last_updated_at?: string
+          rune_name: string
+          user_id?: string
+        }
+        Update: {
+          challenge_name?: string
+          first_earned_at?: string
+          highest_tier?: string
+          id?: string
+          last_updated_at?: string
+          rune_name?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       workout_exercises: {
         Row: {
           id: string
@@ -284,6 +353,10 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
+      calculate_valhalla_tier: {
+        Args: { challenge_name: string; completion_time_minutes: number }
+        Returns: string
+      }
       can_view_template: {
         Args: { template_id: string }
         Returns: boolean
@@ -304,6 +377,10 @@ export type Database = {
         Args: Record<PropertyKey, never>
         Returns: Json
       }
+      get_valhalla_progress: {
+        Args: Record<PropertyKey, never>
+        Returns: Json
+      }
       hero_call_completed_today: {
         Args: { p_user_id: string }
         Returns: boolean
@@ -311,6 +388,14 @@ export type Database = {
       is_template_owner: {
         Args: { template_id: string }
         Returns: boolean
+      }
+      record_valhalla_challenge: {
+        Args: {
+          p_challenge_name: string
+          p_completion_time_minutes: number
+          p_notes?: string
+        }
+        Returns: Json
       }
       upsert_personal_record: {
         Args: { p_exercise_name: string; p_one_rep_max: number }
