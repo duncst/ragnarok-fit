@@ -8,7 +8,7 @@ import { Button } from "./ui/button";
 import { supabase } from "@/integrations/supabase/client";
 import { toast as sonnerToast } from "sonner";
 import { useOnboarding } from "@/hooks/useOnboarding";
-import OnboardingFlow from "./onboarding/OnboardingFlow";
+import NewOnboardingFlow from "./onboarding/NewOnboardingFlow";
 
 const Layout = () => {
   const { session } = useAuth();
@@ -37,7 +37,7 @@ const Layout = () => {
 
   // Show onboarding if not completed
   if (hasCompletedOnboarding === false) {
-    return <OnboardingFlow onComplete={completeOnboarding} />;
+    return <NewOnboardingFlow onComplete={completeOnboarding} />;
   }
 
   // Show loading while checking onboarding status
