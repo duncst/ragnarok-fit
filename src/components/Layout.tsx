@@ -8,25 +8,18 @@ import { Button } from "./ui/button";
 import { supabase } from "@/integrations/supabase/client";
 import { toast as sonnerToast } from "sonner";
 import { useOnboarding } from "@/hooks/useOnboarding";
-import NewOnboardingFlow from "./onboarding/NewOnboardingFlow";
+import OnboardingFlow from "./onboarding/OnboardingFlow";
 
 const Layout = () => {
-  const { session, user } = useAuth();
+  const { session } = useAuth();
   const navigate = useNavigate();
   const { hasCompletedOnboarding, completeOnboarding } = useOnboarding();
 
   useEffect(() => {
-    console.log('Layout mounted with session:', !!session, 'user:', !!user);
-    
     if (!session) {
-      console.log('No session, redirecting to /auth');
       navigate('/auth', { replace: true });
     }
   }, [session, navigate]);
-
-  useEffect(() => {
-    console.log('Onboarding status changed:', hasCompletedOnboarding);
-  }, [hasCompletedOnboarding]);
 
   const handleLogout = async () => {
     const { error } = await supabase.auth.signOut();
@@ -39,27 +32,22 @@ const Layout = () => {
   };
 
   if (!session) {
-    console.log('No session, returning null');
     return null; // or a loading spinner while redirecting
   }
 
-  // Show onboarding if not completed (hasCompletedOnboarding === false)
+  // Show onboarding if not completed
   if (hasCompletedOnboarding === false) {
-    console.log('Showing onboarding flow');
-    return <NewOnboardingFlow onComplete={completeOnboarding} />;
+    return <OnboardingFlow onComplete={completeOnboarding} />;
   }
 
   // Show loading while checking onboarding status
   if (hasCompletedOnboarding === null) {
-    console.log('Loading onboarding status');
     return (
       <div className="flex items-center justify-center min-h-screen">
         <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary"></div>
       </div>
     );
   }
-
-  console.log('Showing main app layout');
 
   return (
     <div className="flex flex-col h-full max-w-md mx-auto bg-background">

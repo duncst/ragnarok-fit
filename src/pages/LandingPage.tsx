@@ -59,7 +59,7 @@ const LandingPage = () => {
       email: values.email,
       password: values.password,
       options: {
-        emailRedirectTo: `${window.location.origin}/home`,
+        emailRedirectTo: window.location.origin,
       },
     });
     if (error) {
@@ -86,7 +86,7 @@ const LandingPage = () => {
           </div>
           <Button 
             variant="outline" 
-            onClick={() => navigate('/auth')}
+            onClick={() => setActiveTab('signin')}
             className="md:hidden"
           >
             Enter
@@ -108,11 +108,7 @@ const LandingPage = () => {
               <p className="text-xl text-muted-foreground uppercase tracking-wide">
                 Discipline. Capability. Brotherhood.
               </p>
-              <Button 
-                size="lg" 
-                className="text-lg px-12 py-6 bg-primary hover:bg-primary/90"
-                onClick={() => navigate('/auth')}
-              >
+              <Button size="lg" className="text-lg px-12 py-6 bg-primary hover:bg-primary/90">
                 REQUEST AN INVITATION
               </Button>
             </div>
@@ -278,6 +274,7 @@ const LandingPage = () => {
         </div>
       </section>
 
+      {/* Capability Paths Section */}
       <section className="py-20 px-4">
         <div className="container mx-auto max-w-4xl">
           <div className="text-center space-y-8 mb-16">
@@ -351,6 +348,7 @@ const LandingPage = () => {
         </div>
       </section>
 
+      {/* Invite-Only Brotherhood Section */}
       <section className="py-20 px-4 bg-gradient-to-b from-card to-background">
         <div className="container mx-auto max-w-4xl text-center space-y-12">
           <div className="space-y-8">
@@ -389,17 +387,14 @@ const LandingPage = () => {
             <blockquote className="text-2xl font-bold italic">
               "You don't join the Forge. You're called to it."
             </blockquote>
-            <Button 
-              size="lg" 
-              className="text-lg px-12 py-6"
-              onClick={() => navigate('/auth')}
-            >
+            <Button size="lg" className="text-lg px-12 py-6">
               REQUEST AN INVITATION
             </Button>
           </div>
         </div>
       </section>
 
+      {/* Footer */}
       <footer className="border-t border-border py-8 px-4">
         <div className="container mx-auto text-center text-muted-foreground">
           <div className="flex items-center justify-center gap-2 mb-4">

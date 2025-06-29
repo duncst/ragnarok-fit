@@ -18,7 +18,7 @@ const AuthPage = () => {
 
   useEffect(() => {
     if (session) {
-      navigate('/home', { replace: true });
+      navigate('/', { replace: true });
     }
   }, [session, navigate]);
 
@@ -45,7 +45,7 @@ const AuthPage = () => {
       sonnerToast.error('Sign In Failed', { description: error.message });
     } else {
       sonnerToast.success('Signed in successfully!');
-      navigate('/home');
+      navigate('/');
     }
     setLoading(false);
   };
@@ -56,13 +56,14 @@ const AuthPage = () => {
       email: values.email,
       password: values.password,
       options: {
-        emailRedirectTo: `${window.location.origin}/home`,
+        emailRedirectTo: window.location.origin,
       },
     });
     if (error) {
       sonnerToast.error('Sign Up Failed', { description: error.message });
     } else {
       sonnerToast.info('Check your email for the confirmation link.');
+      // Reset form for good measure
       form.reset();
     }
     setLoading(false);
