@@ -25,6 +25,12 @@ export const SetRow = ({ set, setIndex, onUpdate, onToggle, exerciseType = 'weig
     onUpdate('distance', meters);
   };
 
+  const handleNumberChange = (field: 'reps' | 'weight', value: string) => {
+    // Allow empty string and convert to 0, or parse the number
+    const numValue = value === '' ? 0 : (parseInt(value) || 0);
+    onUpdate(field, numValue);
+  };
+
   return (
     <div className="grid grid-cols-4 gap-2 items-center">
       <span className="font-bold text-center">{setIndex + 1}</span>
@@ -33,15 +39,15 @@ export const SetRow = ({ set, setIndex, onUpdate, onToggle, exerciseType = 'weig
         <>
           <Input
             type="number"
-            value={set.weight}
-            onChange={(e) => onUpdate('weight', parseInt(e.target.value) || 0)}
+            value={set.weight === 0 ? '' : set.weight}
+            onChange={(e) => handleNumberChange('weight', e.target.value)}
             className="w-full text-center"
             placeholder="Weight"
           />
           <Input
             type="number"
-            value={set.reps}
-            onChange={(e) => onUpdate('reps', parseInt(e.target.value) || 0)}
+            value={set.reps === 0 ? '' : set.reps}
+            onChange={(e) => handleNumberChange('reps', e.target.value)}
             className="w-full text-center"
             placeholder="Reps"
           />
@@ -59,8 +65,8 @@ export const SetRow = ({ set, setIndex, onUpdate, onToggle, exerciseType = 'weig
           />
           <Input
             type="number"
-            value={set.reps}
-            onChange={(e) => onUpdate('reps', parseInt(e.target.value) || 0)}
+            value={set.reps === 0 ? '' : set.reps}
+            onChange={(e) => handleNumberChange('reps', e.target.value)}
             className="w-full text-center"
             placeholder="Reps"
           />
@@ -90,8 +96,8 @@ export const SetRow = ({ set, setIndex, onUpdate, onToggle, exerciseType = 'weig
         <>
           <Input
             type="number"
-            value={set.weight}
-            onChange={(e) => onUpdate('weight', parseInt(e.target.value) || 0)}
+            value={set.weight === 0 ? '' : set.weight}
+            onChange={(e) => handleNumberChange('weight', e.target.value)}
             className="w-full text-center"
             placeholder="Weight"
           />
@@ -119,8 +125,8 @@ export const SetRow = ({ set, setIndex, onUpdate, onToggle, exerciseType = 'weig
           <div className="text-center text-muted-foreground">-</div>
           <Input
             type="number"
-            value={set.reps}
-            onChange={(e) => onUpdate('reps', parseInt(e.target.value) || 0)}
+            value={set.reps === 0 ? '' : set.reps}
+            onChange={(e) => handleNumberChange('reps', e.target.value)}
             className="w-full text-center"
             placeholder="Reps"
           />
