@@ -16,9 +16,17 @@ const ExercisesPage = () => {
   const filteredExercises = useMemo(() => {
     const lowercasedTerm = searchTerm.toLowerCase();
     return allExercises
-      .filter((exercise) =>
-        selectedBodyPart === 'All' || exercise.bodyPart === selectedBodyPart
-      )
+      .filter((exercise) => {
+        // Fix: Check if selectedBodyPart is 'All' OR if the exercise's bodyPart matches
+        if (selectedBodyPart === 'All') return true;
+        
+        // Handle case where exercise.bodyPart might be an array or string
+        if (Array.isArray(exercise.bodyPart)) {
+          return exercise.bodyPart.some(part => part === selectedBodyPart);
+        }
+        
+        return exercise.bodyPart === selectedBodyPart;
+      })
       .filter((exercise) =>
         exercise.name.toLowerCase().includes(lowercasedTerm)
       );
@@ -64,7 +72,9 @@ const ExercisesPage = () => {
                 <div className="space-y-1">
                   <CardTitle className="text-lg">{exercise.name}</CardTitle>
                   <div className="flex gap-2 pt-1">
-                    <Badge variant="secondary">{exercise.bodyPart}</Badge>
+                    <Badge variant="secondary">
+                      {Array.isArray(exercise.bodyPart) ? exercise.bodyPart.join(', ') : exercise.bodyPart}
+                    </Badge>
                     <Badge variant="outline">{exercise.equipment}</Badge>
                   </div>
                 </div>

@@ -1,9 +1,9 @@
-
 import { useState, useEffect, useCallback } from 'react';
 import { useLocation } from 'react-router-dom';
 import type { Exercise, WorkoutSet, WorkoutTemplate, Workout } from '@/types';
 import { useOneRepMax } from './useOneRepMax';
 import { useWorkoutPersistence } from './useWorkoutPersistence';
+import { useExerciseHistory } from './useExerciseHistory';
 import { getExerciseType } from '@/utils/exerciseTypes';
 
 export const useWorkoutState = () => {
@@ -11,6 +11,7 @@ export const useWorkoutState = () => {
   const template = location.state?.template as WorkoutTemplate | undefined;
   const workout = location.state?.workout as Workout | undefined;
   const { loadWorkout, saveWorkout, clearWorkout } = useWorkoutPersistence();
+  const { getExerciseDefaults } = useExerciseHistory();
 
   const [exercises, setExercises] = useState<Exercise[]>([]);
   const [workoutName, setWorkoutName] = useState('');
@@ -120,7 +121,16 @@ export const useWorkoutState = () => {
       prev.map((ex) => {
         if (ex.id === exerciseId) {
           const exerciseType = getExerciseType(name);
-          return { ...ex, name, type: exerciseType };
+          const defaults = getExerciseDefaults(name);
+          
+          // Update existing sets with historical data
+          const updatedSets = ex.sets.map(set => ({
+            ...set,
+            weight: ['weight', 'weight_distance_time'].includes(exerciseType) ? defaults.weight : set.weight,
+            reps: exerciseType === 'distance' ? 1 : defaults.reps,
+          }));
+          
+          return { ...ex, name, type: exerciseType, sets: updatedSets };
         }
         return ex;
       })
@@ -131,15 +141,17 @@ export const useWorkoutState = () => {
     setExercises((prev) =>
       prev.map((ex) => {
         if (ex.id === exerciseId) {
-          const lastSet = ex.sets[ex.sets.length - 1] || { reps: 8, weight: 20, duration: 60, distance: 1000 };
+          const lastSet = ex.sets[ex.sets.length - 1];
           const exerciseType = ex.type || getExerciseType(ex.name);
+          const defaults = getExerciseDefaults(ex.name);
+          
           const newSet: WorkoutSet = {
             id: `set-${Date.now()}`,
-            reps: exerciseType === 'distance' ? 1 : lastSet.reps,
-            weight: ['weight', 'weight_distance_time'].includes(exerciseType) ? lastSet.weight : 0,
+            reps: exerciseType === 'distance' ? 1 : (lastSet?.reps || defaults.reps),
+            weight: ['weight', 'weight_distance_time'].includes(exerciseType) ? (lastSet?.weight || defaults.weight) : 0,
             completed: false,
-            duration: ['time', 'distance', 'weight_distance_time'].includes(exerciseType) ? (lastSet.duration || 60) : undefined,
-            distance: ['distance', 'weight_distance_time'].includes(exerciseType) ? (lastSet.distance || 1000) : undefined,
+            duration: ['time', 'distance', 'weight_distance_time'].includes(exerciseType) ? (lastSet?.duration || 60) : undefined,
+            distance: ['distance', 'weight_distance_time'].includes(exerciseType) ? (lastSet?.distance || 1000) : undefined,
           };
           return { ...ex, sets: [...ex.sets, newSet] };
         }
