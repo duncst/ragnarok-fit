@@ -1,77 +1,39 @@
-import { useState, useEffect, useCallback } from 'react';
-import { useLocation } from 'react-router-dom';
-import type { Exercise, WorkoutSet, WorkoutTemplate, Workout } from '@/types';
-import { useOneRepMax } from './useOneRepMax';
+
+import { useEffect } from 'react';
+import { useWorkoutInitialization } from './useWorkoutInitialization';
 import { useWorkoutPersistence } from './useWorkoutPersistence';
-import { useExerciseHistory } from './useExerciseHistory';
-import { getExerciseType } from '@/utils/exerciseTypes';
+import { useExerciseManagement } from './useExerciseManagement';
+import { useSetManagement } from './useSetManagement';
 
 export const useWorkoutState = () => {
-  const location = useLocation();
-  const template = location.state?.template as WorkoutTemplate | undefined;
-  const workout = location.state?.workout as Workout | undefined;
-  const { loadWorkout, saveWorkout, clearWorkout } = useWorkoutPersistence();
-  const { getExerciseDefaults } = useExerciseHistory();
+  const { saveWorkout, clearWorkout } = useWorkoutPersistence();
 
-  const [exercises, setExercises] = useState<Exercise[]>([]);
-  const [workoutName, setWorkoutName] = useState('');
-  const [selectedEquipment, setSelectedEquipment] = useState<string[]>(['Bodyweight']);
-  const [focusArea, setFocusArea] = useState('Full Body');
-  const [restDuration, setRestDuration] = useState(90);
-  const [isInitialized, setIsInitialized] = useState(false);
+  const {
+    exercises,
+    setExercises,
+    workoutName,
+    setWorkoutName,
+    selectedEquipment,
+    setSelectedEquipment,
+    focusArea,
+    setFocusArea,
+    restDuration,
+    setRestDuration,
+    isInitialized,
+  } = useWorkoutInitialization();
 
-  const { checkAndSave1RM } = useOneRepMax();
+  const {
+    addExercise,
+    removeExercise,
+    moveExercise,
+    updateExerciseName,
+  } = useExerciseManagement(exercises, setExercises);
 
-  // Initialize workout state from template, workout, or persisted data
-  useEffect(() => {
-    if (isInitialized) return;
-
-    if (template) {
-      setWorkoutName(template.name);
-      const exercisesFromTemplate: Exercise[] = template.exercises.map((templateEx, exIndex) => ({
-        id: `ex-${Date.now()}-${exIndex}`,
-        name: templateEx.name,
-        type: templateEx.type,
-        sets: Array.from({ length: templateEx.sets }, (_, setIndex) => ({
-          id: `set-${Date.now()}-${exIndex}-${setIndex}`,
-          reps: templateEx.suggestedReps || 8,
-          weight: 20,
-          completed: false,
-          duration: ['time', 'distance', 'weight_distance_time'].includes(templateEx.type || '') ? 60 : undefined,
-          distance: ['distance', 'weight_distance_time'].includes(templateEx.type || '') ? 1000 : undefined,
-        })),
-      }));
-      setExercises(exercisesFromTemplate);
-    } else if (workout) {
-      setWorkoutName(workout.name);
-      const exercisesFromWorkout: Exercise[] = workout.exercises.map((workoutEx, exIndex) => ({
-          id: `ex-${Date.now()}-${exIndex}`,
-          name: workoutEx.name,
-          type: workoutEx.type,
-          sets: workoutEx.sets.map((set, setIndex) => ({
-              id: `set-${Date.now()}-${exIndex}-${setIndex}`,
-              reps: set.reps,
-              weight: set.weight,
-              completed: false,
-              duration: set.duration,
-              distance: set.distance,
-          })),
-      }));
-      setExercises(exercisesFromWorkout);
-    } else {
-      // Try to load persisted workout
-      const persistedWorkout = loadWorkout();
-      if (persistedWorkout) {
-        setWorkoutName(persistedWorkout.workoutName);
-        setExercises(persistedWorkout.exercises);
-        setSelectedEquipment(persistedWorkout.selectedEquipment);
-        setFocusArea(persistedWorkout.focusArea);
-        setRestDuration(persistedWorkout.restDuration);
-      }
-    }
-    
-    setIsInitialized(true);
-  }, [template, workout, loadWorkout, isInitialized]);
+  const {
+    addSet,
+    updateSet,
+    handleToggleSet,
+  } = useSetManagement(exercises, setExercises);
 
   // Auto-save workout state when it changes
   useEffect(() => {
@@ -88,130 +50,6 @@ export const useWorkoutState = () => {
       });
     }
   }, [exercises, workoutName, selectedEquipment, focusArea, restDuration, isInitialized, saveWorkout]);
-
-  const addExercise = () => {
-    const newExercise: Exercise = {
-      id: `ex-${Date.now()}`,
-      name: '',
-      sets: [{ id: `set-${Date.now()}`, reps: 8, weight: 20, completed: false }],
-    };
-    setExercises((prev) => [...prev, newExercise]);
-  };
-
-  const removeExercise = (exerciseId: string) => {
-    setExercises((prev) => prev.filter((ex) => ex.id !== exerciseId));
-  };
-
-  const moveExercise = (exerciseId: string, direction: 'up' | 'down') => {
-    setExercises((prev) => {
-      const currentIndex = prev.findIndex(ex => ex.id === exerciseId);
-      if (currentIndex === -1) return prev;
-
-      const newIndex = direction === 'up' ? currentIndex - 1 : currentIndex + 1;
-      if (newIndex < 0 || newIndex >= prev.length) return prev;
-
-      const newExercises = [...prev];
-      [newExercises[currentIndex], newExercises[newIndex]] = [newExercises[newIndex], newExercises[currentIndex]];
-      return newExercises;
-    });
-  };
-
-  const updateExerciseName = (exerciseId: string, name: string) => {
-    setExercises((prev) =>
-      prev.map((ex) => {
-        if (ex.id === exerciseId) {
-          const exerciseType = getExerciseType(name);
-          const defaults = getExerciseDefaults(name);
-          
-          // Update existing sets with historical data
-          const updatedSets = ex.sets.map(set => ({
-            ...set,
-            weight: ['weight', 'weight_distance_time'].includes(exerciseType) ? defaults.weight : set.weight,
-            reps: exerciseType === 'distance' ? 1 : defaults.reps,
-          }));
-          
-          return { ...ex, name, type: exerciseType, sets: updatedSets };
-        }
-        return ex;
-      })
-    );
-  };
-
-  const addSet = (exerciseId: string) => {
-    setExercises((prev) =>
-      prev.map((ex) => {
-        if (ex.id === exerciseId) {
-          const lastSet = ex.sets[ex.sets.length - 1];
-          const exerciseType = ex.type || getExerciseType(ex.name);
-          const defaults = getExerciseDefaults(ex.name);
-          
-          const newSet: WorkoutSet = {
-            id: `set-${Date.now()}`,
-            reps: exerciseType === 'distance' ? 1 : (lastSet?.reps || defaults.reps),
-            weight: ['weight', 'weight_distance_time'].includes(exerciseType) ? (lastSet?.weight || defaults.weight) : 0,
-            completed: false,
-            duration: ['time', 'distance', 'weight_distance_time'].includes(exerciseType) ? (lastSet?.duration || 60) : undefined,
-            distance: ['distance', 'weight_distance_time'].includes(exerciseType) ? (lastSet?.distance || 1000) : undefined,
-          };
-          return { ...ex, sets: [...ex.sets, newSet] };
-        }
-        return ex;
-      })
-    );
-  };
-
-  const updateSet = (
-    exerciseId: string,
-    setId: string,
-    field: 'reps' | 'weight' | 'duration' | 'distance',
-    value: number
-  ) => {
-    setExercises((prev) =>
-      prev.map((ex) => {
-        if (ex.id === exerciseId) {
-          return {
-            ...ex,
-            sets: ex.sets.map((set) => {
-              if (set.id === setId) {
-                return { ...set, [field]: value };
-              }
-              return set;
-            }),
-          };
-        }
-        return ex;
-      })
-    );
-  };
-
-  const handleToggleSet = useCallback((
-    exerciseId: string,
-    setId: string,
-    onToggleCallback?: (isCompleted: boolean) => void
-  ) => {
-    setExercises((prev) =>
-      prev.map((ex) => {
-        if (ex.id === exerciseId) {
-          return {
-            ...ex,
-            sets: ex.sets.map((set) => {
-              if (set.id === setId) {
-                const isCompleted = !set.completed;
-                onToggleCallback?.(isCompleted);
-                const updatedSet = { ...set, completed: isCompleted };
-                if (updatedSet.completed) {
-                  checkAndSave1RM(ex, updatedSet);
-                }
-                return updatedSet;
-              }
-              return set;
-            }),
-          };
-        }
-        return ex;
-      })
-    );
-  }, [checkAndSave1RM]);
 
   const clearPersistedWorkout = () => {
     clearWorkout();
