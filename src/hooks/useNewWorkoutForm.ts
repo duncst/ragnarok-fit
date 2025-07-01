@@ -74,6 +74,7 @@ export const useNewWorkoutForm = () => {
     workoutName,
     setWorkoutName,
     exercises,
+    setExercises,
     addExercise,
     removeExercise,
     moveExercise,
