@@ -105,9 +105,9 @@ export const SimpleWorkoutExecution = ({
                   </Button>
                 </div>
               </CardHeader>
-              <CardContent className="space-y-3">
+              <CardContent className="space-y-2">
                 {/* Set Headers */}
-                <div className="grid grid-cols-4 gap-3 text-sm font-medium text-muted-foreground">
+                <div className="grid grid-cols-4 gap-2 text-sm font-medium text-muted-foreground">
                   <span>Set</span>
                   <span className="text-center">Previous</span>
                   <span className="text-center">kg</span>
@@ -116,7 +116,7 @@ export const SimpleWorkoutExecution = ({
                 
                 {/* Sets */}
                 {exercise.sets.map((set, setIndex) => (
-                  <div key={set.id} className="grid grid-cols-4 gap-3 items-center py-2">
+                  <div key={set.id} className="grid grid-cols-4 gap-2 items-center py-1">
                     <span className="font-medium text-center bg-muted rounded-full w-8 h-8 flex items-center justify-center">
                       {setIndex + 1}
                     </span>
