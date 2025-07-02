@@ -165,8 +165,11 @@ const NewWorkoutPage = () => {
           exercises={exercises}
           onAddExercise={handleAddExerciseByName}
           onRemoveExercise={removeExercise}
+          onMoveExercise={moveExercise}
+          onAddSet={addSet}
           onStartWorkout={handleStartWorkout}
           onCancel={handleCancelWorkout}
+          restDuration={restDuration}
         />
         
         {/* OR Separator */}
@@ -210,6 +213,8 @@ const NewWorkoutPage = () => {
           onFinishWorkout={handleFinishWorkout}
           onCancelWorkout={handleCancelWorkout}
           workoutTimer={formattedDuration}
+          restDuration={restDuration}
+          onRestDurationChange={setRestDuration}
         />
         
         <ValhallaScoreDialog

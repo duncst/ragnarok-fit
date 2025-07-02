@@ -4,7 +4,8 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Card, CardContent, CardHeader } from '@/components/ui/card';
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from '@/components/ui/dialog';
-import { RotateCcw, MoreHorizontal, Plus, Check } from 'lucide-react';
+import { RestTimerSettings } from './RestTimerSettings';
+import { RotateCcw, MoreHorizontal, Plus, Check, Settings } from 'lucide-react';
 import { SimpleExerciseSelector } from './SimpleExerciseSelector';
 import type { Exercise } from '@/types';
 
@@ -18,6 +19,8 @@ interface SimpleWorkoutExecutionProps {
   onFinishWorkout: () => void;
   onCancelWorkout: () => void;
   workoutTimer: string;
+  restDuration: number;
+  onRestDurationChange: (duration: number) => void;
 }
 
 export const SimpleWorkoutExecution = ({
@@ -30,8 +33,11 @@ export const SimpleWorkoutExecution = ({
   onFinishWorkout,
   onCancelWorkout,
   workoutTimer,
+  restDuration,
+  onRestDurationChange,
 }: SimpleWorkoutExecutionProps) => {
   const [showFinishDialog, setShowFinishDialog] = useState(false);
+  const [showRestSettings, setShowRestSettings] = useState(false);
 
   const handleFinishClick = () => {
     const hasIncompleteSets = exercises.some(ex => ex.sets.some(set => !set.completed && (set.weight > 0 || set.reps > 0)));
@@ -54,6 +60,12 @@ export const SimpleWorkoutExecution = ({
     onFinishWorkout();
   };
 
+  const formatRestTime = (seconds: number) => {
+    const minutes = Math.floor(seconds / 60);
+    const remainingSeconds = seconds % 60;
+    return `${minutes}:${remainingSeconds.toString().padStart(2, '0')}`;
+  };
+
   return (
     <div className="h-screen flex flex-col bg-background">
       {/* Header */}
@@ -65,12 +77,17 @@ export const SimpleWorkoutExecution = ({
           <h1 className="text-lg font-semibold">{workoutName}</h1>
           <p className="text-sm text-muted-foreground">{workoutTimer}</p>
         </div>
-        <Button 
-          onClick={handleFinishClick}
-          className="bg-green-500 hover:bg-green-600"
-        >
-          Finish
-        </Button>
+        <div className="flex items-center gap-2">
+          <Button variant="ghost" size="icon" onClick={() => setShowRestSettings(true)}>
+            <Settings className="h-5 w-5" />
+          </Button>
+          <Button 
+            onClick={handleFinishClick}
+            className="bg-green-500 hover:bg-green-600"
+          >
+            Finish
+          </Button>
+        </div>
       </div>
 
       {/* Exercise List */}
@@ -145,7 +162,7 @@ export const SimpleWorkoutExecution = ({
                   className="w-full mt-3"
                 >
                   <Plus className="h-4 w-4 mr-2" />
-                  Add Set (2:00)
+                  Add Set ({formatRestTime(restDuration)})
                 </Button>
               </CardContent>
             </Card>
@@ -203,6 +220,22 @@ export const SimpleWorkoutExecution = ({
               Cancel
             </Button>
           </div>
+        </DialogContent>
+      </Dialog>
+
+      {/* Rest Timer Settings Dialog */}
+      <Dialog open={showRestSettings} onOpenChange={setShowRestSettings}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>Rest Timer Settings</DialogTitle>
+          </DialogHeader>
+          <RestTimerSettings
+            restDuration={restDuration}
+            onRestDurationChange={onRestDurationChange}
+          />
+          <Button onClick={() => setShowRestSettings(false)} className="mt-4">
+            Done
+          </Button>
         </DialogContent>
       </Dialog>
     </div>

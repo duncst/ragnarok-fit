@@ -3,7 +3,7 @@ import React from 'react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Card, CardContent } from '@/components/ui/card';
-import { X, Plus } from 'lucide-react';
+import { X, Plus, ChevronUp, ChevronDown } from 'lucide-react';
 import { SimpleExerciseSelector } from './SimpleExerciseSelector';
 import type { Exercise } from '@/types';
 
@@ -13,8 +13,11 @@ interface SimpleWorkoutCreationProps {
   exercises: Exercise[];
   onAddExercise: (exerciseName: string) => void;
   onRemoveExercise: (exerciseId: string) => void;
+  onMoveExercise: (exerciseId: string, direction: 'up' | 'down') => void;
+  onAddSet: (exerciseId: string) => void;
   onStartWorkout: () => void;
   onCancel: () => void;
+  restDuration: number;
 }
 
 export const SimpleWorkoutCreation = ({
@@ -23,10 +26,19 @@ export const SimpleWorkoutCreation = ({
   exercises,
   onAddExercise,
   onRemoveExercise,
+  onMoveExercise,
+  onAddSet,
   onStartWorkout,
   onCancel,
+  restDuration,
 }: SimpleWorkoutCreationProps) => {
   const canStartWorkout = exercises.length > 0;
+
+  const formatRestTime = (seconds: number) => {
+    const minutes = Math.floor(seconds / 60);
+    const remainingSeconds = seconds % 60;
+    return `${minutes}:${remainingSeconds.toString().padStart(2, '0')}`;
+  };
 
   return (
     <div className="h-screen flex flex-col bg-background">
@@ -61,8 +73,8 @@ export const SimpleWorkoutCreation = ({
           {exercises.map((exercise, index) => (
             <Card key={exercise.id} className="border-l-4 border-l-blue-500">
               <CardContent className="p-4">
-                <div className="flex items-center justify-between">
-                  <div>
+                <div className="flex items-center justify-between mb-3">
+                  <div className="flex-1">
                     <h3 className="font-medium text-blue-600">
                       {exercise.name || `Exercise ${index + 1}`}
                     </h3>
@@ -70,14 +82,46 @@ export const SimpleWorkoutCreation = ({
                       {exercise.sets.length} set{exercise.sets.length !== 1 ? 's' : ''}
                     </p>
                   </div>
-                  <Button
-                    variant="ghost"
-                    size="icon"
-                    onClick={() => onRemoveExercise(exercise.id)}
-                  >
-                    <X className="h-4 w-4" />
-                  </Button>
+                  <div className="flex items-center gap-1">
+                    <Button
+                      variant="ghost"
+                      size="icon"
+                      onClick={() => onMoveExercise(exercise.id, 'up')}
+                      disabled={index === 0}
+                      className="h-8 w-8"
+                    >
+                      <ChevronUp className="h-4 w-4" />
+                    </Button>
+                    <Button
+                      variant="ghost"
+                      size="icon"
+                      onClick={() => onMoveExercise(exercise.id, 'down')}
+                      disabled={index === exercises.length - 1}
+                      className="h-8 w-8"
+                    >
+                      <ChevronDown className="h-4 w-4" />
+                    </Button>
+                    <Button
+                      variant="ghost"
+                      size="icon"
+                      onClick={() => onRemoveExercise(exercise.id)}
+                      className="h-8 w-8"
+                    >
+                      <X className="h-4 w-4" />
+                    </Button>
+                  </div>
                 </div>
+                
+                {/* Add Set Button */}
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={() => onAddSet(exercise.id)}
+                  className="w-full"
+                >
+                  <Plus className="h-4 w-4 mr-2" />
+                  Add Set ({formatRestTime(restDuration)})
+                </Button>
               </CardContent>
             </Card>
           ))}
