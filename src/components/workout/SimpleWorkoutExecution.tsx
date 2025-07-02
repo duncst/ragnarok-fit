@@ -92,29 +92,31 @@ export const SimpleWorkoutExecution = ({
 
       {/* Exercise List */}
       <div className="flex-1 overflow-y-auto">
-        <div className="p-4 space-y-6">
+        <div className="p-4 space-y-4">
           {exercises.map((exercise, exerciseIndex) => (
-            <Card key={exercise.id}>
+            <Card key={exercise.id} className="border">
               <CardHeader className="pb-3">
                 <div className="flex items-center justify-between">
-                  <h3 className="text-lg font-medium text-blue-600">{exercise.name}</h3>
+                  <h3 className="text-lg font-medium text-blue-600">
+                    {exercise.name || `Exercise ${exerciseIndex + 1}`}
+                  </h3>
                   <Button variant="ghost" size="icon">
                     <MoreHorizontal className="h-4 w-4" />
                   </Button>
                 </div>
               </CardHeader>
-              <CardContent className="space-y-2">
+              <CardContent className="space-y-3">
                 {/* Set Headers */}
-                <div className="grid grid-cols-4 gap-2 text-sm font-medium text-muted-foreground mb-2">
+                <div className="grid grid-cols-4 gap-3 text-sm font-medium text-muted-foreground">
                   <span>Set</span>
                   <span className="text-center">Previous</span>
-                  <span className="text-center">+kg</span>
+                  <span className="text-center">kg</span>
                   <span className="text-center">Reps</span>
                 </div>
                 
                 {/* Sets */}
                 {exercise.sets.map((set, setIndex) => (
-                  <div key={set.id} className="grid grid-cols-4 gap-2 items-center py-2">
+                  <div key={set.id} className="grid grid-cols-4 gap-3 items-center py-2">
                     <span className="font-medium text-center bg-muted rounded-full w-8 h-8 flex items-center justify-center">
                       {setIndex + 1}
                     </span>

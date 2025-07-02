@@ -27,12 +27,14 @@ const NewWorkoutPage = () => {
     formattedDuration,
     totalDuration,
     toggleWorkout,
+    startWorkout,
   } = useWorkoutTimer();
   
   const {
     workoutName,
     setWorkoutName,
     exercises,
+    setExercises,
     addExercise,
     removeExercise,
     moveExercise,
@@ -112,6 +114,7 @@ const NewWorkoutPage = () => {
 
   const handleStartWorkout = () => {
     setIsInWorkoutFlow(true);
+    startWorkout(); // Start the timer when workout begins
     if (isCookMode) {
       handleEnterCookMode();
     }
@@ -130,14 +133,24 @@ const NewWorkoutPage = () => {
   };
 
   const handleAddExerciseByName = (exerciseName: string) => {
-    addExercise();
-    // Update the last added exercise with the selected name
-    setTimeout(() => {
-      const lastExercise = exercises[exercises.length];
-      if (lastExercise?.id) {
-        updateExerciseName(lastExercise.id, exerciseName);
-      }
-    }, 0);
+    // Create a new exercise with the selected name
+    const newExerciseId = Date.now().toString();
+    const newExercise = {
+      id: newExerciseId,
+      name: exerciseName,
+      sets: [{
+        id: Date.now().toString() + '_set1',
+        reps: 0,
+        weight: 0,
+        completed: false,
+        duration: 0,
+        distance: 0,
+      }],
+    };
+    
+    // Add the exercise directly with the name
+    const updatedExercises = [...exercises, newExercise];
+    setExercises(updatedExercises);
   };
 
   // If we have a Trial of Embers workout, show the Hero Call workout mode
