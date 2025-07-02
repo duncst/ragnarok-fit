@@ -169,6 +169,13 @@ const NewWorkoutPage = () => {
           onCancel={handleCancelWorkout}
         />
         
+        {/* OR Separator */}
+        <div className="flex items-center justify-center py-4">
+          <div className="flex-1 border-t border-gray-300"></div>
+          <div className="px-4 text-sm text-gray-500 font-medium">OR</div>
+          <div className="flex-1 border-t border-gray-300"></div>
+        </div>
+
         {/* AI Workout Generation Section */}
         <div className="px-4">
           <AIWorkoutSection
