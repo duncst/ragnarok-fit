@@ -1,3 +1,4 @@
+
 import React, { useCallback, useState, useEffect } from 'react';
 import { useNewWorkoutForm } from '@/hooks/useNewWorkoutForm';
 import { useWorkoutTimer } from '@/hooks/useWorkoutTimer';
@@ -9,6 +10,8 @@ import { ValhallaScoreDialog } from '@/components/workout/ValhallaScoreDialog';
 import { RestTimerSettings } from '@/components/workout/RestTimerSettings';
 import { RestTimerToast } from '@/components/workout/RestTimerToast';
 import { HeroCallWorkoutMode } from '@/components/hero-call/HeroCallWorkoutMode';
+import { SimpleWorkoutCreation } from '@/components/workout/SimpleWorkoutCreation';
+import { SimpleWorkoutExecution } from '@/components/workout/SimpleWorkoutExecution';
 import { toast as sonnerToast } from 'sonner';
 
 const NewWorkoutPage = () => {
@@ -16,6 +19,7 @@ const NewWorkoutPage = () => {
   const [isInWorkoutFlow, setIsInWorkoutFlow] = useState(false);
   const [trialWorkout, setTrialWorkout] = useState(null);
   const [selectedLevel, setSelectedLevel] = useState<'easy' | 'medium' | 'hard'>('medium');
+  const [workoutMode, setWorkoutMode] = useState<'simple' | 'advanced'>('simple');
   
   const {
     isActive: isWorkoutActive,
@@ -124,6 +128,17 @@ const NewWorkoutPage = () => {
     cancelWorkout();
   };
 
+  const handleAddExerciseByName = (exerciseName: string) => {
+    addExercise();
+    // Update the last added exercise with the selected name
+    setTimeout(() => {
+      const lastExercise = exercises[exercises.length];
+      if (lastExercise?.id) {
+        updateExerciseName(lastExercise.id, exerciseName);
+      }
+    }, 0);
+  };
+
   // If we have a Trial of Embers workout, show the Hero Call workout mode
   if (trialWorkout && isInWorkoutFlow) {
     return (
@@ -136,6 +151,47 @@ const NewWorkoutPage = () => {
         formattedDuration={formattedDuration}
         onToggleWorkout={toggleWorkout}
       />
+    );
+  }
+
+  // Simple workout creation mode (when not in workout flow)
+  if (!isInWorkoutFlow && workoutMode === 'simple') {
+    return (
+      <SimpleWorkoutCreation
+        workoutName={workoutName}
+        onWorkoutNameChange={setWorkoutName}
+        exercises={exercises}
+        onAddExercise={handleAddExerciseByName}
+        onRemoveExercise={removeExercise}
+        onStartWorkout={handleStartWorkout}
+        onCancel={handleCancelWorkout}
+      />
+    );
+  }
+
+  // Simple workout execution mode (when in workout flow)
+  if (isInWorkoutFlow && workoutMode === 'simple' && !isCookMode) {
+    return (
+      <>
+        <SimpleWorkoutExecution
+          workoutName={workoutName}
+          exercises={exercises}
+          onAddExercise={handleAddExerciseByName}
+          onAddSet={addSet}
+          onUpdateSet={updateSet}
+          onToggleSet={handleToggleSet}
+          onFinishWorkout={handleFinishWorkout}
+          onCancelWorkout={handleCancelWorkout}
+          workoutTimer={formattedDuration}
+        />
+        
+        <ValhallaScoreDialog
+          isOpen={showValhallaScoreDialog}
+          onClose={onCloseValhallaDialog}
+          workoutName={currentValhallaWorkout}
+          workoutDuration={workoutDuration}
+        />
+      </>
     );
   }
 
