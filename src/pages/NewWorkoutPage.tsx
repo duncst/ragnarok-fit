@@ -1,4 +1,3 @@
-
 import React, { useCallback, useState, useEffect } from 'react';
 import { useNewWorkoutForm } from '@/hooks/useNewWorkoutForm';
 import { useWorkoutTimer } from '@/hooks/useWorkoutTimer';
@@ -12,6 +11,8 @@ import { RestTimerToast } from '@/components/workout/RestTimerToast';
 import { HeroCallWorkoutMode } from '@/components/hero-call/HeroCallWorkoutMode';
 import { SimpleWorkoutCreation } from '@/components/workout/SimpleWorkoutCreation';
 import { SimpleWorkoutExecution } from '@/components/workout/SimpleWorkoutExecution';
+import { AIWorkoutSection } from '@/components/workout/AIWorkoutSection';
+import { ValhallaSection } from '@/components/workout/ValhallaSection';
 import { toast as sonnerToast } from 'sonner';
 
 const NewWorkoutPage = () => {
@@ -157,15 +158,34 @@ const NewWorkoutPage = () => {
   // Simple workout creation mode (when not in workout flow)
   if (!isInWorkoutFlow && workoutMode === 'simple') {
     return (
-      <SimpleWorkoutCreation
-        workoutName={workoutName}
-        onWorkoutNameChange={setWorkoutName}
-        exercises={exercises}
-        onAddExercise={handleAddExerciseByName}
-        onRemoveExercise={removeExercise}
-        onStartWorkout={handleStartWorkout}
-        onCancel={handleCancelWorkout}
-      />
+      <div className="space-y-6 pb-16">
+        <SimpleWorkoutCreation
+          workoutName={workoutName}
+          onWorkoutNameChange={setWorkoutName}
+          exercises={exercises}
+          onAddExercise={handleAddExerciseByName}
+          onRemoveExercise={removeExercise}
+          onStartWorkout={handleStartWorkout}
+          onCancel={handleCancelWorkout}
+        />
+        
+        {/* AI Workout Generation Section */}
+        <div className="px-4">
+          <AIWorkoutSection
+            selectedEquipment={selectedEquipment}
+            onEquipmentChange={setSelectedEquipment}
+            focusArea={focusArea}
+            onFocusChange={setFocusArea}
+            onGenerateWorkout={handleGenerateWorkout}
+            isGenerating={generateWorkoutMutation.isPending}
+          />
+        </div>
+
+        {/* Valhalla Section */}
+        <div className="px-4">
+          <ValhallaSection />
+        </div>
+      </div>
     );
   }
 
@@ -296,13 +316,6 @@ const NewWorkoutPage = () => {
           workoutName={workoutName}
           onNameChange={setWorkoutName}
           onAddExercise={addExercise}
-          selectedEquipment={selectedEquipment}
-          onEquipmentChange={setSelectedEquipment}
-          focusArea={focusArea}
-          onFocusChange={setFocusArea}
-          onGenerateWorkout={handleGenerateWorkout}
-          isGenerating={generateWorkoutMutation.isPending}
-          onStartValhalla={handleStartValhalla}
           exercises={exercises}
           onRemoveExercise={removeExercise}
           onUpdateExerciseName={updateExerciseName}

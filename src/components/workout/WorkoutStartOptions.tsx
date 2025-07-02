@@ -1,29 +1,20 @@
+
 import React from 'react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Toggle } from '@/components/ui/toggle';
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion';
-import { EquipmentSelector } from './EquipmentSelector';
-import { FocusAreaSelector } from './FocusAreaSelector';
 import { RestTimerSettings } from './RestTimerSettings';
 import { ExerciseCard } from './ExerciseCard';
 import { ImageIcon } from '@/components/ImageIcon';
-import { ValhallaSection } from './ValhallaSection';
 import { TemplateSelector } from './TemplateSelector';
-import { Loader2, Sparkles, Plus, Play, Trash2 } from 'lucide-react';
+import { Plus, Play, Trash2 } from 'lucide-react';
 import type { Exercise, WorkoutTemplate } from '@/types';
 
 interface WorkoutStartOptionsProps {
   workoutName: string;
   onNameChange: (name: string) => void;
   onAddExercise: () => void;
-  selectedEquipment: string[];
-  onEquipmentChange: (equipment: string[]) => void;
-  focusArea: string;
-  onFocusChange: (focus: string) => void;
-  onGenerateWorkout: () => void;
-  isGenerating: boolean;
-  onStartValhalla: (workoutName: string) => void;
   exercises: Exercise[];
   onRemoveExercise: (exerciseId: string) => void;
   onUpdateExerciseName: (exerciseId: string, name: string) => void;
@@ -44,13 +35,6 @@ export const WorkoutStartOptions = ({
   workoutName,
   onNameChange,
   onAddExercise,
-  selectedEquipment,
-  onEquipmentChange,
-  focusArea,
-  onFocusChange,
-  onGenerateWorkout,
-  isGenerating,
-  onStartValhalla,
   exercises,
   onRemoveExercise,
   onUpdateExerciseName,
@@ -178,42 +162,7 @@ export const WorkoutStartOptions = ({
             <TemplateSelector onStartWorkout={handleStartFromTemplate} />
           </AccordionContent>
         </AccordionItem>
-
-        <AccordionItem value="ai-generate" className="border rounded-lg">
-          <AccordionTrigger className="px-4 py-3 hover:no-underline">
-            <div className="flex items-center gap-3">
-              <Sparkles className="h-5 w-5" />
-              <span className="font-medium">Generate Workout with AI</span>
-            </div>
-          </AccordionTrigger>
-          <AccordionContent className="px-4 pb-4">
-            <div className="space-y-4">
-              <FocusAreaSelector
-                selectedFocus={focusArea}
-                onFocusChange={onFocusChange}
-              />
-              <EquipmentSelector
-                selectedEquipment={selectedEquipment}
-                onEquipmentChange={onEquipmentChange}
-              />
-              <Button
-                onClick={onGenerateWorkout}
-                disabled={isGenerating}
-                className="w-full"
-              >
-                {isGenerating ? (
-                  <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                ) : (
-                  <Sparkles className="mr-2 h-4 w-4" />
-                )}
-                Generate Workout
-              </Button>
-            </div>
-          </AccordionContent>
-        </AccordionItem>
       </Accordion>
-
-      <ValhallaSection />
     </div>
   );
 };
