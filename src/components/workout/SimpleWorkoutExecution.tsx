@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -107,16 +106,17 @@ export const SimpleWorkoutExecution = ({
               </CardHeader>
               <CardContent className="space-y-2">
                 {/* Set Headers */}
-                <div className="grid grid-cols-4 gap-2 text-sm font-medium text-muted-foreground">
+                <div className="grid grid-cols-[60px_80px_1fr_1fr_60px] gap-1 text-sm font-medium text-muted-foreground">
                   <span>Set</span>
                   <span className="text-center">Previous</span>
                   <span className="text-center">kg</span>
                   <span className="text-center">Reps</span>
+                  <span></span>
                 </div>
                 
                 {/* Sets */}
                 {exercise.sets.map((set, setIndex) => (
-                  <div key={set.id} className="grid grid-cols-4 gap-2 items-center py-1">
+                  <div key={set.id} className="grid grid-cols-[60px_80px_1fr_1fr_60px] gap-1 items-center py-1">
                     <span className="font-medium text-center bg-muted rounded-full w-8 h-8 flex items-center justify-center">
                       {setIndex + 1}
                     </span>
@@ -131,29 +131,27 @@ export const SimpleWorkoutExecution = ({
                       className="text-center h-10"
                       placeholder="0"
                     />
-                    <div className="flex items-center gap-2">
-                      <Input
-                        type="number"
-                        value={set.reps === 0 ? '' : set.reps}
-                        onChange={(e) => onUpdateSet(exercise.id, set.id, 'reps', parseInt(e.target.value) || 0)}
-                        className="text-center h-10"
-                        placeholder="0"
-                      />
-                      <Button
-                        variant="ghost"
-                        size="icon"
-                        onClick={() => onToggleSet(exercise.id, set.id)}
-                        className="h-10 w-10"
-                      >
-                        {set.completed ? (
-                          <div className="h-6 w-6 rounded-full bg-green-500 flex items-center justify-center">
-                            <Check className="h-4 w-4 text-white" />
-                          </div>
-                        ) : (
-                          <div className="h-6 w-6 rounded-full border-2 border-gray-300" />
-                        )}
-                      </Button>
-                    </div>
+                    <Input
+                      type="number"
+                      value={set.reps === 0 ? '' : set.reps}
+                      onChange={(e) => onUpdateSet(exercise.id, set.id, 'reps', parseInt(e.target.value) || 0)}
+                      className="text-center h-10"
+                      placeholder="0"
+                    />
+                    <Button
+                      variant="ghost"
+                      size="icon"
+                      onClick={() => onToggleSet(exercise.id, set.id)}
+                      className="h-10 w-10"
+                    >
+                      {set.completed ? (
+                        <div className="h-6 w-6 rounded-full bg-green-500 flex items-center justify-center">
+                          <Check className="h-4 w-4 text-white" />
+                        </div>
+                      ) : (
+                        <div className="h-6 w-6 rounded-full border-2 border-gray-300" />
+                      )}
+                    </Button>
                   </div>
                 ))}
                 
