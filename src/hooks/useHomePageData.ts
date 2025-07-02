@@ -1,10 +1,9 @@
-
 import { useQuery } from '@tanstack/react-query';
 import { useAuth } from '@/contexts/AuthContext';
 import { supabase } from '@/integrations/supabase/client';
 import type { Workout, Run, PersonalRecord } from '@/types';
 import { Tables } from '@/integrations/supabase/types';
-import { subDays, format, isSameWeek, startOfDay, isWithinInterval } from 'date-fns';
+import { subDays, format, isSameWeek, startOfDay, isWithinInterval, isSameDay } from 'date-fns';
 import { isHeroCallWorkout } from '@/lib/workoutUtils';
 
 export const useHomePageData = () => {
@@ -90,8 +89,7 @@ export const useHomePageData = () => {
   });
 
   workoutHistory?.filter(w => isWithinInterval(w.startTime, last7DaysInterval)).forEach(workout => {
-    const workoutDay = startOfDay(workout.startTime);
-    const chartEntry = strengthChartData.find(d => d.date.getTime() === workoutDay.getTime());
+    const chartEntry = strengthChartData.find(d => isSameDay(d.date, workout.startTime));
     
     if (chartEntry) {
       // For Hero's Call workouts, add a nominal volume to show activity on the chart
@@ -119,8 +117,7 @@ export const useHomePageData = () => {
   });
   
   runHistory?.filter(r => isWithinInterval(r.date, last7DaysInterval)).forEach(run => {
-    const runDay = startOfDay(run.date);
-    const chartEntry = runChartData.find(d => d.date.getTime() === runDay.getTime());
+    const chartEntry = runChartData.find(d => isSameDay(d.date, run.date));
     if (chartEntry) {
       chartEntry.distance += run.distance;
     }
