@@ -7,8 +7,8 @@ export const useHeroCallOnboarding = () => {
   const [showHeroCallOnboarding, setShowHeroCallOnboarding] = useState(false);
 
   useEffect(() => {
-    const onboardingDismissed = localStorage.getItem(HERO_CALL_ONBOARDING_KEY);
-    setShowHeroCallOnboarding(onboardingDismissed !== 'true');
+    // Always set to false to disable the hero call onboarding modal
+    setShowHeroCallOnboarding(false);
   }, []);
 
   const dismissHeroCallOnboarding = () => {

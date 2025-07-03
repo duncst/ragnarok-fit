@@ -11,12 +11,11 @@ export const useForgeOnboarding = () => {
   const [primaryPath, setPrimaryPath] = useState<number | null>(null);
 
   useEffect(() => {
-    const heroCallDismissed = localStorage.getItem(HERO_CALL_ONBOARDING_KEY);
-    const capabilityOnboardingDismissed = localStorage.getItem(CAPABILITY_ONBOARDING_KEY);
     const savedPrimaryPath = localStorage.getItem(PRIMARY_PATH_KEY);
     
-    setShowHeroCallOnboarding(heroCallDismissed !== 'true');
-    setShowCapabilityOnboarding(capabilityOnboardingDismissed !== 'true');
+    // Always set onboarding modals to false to disable them
+    setShowHeroCallOnboarding(false);
+    setShowCapabilityOnboarding(false);
     setPrimaryPath(savedPrimaryPath ? parseInt(savedPrimaryPath) : null);
   }, []);
 

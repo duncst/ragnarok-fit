@@ -7,8 +7,8 @@ export const useOnboarding = () => {
   const [hasCompletedOnboarding, setHasCompletedOnboarding] = useState<boolean | null>(null);
 
   useEffect(() => {
-    const completed = localStorage.getItem(ONBOARDING_COMPLETED_KEY);
-    setHasCompletedOnboarding(completed === 'true');
+    // Always set onboarding as completed to disable the modal
+    setHasCompletedOnboarding(true);
   }, []);
 
   const completeOnboarding = () => {
