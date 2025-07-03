@@ -1,4 +1,3 @@
-
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { useAuth } from '@/contexts/AuthContext';
 import { supabase } from '@/integrations/supabase/client';
@@ -15,6 +14,7 @@ interface HeroCallStats {
   weeklyCount: number;
   completedToday: boolean;
   lastCompleted: string | null;
+  completedDays: string[]; // Array of completed day names this week
 }
 
 export const useHeroCallData = () => {
@@ -79,10 +79,10 @@ export const useHeroCallData = () => {
         }
       }
 
-      // Calculate weekly count (Monday to Sunday)
+      // Calculate weekly count and completed days (Monday to Sunday)
       const startOfWeek = new Date(today);
       const day = today.getDay();
-      const diff = today.getDate() - day + (day === 0 ? -6 : 1);
+      const diff = today.getDate() - day + (day === 0 ? -6 : 1); // Monday start
       startOfWeek.setDate(diff);
       startOfWeek.setHours(0, 0, 0, 0);
       
@@ -94,26 +94,36 @@ export const useHeroCallData = () => {
         return completionDate >= startOfWeek && completionDate < endOfWeek;
       });
 
-      const uniqueDaysThisWeek = new Set(
+      // Get unique days completed this week
+      const completedDaysSet = new Set(
         weeklyCompletions.map(date => {
           const d = new Date(date);
           d.setHours(0, 0, 0, 0);
           return d.toDateString();
         })
-      ).size;
+      );
+
+      // Convert completed days to day names
+      const dayNames = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+      const completedDayNames: string[] = [];
+      
+      completedDaysSet.forEach(dateString => {
+        const date = new Date(dateString);
+        const dayName = dayNames[date.getDay()];
+        completedDayNames.push(dayName);
+      });
+
+      const uniqueDaysThisWeek = completedDaysSet.size;
 
       // Check if completed today
       const todayString = today.toDateString();
-      const completedToday = allCompletions.some(date => {
-        const d = new Date(date);
-        d.setHours(0, 0, 0, 0);
-        return d.toDateString() === todayString;
-      });
+      const completedToday = Array.from(completedDaysSet).includes(todayString);
 
       return {
         currentStreak,
         weeklyCount: uniqueDaysThisWeek,
         completedToday,
+        completedDays: completedDayNames,
         lastCompleted: allCompletions.length > 0 ? allCompletions[0].toISOString() : null
       };
     },
@@ -195,6 +205,7 @@ export const useHeroCallData = () => {
       currentStreak: 0,
       weeklyCount: 0,
       completedToday: false,
+      completedDays: [],
       lastCompleted: null
     },
     isLoading,

@@ -4,7 +4,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Progress } from '@/components/ui/progress';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
-import { Shield, Sword, Mountain, Zap, Target, Globe, Crown, Lock, Flame, Circle, CheckCircle } from 'lucide-react';
+import { Shield, Sword, Mountain, Zap, Target, Globe, Crown, Lock, Flame, Circle, CheckCircle, CalendarCheck } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import ForgeWorkoutHistory from '@/components/forge/ForgeWorkoutHistory';
 import CapabilityShowcase from '@/components/forge/CapabilityShowcase';
@@ -43,7 +43,12 @@ const ForgePage = () => {
       dayDate.setDate(startOfWeek.getDate() + index);
       const isToday = dayDate.toDateString() === today.toDateString();
       const isPast = dayDate < today;
-      const isCompleted = index < stats.weeklyCount; // Simplified - assumes consecutive days
+      
+      // Convert day name to check against completed days
+      const dayNames = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+      const dayIndex = index === 6 ? 0 : index + 1; // Adjust for our Monday-start vs Sunday-start difference
+      const completedDayName = dayNames[dayIndex];
+      const isCompleted = stats.completedDays?.includes(completedDayName) || false;
       
       return {
         name: dayName,
@@ -94,13 +99,15 @@ const ForgePage = () => {
                   <div key={day.name} className="flex flex-col items-center gap-1">
                     <div className="text-xs text-muted-foreground">{day.name}</div>
                     {day.isCompleted ? (
-                      <CheckCircle className="h-6 w-6 text-green-500" />
+                      <div className="h-6 w-6 rounded-full bg-green-500 flex items-center justify-center">
+                        <CalendarCheck className="h-3 w-3 text-white" />
+                      </div>
                     ) : day.isToday ? (
-                      <Circle className="h-6 w-6 text-orange-500" />
+                      <div className="h-6 w-6 rounded-full border-2 border-orange-500 bg-orange-500/20" />
                     ) : day.isPast ? (
-                      <Circle className="h-6 w-6 text-muted-foreground/50" />
+                      <div className="h-6 w-6 rounded-full border-2 border-muted-foreground/50" />
                     ) : (
-                      <Circle className="h-6 w-6 text-muted-foreground/30" />
+                      <div className="h-6 w-6 rounded-full border-2 border-muted-foreground/30" />
                     )}
                   </div>
                 ))}
@@ -149,7 +156,6 @@ const ForgePage = () => {
         </CardContent>
       </Card>
 
-      {/* Workout History */}
       <Card className="bg-gradient-to-r from-primary/10 to-primary/20 border-primary/30">
         <CardHeader>
           <CardTitle className="flex items-center gap-2 text-foreground">
@@ -162,7 +168,6 @@ const ForgePage = () => {
         </CardContent>
       </Card>
 
-      {/* Halls of Valhalla - Coming Soon */}
       <Card className="bg-gradient-to-r from-primary/10 to-primary/20 border-primary/30">
         <CardContent className="p-6 text-center">
           <div className="space-y-4">
@@ -181,7 +186,6 @@ const ForgePage = () => {
         </CardContent>
       </Card>
 
-      {/* Combined Capability Onboarding Dialog */}
       <CapabilityOnboarding
         isOpen={showCapabilityOnboarding}
         onClose={dismissCapabilityOnboarding}

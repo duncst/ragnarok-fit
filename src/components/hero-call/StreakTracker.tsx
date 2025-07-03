@@ -10,6 +10,7 @@ interface StreakTrackerProps {
     currentStreak: number;
     weeklyCount: number;
     lastCompleted: string | null;
+    completedDays?: string[]; // Array of completed day names
   };
   completedToday: boolean;
   onMarkComplete?: () => void;
@@ -24,6 +25,40 @@ export const StreakTracker = ({
 }: StreakTrackerProps) => {
   const progressPercentage = Math.min((streakData.weeklyCount / 5) * 100, 100);
 
+  // Generate array for 7 days of the week (Monday to Sunday)
+  const weekDays = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
+  
+  // Get current week completion status
+  const getWeeklyCompletionStatus = () => {
+    const today = new Date();
+    const startOfWeek = new Date(today);
+    const day = today.getDay();
+    const diff = today.getDate() - day + (day === 0 ? -6 : 1); // Monday start
+    startOfWeek.setDate(diff);
+    startOfWeek.setHours(0, 0, 0, 0);
+    
+    return weekDays.map((dayName, index) => {
+      const dayDate = new Date(startOfWeek);
+      dayDate.setDate(startOfWeek.getDate() + index);
+      const isToday = dayDate.toDateString() === today.toDateString();
+      const isPast = dayDate < today;
+      
+      // Convert day name to check against completed days
+      const dayNames = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+      const dayIndex = index === 6 ? 0 : index + 1; // Adjust for our Monday-start vs Sunday-start difference
+      const completedDayName = dayNames[dayIndex];
+      const isCompleted = streakData.completedDays?.includes(completedDayName) || false;
+      
+      return {
+        name: dayName,
+        isToday,
+        isPast,
+        isCompleted,
+        isFuture: dayDate > today
+      };
+    });
+  };
+
   if (!showFullDisplay) {
     return (
       <div className="flex items-center gap-2">
@@ -34,6 +69,8 @@ export const StreakTracker = ({
       </div>
     );
   }
+
+  const weeklyStatus = getWeeklyCompletionStatus();
 
   return (
     <Collapsible className="w-full">
@@ -65,6 +102,26 @@ export const StreakTracker = ({
               className="bg-primary h-2 rounded-full transition-all duration-300" 
               style={{ width: `${progressPercentage}%` }}
             />
+          </div>
+
+          {/* Weekly completion circles */}
+          <div className="flex items-center justify-center gap-3">
+            {weeklyStatus.map((day) => (
+              <div key={day.name} className="flex flex-col items-center gap-1">
+                <div className="text-xs text-muted-foreground">{day.name}</div>
+                {day.isCompleted ? (
+                  <div className="h-6 w-6 rounded-full bg-green-500 flex items-center justify-center">
+                    <CalendarCheck className="h-3 w-3 text-white" />
+                  </div>
+                ) : day.isToday ? (
+                  <div className="h-6 w-6 rounded-full border-2 border-primary bg-primary/20" />
+                ) : day.isPast ? (
+                  <div className="h-6 w-6 rounded-full border-2 border-muted-foreground/50" />
+                ) : (
+                  <div className="h-6 w-6 rounded-full border-2 border-muted-foreground/30" />
+                )}
+              </div>
+            ))}
           </div>
 
           {streakData.currentStreak > 0 && (
