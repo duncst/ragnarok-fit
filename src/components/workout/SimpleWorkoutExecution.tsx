@@ -5,7 +5,7 @@ import { Input } from '@/components/ui/input';
 import { Card, CardContent, CardHeader } from '@/components/ui/card';
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { RestTimerSettings } from './RestTimerSettings';
-import { RotateCcw, MoreHorizontal, Plus, Check, Settings } from 'lucide-react';
+import { RotateCcw, MoreHorizontal, Plus, Check, Settings, ChevronUp, ChevronDown, Trash2 } from 'lucide-react';
 import { SimpleExerciseSelector } from './SimpleExerciseSelector';
 import type { Exercise } from '@/types';
 
@@ -13,6 +13,8 @@ interface SimpleWorkoutExecutionProps {
   workoutName: string;
   exercises: Exercise[];
   onAddExercise: (exerciseName: string) => void;
+  onRemoveExercise: (exerciseId: string) => void;
+  onMoveExercise: (exerciseId: string, direction: 'up' | 'down') => void;
   onAddSet: (exerciseId: string) => void;
   onUpdateSet: (exerciseId: string, setId: string, field: 'weight' | 'reps', value: number) => void;
   onToggleSet: (exerciseId: string, setId: string) => void;
@@ -27,6 +29,8 @@ export const SimpleWorkoutExecution = ({
   workoutName,
   exercises,
   onAddExercise,
+  onRemoveExercise,
+  onMoveExercise,
   onAddSet,
   onUpdateSet,
   onToggleSet,
@@ -100,9 +104,34 @@ export const SimpleWorkoutExecution = ({
                   <h3 className="text-lg font-medium text-blue-600">
                     {exercise.name || `Exercise ${exerciseIndex + 1}`}
                   </h3>
-                  <Button variant="ghost" size="icon">
-                    <MoreHorizontal className="h-4 w-4" />
-                  </Button>
+                  <div className="flex items-center gap-1">
+                    <Button 
+                      variant="ghost" 
+                      size="icon" 
+                      onClick={() => onMoveExercise(exercise.id, 'up')}
+                      disabled={exerciseIndex === 0}
+                      className="h-8 w-8"
+                    >
+                      <ChevronUp className="h-4 w-4 text-muted-foreground" />
+                    </Button>
+                    <Button 
+                      variant="ghost" 
+                      size="icon" 
+                      onClick={() => onMoveExercise(exercise.id, 'down')}
+                      disabled={exerciseIndex === exercises.length - 1}
+                      className="h-8 w-8"
+                    >
+                      <ChevronDown className="h-4 w-4 text-muted-foreground" />
+                    </Button>
+                    <Button 
+                      variant="ghost" 
+                      size="icon" 
+                      onClick={() => onRemoveExercise(exercise.id)}
+                      className="h-8 w-8"
+                    >
+                      <Trash2 className="h-4 w-4 text-muted-foreground" />
+                    </Button>
+                  </div>
                 </div>
               </CardHeader>
               <CardContent className="space-y-1">

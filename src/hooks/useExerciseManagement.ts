@@ -9,10 +9,10 @@ export const useExerciseManagement = (
 ) => {
   const { getExerciseDefaults } = useExerciseHistory();
 
-  const addExercise = () => {
+  const addExercise = (exerciseName?: string) => {
     const newExercise: Exercise = {
       id: `ex-${Date.now()}`,
-      name: '',
+      name: exerciseName || '',
       sets: [{ id: `set-${Date.now()}`, reps: 8, weight: 20, completed: false }],
     };
     setExercises((prev) => [...prev, newExercise]);

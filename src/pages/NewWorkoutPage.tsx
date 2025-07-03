@@ -220,6 +220,8 @@ const NewWorkoutPage = () => {
           workoutName={workoutName}
           exercises={exercises}
           onAddExercise={handleAddExerciseByName}
+          onRemoveExercise={removeExercise}
+          onMoveExercise={moveExercise}
           onAddSet={addSet}
           onUpdateSet={updateSet}
           onToggleSet={handleToggleSet}
