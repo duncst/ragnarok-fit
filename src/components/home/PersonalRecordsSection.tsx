@@ -13,26 +13,59 @@ interface PersonalRecordsSectionProps {
   isLoading: boolean;
 }
 
+const formatTime = (seconds: number): string => {
+  const hours = Math.floor(seconds / 3600);
+  const minutes = Math.floor((seconds % 3600) / 60);
+  const secs = seconds % 60;
+  
+  if (hours > 0) {
+    return `${hours}:${minutes.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
+  }
+  return `${minutes}:${secs.toString().padStart(2, '0')}`;
+};
+
 export const PersonalRecordsSection = ({ personalRecords, isLoading }: PersonalRecordsSectionProps) => {
-  // Process personal records to separate 1RM and Valhalla scores
-  const oneRepMaxRecords = personalRecords?.filter(pr => !pr.exercise_name.includes('(Valhalla)')) || [];
+  // Process personal records to separate different types
+  const strengthRecords = personalRecords?.filter(pr => 
+    !pr.exercise_name.includes('(Valhalla)') && 
+    !pr.exercise_name.includes('Run')
+  ) || [];
+  
+  const runningRecords = personalRecords?.filter(pr => pr.exercise_name.includes('Run')) || [];
   const valhallaRecords = personalRecords?.filter(pr => pr.exercise_name.includes('(Valhalla)')) || [];
 
   // Format records for display
-  const formatPRsForDisplay = (records: PersonalRecord[], isValhalla: boolean = false) => {
-    return records.map(pr => ({
-      exercise: pr.exercise_name,
-      value: isValhalla 
-        ? `${Number(pr.one_rep_max).toFixed(1)}` 
-        : `${Number(pr.one_rep_max).toFixed(1)} kg`,
-      date: format(new Date(pr.date), 'yyyy-MM-dd'),
-      type: isValhalla ? 'valhalla' : 'weight'
-    }));
+  const formatPRsForDisplay = (records: PersonalRecord[], type: 'strength' | 'running' | 'valhalla') => {
+    return records.map(pr => {
+      let value: string;
+      let recordType: string;
+      
+      if (type === 'running') {
+        // For running, the one_rep_max field stores pace per km in seconds
+        const totalTime = Number(pr.one_rep_max) * parseFloat(pr.exercise_name.replace('k Run', ''));
+        value = formatTime(Math.round(totalTime));
+        recordType = 'running';
+      } else if (type === 'valhalla') {
+        value = `${Number(pr.one_rep_max).toFixed(1)}`;
+        recordType = 'valhalla';
+      } else {
+        value = `${Number(pr.one_rep_max).toFixed(1)} kg`;
+        recordType = 'strength';
+      }
+      
+      return {
+        exercise: pr.exercise_name,
+        value,
+        date: format(new Date(pr.date), 'yyyy-MM-dd'),
+        type: recordType
+      };
+    });
   };
 
   const allPRsForDisplay = [
-    ...formatPRsForDisplay(oneRepMaxRecords, false),
-    ...formatPRsForDisplay(valhallaRecords, true)
+    ...formatPRsForDisplay(strengthRecords, 'strength'),
+    ...formatPRsForDisplay(runningRecords, 'running'),
+    ...formatPRsForDisplay(valhallaRecords, 'valhalla')
   ].sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
 
   return (
@@ -77,6 +110,10 @@ export const PersonalRecordsSection = ({ personalRecords, isLoading }: PersonalR
                       {item.type === 'valhalla' ? (
                         <span className="inline-flex items-center text-xs bg-orange-100 text-orange-800 px-2 py-1 rounded-full">
                           ⚔️ Valhalla
+                        </span>
+                      ) : item.type === 'running' ? (
+                        <span className="inline-flex items-center text-xs bg-green-100 text-green-800 px-2 py-1 rounded-full">
+                          🏃 Running
                         </span>
                       ) : (
                         <span className="inline-flex items-center text-xs bg-blue-100 text-blue-800 px-2 py-1 rounded-full">
