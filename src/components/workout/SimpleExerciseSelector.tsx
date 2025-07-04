@@ -58,11 +58,11 @@ export const SimpleExerciseSelector = ({ onExerciseSelect, trigger }: SimpleExer
           </Button>
         )}
       </DialogTrigger>
-      <DialogContent className="sm:max-w-md">
+      <DialogContent className="sm:max-w-md max-h-[90vh] flex flex-col">
         <DialogHeader>
           <DialogTitle>Add Exercise</DialogTitle>
         </DialogHeader>
-        <div className="space-y-4">
+        <div className="space-y-4 flex-1 overflow-hidden">
           <div className="relative">
             <Search className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
             <Input
@@ -73,22 +73,24 @@ export const SimpleExerciseSelector = ({ onExerciseSelect, trigger }: SimpleExer
             />
           </div>
           
-          {/* Body Part Filter */}
-          <div className="flex overflow-x-auto gap-2 pb-2">
-            {bodyParts.map((part) => (
-              <Button
-                key={part}
-                variant={selectedBodyPart === part ? 'default' : 'secondary'}
-                size="sm"
-                className="shrink-0"
-                onClick={() => setSelectedBodyPart(part)}
-              >
-                {part}
-              </Button>
-            ))}
+          {/* Body Part Filter with improved mobile scrolling */}
+          <div className="w-full">
+            <div className="flex gap-2 overflow-x-auto pb-2 scrollbar-hide" style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}>
+              {bodyParts.map((part) => (
+                <Button
+                  key={part}
+                  variant={selectedBodyPart === part ? 'default' : 'secondary'}
+                  size="sm"
+                  className="shrink-0 whitespace-nowrap px-3 py-1.5 text-xs"
+                  onClick={() => setSelectedBodyPart(part)}
+                >
+                  {part}
+                </Button>
+              ))}
+            </div>
           </div>
 
-          <div className="max-h-96 overflow-y-auto">
+          <div className="flex-1 overflow-y-auto min-h-0">
             {filteredExercises.length === 0 ? (
               <div className="text-center py-8 text-muted-foreground">
                 No exercises found
