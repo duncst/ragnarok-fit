@@ -17,15 +17,15 @@ const ExercisesPage = () => {
     const lowercasedTerm = searchTerm.toLowerCase();
     return allExercises
       .filter((exercise) => {
-        // Fix: Check if selectedBodyPart is 'All' OR if the exercise's bodyPart matches
+        // Fix: Check if selectedBodyPart is 'All' OR if the exercise's bodyPart matches (case-insensitive)
         if (selectedBodyPart === 'All') return true;
         
         // Handle case where exercise.bodyPart might be an array or string
         if (Array.isArray(exercise.bodyPart)) {
-          return exercise.bodyPart.some(part => part === selectedBodyPart);
+          return exercise.bodyPart.some(part => part.toLowerCase() === selectedBodyPart.toLowerCase());
         }
         
-        return exercise.bodyPart === selectedBodyPart;
+        return exercise.bodyPart.toLowerCase() === selectedBodyPart.toLowerCase();
       })
       .filter((exercise) =>
         exercise.name.toLowerCase().includes(lowercasedTerm)
