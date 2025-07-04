@@ -1,3 +1,4 @@
+
 import type { ExerciseDef } from "@/types";
 
 export const exercises: ExerciseDef[] = [
@@ -61,13 +62,12 @@ export const exercises: ExerciseDef[] = [
   { name: "Crunches", bodyPart: "core", equipment: "bodyweight", targetMuscles: ["abs"], description: "Crunch up from lying position" },
   { name: "Russian Twists", bodyPart: "core", equipment: "bodyweight", targetMuscles: ["obliques"], description: "Twist torso side to side" },
   { name: "Leg Raises", bodyPart: "core", equipment: "bodyweight", targetMuscles: ["lower abs"], description: "Raise legs while lying down" },
-  { name: "Mountain Climbers", bodyPart: "core", equipment: "bodyweight", targetMuscles: ["core", "cardio"], description: "Alternate bringing knees to chest" },
+  { name: "Mountain Climbers", bodyPart: "core", equipment: "bodyweight", targetMuscles: ["core", "cardio"], description: "Alternate bringing knees to chest", type: "time" },
   { name: "Dead Bug", bodyPart: "core", equipment: "bodyweight", targetMuscles: ["core"], description: "Opposite arm and leg extensions" },
   { name: "Bicycle Crunches", bodyPart: "core", equipment: "bodyweight", targetMuscles: ["abs", "obliques"], description: "Alternate elbow to knee crunches" },
   { name: "Sit-ups", bodyPart: "core", equipment: "bodyweight", targetMuscles: ["abs"], description: "Standard sit-ups", type: "reps" },
   { name: "Flutter Kicks", bodyPart: "core", equipment: "bodyweight", targetMuscles: ["abs", "hip flexors"], description: "Lying flutter kicks", type: "reps" },
   { name: "High Knees", bodyPart: "cardio", equipment: "bodyweight", targetMuscles: ["legs", "core"], description: "High knee marching", type: "reps" },
-  { name: "Mountain Climbers", bodyPart: "core", equipment: "bodyweight", targetMuscles: ["core", "shoulders"], description: "High-intensity mountain climbers", type: "reps" },
 
   // Full Body / Cardio
   { name: "Burpees", bodyPart: "full body", equipment: "bodyweight", targetMuscles: ["full body"], description: "Squat, jump back, push-up, jump forward, jump up" },

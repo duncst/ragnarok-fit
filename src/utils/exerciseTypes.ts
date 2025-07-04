@@ -1,4 +1,3 @@
-
 // Time-based exercises that should be measured by duration instead of weight
 export const TIME_BASED_EXERCISES = [
   'Plank',
@@ -11,6 +10,7 @@ export const TIME_BASED_EXERCISES = [
   'High Knees',
   'Butt Kicks',
   'Jumping Jacks',
+  'Jump Rope',
 ];
 
 // Distance-based exercises (time + distance)
