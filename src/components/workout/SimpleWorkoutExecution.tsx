@@ -7,6 +7,7 @@ import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } f
 import { RestTimerSettings } from './RestTimerSettings';
 import { RotateCcw, MoreHorizontal, Plus, Check, Settings, ChevronUp, ChevronDown, Trash2 } from 'lucide-react';
 import { SimpleExerciseSelector } from './SimpleExerciseSelector';
+import { getExerciseType, formatDuration, parseDurationInput, formatDistance, parseDistanceInput } from '@/utils/exerciseTypes';
 import type { Exercise } from '@/types';
 
 interface SimpleWorkoutExecutionProps {
@@ -16,7 +17,7 @@ interface SimpleWorkoutExecutionProps {
   onRemoveExercise: (exerciseId: string) => void;
   onMoveExercise: (exerciseId: string, direction: 'up' | 'down') => void;
   onAddSet: (exerciseId: string) => void;
-  onUpdateSet: (exerciseId: string, setId: string, field: 'weight' | 'reps', value: number) => void;
+  onUpdateSet: (exerciseId: string, setId: string, field: 'weight' | 'reps' | 'duration' | 'distance', value: number) => void;
   onToggleSet: (exerciseId: string, setId: string) => void;
   onFinishWorkout: () => void;
   onCancelWorkout: () => void;
@@ -70,6 +71,36 @@ export const SimpleWorkoutExecution = ({
     return `${minutes}:${remainingSeconds.toString().padStart(2, '0')}`;
   };
 
+  const handleDurationChange = (exerciseId: string, setId: string, value: string) => {
+    const seconds = parseDurationInput(value);
+    onUpdateSet(exerciseId, setId, 'duration', seconds);
+  };
+
+  const handleDistanceChange = (exerciseId: string, setId: string, value: string) => {
+    const meters = parseDistanceInput(value);
+    onUpdateSet(exerciseId, setId, 'distance', meters);
+  };
+
+  const handleNumberChange = (exerciseId: string, setId: string, field: 'reps' | 'weight', value: string) => {
+    const numValue = value === '' ? 0 : (parseInt(value) || 0);
+    onUpdateSet(exerciseId, setId, field, numValue);
+  };
+
+  const getHeaderLabels = (exerciseType: string) => {
+    switch (exerciseType) {
+      case 'time':
+        return ['Set', 'Prev', 'Duration', 'Reps', ''];
+      case 'distance':
+        return ['Set', 'Prev', 'Duration', 'Distance', ''];
+      case 'weight_distance_time':
+        return ['Set', 'Prev', 'Weight', 'Time/Dist', ''];
+      case 'reps':
+        return ['Set', 'Prev', '', 'Reps', ''];
+      default:
+        return ['Set', 'Prev', 'kg', 'Reps', ''];
+    }
+  };
+
   return (
     <div className="h-screen flex flex-col bg-background">
       {/* Header */}
@@ -97,106 +128,197 @@ export const SimpleWorkoutExecution = ({
       {/* Exercise List */}
       <div className="flex-1 overflow-y-auto">
         <div className="p-4 space-y-4">
-          {exercises.map((exercise, exerciseIndex) => (
-            <Card key={exercise.id} className="border">
-              <CardHeader className="pb-3">
-                <div className="flex items-center justify-between">
-                  <h3 className="text-lg font-medium text-blue-600">
-                    {exercise.name || `Exercise ${exerciseIndex + 1}`}
-                  </h3>
-                  <div className="flex items-center gap-1">
-                    <Button 
-                      variant="ghost" 
-                      size="icon" 
-                      onClick={() => onMoveExercise(exercise.id, 'up')}
-                      disabled={exerciseIndex === 0}
-                      className="h-8 w-8"
-                    >
-                      <ChevronUp className="h-4 w-4 text-muted-foreground" />
-                    </Button>
-                    <Button 
-                      variant="ghost" 
-                      size="icon" 
-                      onClick={() => onMoveExercise(exercise.id, 'down')}
-                      disabled={exerciseIndex === exercises.length - 1}
-                      className="h-8 w-8"
-                    >
-                      <ChevronDown className="h-4 w-4 text-muted-foreground" />
-                    </Button>
-                    <Button 
-                      variant="ghost" 
-                      size="icon" 
-                      onClick={() => onRemoveExercise(exercise.id)}
-                      className="h-8 w-8"
-                    >
-                      <Trash2 className="h-4 w-4 text-muted-foreground" />
-                    </Button>
-                  </div>
-                </div>
-              </CardHeader>
-              <CardContent className="space-y-1">
-                {/* Set Headers */}
-                <div className="grid grid-cols-[40px_50px_1fr_1fr_50px] text-sm font-medium text-muted-foreground">
-                  <span>Set</span>
-                  <span className="text-center">Prev</span>
-                  <span className="text-center">kg</span>
-                  <span className="text-center">Reps</span>
-                  <span></span>
-                </div>
-                
-                {/* Sets */}
-                {exercise.sets.map((set, setIndex) => (
-                  <div key={set.id} className="grid grid-cols-[40px_50px_1fr_1fr_50px] items-center">
-                    <span className="font-medium text-center bg-muted rounded-full w-6 h-6 flex items-center justify-center text-xs">
-                      {setIndex + 1}
-                    </span>
-                    <div className="text-center text-xs text-muted-foreground">
-                      {/* Previous set data would go here */}
-                      -
+          {exercises.map((exercise, exerciseIndex) => {
+            const exerciseType = exercise.type || getExerciseType(exercise.name);
+            const headerLabels = getHeaderLabels(exerciseType);
+            
+            return (
+              <Card key={exercise.id} className="border">
+                <CardHeader className="pb-3">
+                  <div className="flex items-center justify-between">
+                    <h3 className="text-lg font-medium text-blue-600">
+                      {exercise.name || `Exercise ${exerciseIndex + 1}`}
+                    </h3>
+                    <div className="flex items-center gap-1">
+                      <Button 
+                        variant="ghost" 
+                        size="icon" 
+                        onClick={() => onMoveExercise(exercise.id, 'up')}
+                        disabled={exerciseIndex === 0}
+                        className="h-8 w-8"
+                      >
+                        <ChevronUp className="h-4 w-4 text-muted-foreground" />
+                      </Button>
+                      <Button 
+                        variant="ghost" 
+                        size="icon" 
+                        onClick={() => onMoveExercise(exercise.id, 'down')}
+                        disabled={exerciseIndex === exercises.length - 1}
+                        className="h-8 w-8"
+                      >
+                        <ChevronDown className="h-4 w-4 text-muted-foreground" />
+                      </Button>
+                      <Button 
+                        variant="ghost" 
+                        size="icon" 
+                        onClick={() => onRemoveExercise(exercise.id)}
+                        className="h-8 w-8"
+                      >
+                        <Trash2 className="h-4 w-4 text-muted-foreground" />
+                      </Button>
                     </div>
-                    <Input
-                      type="number"
-                      value={set.weight === 0 ? '' : set.weight}
-                      onChange={(e) => onUpdateSet(exercise.id, set.id, 'weight', parseInt(e.target.value) || 0)}
-                      className="text-center h-8 text-sm"
-                      placeholder="0"
-                    />
-                    <Input
-                      type="number"
-                      value={set.reps === 0 ? '' : set.reps}
-                      onChange={(e) => onUpdateSet(exercise.id, set.id, 'reps', parseInt(e.target.value) || 0)}
-                      className="text-center h-8 text-sm"
-                      placeholder="0"
-                    />
-                    <Button
-                      variant="ghost"
-                      size="icon"
-                      onClick={() => onToggleSet(exercise.id, set.id)}
-                      className="h-8 w-8"
-                    >
-                      {set.completed ? (
-                        <div className="h-5 w-5 rounded-full bg-green-500 flex items-center justify-center">
-                          <Check className="h-3 w-3 text-white" />
-                        </div>
-                      ) : (
-                        <div className="h-5 w-5 rounded-full border-2 border-gray-300" />
-                      )}
-                    </Button>
                   </div>
-                ))}
-                
-                {/* Add Set Button */}
-                <Button
-                  variant="outline"
-                  onClick={() => onAddSet(exercise.id)}
-                  className="w-full mt-3"
-                >
-                  <Plus className="h-4 w-4 mr-2" />
-                  Add Set ({formatRestTime(restDuration)})
-                </Button>
-              </CardContent>
-            </Card>
-          ))}
+                </CardHeader>
+                <CardContent className="space-y-1">
+                  {/* Set Headers */}
+                  <div className="grid grid-cols-5 text-sm font-medium text-muted-foreground">
+                    <span>{headerLabels[0]}</span>
+                    <span className="text-center">{headerLabels[1]}</span>
+                    <span className="text-center">{headerLabels[2]}</span>
+                    <span className="text-center">{headerLabels[3]}</span>
+                    <span></span>
+                  </div>
+                  
+                  {/* Sets */}
+                  {exercise.sets.map((set, setIndex) => (
+                    <div key={set.id} className="grid grid-cols-5 items-center gap-2">
+                      <span className="font-medium text-center bg-muted rounded-full w-6 h-6 flex items-center justify-center text-xs">
+                        {setIndex + 1}
+                      </span>
+                      <div className="text-center text-xs text-muted-foreground">
+                        {/* Previous set data would go here */}
+                        -
+                      </div>
+                      
+                      {/* Input fields based on exercise type */}
+                      {exerciseType === 'weight' && (
+                        <>
+                          <Input
+                            type="number"
+                            value={set.weight === 0 ? '' : set.weight}
+                            onChange={(e) => handleNumberChange(exercise.id, set.id, 'weight', e.target.value)}
+                            className="text-center h-8 text-sm"
+                            placeholder="0"
+                          />
+                          <Input
+                            type="number"
+                            value={set.reps === 0 ? '' : set.reps}
+                            onChange={(e) => handleNumberChange(exercise.id, set.id, 'reps', e.target.value)}
+                            className="text-center h-8 text-sm"
+                            placeholder="0"
+                          />
+                        </>
+                      )}
+                      
+                      {exerciseType === 'time' && (
+                        <>
+                          <Input
+                            type="text"
+                            value={set.duration ? formatDuration(set.duration) : ''}
+                            onChange={(e) => handleDurationChange(exercise.id, set.id, e.target.value)}
+                            className="text-center h-8 text-sm"
+                            placeholder="MM:SS"
+                          />
+                          <Input
+                            type="number"
+                            value={set.reps === 0 ? '' : set.reps}
+                            onChange={(e) => handleNumberChange(exercise.id, set.id, 'reps', e.target.value)}
+                            className="text-center h-8 text-sm"
+                            placeholder="0"
+                          />
+                        </>
+                      )}
+                      
+                      {exerciseType === 'distance' && (
+                        <>
+                          <Input
+                            type="text"
+                            value={set.duration ? formatDuration(set.duration) : ''}
+                            onChange={(e) => handleDurationChange(exercise.id, set.id, e.target.value)}
+                            className="text-center h-8 text-sm"
+                            placeholder="MM:SS"
+                          />
+                          <Input
+                            type="text"
+                            value={set.distance ? `${set.distance}` : ''}
+                            onChange={(e) => handleDistanceChange(exercise.id, set.id, e.target.value)}
+                            className="text-center h-8 text-sm"
+                            placeholder="Distance"
+                          />
+                        </>
+                      )}
+                      
+                      {exerciseType === 'weight_distance_time' && (
+                        <>
+                          <Input
+                            type="number"
+                            value={set.weight === 0 ? '' : set.weight}
+                            onChange={(e) => handleNumberChange(exercise.id, set.id, 'weight', e.target.value)}
+                            className="text-center h-8 text-sm"
+                            placeholder="0"
+                          />
+                          <div className="flex flex-col gap-0.5">
+                            <Input
+                              type="text"
+                              value={set.duration ? formatDuration(set.duration) : ''}
+                              onChange={(e) => handleDurationChange(exercise.id, set.id, e.target.value)}
+                              className="text-center h-6 text-xs"
+                              placeholder="MM:SS"
+                            />
+                            <Input
+                              type="text"
+                              value={set.distance ? `${set.distance}` : ''}
+                              onChange={(e) => handleDistanceChange(exercise.id, set.id, e.target.value)}
+                              className="text-center h-6 text-xs"
+                              placeholder="Dist"
+                            />
+                          </div>
+                        </>
+                      )}
+                      
+                      {exerciseType === 'reps' && (
+                        <>
+                          <div className="text-center text-muted-foreground">-</div>
+                          <Input
+                            type="number"
+                            value={set.reps === 0 ? '' : set.reps}
+                            onChange={(e) => handleNumberChange(exercise.id, set.id, 'reps', e.target.value)}
+                            className="text-center h-8 text-sm"
+                            placeholder="0"
+                          />
+                        </>
+                      )}
+                      
+                      <Button
+                        variant="ghost"
+                        size="icon"
+                        onClick={() => onToggleSet(exercise.id, set.id)}
+                        className="h-8 w-8"
+                      >
+                        {set.completed ? (
+                          <div className="h-5 w-5 rounded-full bg-green-500 flex items-center justify-center">
+                            <Check className="h-3 w-3 text-white" />
+                          </div>
+                        ) : (
+                          <div className="h-5 w-5 rounded-full border-2 border-gray-300" />
+                        )}
+                      </Button>
+                    </div>
+                  ))}
+                  
+                  {/* Add Set Button */}
+                  <Button
+                    variant="outline"
+                    onClick={() => onAddSet(exercise.id)}
+                    className="w-full mt-3"
+                  >
+                    <Plus className="h-4 w-4 mr-2" />
+                    Add Set ({formatRestTime(restDuration)})
+                  </Button>
+                </CardContent>
+              </Card>
+            );
+          })}
           
           {/* Add Exercise Button */}
           <SimpleExerciseSelector
