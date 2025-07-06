@@ -230,6 +230,8 @@ export type Database = {
       workout_sets: {
         Row: {
           completed: boolean
+          distance: number | null
+          duration: number | null
           id: string
           order: number
           reps: number
@@ -238,6 +240,8 @@ export type Database = {
         }
         Insert: {
           completed?: boolean
+          distance?: number | null
+          duration?: number | null
           id?: string
           order: number
           reps: number
@@ -246,6 +250,8 @@ export type Database = {
         }
         Update: {
           completed?: boolean
+          distance?: number | null
+          duration?: number | null
           id?: string
           order?: number
           reps?: number
@@ -368,6 +374,16 @@ export type Database = {
       get_hero_call_weekly_count: {
         Args: { p_user_id: string }
         Returns: number
+      }
+      get_last_exercise_data: {
+        Args: { p_exercise_name: string }
+        Returns: {
+          last_weight: number
+          last_reps: number
+          last_duration: number
+          last_distance: number
+          last_used: string
+        }[]
       }
       get_last_exercise_weight: {
         Args: { p_exercise_name: string }

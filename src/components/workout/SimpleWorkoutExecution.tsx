@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -8,6 +7,7 @@ import { RestTimerSettings } from './RestTimerSettings';
 import { RotateCcw, MoreHorizontal, Plus, Check, Settings, ChevronUp, ChevronDown, Trash2 } from 'lucide-react';
 import { SimpleExerciseSelector } from './SimpleExerciseSelector';
 import { getExerciseType, formatDuration, parseDurationInput, formatDistance, parseDistanceInput } from '@/utils/exerciseTypes';
+import { useExerciseHistory } from '@/hooks/useExerciseHistory';
 import type { Exercise } from '@/types';
 
 interface SimpleWorkoutExecutionProps {
@@ -43,6 +43,7 @@ export const SimpleWorkoutExecution = ({
 }: SimpleWorkoutExecutionProps) => {
   const [showFinishDialog, setShowFinishDialog] = useState(false);
   const [showRestSettings, setShowRestSettings] = useState(false);
+  const { getExercisePrevious } = useExerciseHistory();
 
   const handleFinishClick = () => {
     const hasIncompleteSets = exercises.some(ex => ex.sets.some(set => !set.completed && (set.weight > 0 || set.reps > 0)));
@@ -98,6 +99,24 @@ export const SimpleWorkoutExecution = ({
         return ['Set', 'Prev', '', 'Reps', ''];
       default:
         return ['Set', 'Prev', 'kg', 'Reps', ''];
+    }
+  };
+
+  const formatPreviousData = (exerciseName: string, exerciseType: string) => {
+    const previous = getExercisePrevious(exerciseName);
+    if (!previous) return '-';
+    
+    switch (exerciseType) {
+      case 'time':
+        return `${formatDuration(previous.duration)} × ${previous.reps}`;
+      case 'distance':
+        return `${formatDuration(previous.duration)} × ${previous.distance}m`;
+      case 'weight_distance_time':
+        return `${previous.weight}kg`;
+      case 'reps':
+        return `${previous.reps}`;
+      default:
+        return `${previous.weight}kg × ${previous.reps}`;
     }
   };
 
@@ -186,8 +205,7 @@ export const SimpleWorkoutExecution = ({
                         {setIndex + 1}
                       </span>
                       <div className="text-center text-xs text-muted-foreground">
-                        {/* Previous set data would go here */}
-                        -
+                        {formatPreviousData(exercise.name, exerciseType)}
                       </div>
                       
                       {/* Input fields based on exercise type */}

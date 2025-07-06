@@ -6,6 +6,8 @@ import { useAuth } from '@/contexts/AuthContext';
 interface ExerciseHistoryData {
   weight: number;
   reps: number;
+  duration: number;
+  distance: number;
   lastUsed: string;
 }
 
@@ -18,44 +20,47 @@ export const useExerciseHistory = () => {
 
     const fetchExerciseHistory = async () => {
       try {
-        // Get the most recent workout data for each exercise
-        const { data: recentSets, error } = await supabase
-          .from('workout_sets')
+        // Get list of unique exercise names from recent workouts
+        const { data: exercises, error: exercisesError } = await supabase
+          .from('workout_exercises')
           .select(`
-            weight,
-            reps,
-            workout_exercises!inner(
-              name,
-              workouts!inner(
-                end_time,
-                user_id
-              )
-            )
+            name,
+            workouts!inner(user_id, end_time)
           `)
-          .eq('workout_exercises.workouts.user_id', user.id)
-          .not('workout_exercises.workouts.end_time', 'is', null)
-          .order('workout_exercises.workouts.end_time', { ascending: false });
+          .eq('workouts.user_id', user.id)
+          .not('workouts.end_time', 'is', null);
 
-        if (error) {
-          console.error('Error fetching exercise history:', error);
+        if (exercisesError) {
+          console.error('Error fetching exercises:', exercisesError);
           return;
         }
 
-        // Process the data to get the most recent weight/reps for each exercise
+        // Get unique exercise names
+        const uniqueExercises = [...new Set(exercises?.map(ex => ex.name) || [])];
+        
+        // Fetch last data for each exercise using the new function
         const historyMap: Record<string, ExerciseHistoryData> = {};
         
-        recentSets?.forEach((set: any) => {
-          const exerciseName = set.workout_exercises.name;
-          const endTime = set.workout_exercises.workouts.end_time;
-          
-          if (!historyMap[exerciseName] || new Date(endTime) > new Date(historyMap[exerciseName].lastUsed)) {
+        for (const exerciseName of uniqueExercises) {
+          const { data: lastData, error } = await supabase
+            .rpc('get_last_exercise_data', { p_exercise_name: exerciseName });
+
+          if (error) {
+            console.error(`Error fetching data for ${exerciseName}:`, error);
+            continue;
+          }
+
+          if (lastData && lastData.length > 0) {
+            const data = lastData[0];
             historyMap[exerciseName] = {
-              weight: set.weight,
-              reps: set.reps,
-              lastUsed: endTime
+              weight: data.last_weight || 0,
+              reps: data.last_reps || 0,
+              duration: data.last_duration || 0,
+              distance: data.last_distance || 0,
+              lastUsed: data.last_used || ''
             };
           }
-        });
+        }
 
         setExerciseHistory(historyMap);
       } catch (error) {
@@ -70,9 +75,24 @@ export const useExerciseHistory = () => {
     const history = exerciseHistory[exerciseName];
     return {
       weight: history?.weight || 20,
-      reps: history?.reps || 8
+      reps: history?.reps || 8,
+      duration: history?.duration || 0,
+      distance: history?.distance || 0
     };
   };
 
-  return { getExerciseDefaults };
+  const getExercisePrevious = (exerciseName: string) => {
+    const history = exerciseHistory[exerciseName];
+    if (!history) return null;
+    
+    return {
+      weight: history.weight,
+      reps: history.reps,
+      duration: history.duration,
+      distance: history.distance,
+      lastUsed: history.lastUsed
+    };
+  };
+
+  return { getExerciseDefaults, getExercisePrevious };
 };
