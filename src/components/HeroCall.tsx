@@ -1,13 +1,10 @@
 
 import React, { useState, useEffect } from 'react';
 import { Card, CardContent } from '@/components/ui/card';
-import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion';
-import { Button } from '@/components/ui/button';
-import { Swords, Play, Check } from 'lucide-react';
 import { getDailyWorkout } from './hero-call/utils';
-import { StreakTracker } from './hero-call/StreakTracker';
-import { WorkoutDisplay } from './hero-call/WorkoutDisplay';
 import { HeroCallWorkoutMode } from './hero-call/HeroCallWorkoutMode';
+import { HeroCallCompletionView } from './hero-call/HeroCallCompletionView';
+import { HeroCallAccordion } from './hero-call/HeroCallAccordion';
 import { useWorkoutTimer } from '@/hooks/useWorkoutTimer';
 import { useHeroCallData } from '@/hooks/useHeroCallData';
 import { useSaveWorkout } from '@/hooks/useSaveWorkout';
@@ -129,89 +126,26 @@ export const HeroCall = () => {
   // Completion View
   if (showCompletion) {
     return (
-      <Card className="w-full">
-        <CardContent className="p-6 text-center space-y-4">
-          <div className="space-y-2">
-            <Check className="h-12 w-12 text-green-600 mx-auto" />
-            <h2 className="text-2xl font-bold text-primary">Challenge Complete!</h2>
-            <p className="text-muted-foreground">
-              You've completed today's Hero's Call: <strong>{currentWorkout.name}</strong>
-            </p>
-            <p className="text-sm text-muted-foreground">
-              Duration: {formattedDuration}
-            </p>
-          </div>
-          
-          <div className="flex gap-2 justify-center">
-            <Button 
-              onClick={handleMarkComplete} 
-              className="flex items-center gap-2"
-              disabled={completeHeroCall.isPending}
-            >
-              <Check className="h-4 w-4" />
-              {completeHeroCall.isPending ? 'Saving...' : 'Mark as Complete'}
-            </Button>
-            <Button variant="outline" onClick={handleExitWorkout}>
-              Exit
-            </Button>
-          </div>
-        </CardContent>
-      </Card>
+      <HeroCallCompletionView
+        workoutName={currentWorkout.name}
+        formattedDuration={formattedDuration}
+        onMarkComplete={handleMarkComplete}
+        onExit={handleExitWorkout}
+        isLoading={completeHeroCall.isPending}
+      />
     );
   }
 
   return (
     <Card className="w-full">
       <CardContent className="p-0">
-        <Accordion type="single" collapsible className="w-full">
-          <AccordionItem value="hero-call" className="border-none">
-            <AccordionTrigger className="text-left px-6 py-4">
-              <div className="flex items-center justify-between w-full pr-2">
-                <div className="flex items-center gap-2">
-                  <Swords className="h-5 w-5 text-primary" />
-                  <span className="font-bold text-primary">Daily Hero's Call:</span>
-                  <span className="font-semibold">{currentWorkout.name}</span>
-                </div>
-                <StreakTracker streakData={stats} completedToday={stats.completedToday} />
-              </div>
-            </AccordionTrigger>
-            <AccordionContent className="px-6 pb-4">
-              <div className="space-y-4">
-                <StreakTracker 
-                  streakData={stats} 
-                  completedToday={stats.completedToday}
-                  showFullDisplay={true}
-                />
-                
-                <WorkoutDisplay 
-                  workout={currentWorkout}
-                  selectedLevel={selectedLevel}
-                  onLevelChange={setSelectedLevel}
-                />
-                
-                {!stats.completedToday && (
-                  <div className="flex justify-center pt-4">
-                    <Button 
-                      onClick={handleStartWorkout}
-                      size="lg"
-                      className="flex items-center gap-2"
-                    >
-                      <Play className="h-5 w-5" />
-                      Start Hero's Call
-                    </Button>
-                  </div>
-                )}
-                
-                {stats.completedToday && (
-                  <div className="flex items-center justify-center gap-2 text-sm text-green-600 bg-green-50 p-3 rounded-lg">
-                    <Check className="h-4 w-4" />
-                    Today's Hero's Call completed! 🔥
-                  </div>
-                )}
-              </div>
-            </AccordionContent>
-          </AccordionItem>
-        </Accordion>
+        <HeroCallAccordion
+          currentWorkout={currentWorkout}
+          selectedLevel={selectedLevel}
+          onLevelChange={setSelectedLevel}
+          onStartWorkout={handleStartWorkout}
+          stats={stats}
+        />
       </CardContent>
     </Card>
   );

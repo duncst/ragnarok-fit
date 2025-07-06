@@ -9,10 +9,8 @@ import { ValhallaScoreDialog } from '@/components/workout/ValhallaScoreDialog';
 import { RestTimerSettings } from '@/components/workout/RestTimerSettings';
 import { RestTimerToast } from '@/components/workout/RestTimerToast';
 import { HeroCallWorkoutMode } from '@/components/hero-call/HeroCallWorkoutMode';
-import { SimpleWorkoutCreation } from '@/components/workout/SimpleWorkoutCreation';
 import { SimpleWorkoutExecution } from '@/components/workout/SimpleWorkoutExecution';
-import { AIWorkoutSection } from '@/components/workout/AIWorkoutSection';
-import { ValhallaSection } from '@/components/workout/ValhallaSection';
+import { WorkoutModeSelector } from '@/components/workout/WorkoutModeSelector';
 import { toast as sonnerToast } from 'sonner';
 
 const NewWorkoutPage = () => {
@@ -107,11 +105,6 @@ const NewWorkoutPage = () => {
     generateWorkoutMutation.mutate({ equipment: selectedEquipment, focus: focusArea });
   };
 
-  const handleStartValhalla = (valhallaName: string) => {
-    setWorkoutName(valhallaName);
-    // Valhalla workouts will be loaded from templates automatically
-  };
-
   const handleStartWorkout = () => {
     setIsInWorkoutFlow(true);
     startWorkout(); // Start the timer when workout begins
@@ -171,44 +164,24 @@ const NewWorkoutPage = () => {
   // Simple workout creation mode (when not in workout flow)
   if (!isInWorkoutFlow && workoutMode === 'simple') {
     return (
-      <div className="space-y-6 pb-16">
-        <SimpleWorkoutCreation
-          workoutName={workoutName}
-          onWorkoutNameChange={setWorkoutName}
-          exercises={exercises}
-          onAddExercise={handleAddExerciseByName}
-          onRemoveExercise={removeExercise}
-          onMoveExercise={moveExercise}
-          onAddSet={addSet}
-          onStartWorkout={handleStartWorkout}
-          onCancel={handleCancelWorkout}
-          restDuration={restDuration}
-        />
-        
-        {/* OR Separator */}
-        <div className="flex items-center justify-center py-4">
-          <div className="flex-1 border-t border-gray-300"></div>
-          <div className="px-4 text-sm text-gray-500 font-medium">OR</div>
-          <div className="flex-1 border-t border-gray-300"></div>
-        </div>
-
-        {/* AI Workout Generation Section */}
-        <div className="px-4">
-          <AIWorkoutSection
-            selectedEquipment={selectedEquipment}
-            onEquipmentChange={setSelectedEquipment}
-            focusArea={focusArea}
-            onFocusChange={setFocusArea}
-            onGenerateWorkout={handleGenerateWorkout}
-            isGenerating={generateWorkoutMutation.isPending}
-          />
-        </div>
-
-        {/* Valhalla Section */}
-        <div className="px-4">
-          <ValhallaSection />
-        </div>
-      </div>
+      <WorkoutModeSelector
+        workoutName={workoutName}
+        onWorkoutNameChange={setWorkoutName}
+        exercises={exercises}
+        onAddExercise={handleAddExerciseByName}
+        onRemoveExercise={removeExercise}
+        onMoveExercise={moveExercise}
+        onAddSet={addSet}
+        onStartWorkout={handleStartWorkout}
+        onCancel={handleCancelWorkout}
+        restDuration={restDuration}
+        selectedEquipment={selectedEquipment}
+        onEquipmentChange={setSelectedEquipment}
+        focusArea={focusArea}
+        onFocusChange={setFocusArea}
+        onGenerateWorkout={handleGenerateWorkout}
+        isGenerating={generateWorkoutMutation.isPending}
+      />
     );
   }
 
