@@ -11,7 +11,7 @@ interface WorkoutModeSelectorProps {
   exercises: Exercise[];
   onAddExercise: (exerciseName: string) => void;
   onRemoveExercise: (id: string) => void;
-  onMoveExercise: (dragIndex: number, hoverIndex: number) => void;
+  onMoveExercise: (exerciseId: string, direction: 'up' | 'down') => void;
   onAddSet: (exerciseId: string) => void;
   onStartWorkout: () => void;
   onCancel: () => void;
