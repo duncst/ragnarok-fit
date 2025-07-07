@@ -19,6 +19,8 @@ const NewWorkoutPage = () => {
   const [trialWorkout, setTrialWorkout] = useState(null);
   const [selectedLevel, setSelectedLevel] = useState<'easy' | 'medium' | 'hard'>('medium');
   const [workoutMode, setWorkoutMode] = useState<'simple' | 'advanced'>('simple');
+  const [showRestTimer, setShowRestTimer] = useState(false);
+  const [restTimerDuration, setRestTimerDuration] = useState(0);
   
   const {
     isActive: isWorkoutActive,
@@ -78,13 +80,16 @@ const NewWorkoutPage = () => {
   const handleToggleSet = useCallback((exerciseId: string, setId: string) => {
     originalHandleToggleSet(exerciseId, setId, (isCompleted) => {
       if (isCompleted && !isValhallaWorkout) {
-        sonnerToast.custom(
-          (t) => <RestTimerToast duration={restDuration} toastId={t} />,
-          { duration: restDuration * 1000 + 5000, position: 'top-center' }
-        );
+        setRestTimerDuration(restDuration);
+        setShowRestTimer(true);
       }
     });
   }, [originalHandleToggleSet, restDuration, isValhallaWorkout]);
+
+  const handleDismissRestTimer = () => {
+    setShowRestTimer(false);
+    setRestTimerDuration(0);
+  };
 
   const handleEnterCookMode = () => {
     setIsCookMode(true);
@@ -146,49 +151,45 @@ const NewWorkoutPage = () => {
     setExercises(updatedExercises);
   };
 
-  // If we have a Trial of Embers workout, show the Hero Call workout mode
-  if (trialWorkout && isInWorkoutFlow) {
-    return (
-      <HeroCallWorkoutMode
-        workout={trialWorkout}
-        selectedLevel={selectedLevel}
-        onFinish={handleFinishWorkout}
-        onExit={handleExitTrial}
-        isWorkoutActive={isWorkoutActive}
-        formattedDuration={formattedDuration}
-        onToggleWorkout={toggleWorkout}
-      />
-    );
-  }
+  return (
+    <>
+      {/* If we have a Trial of Embers workout, show the Hero Call workout mode */}
+      {trialWorkout && isInWorkoutFlow && (
+        <HeroCallWorkoutMode
+          workout={trialWorkout}
+          selectedLevel={selectedLevel}
+          onFinish={handleFinishWorkout}
+          onExit={handleExitTrial}
+          isWorkoutActive={isWorkoutActive}
+          formattedDuration={formattedDuration}
+          onToggleWorkout={toggleWorkout}
+        />
+      )}
 
-  // Simple workout creation mode (when not in workout flow)
-  if (!isInWorkoutFlow && workoutMode === 'simple') {
-    return (
-      <WorkoutModeSelector
-        workoutName={workoutName}
-        onWorkoutNameChange={setWorkoutName}
-        exercises={exercises}
-        onAddExercise={handleAddExerciseByName}
-        onRemoveExercise={removeExercise}
-        onMoveExercise={moveExercise}
-        onAddSet={addSet}
-        onStartWorkout={handleStartWorkout}
-        onCancel={handleCancelWorkout}
-        restDuration={restDuration}
-        selectedEquipment={selectedEquipment}
-        onEquipmentChange={setSelectedEquipment}
-        focusArea={focusArea}
-        onFocusChange={setFocusArea}
-        onGenerateWorkout={handleGenerateWorkout}
-        isGenerating={generateWorkoutMutation.isPending}
-      />
-    );
-  }
+      {/* Simple workout creation mode (when not in workout flow) */}
+      {!isInWorkoutFlow && workoutMode === 'simple' && (
+        <WorkoutModeSelector
+          workoutName={workoutName}
+          onWorkoutNameChange={setWorkoutName}
+          exercises={exercises}
+          onAddExercise={handleAddExerciseByName}
+          onRemoveExercise={removeExercise}
+          onMoveExercise={moveExercise}
+          onAddSet={addSet}
+          onStartWorkout={handleStartWorkout}
+          onCancel={handleCancelWorkout}
+          restDuration={restDuration}
+          selectedEquipment={selectedEquipment}
+          onEquipmentChange={setSelectedEquipment}
+          focusArea={focusArea}
+          onFocusChange={setFocusArea}
+          onGenerateWorkout={handleGenerateWorkout}
+          isGenerating={generateWorkoutMutation.isPending}
+        />
+      )}
 
-  // Simple workout execution mode (when in workout flow)
-  if (isInWorkoutFlow && workoutMode === 'simple' && !isCookMode) {
-    return (
-      <>
+      {/* Simple workout execution mode (when in workout flow) */}
+      {isInWorkoutFlow && workoutMode === 'simple' && !isCookMode && (
         <SimpleWorkoutExecution
           workoutName={workoutName}
           exercises={exercises}
@@ -204,42 +205,29 @@ const NewWorkoutPage = () => {
           restDuration={restDuration}
           onRestDurationChange={setRestDuration}
         />
-        
-        <ValhallaScoreDialog
-          isOpen={showValhallaScoreDialog}
-          onClose={onCloseValhallaDialog}
-          workoutName={currentValhallaWorkout}
-          workoutDuration={workoutDuration}
+      )}
+
+      {isCookMode && isInWorkoutFlow && (
+        <WorkoutCookMode
+          workoutName={workoutName}
+          exercises={exercises}
+          onExitCookMode={handleExitCookMode}
+          onAddExercise={addExercise}
+          onRemoveExercise={removeExercise}
+          onMoveExercise={moveExercise}
+          onUpdateExerciseName={updateExerciseName}
+          onAddSet={addSet}
+          onUpdateSet={updateSet}
+          onToggleSet={handleToggleSet}
+          onFinishWorkout={handleFinishWorkout}
+          isSaving={saveWorkoutMutation.isPending}
+          isWorkoutActive={isWorkoutActive}
+          formattedDuration={formattedDuration}
+          onToggleWorkout={toggleWorkout}
         />
-      </>
-    );
-  }
+      )}
 
-  if (isCookMode && isInWorkoutFlow) {
-    return (
-      <WorkoutCookMode
-        workoutName={workoutName}
-        exercises={exercises}
-        onExitCookMode={handleExitCookMode}
-        onAddExercise={addExercise}
-        onRemoveExercise={removeExercise}
-        onMoveExercise={moveExercise}
-        onUpdateExerciseName={updateExerciseName}
-        onAddSet={addSet}
-        onUpdateSet={updateSet}
-        onToggleSet={handleToggleSet}
-        onFinishWorkout={handleFinishWorkout}
-        isSaving={saveWorkoutMutation.isPending}
-        isWorkoutActive={isWorkoutActive}
-        formattedDuration={formattedDuration}
-        onToggleWorkout={toggleWorkout}
-      />
-    );
-  }
-
-  if (isInWorkoutFlow) {
-    return (
-      <>
+      {isInWorkoutFlow && !isCookMode && workoutMode === 'advanced' && (
         <div className="space-y-4 pb-16">
           <div className="flex justify-between items-center">
             <h1 className="text-3xl font-bold tracking-tight">Workout in Progress</h1>
@@ -289,49 +277,40 @@ const NewWorkoutPage = () => {
             />
           ))}
         </div>
+      )}
 
-        <ValhallaScoreDialog
-          isOpen={showValhallaScoreDialog}
-          onClose={onCloseValhallaDialog}
-          workoutName={currentValhallaWorkout}
-          workoutDuration={workoutDuration}
-        />
-      </>
-    );
-  }
+      {!isInWorkoutFlow && workoutMode === 'advanced' && (
+        <div className="space-y-4 pb-16">
+          <div className="flex justify-between items-center">
+            <h1 className="text-3xl font-bold tracking-tight">Choose your Destiny</h1>
+            {isWorkoutActive && (
+              <div className="text-lg font-semibold text-green-600">
+                {formattedDuration}
+              </div>
+            )}
+          </div>
 
-  return (
-    <>
-      <div className="space-y-4 pb-16">
-        <div className="flex justify-between items-center">
-          <h1 className="text-3xl font-bold tracking-tight">Choose your Destiny</h1>
-          {isWorkoutActive && (
-            <div className="text-lg font-semibold text-green-600">
-              {formattedDuration}
-            </div>
-          )}
+          <WorkoutStartOptions
+            workoutName={workoutName}
+            onNameChange={setWorkoutName}
+            onAddExercise={addExercise}
+            exercises={exercises}
+            onRemoveExercise={removeExercise}
+            onUpdateExerciseName={updateExerciseName}
+            onAddSet={addSet}
+            onUpdateSet={updateSet}
+            onToggleSet={handleToggleSet}
+            restDuration={restDuration}
+            onRestDurationChange={setRestDuration}
+            isCookMode={isCookMode}
+            onToggleCookMode={setIsCookMode}
+            onStartWorkout={handleStartWorkout}
+            onCancel={handleCancelWorkout}
+            isWorkoutActive={isWorkoutActive}
+            onToggleWorkout={toggleWorkout}
+          />
         </div>
-
-        <WorkoutStartOptions
-          workoutName={workoutName}
-          onNameChange={setWorkoutName}
-          onAddExercise={addExercise}
-          exercises={exercises}
-          onRemoveExercise={removeExercise}
-          onUpdateExerciseName={updateExerciseName}
-          onAddSet={addSet}
-          onUpdateSet={updateSet}
-          onToggleSet={handleToggleSet}
-          restDuration={restDuration}
-          onRestDurationChange={setRestDuration}
-          isCookMode={isCookMode}
-          onToggleCookMode={setIsCookMode}
-          onStartWorkout={handleStartWorkout}
-          onCancel={handleCancelWorkout}
-          isWorkoutActive={isWorkoutActive}
-          onToggleWorkout={toggleWorkout}
-        />
-      </div>
+      )}
 
       <ValhallaScoreDialog
         isOpen={showValhallaScoreDialog}
@@ -339,6 +318,14 @@ const NewWorkoutPage = () => {
         workoutName={currentValhallaWorkout}
         workoutDuration={workoutDuration}
       />
+
+      {/* Rest Timer Bar */}
+      {showRestTimer && (
+        <RestTimerToast
+          duration={restTimerDuration}
+          onDismiss={handleDismissRestTimer}
+        />
+      )}
     </>
   );
 };
