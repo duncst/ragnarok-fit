@@ -68,7 +68,7 @@ export const SimpleWorkoutCreation = ({
       </div>
 
       {/* Exercise List */}
-      <div className="flex-1 overflow-y-auto">
+      <div className="flex-1 overflow-y-auto pb-2">
         <div className="p-4 space-y-3">
           {exercises.map((exercise, index) => (
             <Card key={exercise.id} className="border-l-4 border-l-blue-500">
