@@ -43,7 +43,7 @@ export const WorkoutModeSelector = ({
   isGenerating
 }: WorkoutModeSelectorProps) => {
   return (
-    <div className="space-y-6 pb-16">
+    <div className="space-y-4 pb-16">
       <SimpleWorkoutCreation
         workoutName={workoutName}
         onWorkoutNameChange={onWorkoutNameChange}
@@ -58,7 +58,7 @@ export const WorkoutModeSelector = ({
       />
       
       {/* OR Separator */}
-      <div className="flex items-center justify-center py-4">
+      <div className="flex items-center justify-center py-2">
         <div className="flex-1 border-t border-gray-300"></div>
         <div className="px-4 text-sm text-gray-500 font-medium">OR</div>
         <div className="flex-1 border-t border-gray-300"></div>
