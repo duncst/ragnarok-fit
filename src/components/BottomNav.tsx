@@ -22,10 +22,8 @@ const ExerciseIcon = ({ className }: { className?: string }) => (
 
 const navItems = [
   { to: "/", icon: HomeIcon, label: "Home" },
-  { to: "/forge", icon: Anvil, label: "Forge" },
   { to: "/workout/new", icon: StartWorkoutIcon, label: "Start Workout" },
-  { to: "/exercises", icon: ExerciseIcon, label: "Exercises" },
-  { to: "/run", icon: RunningIcon, label: "Running" },
+  { to: "/forge", icon: Anvil, label: "Forge" },
 ];
 
 const BottomNav = () => {
