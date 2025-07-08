@@ -39,7 +39,7 @@ export const useNewWorkoutForm = () => {
   const { generateWorkoutMutation } = useGenerateWorkout({ setWorkoutName, setExercises });
 
   const isValhallaWorkout = (name: string) => {
-    return name.match(/^(THOR|FENRIR|HEL|NJORD|ODIN)$/i);
+    return !!name.match(/^(THOR|FENRIR|HEL|NJORD|ODIN)$/i);
   };
 
   const handleValhallaScorePrompt = (workoutName: string, duration: number) => {

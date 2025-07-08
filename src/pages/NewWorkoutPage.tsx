@@ -1,26 +1,20 @@
-import React, { useCallback, useState, useEffect } from 'react';
+import React, { useCallback, useState } from 'react';
 import { useNewWorkoutForm } from '@/hooks/useNewWorkoutForm';
 import { useWorkoutTimer } from '@/hooks/useWorkoutTimer';
-import { WorkoutHeader } from '@/components/workout/WorkoutHeader';
-import { ExerciseCard } from '@/components/workout/ExerciseCard';
-import { WorkoutStartOptions } from '@/components/workout/WorkoutStartOptions';
+import { useTrialWorkout } from '@/hooks/useTrialWorkout';
+import { useRestTimer } from '@/hooks/useRestTimer';
 import { WorkoutCookMode } from '@/components/workout/WorkoutCookMode';
 import { ValhallaScoreDialog } from '@/components/workout/ValhallaScoreDialog';
-import { RestTimerSettings } from '@/components/workout/RestTimerSettings';
 import { RestTimerToast } from '@/components/workout/RestTimerToast';
-import { HeroCallWorkoutMode } from '@/components/hero-call/HeroCallWorkoutMode';
-import { SimpleWorkoutExecution } from '@/components/workout/SimpleWorkoutExecution';
-import { WorkoutModeSelector } from '@/components/workout/WorkoutModeSelector';
-import { toast as sonnerToast } from 'sonner';
+import { TrialWorkoutMode } from '@/components/workout/TrialWorkoutMode';
+import { WorkoutModeManager } from '@/components/workout/WorkoutModeManager';
+import { AdvancedWorkoutMode } from '@/components/workout/AdvancedWorkoutMode';
 
 const NewWorkoutPage = () => {
   const [isCookMode, setIsCookMode] = useState(false);
   const [isInWorkoutFlow, setIsInWorkoutFlow] = useState(false);
-  const [trialWorkout, setTrialWorkout] = useState(null);
   const [selectedLevel, setSelectedLevel] = useState<'easy' | 'medium' | 'hard'>('medium');
   const [workoutMode, setWorkoutMode] = useState<'simple' | 'advanced'>('simple');
-  const [showRestTimer, setShowRestTimer] = useState(false);
-  const [restTimerDuration, setRestTimerDuration] = useState(0);
   
   const {
     isActive: isWorkoutActive,
@@ -61,35 +55,27 @@ const NewWorkoutPage = () => {
     isValhallaWorkout,
   } = useNewWorkoutForm();
 
-  // Check for Trial of Embers workout on component mount
-  useEffect(() => {
-    const storedTrialWorkout = localStorage.getItem('hero-call-trial-workout');
-    if (storedTrialWorkout) {
-      const parsedWorkout = JSON.parse(storedTrialWorkout);
-      setTrialWorkout(parsedWorkout);
-      setWorkoutName(parsedWorkout.name);
-      setIsInWorkoutFlow(true);
-      // Clean up the stored workout
-      localStorage.removeItem('hero-call-trial-workout');
-    }
-  }, [setWorkoutName]);
+  const { trialWorkout, clearTrialWorkout } = useTrialWorkout(setWorkoutName);
+  const { 
+    showRestTimer, 
+    restTimerDuration, 
+    handleSetCompletion, 
+    handleDismissRestTimer 
+  } = useRestTimer(restDuration, isValhallaWorkout);
 
   // Check if there's meaningful workout data
   const hasWorkoutData = workoutName.trim() !== '' || exercises.some(ex => ex.name.trim() !== '' || ex.sets.length > 0);
 
-  const handleToggleSet = useCallback((exerciseId: string, setId: string) => {
-    originalHandleToggleSet(exerciseId, setId, (isCompleted) => {
-      if (isCompleted && !isValhallaWorkout) {
-        setRestTimerDuration(restDuration);
-        setShowRestTimer(true);
-      }
-    });
-  }, [originalHandleToggleSet, restDuration, isValhallaWorkout]);
+  // Set workout flow when trial workout is loaded
+  React.useEffect(() => {
+    if (trialWorkout) {
+      setIsInWorkoutFlow(true);
+    }
+  }, [trialWorkout]);
 
-  const handleDismissRestTimer = () => {
-    setShowRestTimer(false);
-    setRestTimerDuration(0);
-  };
+  const handleToggleSet = useCallback((exerciseId: string, setId: string) => {
+    originalHandleToggleSet(exerciseId, setId, handleSetCompletion);
+  }, [originalHandleToggleSet, handleSetCompletion]);
 
   const handleEnterCookMode = () => {
     setIsCookMode(true);
@@ -103,7 +89,7 @@ const NewWorkoutPage = () => {
   const handleFinishWorkout = () => {
     finishWorkout(totalDuration);
     setIsInWorkoutFlow(false);
-    setTrialWorkout(null);
+    clearTrialWorkout();
   };
 
   const handleGenerateWorkout = () => {
@@ -112,7 +98,7 @@ const NewWorkoutPage = () => {
 
   const handleStartWorkout = () => {
     setIsInWorkoutFlow(true);
-    startWorkout(); // Start the timer when workout begins
+    startWorkout();
     if (isCookMode) {
       handleEnterCookMode();
     }
@@ -120,18 +106,17 @@ const NewWorkoutPage = () => {
 
   const handleCancelWorkout = () => {
     setIsInWorkoutFlow(false);
-    setTrialWorkout(null);
+    clearTrialWorkout();
     cancelWorkout();
   };
 
   const handleExitTrial = () => {
-    setTrialWorkout(null);
+    clearTrialWorkout();
     setIsInWorkoutFlow(false);
     cancelWorkout();
   };
 
   const handleAddExerciseByName = (exerciseName: string) => {
-    // Create a new exercise with the selected name
     const newExerciseId = Date.now().toString();
     const newExercise = {
       id: newExerciseId,
@@ -146,17 +131,16 @@ const NewWorkoutPage = () => {
       }],
     };
     
-    // Add the exercise directly with the name
     const updatedExercises = [...exercises, newExercise];
     setExercises(updatedExercises);
   };
 
   return (
     <>
-      {/* If we have a Trial of Embers workout, show the Hero Call workout mode */}
+      {/* Trial of Embers workout mode */}
       {trialWorkout && isInWorkoutFlow && (
-        <HeroCallWorkoutMode
-          workout={trialWorkout}
+        <TrialWorkoutMode
+          trialWorkout={trialWorkout}
           selectedLevel={selectedLevel}
           onFinish={handleFinishWorkout}
           onExit={handleExitTrial}
@@ -166,48 +150,37 @@ const NewWorkoutPage = () => {
         />
       )}
 
-      {/* Simple workout creation mode (when not in workout flow) */}
-      {!isInWorkoutFlow && workoutMode === 'simple' && (
-        <WorkoutModeSelector
+      {/* Simple workout modes */}
+      {!trialWorkout && (
+        <WorkoutModeManager
+          isInWorkoutFlow={isInWorkoutFlow}
+          workoutMode={workoutMode}
           workoutName={workoutName}
-          onWorkoutNameChange={setWorkoutName}
           exercises={exercises}
-          onAddExercise={handleAddExerciseByName}
-          onRemoveExercise={removeExercise}
-          onMoveExercise={moveExercise}
-          onAddSet={addSet}
-          onStartWorkout={handleStartWorkout}
-          onCancel={handleCancelWorkout}
           restDuration={restDuration}
+          formattedDuration={formattedDuration}
           selectedEquipment={selectedEquipment}
-          onEquipmentChange={setSelectedEquipment}
           focusArea={focusArea}
-          onFocusChange={setFocusArea}
-          onGenerateWorkout={handleGenerateWorkout}
           isGenerating={generateWorkoutMutation.isPending}
-        />
-      )}
-
-      {/* Simple workout execution mode (when in workout flow) */}
-      {isInWorkoutFlow && workoutMode === 'simple' && !isCookMode && (
-        <SimpleWorkoutExecution
-          workoutName={workoutName}
-          exercises={exercises}
+          onWorkoutNameChange={setWorkoutName}
           onAddExercise={handleAddExerciseByName}
           onRemoveExercise={removeExercise}
           onMoveExercise={moveExercise}
           onAddSet={addSet}
           onUpdateSet={updateSet}
           onToggleSet={handleToggleSet}
+          onStartWorkout={handleStartWorkout}
           onFinishWorkout={handleFinishWorkout}
           onCancelWorkout={handleCancelWorkout}
-          workoutTimer={formattedDuration}
-          restDuration={restDuration}
+          onEquipmentChange={setSelectedEquipment}
+          onFocusChange={setFocusArea}
+          onGenerateWorkout={handleGenerateWorkout}
           onRestDurationChange={setRestDuration}
         />
       )}
 
-      {isCookMode && isInWorkoutFlow && (
+      {/* Cook mode */}
+      {isCookMode && isInWorkoutFlow && !trialWorkout && (
         <WorkoutCookMode
           workoutName={workoutName}
           exercises={exercises}
@@ -227,89 +200,36 @@ const NewWorkoutPage = () => {
         />
       )}
 
-      {isInWorkoutFlow && !isCookMode && workoutMode === 'advanced' && (
-        <div className="space-y-4 pb-16">
-          <div className="flex justify-between items-center">
-            <h1 className="text-3xl font-bold tracking-tight">Workout in Progress</h1>
-            {isWorkoutActive && (
-              <div className="text-lg font-semibold text-green-600">
-                {formattedDuration}
-              </div>
-            )}
-          </div>
-
-          <WorkoutHeader
-            workoutName={workoutName}
-            onNameChange={setWorkoutName}
-            onFinish={handleFinishWorkout}
-            onCancel={handleCancelWorkout}
-            isSaving={saveWorkoutMutation.isPending}
-            onSaveAsTemplate={saveAsTemplate}
-            isSavingAsTemplate={saveAsTemplateMutation.isPending}
-            isWorkoutActive={isWorkoutActive}
-            onToggleWorkout={toggleWorkout}
-            isCookMode={isCookMode}
-            onToggleCookMode={setIsCookMode}
-            hasWorkoutData={hasWorkoutData}
-          />
-
-          {!isValhallaWorkout && (
-            <div className="p-4 border rounded-lg">
-              <RestTimerSettings
-                restDuration={restDuration}
-                onRestDurationChange={setRestDuration}
-              />
-            </div>
-          )}
-
-          {exercises.map((exercise, exerciseIndex) => (
-            <ExerciseCard
-              key={exercise.id}
-              exercise={exercise}
-              exerciseIndex={exerciseIndex}
-              totalExercises={exercises.length}
-              onRemove={removeExercise}
-              onMove={moveExercise}
-              onUpdateName={updateExerciseName}
-              onAddSet={addSet}
-              onUpdateSet={updateSet}
-              onToggleSet={handleToggleSet}
-            />
-          ))}
-        </div>
-      )}
-
-      {!isInWorkoutFlow && workoutMode === 'advanced' && (
-        <div className="space-y-4 pb-16">
-          <div className="flex justify-between items-center">
-            <h1 className="text-3xl font-bold tracking-tight">Choose your Destiny</h1>
-            {isWorkoutActive && (
-              <div className="text-lg font-semibold text-green-600">
-                {formattedDuration}
-              </div>
-            )}
-          </div>
-
-          <WorkoutStartOptions
-            workoutName={workoutName}
-            onNameChange={setWorkoutName}
-            onAddExercise={addExercise}
-            exercises={exercises}
-            onRemoveExercise={removeExercise}
-            onUpdateExerciseName={updateExerciseName}
-            onAddSet={addSet}
-            onUpdateSet={updateSet}
-            onToggleSet={handleToggleSet}
-            restDuration={restDuration}
-            onRestDurationChange={setRestDuration}
-            isCookMode={isCookMode}
-            onToggleCookMode={setIsCookMode}
-            onStartWorkout={handleStartWorkout}
-            onCancel={handleCancelWorkout}
-            isWorkoutActive={isWorkoutActive}
-            onToggleWorkout={toggleWorkout}
-          />
-        </div>
+      {/* Advanced workout mode */}
+      {!trialWorkout && workoutMode === 'advanced' && !isCookMode && (
+        <AdvancedWorkoutMode
+          isInWorkoutFlow={isInWorkoutFlow}
+          workoutName={workoutName}
+          exercises={exercises}
+          restDuration={restDuration}
+          isCookMode={isCookMode}
+          isWorkoutActive={isWorkoutActive}
+          formattedDuration={formattedDuration}
+          isValhallaWorkout={isValhallaWorkout}
+          hasWorkoutData={hasWorkoutData}
+          isSaving={saveWorkoutMutation.isPending}
+          isSavingAsTemplate={saveAsTemplateMutation.isPending}
+          onNameChange={setWorkoutName}
+          onFinish={handleFinishWorkout}
+          onCancel={handleCancelWorkout}
+          onSaveAsTemplate={saveAsTemplate}
+          onToggleWorkout={toggleWorkout}
+          onToggleCookMode={setIsCookMode}
+          onRestDurationChange={setRestDuration}
+          onAddExercise={addExercise}
+          onRemoveExercise={removeExercise}
+          onUpdateExerciseName={updateExerciseName}
+          onAddSet={addSet}
+          onUpdateSet={updateSet}
+          onToggleSet={handleToggleSet}
+          onMoveExercise={moveExercise}
+          onStartWorkout={handleStartWorkout}
+        />
       )}
 
       <ValhallaScoreDialog
