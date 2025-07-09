@@ -1,6 +1,5 @@
 
 import { HeroCall } from "@/components/HeroCall";
-import { RecentActivity } from "@/components/RecentActivity";
 import { BodyMetricsTracker } from "@/components/BodyMetricsTracker";
 import { ActionButtons } from "@/components/home/ActionButtons";
 import { AnalyticsSection } from "@/components/home/AnalyticsSection";
@@ -45,8 +44,6 @@ const HomePage = () => {
         <HeroCall />
       )}
       
-      <RecentActivity />
-
       <AnalyticsSection
         workoutHistory={workoutHistory}
         runHistory={runHistory}
