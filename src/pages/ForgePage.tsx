@@ -3,26 +3,14 @@ import React from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Progress } from '@/components/ui/progress';
 import { Badge } from '@/components/ui/badge';
-import { Button } from '@/components/ui/button';
-import { Shield, Sword, Mountain, Zap, Target, Globe, Crown, Lock, Flame, Circle, CheckCircle, CalendarCheck } from 'lucide-react';
-import { useNavigate } from 'react-router-dom';
+import { Crown, Lock, Flame, CalendarCheck, Sword } from 'lucide-react';
 import ForgeWorkoutHistory from '@/components/forge/ForgeWorkoutHistory';
-import CapabilityShowcase from '@/components/forge/CapabilityShowcase';
-import CapabilityOnboarding from '@/components/forge/CapabilityOnboarding';
-import { useForgeOnboarding } from '@/hooks/useForgeOnboarding';
+import { MonthlyActivityCalendar } from '@/components/forge/MonthlyActivityCalendar';
 import { useForgeProgress } from '@/hooks/useForgeProgress';
 import { useHeroCallData } from '@/hooks/useHeroCallData';
 import { Skeleton } from '@/components/ui/skeleton';
 
 const ForgePage = () => {
-  const navigate = useNavigate();
-  const {
-    showCapabilityOnboarding,
-    primaryPath,
-    dismissCapabilityOnboarding,
-    selectPrimaryPath,
-  } = useForgeOnboarding();
-
   const { forgeProgress, isLoading } = useForgeProgress();
   const { stats } = useHeroCallData();
 
@@ -136,25 +124,8 @@ const ForgePage = () => {
         </CardContent>
       </Card>
 
-      {/* Capability Paths with Primary Focus */}
-      <Card className="bg-gradient-to-r from-primary/10 to-primary/20 border-primary/30">
-        <CardHeader>
-          <CardTitle className="flex items-center justify-between">
-            <div className="flex items-center gap-2">
-              <Target className="h-5 w-5 text-primary" />
-              <span className="text-foreground">Capability Paths</span>
-            </div>
-            {primaryPath === null && (
-              <Button onClick={() => selectPrimaryPath(0)} variant="outline" size="sm" className="border-primary text-primary hover:bg-primary hover:text-primary-foreground">
-                Choose Primary Path
-              </Button>
-            )}
-          </CardTitle>
-        </CardHeader>
-        <CardContent>
-          <CapabilityShowcase primaryPath={primaryPath} />
-        </CardContent>
-      </Card>
+      {/* Monthly Activity Calendar */}
+      <MonthlyActivityCalendar />
 
       <Card className="bg-gradient-to-r from-primary/10 to-primary/20 border-primary/30">
         <CardHeader>
@@ -186,11 +157,6 @@ const ForgePage = () => {
         </CardContent>
       </Card>
 
-      <CapabilityOnboarding
-        isOpen={showCapabilityOnboarding}
-        onClose={dismissCapabilityOnboarding}
-        onSelectPrimary={selectPrimaryPath}
-      />
     </div>
   );
 };
