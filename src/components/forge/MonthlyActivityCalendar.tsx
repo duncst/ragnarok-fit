@@ -155,7 +155,7 @@ export const MonthlyActivityCalendar = () => {
         <CardTitle className="flex items-center justify-between">
           <div className="flex items-center gap-2">
             <CalendarDays className="h-5 w-5 text-primary" />
-            <span className="text-foreground">Monthly Activity Overview</span>
+            <span className="text-foreground">Behold your Deeds</span>
           </div>
           <div className="flex items-center gap-2">
             <Button
