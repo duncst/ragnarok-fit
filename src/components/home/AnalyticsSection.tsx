@@ -60,7 +60,7 @@ export const AnalyticsSection = ({
 
   return (
     <div>
-      <h2 className="text-2xl font-bold mb-4">Analytics</h2>
+      <h2 className="text-2xl font-bold mb-4">Your Saga</h2>
       <div className="space-y-4">
         <Collapsible open={strengthOpen} onOpenChange={setStrengthOpen}>
           <Card>
@@ -69,7 +69,7 @@ export const AnalyticsSection = ({
                 <div className="flex items-center justify-between w-full">
                   <CardTitle className="flex items-center gap-2 text-lg font-semibold">
                     <Zap className="h-7 w-7 text-primary" />
-                    Strength Training
+                    Strength
                   </CardTitle>
                   <ChevronDown className={`h-4 w-4 text-muted-foreground transition-transform duration-200 ${strengthOpen ? 'rotate-180' : ''}`} />
                 </div>
@@ -110,7 +110,7 @@ export const AnalyticsSection = ({
                 <div className="flex items-center justify-between w-full">
                   <CardTitle className="flex items-center gap-2 text-lg font-semibold">
                     <ImageIcon src="/lovable-uploads/ce6da73b-d67b-4c6a-9101-65cfa425f67a.png" alt="Running icon" className="h-8 w-8 text-primary" />
-                    Running
+                    Endurance
                   </CardTitle>
                   <ChevronDown className={`h-4 w-4 text-muted-foreground transition-transform duration-200 ${runningOpen ? 'rotate-180' : ''}`} />
                 </div>
