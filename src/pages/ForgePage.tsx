@@ -4,8 +4,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Progress } from '@/components/ui/progress';
 import { Badge } from '@/components/ui/badge';
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion';
-import { Crown, Lock, Flame, CalendarCheck, Sword } from 'lucide-react';
-import ForgeWorkoutHistory from '@/components/forge/ForgeWorkoutHistory';
+import { Crown, Lock, Flame, CalendarCheck } from 'lucide-react';
 import { MonthlyActivityCalendar } from '@/components/forge/MonthlyActivityCalendar';
 import { useForgeProgress } from '@/hooks/useForgeProgress';
 import { useHeroCallData } from '@/hooks/useHeroCallData';
@@ -216,18 +215,6 @@ const ForgePage = () => {
               "{currentQuote}"
             </blockquote>
           </div>
-        </CardContent>
-      </Card>
-
-      <Card className="bg-gradient-to-r from-primary/10 to-primary/20 border-primary/30">
-        <CardHeader>
-          <CardTitle className="flex items-center gap-2 text-foreground">
-            <Sword className="h-5 w-5 text-primary" />
-            Workout History
-          </CardTitle>
-        </CardHeader>
-        <CardContent>
-          <ForgeWorkoutHistory />
         </CardContent>
       </Card>
 
