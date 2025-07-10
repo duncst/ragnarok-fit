@@ -150,84 +150,76 @@ export const MonthlyActivityCalendar = () => {
   };
 
   return (
-    <Card className="bg-gradient-to-r from-primary/10 to-primary/20 border-primary/30">
-      <CardHeader>
-        <CardTitle className="flex items-center justify-between">
-          <div className="flex items-center gap-2">
-            <CalendarDays className="h-5 w-5 text-primary" />
-            <span className="text-foreground">Behold your Deeds</span>
-          </div>
-          <div className="flex items-center gap-2">
-            <Button
-              variant="outline"
-              size="sm"
-              onClick={() => navigateMonth('prev')}
-              className="border-primary text-primary hover:bg-primary hover:text-primary-foreground"
-            >
-              <ChevronLeft className="h-4 w-4" />
-            </Button>
-            <span className="text-sm font-medium text-foreground min-w-[100px] text-center">
-              {format(currentDate, 'MMMM yyyy')}
-            </span>
-            <Button
-              variant="outline"
-              size="sm"
-              onClick={() => navigateMonth('next')}
-              className="border-primary text-primary hover:bg-primary hover:text-primary-foreground"
-            >
-              <ChevronRight className="h-4 w-4" />
-            </Button>
-          </div>
-        </CardTitle>
-      </CardHeader>
-      <CardContent>
-        <div className="space-y-4">
-          {/* Legend */}
-          <div className="flex flex-wrap gap-4 text-sm">
-            <div className="flex items-center gap-2">
-              <div className="w-3 h-3 rounded-full bg-blue-500" />
-              <span>Workout</span>
-            </div>
-            <div className="flex items-center gap-2">
-              <div className="w-3 h-3 rounded-full bg-green-500" />
-              <span>Run</span>
-            </div>
-            <div className="flex items-center gap-2">
-              <div className="w-3 h-3 rounded-full bg-orange-500" />
-              <span>Hero's Call</span>
-            </div>
-            <div className="flex items-center gap-2">
-              <div className="w-3 h-3 rounded-full bg-purple-500" />
-              <span>Valhalla</span>
-            </div>
-          </div>
-
-          {/* Calendar */}
-          <div className="flex justify-center">
-            <Calendar
-              mode="single"
-              month={currentDate}
-              onMonthChange={setCurrentDate}
-              className="rounded-md border pointer-events-auto"
-              classNames={{
-                day: cn(
-                  "h-12 w-12 p-0 font-normal aria-selected:opacity-100 flex flex-col items-center justify-center relative"
-                ),
-                day_selected: "bg-primary text-primary-foreground hover:bg-primary hover:text-primary-foreground",
-                day_today: "bg-accent text-accent-foreground",
-              }}
-              components={{
-                DayContent: ({ date }) => (
-                  <div className="flex flex-col items-center justify-center h-full w-full">
-                    <span className="text-sm">{format(date, 'd')}</span>
-                    <ActivityIndicators date={date} />
-                  </div>
-                ),
-              }}
-            />
-          </div>
+    <div className="space-y-4">
+      {/* Navigation Header */}
+      <div className="flex items-center justify-between">
+        <div className="flex items-center gap-2">
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={() => navigateMonth('prev')}
+            className="border-primary text-primary hover:bg-primary hover:text-primary-foreground"
+          >
+            <ChevronLeft className="h-4 w-4" />
+          </Button>
+          <span className="text-lg font-medium text-foreground min-w-[120px] text-center">
+            {format(currentDate, 'MMMM yyyy')}
+          </span>
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={() => navigateMonth('next')}
+            className="border-primary text-primary hover:bg-primary hover:text-primary-foreground"
+          >
+            <ChevronRight className="h-4 w-4" />
+          </Button>
         </div>
-      </CardContent>
-    </Card>
+      </div>
+
+      {/* Legend */}
+      <div className="flex flex-wrap gap-4 text-sm">
+        <div className="flex items-center gap-2">
+          <div className="w-3 h-3 rounded-full bg-blue-500" />
+          <span>Workout</span>
+        </div>
+        <div className="flex items-center gap-2">
+          <div className="w-3 h-3 rounded-full bg-green-500" />
+          <span>Run</span>
+        </div>
+        <div className="flex items-center gap-2">
+          <div className="w-3 h-3 rounded-full bg-orange-500" />
+          <span>Hero's Call</span>
+        </div>
+        <div className="flex items-center gap-2">
+          <div className="w-3 h-3 rounded-full bg-purple-500" />
+          <span>Valhalla</span>
+        </div>
+      </div>
+
+      {/* Calendar */}
+      <div className="flex justify-center">
+        <Calendar
+          mode="single"
+          month={currentDate}
+          onMonthChange={setCurrentDate}
+          className="rounded-md border pointer-events-auto"
+          classNames={{
+            day: cn(
+              "h-12 w-12 p-0 font-normal aria-selected:opacity-100 flex flex-col items-center justify-center relative"
+            ),
+            day_selected: "bg-primary text-primary-foreground hover:bg-primary hover:text-primary-foreground",
+            day_today: "bg-accent text-accent-foreground",
+          }}
+          components={{
+            DayContent: ({ date }) => (
+              <div className="flex flex-col items-center justify-center h-full w-full">
+                <span className="text-sm">{format(date, 'd')}</span>
+                <ActivityIndicators date={date} />
+              </div>
+            ),
+          }}
+        />
+      </div>
+    </div>
   );
 };
