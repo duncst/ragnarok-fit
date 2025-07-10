@@ -1,7 +1,7 @@
 import React from 'react';
 import { WorkoutModeSelector } from './WorkoutModeSelector';
 import { SimpleWorkoutExecution } from './SimpleWorkoutExecution';
-import type { Exercise } from '@/types';
+import type { Exercise, Workout } from '@/types';
 
 interface WorkoutModeManagerProps {
   // Workout state
@@ -32,6 +32,7 @@ interface WorkoutModeManagerProps {
   onFocusChange: (focus: string) => void;
   onGenerateWorkout: () => void;
   onRestDurationChange: (duration: number) => void;
+  onRedoWorkout?: (workout: Workout) => void;
 }
 
 export const WorkoutModeManager = ({
@@ -58,6 +59,7 @@ export const WorkoutModeManager = ({
   onFocusChange,
   onGenerateWorkout,
   onRestDurationChange,
+  onRedoWorkout,
 }: WorkoutModeManagerProps) => {
   // Simple workout creation mode (when not in workout flow)
   if (!isInWorkoutFlow && workoutMode === 'simple') {
@@ -79,6 +81,7 @@ export const WorkoutModeManager = ({
         onFocusChange={onFocusChange}
         onGenerateWorkout={onGenerateWorkout}
         isGenerating={isGenerating}
+        onRedoWorkout={onRedoWorkout}
       />
     );
   }

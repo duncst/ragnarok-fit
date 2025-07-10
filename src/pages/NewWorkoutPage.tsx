@@ -9,6 +9,7 @@ import { RestTimerToast } from '@/components/workout/RestTimerToast';
 import { TrialWorkoutMode } from '@/components/workout/TrialWorkoutMode';
 import { WorkoutModeManager } from '@/components/workout/WorkoutModeManager';
 import { AdvancedWorkoutMode } from '@/components/workout/AdvancedWorkoutMode';
+import type { Workout } from '@/types';
 
 const NewWorkoutPage = () => {
   const [isCookMode, setIsCookMode] = useState(false);
@@ -135,6 +136,28 @@ const NewWorkoutPage = () => {
     setExercises(updatedExercises);
   };
 
+  const handleRedoWorkout = (workout: Workout) => {
+    // Clear current workout
+    setExercises([]);
+    setWorkoutName(workout.name || '');
+    
+    // Load workout exercises
+    const loadedExercises = workout.exercises.map((exercise, index) => ({
+      id: `${Date.now()}_${index}`,
+      name: exercise.name,
+      sets: exercise.sets.map((set, setIndex) => ({
+        id: `${Date.now()}_${index}_set${setIndex}`,
+        reps: set.reps,
+        weight: set.weight,
+        completed: false, // Reset completion status
+        duration: set.duration || 0,
+        distance: set.distance || 0,
+      }))
+    }));
+    
+    setExercises(loadedExercises);
+  };
+
   return (
     <>
       {/* Trial of Embers workout mode */}
@@ -176,6 +199,7 @@ const NewWorkoutPage = () => {
           onFocusChange={setFocusArea}
           onGenerateWorkout={handleGenerateWorkout}
           onRestDurationChange={setRestDuration}
+          onRedoWorkout={handleRedoWorkout}
         />
       )}
 

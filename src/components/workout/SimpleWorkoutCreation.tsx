@@ -5,7 +5,8 @@ import { Input } from '@/components/ui/input';
 import { Card, CardContent } from '@/components/ui/card';
 import { X, Plus, ChevronUp, ChevronDown } from 'lucide-react';
 import { SimpleExerciseSelector } from './SimpleExerciseSelector';
-import type { Exercise } from '@/types';
+import { WorkoutHistoryAccordion } from './WorkoutHistoryAccordion';
+import type { Exercise, Workout } from '@/types';
 
 interface SimpleWorkoutCreationProps {
   workoutName: string;
@@ -18,6 +19,7 @@ interface SimpleWorkoutCreationProps {
   onStartWorkout: () => void;
   onCancel: () => void;
   restDuration: number;
+  onRedoWorkout?: (workout: Workout) => void;
 }
 
 export const SimpleWorkoutCreation = ({
@@ -31,6 +33,7 @@ export const SimpleWorkoutCreation = ({
   onStartWorkout,
   onCancel,
   restDuration,
+  onRedoWorkout,
 }: SimpleWorkoutCreationProps) => {
   const canStartWorkout = exercises.length > 0;
 
@@ -60,10 +63,10 @@ export const SimpleWorkoutCreation = ({
       {/* Workout Name */}
       <div className="p-4 border-b">
         <Input
-          placeholder="Workout Name"
+          placeholder="Name this Test"
           value={workoutName}
           onChange={(e) => onWorkoutNameChange(e.target.value)}
-          className="text-lg font-medium border-none px-0 focus-visible:ring-0"
+          className="text-lg font-medium border-none px-0 focus-visible:ring-0 italic placeholder:italic"
         />
       </div>
 
@@ -134,6 +137,12 @@ export const SimpleWorkoutCreation = ({
                 Add Exercise
               </Button>
             }
+          />
+          
+          {/* Workout History Accordion */}
+          <WorkoutHistoryAccordion 
+            onRedoWorkout={onRedoWorkout}
+            className="mt-4"
           />
         </div>
       </div>

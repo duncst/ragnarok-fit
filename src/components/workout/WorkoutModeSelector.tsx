@@ -3,7 +3,7 @@ import React from 'react';
 import { SimpleWorkoutCreation } from './SimpleWorkoutCreation';
 import { AIWorkoutSection } from './AIWorkoutSection';
 import { ValhallaSection } from './ValhallaSection';
-import type { Exercise } from '@/types';
+import type { Exercise, Workout } from '@/types';
 
 interface WorkoutModeSelectorProps {
   workoutName: string;
@@ -22,6 +22,7 @@ interface WorkoutModeSelectorProps {
   onFocusChange: (focus: string) => void;
   onGenerateWorkout: () => void;
   isGenerating: boolean;
+  onRedoWorkout?: (workout: Workout) => void;
 }
 
 export const WorkoutModeSelector = ({
@@ -40,7 +41,8 @@ export const WorkoutModeSelector = ({
   focusArea,
   onFocusChange,
   onGenerateWorkout,
-  isGenerating
+  isGenerating,
+  onRedoWorkout
 }: WorkoutModeSelectorProps) => {
   return (
     <div className="space-y-2 pb-16">
@@ -55,6 +57,7 @@ export const WorkoutModeSelector = ({
         onStartWorkout={onStartWorkout}
         onCancel={onCancel}
         restDuration={restDuration}
+        onRedoWorkout={onRedoWorkout}
       />
       
       {/* OR Separator */}
