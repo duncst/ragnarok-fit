@@ -6,6 +6,8 @@ import { Card, CardContent } from '@/components/ui/card';
 import { X, Plus, ChevronUp, ChevronDown } from 'lucide-react';
 import { SimpleExerciseSelector } from './SimpleExerciseSelector';
 import { WorkoutHistoryAccordion } from './WorkoutHistoryAccordion';
+import { AIWorkoutSection } from './AIWorkoutSection';
+import { ValhallaSection } from './ValhallaSection';
 import type { Exercise, Workout } from '@/types';
 
 interface SimpleWorkoutCreationProps {
@@ -20,6 +22,12 @@ interface SimpleWorkoutCreationProps {
   onCancel: () => void;
   restDuration: number;
   onRedoWorkout?: (workout: Workout) => void;
+  selectedEquipment: string[];
+  onEquipmentChange: (equipment: string[]) => void;
+  focusArea: string;
+  onFocusChange: (focus: string) => void;
+  onGenerateWorkout: () => void;
+  isGenerating: boolean;
 }
 
 export const SimpleWorkoutCreation = ({
@@ -34,6 +42,12 @@ export const SimpleWorkoutCreation = ({
   onCancel,
   restDuration,
   onRedoWorkout,
+  selectedEquipment,
+  onEquipmentChange,
+  focusArea,
+  onFocusChange,
+  onGenerateWorkout,
+  isGenerating,
 }: SimpleWorkoutCreationProps) => {
   const canStartWorkout = exercises.length > 0;
 
@@ -139,11 +153,31 @@ export const SimpleWorkoutCreation = ({
             }
           />
           
+          {/* OR Separator */}
+          <div className="flex items-center justify-center py-4">
+            <div className="flex-1 border-t border-gray-300"></div>
+            <div className="px-4 text-sm text-gray-500 font-medium">OR</div>
+            <div className="flex-1 border-t border-gray-300"></div>
+          </div>
+          
           {/* Workout History Accordion */}
           <WorkoutHistoryAccordion 
             onRedoWorkout={onRedoWorkout}
-            className="mt-4"
+            className="mb-4"
           />
+          
+          {/* AI Workout Generation Section */}
+          <AIWorkoutSection
+            selectedEquipment={selectedEquipment}
+            onEquipmentChange={onEquipmentChange}
+            focusArea={focusArea}
+            onFocusChange={onFocusChange}
+            onGenerateWorkout={onGenerateWorkout}
+            isGenerating={isGenerating}
+          />
+          
+          {/* Valhalla Section */}
+          <ValhallaSection />
         </div>
       </div>
     </div>

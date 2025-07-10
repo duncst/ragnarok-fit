@@ -1,8 +1,6 @@
 
 import React from 'react';
 import { SimpleWorkoutCreation } from './SimpleWorkoutCreation';
-import { AIWorkoutSection } from './AIWorkoutSection';
-import { ValhallaSection } from './ValhallaSection';
 import type { Exercise, Workout } from '@/types';
 
 interface WorkoutModeSelectorProps {
@@ -58,31 +56,13 @@ export const WorkoutModeSelector = ({
         onCancel={onCancel}
         restDuration={restDuration}
         onRedoWorkout={onRedoWorkout}
+        selectedEquipment={selectedEquipment}
+        onEquipmentChange={onEquipmentChange}
+        focusArea={focusArea}
+        onFocusChange={onFocusChange}
+        onGenerateWorkout={onGenerateWorkout}
+        isGenerating={isGenerating}
       />
-      
-      {/* OR Separator */}
-      <div className="flex items-center justify-center py-1">
-        <div className="flex-1 border-t border-gray-300"></div>
-        <div className="px-4 text-sm text-gray-500 font-medium">OR</div>
-        <div className="flex-1 border-t border-gray-300"></div>
-      </div>
-
-      {/* AI Workout Generation Section */}
-      <div className="px-4">
-        <AIWorkoutSection
-          selectedEquipment={selectedEquipment}
-          onEquipmentChange={onEquipmentChange}
-          focusArea={focusArea}
-          onFocusChange={onFocusChange}
-          onGenerateWorkout={onGenerateWorkout}
-          isGenerating={isGenerating}
-        />
-      </div>
-
-      {/* Valhalla Section */}
-      <div className="px-4">
-        <ValhallaSection />
-      </div>
     </div>
   );
 };
