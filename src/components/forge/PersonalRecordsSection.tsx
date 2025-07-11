@@ -5,20 +5,15 @@ import { Button } from '@/components/ui/button';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from '@/components/ui/alert-dialog';
 import { Skeleton } from '@/components/ui/skeleton';
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
-import { TrendingUp, Trophy, Calendar, RotateCcw } from 'lucide-react';
+import { TrendingUp, Trophy, Calendar, RotateCcw, Calculator } from 'lucide-react';
 import { supabase } from '@/integrations/supabase/client';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { format } from 'date-fns';
 import { toast } from 'sonner';
-
-interface PersonalRecord {
-  id: string;
-  exercise_name: string;
-  one_rep_max: number;
-  date: string;
-  created_at: string;
-}
+import { Link } from 'react-router-dom';
+import type { PersonalRecord } from '@/types';
 
 const MAJOR_LIFTS = [
   'bench press',
@@ -30,6 +25,7 @@ const MAJOR_LIFTS = [
 
 const PersonalRecordsSection = () => {
   const [selectedExercise, setSelectedExercise] = useState<string | null>(null);
+  const [showAllRecords, setShowAllRecords] = useState(false);
   const queryClient = useQueryClient();
 
   // Fetch all personal records
@@ -50,6 +46,27 @@ const PersonalRecordsSection = () => {
   const liftsWithRecords = MAJOR_LIFTS.filter(lift => 
     personalRecords.some(pr => pr.exercise_name.toLowerCase() === lift.toLowerCase())
   );
+
+  // Process personal records to separate 1RM and Valhalla scores
+  const oneRepMaxRecords = personalRecords?.filter(pr => !pr.exercise_name.includes('(Valhalla)')) || [];
+  const valhallaRecords = personalRecords?.filter(pr => pr.exercise_name.includes('(Valhalla)')) || [];
+
+  // Format records for display
+  const formatPRsForDisplay = (records: PersonalRecord[], isValhalla: boolean = false) => {
+    return records.map(pr => ({
+      exercise: pr.exercise_name,
+      value: isValhalla 
+        ? `${Number(pr.one_rep_max).toFixed(1)}` 
+        : `${Number(pr.one_rep_max).toFixed(1)} kg`,
+      date: format(new Date(pr.date), 'yyyy-MM-dd'),
+      type: isValhalla ? 'valhalla' : 'weight'
+    }));
+  };
+
+  const allPRsForDisplay = [
+    ...formatPRsForDisplay(oneRepMaxRecords, false),
+    ...formatPRsForDisplay(valhallaRecords, true)
+  ].sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
 
   // Fetch progression data for selected exercise
   const { data: progressionData = [], isLoading: isLoadingProgression } = useQuery({
@@ -137,11 +154,6 @@ const PersonalRecordsSection = () => {
     );
   }
 
-  // Don't render anything if no lifts have records
-  if (liftsWithRecords.length === 0) {
-    return null;
-  }
-
   return (
     <div className="space-y-6">
       <div className="text-center space-y-2">
@@ -154,145 +166,228 @@ const PersonalRecordsSection = () => {
         </p>
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-        {liftsWithRecords.map((lift) => {
-          const pr = getCurrentPR(lift);
-          
-          return (
-            <Dialog key={lift}>
-              <DialogTrigger asChild>
-                <Card className="cursor-pointer hover:bg-muted/50 transition-colors border-muted">
-                  <CardContent className="p-4">
-                    <div className="text-center space-y-3">
-                      <div>
-                        <h4 className="font-semibold text-foreground capitalize">
-                          {lift}
-                        </h4>
-                        {pr ? (
-                          <div className="space-y-1">
-                            <Badge variant="secondary" className="bg-primary/20 text-foreground">
-                              {pr.one_rep_max.toFixed(1)}kg
-                            </Badge>
-                            <p className="text-xs text-muted-foreground">
-                              {format(new Date(pr.date), 'MMM dd, yyyy')}
-                            </p>
-                          </div>
-                        ) : (
-                          <p className="text-sm text-muted-foreground">No PR yet</p>
-                        )}
+      {/* Major Lifts Grid */}
+      {liftsWithRecords.length > 0 && (
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+          {liftsWithRecords.map((lift) => {
+            const pr = getCurrentPR(lift);
+            
+            return (
+              <Dialog key={lift}>
+                <DialogTrigger asChild>
+                  <Card className="cursor-pointer hover:bg-muted/50 transition-colors border-muted">
+                    <CardContent className="p-4">
+                      <div className="text-center space-y-3">
+                        <div>
+                          <h4 className="font-semibold text-foreground capitalize">
+                            {lift}
+                          </h4>
+                          {pr ? (
+                            <div className="space-y-1">
+                              <Badge variant="secondary" className="bg-primary/20 text-foreground">
+                                {pr.one_rep_max.toFixed(1)}kg
+                              </Badge>
+                              <p className="text-xs text-muted-foreground">
+                                {format(new Date(pr.date), 'MMM dd, yyyy')}
+                              </p>
+                            </div>
+                          ) : (
+                            <p className="text-sm text-muted-foreground">No PR yet</p>
+                          )}
+                        </div>
+                        <div className="flex items-center justify-center gap-1 text-xs text-muted-foreground">
+                          <TrendingUp className="h-3 w-3" />
+                          View Progress
+                        </div>
                       </div>
-                      <div className="flex items-center justify-center gap-1 text-xs text-muted-foreground">
-                        <TrendingUp className="h-3 w-3" />
-                        View Progress
-                      </div>
-                    </div>
-                  </CardContent>
-                </Card>
-              </DialogTrigger>
-              
-              <DialogContent className="max-w-2xl">
-                <DialogHeader>
-                  <DialogTitle className="flex items-center justify-between">
-                    <span className="capitalize">{lift} Progression</span>
-                    {pr && (
-                      <AlertDialog>
-                        <AlertDialogTrigger asChild>
-                          <Button variant="outline" size="sm" className="text-destructive hover:text-destructive">
-                            <RotateCcw className="h-4 w-4 mr-1" />
-                            Reset PR
-                          </Button>
-                        </AlertDialogTrigger>
-                        <AlertDialogContent>
-                          <AlertDialogHeader>
-                            <AlertDialogTitle>Reset Personal Record</AlertDialogTitle>
-                            <AlertDialogDescription>
-                              Are you sure you want to reset your personal record for {lift}? This action cannot be undone.
-                            </AlertDialogDescription>
-                          </AlertDialogHeader>
-                          <AlertDialogFooter>
-                            <AlertDialogCancel>Cancel</AlertDialogCancel>
-                            <AlertDialogAction 
-                              onClick={() => resetPersonalRecord(lift)}
-                              className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
-                            >
-                              Reset
-                            </AlertDialogAction>
-                          </AlertDialogFooter>
-                        </AlertDialogContent>
-                      </AlertDialog>
-                    )}
-                  </DialogTitle>
-                </DialogHeader>
+                    </CardContent>
+                  </Card>
+                </DialogTrigger>
                 
-                <div className="space-y-6">
-                  {pr && (
-                    <div className="text-center space-y-2">
-                      <div className="flex items-center justify-center gap-2">
-                        <Trophy className="h-5 w-5 text-primary" />
-                        <span className="text-lg font-semibold">Current PR</span>
-                      </div>
-                      <div className="text-3xl font-bold text-primary">{pr.one_rep_max.toFixed(1)}kg</div>
-                      <div className="flex items-center justify-center gap-1 text-sm text-muted-foreground">
-                        <Calendar className="h-4 w-4" />
-                        {format(new Date(pr.date), 'MMMM dd, yyyy')}
-                      </div>
-                    </div>
-                  )}
-
-                  <div className="h-64">
-                    {isLoadingProgression ? (
-                      <div className="flex items-center justify-center h-full">
-                        <Skeleton className="w-full h-full" />
-                      </div>
-                    ) : progressionData.length > 0 ? (
-                      <ResponsiveContainer width="100%" height="100%">
-                        <LineChart data={progressionData}>
-                          <CartesianGrid strokeDasharray="3 3" className="opacity-30" />
-                          <XAxis 
-                            dataKey="formattedDate" 
-                            fontSize={12}
-                            className="text-muted-foreground"
-                          />
-                          <YAxis 
-                            fontSize={12}
-                            className="text-muted-foreground"
-                            label={{ value: 'Weight (kg)', angle: -90, position: 'insideLeft' }}
-                          />
-                          <Tooltip 
-                            formatter={(value) => [`${value}kg`, 'Est. 1RM']}
-                            labelFormatter={(label) => `Date: ${label}`}
-                            contentStyle={{
-                              backgroundColor: 'hsl(var(--card))',
-                              border: '1px solid hsl(var(--border))',
-                              borderRadius: '6px'
-                            }}
-                          />
-                          <Line 
-                            type="monotone" 
-                            dataKey="oneRepMax" 
-                            stroke="hsl(var(--primary))" 
-                            strokeWidth={2}
-                            dot={{ fill: 'hsl(var(--primary))', strokeWidth: 2, r: 4 }}
-                            activeDot={{ r: 6, stroke: 'hsl(var(--primary))', strokeWidth: 2 }}
-                          />
-                        </LineChart>
-                      </ResponsiveContainer>
-                    ) : (
-                      <div className="flex items-center justify-center h-full text-muted-foreground">
-                        <div className="text-center space-y-2">
-                          <TrendingUp className="h-8 w-8 mx-auto opacity-50" />
-                          <p>No progression data yet</p>
-                          <p className="text-sm">Complete workouts with {lift} to see your progress</p>
+                <DialogContent className="max-w-2xl">
+                  <DialogHeader>
+                    <DialogTitle className="flex items-center justify-between">
+                      <span className="capitalize">{lift} Progression</span>
+                      {pr && (
+                        <AlertDialog>
+                          <AlertDialogTrigger asChild>
+                            <Button variant="outline" size="sm" className="text-destructive hover:text-destructive">
+                              <RotateCcw className="h-4 w-4 mr-1" />
+                              Reset PR
+                            </Button>
+                          </AlertDialogTrigger>
+                          <AlertDialogContent>
+                            <AlertDialogHeader>
+                              <AlertDialogTitle>Reset Personal Record</AlertDialogTitle>
+                              <AlertDialogDescription>
+                                Are you sure you want to reset your personal record for {lift}? This action cannot be undone.
+                              </AlertDialogDescription>
+                            </AlertDialogHeader>
+                            <AlertDialogFooter>
+                              <AlertDialogCancel>Cancel</AlertDialogCancel>
+                              <AlertDialogAction 
+                                onClick={() => resetPersonalRecord(lift)}
+                                className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
+                              >
+                                Reset
+                              </AlertDialogAction>
+                            </AlertDialogFooter>
+                          </AlertDialogContent>
+                        </AlertDialog>
+                      )}
+                    </DialogTitle>
+                  </DialogHeader>
+                  
+                  <div className="space-y-6">
+                    {pr && (
+                      <div className="text-center space-y-2">
+                        <div className="flex items-center justify-center gap-2">
+                          <Trophy className="h-5 w-5 text-primary" />
+                          <span className="text-lg font-semibold">Current PR</span>
+                        </div>
+                        <div className="text-3xl font-bold text-primary">{pr.one_rep_max.toFixed(1)}kg</div>
+                        <div className="flex items-center justify-center gap-1 text-sm text-muted-foreground">
+                          <Calendar className="h-4 w-4" />
+                          {format(new Date(pr.date), 'MMMM dd, yyyy')}
                         </div>
                       </div>
                     )}
+
+                    <div className="h-64">
+                      {isLoadingProgression ? (
+                        <div className="flex items-center justify-center h-full">
+                          <Skeleton className="w-full h-full" />
+                        </div>
+                      ) : progressionData.length > 0 ? (
+                        <ResponsiveContainer width="100%" height="100%">
+                          <LineChart data={progressionData}>
+                            <CartesianGrid strokeDasharray="3 3" className="opacity-30" />
+                            <XAxis 
+                              dataKey="formattedDate" 
+                              fontSize={12}
+                              className="text-muted-foreground"
+                            />
+                            <YAxis 
+                              fontSize={12}
+                              className="text-muted-foreground"
+                              label={{ value: 'Weight (kg)', angle: -90, position: 'insideLeft' }}
+                            />
+                            <Tooltip 
+                              formatter={(value) => [`${value}kg`, 'Est. 1RM']}
+                              labelFormatter={(label) => `Date: ${label}`}
+                              contentStyle={{
+                                backgroundColor: 'hsl(var(--card))',
+                                border: '1px solid hsl(var(--border))',
+                                borderRadius: '6px'
+                              }}
+                            />
+                            <Line 
+                              type="monotone" 
+                              dataKey="oneRepMax" 
+                              stroke="hsl(var(--primary))" 
+                              strokeWidth={2}
+                              dot={{ fill: 'hsl(var(--primary))', strokeWidth: 2, r: 4 }}
+                              activeDot={{ r: 6, stroke: 'hsl(var(--primary))', strokeWidth: 2 }}
+                            />
+                          </LineChart>
+                        </ResponsiveContainer>
+                      ) : (
+                        <div className="flex items-center justify-center h-full text-muted-foreground">
+                          <div className="text-center space-y-2">
+                            <TrendingUp className="h-8 w-8 mx-auto opacity-50" />
+                            <p>No progression data yet</p>
+                            <p className="text-sm">Complete workouts with {lift} to see your progress</p>
+                          </div>
+                        </div>
+                      )}
+                    </div>
                   </div>
+                </DialogContent>
+              </Dialog>
+            );
+          })}
+        </div>
+      )}
+
+      {/* All Personal Records Table */}
+      <Card>
+        <CardHeader>
+          <div className="flex justify-between items-center">
+            <CardTitle className="flex items-center gap-2 text-lg font-semibold">
+              <TrendingUp className="text-primary" />
+              All Personal Records
+            </CardTitle>
+            <Button asChild variant="outline" size="sm">
+              <Link to="/1rm-calculator">
+                <Calculator className="mr-2 h-4 w-4" />
+                Calculator
+              </Link>
+            </Button>
+          </div>
+        </CardHeader>
+        <CardContent className="pt-0">
+          {isLoading ? (
+            <div className="space-y-2 pt-4">
+              <Skeleton className="h-8 w-full" />
+              <Skeleton className="h-8 w-full" />
+              <Skeleton className="h-8 w-full" />
+            </div>
+          ) : (
+            <>
+              <Table>
+                <TableHeader>
+                  <TableRow>
+                    <TableHead>Exercise</TableHead>
+                    <TableHead className="text-center">Type</TableHead>
+                    <TableHead className="text-right">Score</TableHead>
+                    <TableHead className="text-right">Date</TableHead>
+                  </TableRow>
+                </TableHeader>
+                <TableBody>
+                  {allPRsForDisplay.length > 0 ? (
+                    (showAllRecords ? allPRsForDisplay : allPRsForDisplay.slice(0, 5)).map((item, index) => (
+                      <TableRow key={`${item.exercise}-${index}`}>
+                        <TableCell className="font-medium">{item.exercise}</TableCell>
+                        <TableCell className="text-center">
+                          {item.type === 'valhalla' ? (
+                            <span className="inline-flex items-center text-xs bg-orange-100 text-orange-800 px-2 py-1 rounded-full">
+                              ⚔️ Valhalla
+                            </span>
+                          ) : (
+                            <span className="inline-flex items-center text-xs bg-blue-100 text-blue-800 px-2 py-1 rounded-full">
+                              💪 1RM
+                            </span>
+                          )}
+                        </TableCell>
+                        <TableCell className="text-right">{item.value}</TableCell>
+                        <TableCell className="text-right text-muted-foreground text-xs">{item.date}</TableCell>
+                      </TableRow>
+                    ))
+                  ) : (
+                    <TableRow>
+                      <TableCell colSpan={4} className="text-center text-muted-foreground">
+                        No personal records yet.
+                      </TableCell>
+                    </TableRow>
+                  )}
+                </TableBody>
+              </Table>
+              
+              {allPRsForDisplay.length > 5 && (
+                <div className="flex justify-center mt-4">
+                  <Button 
+                    variant="outline" 
+                    size="sm"
+                    onClick={() => setShowAllRecords(!showAllRecords)}
+                  >
+                    {showAllRecords ? 'Show Less' : `Show All (${allPRsForDisplay.length})`}
+                  </Button>
                 </div>
-              </DialogContent>
-            </Dialog>
-          );
-        })}
-      </div>
+              )}
+            </>
+          )}
+        </CardContent>
+      </Card>
     </div>
   );
 };

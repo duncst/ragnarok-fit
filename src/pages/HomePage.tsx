@@ -3,7 +3,6 @@ import { HeroCall } from "@/components/HeroCall";
 import { BodyMetricsTracker } from "@/components/BodyMetricsTracker";
 import { ActionButtons } from "@/components/home/ActionButtons";
 import { AnalyticsSection } from "@/components/home/AnalyticsSection";
-import { PersonalRecordsSection } from "@/components/home/PersonalRecordsSection";
 import HeroCallOnboarding from "@/components/home/HeroCallOnboarding";
 import { useHomePageData } from "@/hooks/useHomePageData";
 import { useHeroCallOnboarding } from "@/hooks/useHeroCallOnboarding";
@@ -16,7 +15,6 @@ const HomePage = () => {
   const {
     workoutHistory,
     runHistory,
-    personalRecords,
     isLoading,
     strengthChartData,
     runChartData,
@@ -83,11 +81,6 @@ const HomePage = () => {
       />
       
       <BodyMetricsTracker />
-      
-      <PersonalRecordsSection
-        personalRecords={personalRecords}
-        isLoading={isLoading}
-      />
     </div>
   );
 };
