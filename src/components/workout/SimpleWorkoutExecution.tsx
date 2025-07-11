@@ -83,8 +83,13 @@ export const SimpleWorkoutExecution = ({
   };
 
   const handleNumberChange = (exerciseId: string, setId: string, field: 'reps' | 'weight', value: string) => {
-    const numValue = value === '' ? 0 : (parseInt(value) || 0);
-    onUpdateSet(exerciseId, setId, field, numValue);
+    if (field === 'weight') {
+      const numValue = value === '' ? 0 : (parseFloat(value) || 0);
+      onUpdateSet(exerciseId, setId, field, numValue);
+    } else {
+      const numValue = value === '' ? 0 : (parseInt(value) || 0);
+      onUpdateSet(exerciseId, setId, field, numValue);
+    }
   };
 
   const getHeaderLabels = (exerciseType: string) => {
@@ -213,6 +218,7 @@ export const SimpleWorkoutExecution = ({
                         <>
                           <Input
                             type="number"
+                            step="0.1"
                             value={set.weight === 0 ? '' : set.weight}
                             onChange={(e) => handleNumberChange(exercise.id, set.id, 'weight', e.target.value)}
                             className="text-center h-8 text-sm"
@@ -270,6 +276,7 @@ export const SimpleWorkoutExecution = ({
                         <>
                           <Input
                             type="number"
+                            step="0.1"
                             value={set.weight === 0 ? '' : set.weight}
                             onChange={(e) => handleNumberChange(exercise.id, set.id, 'weight', e.target.value)}
                             className="text-center h-8 text-sm"

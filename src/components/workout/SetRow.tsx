@@ -27,8 +27,13 @@ export const SetRow = ({ set, setIndex, onUpdate, onToggle, exerciseType = 'weig
 
   const handleNumberChange = (field: 'reps' | 'weight', value: string) => {
     // Allow empty string and convert to 0, or parse the number
-    const numValue = value === '' ? 0 : (parseInt(value) || 0);
-    onUpdate(field, numValue);
+    if (field === 'weight') {
+      const numValue = value === '' ? 0 : (parseFloat(value) || 0);
+      onUpdate(field, numValue);
+    } else {
+      const numValue = value === '' ? 0 : (parseInt(value) || 0);
+      onUpdate(field, numValue);
+    }
   };
 
   return (
@@ -39,6 +44,7 @@ export const SetRow = ({ set, setIndex, onUpdate, onToggle, exerciseType = 'weig
         <>
           <Input
             type="number"
+            step="0.1"
             value={set.weight === 0 ? '' : set.weight}
             onChange={(e) => handleNumberChange('weight', e.target.value)}
             className="w-full text-center"
@@ -96,6 +102,7 @@ export const SetRow = ({ set, setIndex, onUpdate, onToggle, exerciseType = 'weig
         <>
           <Input
             type="number"
+            step="0.1"
             value={set.weight === 0 ? '' : set.weight}
             onChange={(e) => handleNumberChange('weight', e.target.value)}
             className="w-full text-center"
