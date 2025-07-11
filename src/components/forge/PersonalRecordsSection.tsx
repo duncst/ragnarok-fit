@@ -1,13 +1,16 @@
 import React, { useState } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
+import { Button } from '@/components/ui/button';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
+import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from '@/components/ui/alert-dialog';
 import { Skeleton } from '@/components/ui/skeleton';
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
-import { TrendingUp, Trophy, Calendar } from 'lucide-react';
+import { TrendingUp, Trophy, Calendar, RotateCcw } from 'lucide-react';
 import { supabase } from '@/integrations/supabase/client';
-import { useQuery } from '@tanstack/react-query';
+import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { format } from 'date-fns';
+import { toast } from 'sonner';
 
 interface PersonalRecord {
   id: string;
@@ -18,15 +21,16 @@ interface PersonalRecord {
 }
 
 const MAJOR_LIFTS = [
-  { name: 'bench press', icon: '🏋️' },
-  { name: 'bent over row', icon: '🚣' },
-  { name: 'squat', icon: '🦵' },
-  { name: 'deadlift', icon: '⚡' },
-  { name: 'pullups', icon: '💪' }
+  'bench press',
+  'bent over row',
+  'squat',
+  'deadlift',
+  'pullups'
 ];
 
 const PersonalRecordsSection = () => {
   const [selectedExercise, setSelectedExercise] = useState<string | null>(null);
+  const queryClient = useQueryClient();
 
   // Fetch all personal records
   const { data: personalRecords = [], isLoading } = useQuery({
@@ -41,6 +45,11 @@ const PersonalRecordsSection = () => {
       return data as PersonalRecord[];
     }
   });
+
+  // Get lifts that have personal records
+  const liftsWithRecords = MAJOR_LIFTS.filter(lift => 
+    personalRecords.some(pr => pr.exercise_name.toLowerCase() === lift.toLowerCase())
+  );
 
   // Fetch progression data for selected exercise
   const { data: progressionData = [], isLoading: isLoadingProgression } = useQuery({
@@ -98,16 +107,39 @@ const PersonalRecordsSection = () => {
     return personalRecords.find(pr => pr.exercise_name.toLowerCase() === exerciseName.toLowerCase());
   };
 
+  // Reset personal record
+  const resetPersonalRecord = async (exerciseName: string) => {
+    try {
+      const { error } = await supabase
+        .from('personal_records')
+        .delete()
+        .eq('exercise_name', exerciseName);
+
+      if (error) throw error;
+
+      toast.success('Personal record reset successfully');
+      queryClient.invalidateQueries({ queryKey: ['personalRecords'] });
+    } catch (error) {
+      console.error('Error resetting personal record:', error);
+      toast.error('Failed to reset personal record');
+    }
+  };
+
   if (isLoading) {
     return (
       <div className="space-y-4">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
           {MAJOR_LIFTS.map((lift) => (
-            <Skeleton key={lift.name} className="h-32" />
+            <Skeleton key={lift} className="h-32" />
           ))}
         </div>
       </div>
     );
+  }
+
+  // Don't render anything if no lifts have records
+  if (liftsWithRecords.length === 0) {
+    return null;
   }
 
   return (
@@ -123,19 +155,18 @@ const PersonalRecordsSection = () => {
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-        {MAJOR_LIFTS.map((lift) => {
-          const pr = getCurrentPR(lift.name);
+        {liftsWithRecords.map((lift) => {
+          const pr = getCurrentPR(lift);
           
           return (
-            <Dialog key={lift.name}>
+            <Dialog key={lift}>
               <DialogTrigger asChild>
                 <Card className="cursor-pointer hover:bg-muted/50 transition-colors border-muted">
                   <CardContent className="p-4">
                     <div className="text-center space-y-3">
-                      <div className="text-2xl">{lift.icon}</div>
                       <div>
                         <h4 className="font-semibold text-foreground capitalize">
-                          {lift.name}
+                          {lift}
                         </h4>
                         {pr ? (
                           <div className="space-y-1">
@@ -161,9 +192,35 @@ const PersonalRecordsSection = () => {
               
               <DialogContent className="max-w-2xl">
                 <DialogHeader>
-                  <DialogTitle className="flex items-center gap-2 capitalize">
-                    <span className="text-2xl">{lift.icon}</span>
-                    {lift.name} Progression
+                  <DialogTitle className="flex items-center justify-between">
+                    <span className="capitalize">{lift} Progression</span>
+                    {pr && (
+                      <AlertDialog>
+                        <AlertDialogTrigger asChild>
+                          <Button variant="outline" size="sm" className="text-destructive hover:text-destructive">
+                            <RotateCcw className="h-4 w-4 mr-1" />
+                            Reset PR
+                          </Button>
+                        </AlertDialogTrigger>
+                        <AlertDialogContent>
+                          <AlertDialogHeader>
+                            <AlertDialogTitle>Reset Personal Record</AlertDialogTitle>
+                            <AlertDialogDescription>
+                              Are you sure you want to reset your personal record for {lift}? This action cannot be undone.
+                            </AlertDialogDescription>
+                          </AlertDialogHeader>
+                          <AlertDialogFooter>
+                            <AlertDialogCancel>Cancel</AlertDialogCancel>
+                            <AlertDialogAction 
+                              onClick={() => resetPersonalRecord(lift)}
+                              className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
+                            >
+                              Reset
+                            </AlertDialogAction>
+                          </AlertDialogFooter>
+                        </AlertDialogContent>
+                      </AlertDialog>
+                    )}
                   </DialogTitle>
                 </DialogHeader>
                 
@@ -225,7 +282,7 @@ const PersonalRecordsSection = () => {
                         <div className="text-center space-y-2">
                           <TrendingUp className="h-8 w-8 mx-auto opacity-50" />
                           <p>No progression data yet</p>
-                          <p className="text-sm">Complete workouts with {lift.name} to see your progress</p>
+                          <p className="text-sm">Complete workouts with {lift} to see your progress</p>
                         </div>
                       </div>
                     )}
