@@ -171,7 +171,7 @@ const PersonalRecordsSection = () => {
                         {pr ? (
                           <div className="space-y-1">
                             <Badge variant="secondary" className="bg-primary/20 text-foreground">
-                              {pr.one_rep_max}kg
+                              {pr.one_rep_max.toFixed(1)}kg
                             </Badge>
                             <p className="text-xs text-muted-foreground">
                               {format(new Date(pr.date), 'MMM dd, yyyy')}
@@ -231,7 +231,7 @@ const PersonalRecordsSection = () => {
                         <Trophy className="h-5 w-5 text-primary" />
                         <span className="text-lg font-semibold">Current PR</span>
                       </div>
-                      <div className="text-3xl font-bold text-primary">{pr.one_rep_max}kg</div>
+                      <div className="text-3xl font-bold text-primary">{pr.one_rep_max.toFixed(1)}kg</div>
                       <div className="flex items-center justify-center gap-1 text-sm text-muted-foreground">
                         <Calendar className="h-4 w-4" />
                         {format(new Date(pr.date), 'MMMM dd, yyyy')}
