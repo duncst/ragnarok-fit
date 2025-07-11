@@ -6,12 +6,9 @@ import type { Exercise, WorkoutSet } from '@/types';
 const MAJOR_LIFTS = [
   'bench press',
   'bent over row',
-  'overhead press',
   'squat',
   'deadlift',
-  'arnold press',
-  'lat pulldowns',
-  'leg press'
+  'pullups'
 ].map(lift => lift.toLowerCase());
 
 const calculate1RM = (weight: number, reps: number): number => {

@@ -6,6 +6,7 @@ import { Badge } from '@/components/ui/badge';
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion';
 import { Crown, Lock, Flame, CalendarCheck } from 'lucide-react';
 import { MonthlyActivityCalendar } from '@/components/forge/MonthlyActivityCalendar';
+import PersonalRecordsSection from '@/components/forge/PersonalRecordsSection';
 import { useForgeProgress } from '@/hooks/useForgeProgress';
 import { useHeroCallData } from '@/hooks/useHeroCallData';
 import { Skeleton } from '@/components/ui/skeleton';
@@ -196,8 +197,9 @@ const ForgePage = () => {
               <span className="text-foreground text-xl font-bold">Behold your Deeds</span>
             </div>
           </AccordionTrigger>
-          <AccordionContent className="px-6 pb-6">
+          <AccordionContent className="px-6 pb-6 space-y-8">
             <MonthlyActivityCalendar />
+            <PersonalRecordsSection />
           </AccordionContent>
         </AccordionItem>
       </Accordion>
