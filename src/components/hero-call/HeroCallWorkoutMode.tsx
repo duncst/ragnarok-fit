@@ -50,9 +50,12 @@ export const HeroCallWorkoutMode = ({
           <div className="flex items-center justify-between mb-3">
             <div className="flex items-center gap-3 flex-1 min-w-0">
               <Swords className="h-8 w-8 text-primary flex-shrink-0" />
-              <h1 className="text-xl sm:text-2xl font-bold truncate">
-                Hero's Call: {workout.name}
-              </h1>
+              <div className="flex flex-col">
+                <h1 className="text-xl sm:text-2xl font-bold truncate">
+                  You Walk the Hero's Call
+                </h1>
+                <p className="text-sm text-muted-foreground">Stay the course. Every rep, every step, every breath—etched into your saga.</p>
+              </div>
             </div>
             <Button variant="outline" size="icon" onClick={onExit} className="flex-shrink-0">
               <X className="h-5 w-5" />
@@ -132,8 +135,8 @@ export const HeroCallWorkoutMode = ({
           {/* Motivational Footer */}
           <Card className="bg-primary/5">
             <CardContent className="p-4 text-center">
-              <p className="text-sm text-muted-foreground font-medium">
-                Remember, warrior: <span className="text-primary">Consistency conquers perfection.</span>
+              <p className="text-sm text-muted-foreground font-medium italic">
+                "Effort is the only offering the forge accepts."
               </p>
             </CardContent>
           </Card>

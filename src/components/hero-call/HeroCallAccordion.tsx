@@ -27,10 +27,12 @@ export const HeroCallAccordion = ({
       <AccordionItem value="hero-call" className="border-none">
         <AccordionTrigger className="text-left px-6 py-4">
           <div className="flex items-center justify-between w-full pr-2">
-            <div className="flex items-center gap-2">
-              <Swords className="h-5 w-5 text-primary" />
-              <span className="font-bold text-primary">Daily Hero's Call:</span>
-              <span className="font-semibold">{currentWorkout.name}</span>
+            <div className="flex flex-col gap-1">
+              <div className="flex items-center gap-2">
+                <Swords className="h-5 w-5 text-primary" />
+                <span className="font-bold text-primary text-lg">Will you answer the Hero's Call?</span>
+              </div>
+              <span className="text-sm text-muted-foreground italic">Each dawn is a summons. You may remain unchanged—or rise anew.</span>
             </div>
             <StreakTracker streakData={stats} completedToday={stats.completedToday} />
           </div>
@@ -56,8 +58,8 @@ export const HeroCallAccordion = ({
                   size="lg"
                   className="flex items-center gap-2"
                 >
-                  <Play className="h-5 w-5" />
-                  Start Hero's Call
+                  <Swords className="h-5 w-5" />
+                  Answer the Call
                 </Button>
               </div>
             )}
@@ -65,7 +67,7 @@ export const HeroCallAccordion = ({
             {stats.completedToday && (
               <div className="flex items-center justify-center gap-2 text-sm text-green-600 bg-green-50 p-3 rounded-lg">
                 <Check className="h-4 w-4" />
-                Today's Hero's Call completed! 🔥
+                The deed is done. Return tomorrow. The saga continues.
               </div>
             )}
           </div>

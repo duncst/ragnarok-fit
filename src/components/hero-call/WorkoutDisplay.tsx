@@ -33,7 +33,8 @@ export const WorkoutDisplay = ({ workout, selectedLevel, onLevelChange }: Workou
           "{workout.motivation}"
         </p>
         <div className="bg-muted/50 p-3 rounded-lg">
-          <p className="text-sm leading-relaxed">{workout.description}</p>
+          <p className="text-sm leading-relaxed font-medium text-foreground">The forge is hot. Step into it.</p>
+          <p className="text-sm leading-relaxed mt-2">{workout.description}</p>
         </div>
       </div>
 
@@ -88,10 +89,10 @@ export const WorkoutDisplay = ({ workout, selectedLevel, onLevelChange }: Workou
 
       <div className="text-center space-y-2">
         <p className="text-sm text-muted-foreground font-medium">
-          Remember, warrior: <span className="text-primary">Consistency conquers perfection.</span>
+          Are you ready to begin? <span className="text-primary">Will you honor this commitment?</span>
         </p>
         <p className="text-xs text-muted-foreground">
-          A new Daily Hero's Call awaits you each dawn. Forge your strength, one day at a time.
+          This is no mere exercise. It is a test of will, discipline, and respect for the craft.
         </p>
       </div>
     </>
