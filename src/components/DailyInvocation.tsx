@@ -5,6 +5,7 @@ import { Badge } from '@/components/ui/badge';
 import { Swords, Shield, Zap, Leaf, Lock } from 'lucide-react';
 import { HeroCall } from './HeroCall';
 import { useHeroCallData } from '@/hooks/useHeroCallData';
+import { useNavigate } from 'react-router-dom';
 
 type WorkoutPath = 'hero-call' | 'strength' | 'endurance' | 'recovery';
 
@@ -22,6 +23,7 @@ interface WorkoutOption {
 export const DailyInvocation = () => {
   const [selectedPath, setSelectedPath] = useState<WorkoutPath | null>(null);
   const { stats } = useHeroCallData();
+  const navigate = useNavigate();
 
   // Check if recovery is unlocked (example: 3+ active days this week)
   const weeklyWorkouts = stats.weeklyCount || 0;
@@ -64,18 +66,36 @@ export const DailyInvocation = () => {
     }
   ];
 
+  const handlePathSelection = (path: WorkoutPath) => {
+    switch (path) {
+      case 'hero-call':
+        setSelectedPath('hero-call');
+        break;
+      case 'strength':
+        navigate('/workout/new');
+        break;
+      case 'endurance':
+        navigate('/log-run');
+        break;
+      case 'recovery':
+        // For now, show coming soon - could navigate to a recovery-specific page later
+        setSelectedPath('recovery');
+        break;
+    }
+  };
+
   if (selectedPath === 'hero-call') {
     return <HeroCall />;
   }
 
-  if (selectedPath === 'strength' || selectedPath === 'endurance' || selectedPath === 'recovery') {
+  if (selectedPath === 'recovery') {
     return (
       <Card className="w-full">
         <CardContent className="p-6 text-center space-y-4">
           <div className="space-y-2">
             <h2 className="text-2xl font-bold text-primary">Path Selected</h2>
             <p className="text-muted-foreground">
-              {workoutOptions.find(opt => opt.id === selectedPath)?.title} coming soon...
+              Recovery & Ritual coming soon...
             </p>
             <Button 
               variant="outline" 
@@ -125,7 +145,7 @@ export const DailyInvocation = () => {
                       ? 'border-muted bg-muted/10 opacity-60' 
                       : 'border-border hover:border-primary hover:shadow-md hover:scale-[1.02]'
                   }`}
-                  onClick={() => !isLocked && setSelectedPath(option.id)}
+                  onClick={() => !isLocked && handlePathSelection(option.id)}
                 >
                   <CardContent className="p-4 space-y-3">
                     <div className="flex items-start justify-between">
@@ -163,7 +183,7 @@ export const DailyInvocation = () => {
                           className="w-full"
                           onClick={(e) => {
                             e.stopPropagation();
-                            setSelectedPath(option.id);
+                            handlePathSelection(option.id);
                           }}
                         >
                           {option.buttonText}
