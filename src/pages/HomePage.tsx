@@ -1,5 +1,5 @@
 
-import { HeroCall } from "@/components/HeroCall";
+import { DailyInvocation } from "@/components/DailyInvocation";
 import { BodyMetricsTracker } from "@/components/BodyMetricsTracker";
 import { ActionButtons } from "@/components/home/ActionButtons";
 import { AnalyticsSection } from "@/components/home/AnalyticsSection";
@@ -63,7 +63,7 @@ const HomePage = () => {
           onStartChallenge={handleStartChallenge}
         />
       ) : (
-        <HeroCall />
+        <DailyInvocation />
       )}
       
       <AnalyticsSection
