@@ -68,10 +68,9 @@ export const RitualsPage = () => {
     : rituals.filter(ritual => ritual.category === activeTab);
 
   const handleBeginRitual = (ritual: Ritual) => {
-    // Navigate to workout page with this template loaded
-    navigate('/workout/new', { 
+    // Navigate to ritual workout execution page
+    navigate(`/ritual/${ritual.id}/workout`, { 
       state: { 
-        templateId: ritual.id,
         templateName: ritual.name 
       } 
     });

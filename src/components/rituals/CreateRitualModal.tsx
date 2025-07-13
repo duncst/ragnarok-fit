@@ -7,6 +7,7 @@ import { Label } from '@/components/ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Plus, Trash2, X } from 'lucide-react';
 import { Card, CardContent } from '@/components/ui/card';
+import { SimpleExerciseSelector } from '@/components/workout/SimpleExerciseSelector';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { supabase } from '@/integrations/supabase/client';
 import { toast } from 'sonner';
@@ -201,10 +202,17 @@ export const CreateRitualModal = ({ open, onOpenChange }: CreateRitualModalProps
                     <div className="grid grid-cols-12 gap-3 items-end">
                       <div className="col-span-6">
                         <Label className="text-sm text-muted-foreground">Exercise</Label>
-                        <Input
-                          placeholder="e.g. Push-ups"
-                          value={exercise.name}
-                          onChange={(e) => updateExercise(index, 'name', e.target.value)}
+                        <SimpleExerciseSelector
+                          onExerciseSelect={(exerciseName) => updateExercise(index, 'name', exerciseName)}
+                          trigger={
+                            <Input
+                              placeholder="e.g. Push-ups"
+                              value={exercise.name}
+                              onChange={(e) => updateExercise(index, 'name', e.target.value)}
+                              className="cursor-pointer"
+                              readOnly
+                            />
+                          }
                         />
                       </div>
                       <div className="col-span-2">
