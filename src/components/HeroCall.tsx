@@ -4,7 +4,7 @@ import { Card, CardContent } from '@/components/ui/card';
 import { getDailyWorkout } from './hero-call/utils';
 import { HeroCallWorkoutMode } from './hero-call/HeroCallWorkoutMode';
 import { HeroCallCompletionView } from './hero-call/HeroCallCompletionView';
-import { HeroCallAccordion } from './hero-call/HeroCallAccordion';
+import { HeroCallChallenge } from './hero-call/HeroCallChallenge';
 import { useWorkoutTimer } from '@/hooks/useWorkoutTimer';
 import { useHeroCallData } from '@/hooks/useHeroCallData';
 import { useSaveWorkout } from '@/hooks/useSaveWorkout';
@@ -137,16 +137,12 @@ export const HeroCall = () => {
   }
 
   return (
-    <Card className="w-full">
-      <CardContent className="p-0">
-        <HeroCallAccordion
-          currentWorkout={currentWorkout}
-          selectedLevel={selectedLevel}
-          onLevelChange={setSelectedLevel}
-          onStartWorkout={handleStartWorkout}
-          stats={stats}
-        />
-      </CardContent>
-    </Card>
+    <HeroCallChallenge
+      currentWorkout={currentWorkout}
+      selectedLevel={selectedLevel}
+      onLevelChange={setSelectedLevel}
+      onStartWorkout={handleStartWorkout}
+      stats={stats}
+    />
   );
 };
