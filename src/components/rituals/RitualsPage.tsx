@@ -11,6 +11,7 @@ import { supabase } from '@/integrations/supabase/client';
 import { useNavigate } from 'react-router-dom';
 import { formatDistanceToNow } from 'date-fns';
 import { toast as sonnerToast } from 'sonner';
+import { ValhallaSection } from '../workout/ValhallaSection';
 
 interface Ritual {
   id: string;
@@ -29,7 +30,7 @@ interface Ritual {
 
 export const RitualsPage = () => {
   const [showCreateModal, setShowCreateModal] = useState(false);
-  const [activeTab, setActiveTab] = useState('All Rituals');
+  const [activeTab, setActiveTab] = useState('Valhalla');
   const navigate = useNavigate();
   const queryClient = useQueryClient();
 
@@ -66,8 +67,8 @@ export const RitualsPage = () => {
     lastPerformed: template.created_at
   }));
 
-  const filteredRituals = activeTab === 'All Rituals' 
-    ? rituals 
+  const filteredRituals = activeTab === 'Valhalla' 
+    ? [] 
     : rituals.filter(ritual => ritual.category === activeTab);
 
   const deleteTemplateMutation = useMutation({
@@ -121,114 +122,124 @@ export const RitualsPage = () => {
       {/* Tabs */}
       <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
         <TabsList className="w-full justify-start bg-muted/30">
-          <TabsTrigger value="All Rituals" className="flex-1">All Rituals</TabsTrigger>
+          <TabsTrigger value="Valhalla" className="flex-1">Valhalla</TabsTrigger>
           <TabsTrigger value="Strength" className="flex-1">Strength</TabsTrigger>
           <TabsTrigger value="Endurance" className="flex-1">Endurance</TabsTrigger>
           <TabsTrigger value="Mobility" className="flex-1">Mobility</TabsTrigger>
         </TabsList>
 
+        {/* Valhalla Tab Content */}
+        <TabsContent value="Valhalla" className="space-y-4">
+          <ValhallaSection />
+        </TabsContent>
+
+        {/* Other Tabs Content */}
         <TabsContent value={activeTab} className="space-y-4">
-          {/* Create New Ritual Button */}
-          <Button 
-            onClick={() => {
-              if (activeTab === 'Endurance') {
-                navigate('/log-run');
-              } else {
-                setShowCreateModal(true);
-              }
-            }}
-            className="w-full h-14 text-lg bg-primary hover:bg-primary/90"
-            size="lg"
-          >
-            <Plus className="mr-2 h-5 w-5" />
-            {activeTab === 'Endurance' ? 'Log a Run' : 'Create New Ritual'}
-          </Button>
+          {activeTab !== 'Valhalla' && (
+            <>
+              {/* Create New Ritual Button */}
+              <Button 
+                onClick={() => {
+                  if (activeTab === 'Endurance') {
+                    navigate('/log-run');
+                  } else {
+                    setShowCreateModal(true);
+                  }
+                }}
+                className="w-full h-14 text-lg bg-primary hover:bg-primary/90"
+                size="lg"
+              >
+                <Plus className="mr-2 h-5 w-5" />
+                {activeTab === 'Endurance' ? 'Log a Run' : 'Create New Ritual'}
+              </Button>
 
-          {/* Rituals List */}
-          <div className="space-y-4">
-            {filteredRituals.length === 0 ? (
-              <Card className="border-dashed border-2 border-muted-foreground/25">
-                <CardContent className="p-8 text-center space-y-4">
-                  <div className="text-muted-foreground">
-                    <p className="text-lg">No rituals found</p>
-                    <p>Create your first ritual to begin your journey</p>
-                  </div>
-                </CardContent>
-              </Card>
-            ) : (
-              filteredRituals.map((ritual) => (
-                <Card key={ritual.id} className="border-border/50 bg-card/50 backdrop-blur">
-                  <CardContent className="p-6 space-y-4">
-                    {/* Ritual Header */}
-                    <div className="flex items-start justify-between">
-                      <div className="space-y-1">
-                        <h3 className="text-xl font-bold text-primary">{ritual.name}</h3>
-                        <p className="text-muted-foreground">{ritual.description}</p>
+              {/* Rituals List */}
+              <div className="space-y-4">
+                {filteredRituals.length === 0 ? (
+                  <Card className="border-dashed border-2 border-muted-foreground/25">
+                    <CardContent className="p-8 text-center space-y-4">
+                      <div className="text-muted-foreground">
+                        <p className="text-lg">No rituals found</p>
+                        <p>Create your first ritual to begin your journey</p>
                       </div>
-                      <div className="flex items-center gap-2">
-                        <Badge variant="secondary" className="bg-primary/10 text-primary border-primary/20">
-                          {ritual.category}
-                        </Badge>
-                        <Button 
-                          variant="ghost" 
-                          size="sm"
-                          onClick={() => {
-                            if (window.confirm('Are you sure you want to delete this ritual? This action cannot be undone.')) {
-                              handleDeleteRitual(ritual.id);
-                            }
-                          }}
-                          disabled={deleteTemplateMutation.isPending}
-                          className="text-destructive hover:text-destructive hover:bg-destructive/10"
-                        >
-                          <X className="h-4 w-4" />
-                        </Button>
-                      </div>
-                    </div>
+                    </CardContent>
+                  </Card>
+                ) : (
+                  filteredRituals.map((ritual) => (
+                    <Card key={ritual.id} className="border-border/50 bg-card/50 backdrop-blur">
+                      <CardContent className="p-6 space-y-4">
+                        {/* Ritual Header */}
+                        <div className="flex items-start justify-between">
+                          <div className="space-y-1">
+                            <h3 className="text-xl font-bold text-primary">{ritual.name}</h3>
+                            <p className="text-muted-foreground">{ritual.description}</p>
+                          </div>
+                          <div className="flex items-center gap-2">
+                            <Badge variant="secondary" className="bg-primary/10 text-primary border-primary/20">
+                              {ritual.category}
+                            </Badge>
+                            <Button 
+                              variant="ghost" 
+                              size="sm"
+                              onClick={() => {
+                                if (window.confirm('Are you sure you want to delete this ritual? This action cannot be undone.')) {
+                                  handleDeleteRitual(ritual.id);
+                                }
+                              }}
+                              disabled={deleteTemplateMutation.isPending}
+                              className="text-destructive hover:text-destructive hover:bg-destructive/10"
+                            >
+                              <X className="h-4 w-4" />
+                            </Button>
+                          </div>
+                        </div>
 
-                    {/* Exercises */}
-                    <div className="space-y-3">
-                      <h4 className="font-semibold text-foreground">Exercises</h4>
-                      <div className="space-y-2">
-                        {ritual.exercises.map((exercise, index) => (
-                          <div key={index} className="flex justify-between items-center py-2 border-b border-border/20 last:border-0">
-                            <span className="text-foreground">{exercise.name}</span>
-                            <span className="text-primary font-medium">
-                              {exercise.sets} x {exercise.reps || exercise.duration || exercise.distance}
+                        {/* Exercises */}
+                        <div className="space-y-3">
+                          <h4 className="font-semibold text-foreground">Exercises</h4>
+                          <div className="space-y-2">
+                            {ritual.exercises.map((exercise, index) => (
+                              <div key={index} className="flex justify-between items-center py-2 border-b border-border/20 last:border-0">
+                                <span className="text-foreground">{exercise.name}</span>
+                                <span className="text-primary font-medium">
+                                  {exercise.sets} x {exercise.reps || exercise.duration || exercise.distance}
+                                </span>
+                              </div>
+                            ))}
+                          </div>
+                        </div>
+
+                        {/* Footer */}
+                        <div className="flex items-center justify-between pt-2">
+                          <div className="flex items-center gap-2 text-sm text-muted-foreground">
+                            <Clock className="h-4 w-4" />
+                            <span>
+                              Last performed: {ritual.lastPerformed 
+                                ? formatDistanceToNow(new Date(ritual.lastPerformed), { addSuffix: true })
+                                : 'Never'
+                              }
                             </span>
                           </div>
-                        ))}
-                      </div>
-                    </div>
-
-                    {/* Footer */}
-                    <div className="flex items-center justify-between pt-2">
-                      <div className="flex items-center gap-2 text-sm text-muted-foreground">
-                        <Clock className="h-4 w-4" />
-                        <span>
-                          Last performed: {ritual.lastPerformed 
-                            ? formatDistanceToNow(new Date(ritual.lastPerformed), { addSuffix: true })
-                            : 'Never'
-                          }
-                        </span>
-                      </div>
-                      <div className="flex items-center gap-2">
-                        <Button variant="ghost" size="sm">
-                          <RotateCcw className="h-4 w-4" />
-                        </Button>
-                        <Button 
-                          onClick={() => handleBeginRitual(ritual)}
-                          className="bg-primary hover:bg-primary/90"
-                        >
-                          <Play className="mr-2 h-4 w-4" />
-                          Begin Ritual
-                        </Button>
-                      </div>
-                    </div>
-                  </CardContent>
-                </Card>
-              ))
-            )}
-          </div>
+                          <div className="flex items-center gap-2">
+                            <Button variant="ghost" size="sm">
+                              <RotateCcw className="h-4 w-4" />
+                            </Button>
+                            <Button 
+                              onClick={() => handleBeginRitual(ritual)}
+                              className="bg-primary hover:bg-primary/90"
+                            >
+                              <Play className="mr-2 h-4 w-4" />
+                              Begin Ritual
+                            </Button>
+                          </div>
+                        </div>
+                      </CardContent>
+                    </Card>
+                  ))
+                )}
+              </div>
+            </>
+          )}
         </TabsContent>
       </Tabs>
 
