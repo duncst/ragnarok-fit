@@ -95,22 +95,30 @@ const ForgeProgressSection = () => {
               <span>This Week's Forge ({stats.weeklyCount}/5 days to forge the week)</span>
             </div>
             <div className="flex items-center justify-center gap-3">
-              {weeklyStatus.map((day, index) => (
-                <div key={day.name} className="flex flex-col items-center gap-1">
-                  <div className="text-xs text-muted-foreground">{day.name}</div>
-                  {day.isCompleted ? (
-                    <div className="h-6 w-6 rounded-full bg-green-500 flex items-center justify-center">
-                      <CalendarCheck className="h-3 w-3 text-white" />
+              {weeklyStatus.map((day, index) => {
+                const runeMap = {
+                  'Mon': 'ᚱ',
+                  'Tue': 'ᚢ',
+                  'Wed': 'ᚦ',
+                  'Thu': 'ᚨ',
+                  'Fri': 'ᛏ',
+                  'Sat': 'ᛜ',
+                  'Sun': 'ᛉ'
+                };
+                
+                return (
+                  <div key={day.name} className="flex flex-col items-center gap-1">
+                    <div className="text-xs text-muted-foreground">{day.name}</div>
+                    <div className={`h-8 w-8 flex items-center justify-center text-xl font-bold ${
+                      day.isCompleted 
+                        ? 'text-red-500 drop-shadow-[0_0_8px_rgba(239,68,68,0.8)] animate-pulse' 
+                        : 'text-muted-foreground/50'
+                    }`}>
+                      {runeMap[day.name]}
                     </div>
-                  ) : day.isToday ? (
-                    <div className="h-6 w-6 rounded-full border-2 border-orange-500 bg-orange-500/20" />
-                  ) : day.isPast ? (
-                    <div className="h-6 w-6 rounded-full border-2 border-muted-foreground/50" />
-                  ) : (
-                    <div className="h-6 w-6 rounded-full border-2 border-muted-foreground/30" />
-                  )}
-                </div>
-              ))}
+                  </div>
+                );
+              })}
             </div>
           </div>
           
