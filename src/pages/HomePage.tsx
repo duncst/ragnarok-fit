@@ -8,8 +8,7 @@ import { useHomePageData } from "@/hooks/useHomePageData";
 import { useHeroCallOnboarding } from "@/hooks/useHeroCallOnboarding";
 import { useForgeProgress } from "@/hooks/useForgeProgress";
 import { useHeroCallData } from "@/hooks/useHeroCallData";
-import { Badge } from "@/components/ui/badge";
-import { Flame } from "lucide-react";
+import { CalendarCheck } from "lucide-react";
 
 const HomePage = () => {
   const {
@@ -39,18 +38,54 @@ const HomePage = () => {
     <div className="space-y-6">
       {/* Welcome Section */}
       <div className="space-y-4">
-        <div className="text-center space-y-2">
-          <h1 className="text-2xl font-bold">Welcome back, Warrior!</h1>
-          <div className="flex items-center justify-center gap-2">
-            <Badge variant="secondary" className="flex items-center gap-1">
-              <Flame className="h-3 w-3" />
-              {forgeProgress.currentTitle}
-            </Badge>
-            {stats.currentStreak > 0 && (
-              <Badge variant="outline" className="flex items-center gap-1">
-                🔥 {stats.currentStreak} day streak
-              </Badge>
-            )}
+        <div className="text-center space-y-4">
+          <h1 className="text-2xl font-bold">Welcome back, {forgeProgress.currentTitle}!</h1>
+          
+          {/* Weekly Progress */}
+          <div className="space-y-3">
+            <div className="flex items-center justify-center gap-2 text-sm text-muted-foreground">
+              <span>This Week's Forge ({stats.weeklyCount}/5 days to forge the week)</span>
+            </div>
+            <div className="flex items-center justify-center gap-3">
+              {(() => {
+                const weekDays = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
+                const today = new Date();
+                const startOfWeek = new Date(today);
+                const day = today.getDay();
+                const diff = today.getDate() - day + (day === 0 ? -6 : 1);
+                startOfWeek.setDate(diff);
+                startOfWeek.setHours(0, 0, 0, 0);
+                
+                return weekDays.map((dayName, index) => {
+                  const dayDate = new Date(startOfWeek);
+                  dayDate.setDate(startOfWeek.getDate() + index);
+                  const isToday = dayDate.toDateString() === today.toDateString();
+                  const isPast = dayDate < today;
+                  
+                  const dayNames = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+                  const dayIndex = index === 6 ? 0 : index + 1;
+                  const completedDayName = dayNames[dayIndex];
+                  const isCompleted = stats.completedDays?.includes(completedDayName) || false;
+                  
+                  return (
+                    <div key={dayName} className="flex flex-col items-center gap-1">
+                      <div className="text-xs text-muted-foreground">{dayName}</div>
+                      {isCompleted ? (
+                        <div className="h-6 w-6 rounded-full bg-green-500 flex items-center justify-center">
+                          <CalendarCheck className="h-3 w-3 text-white" />
+                        </div>
+                      ) : isToday ? (
+                        <div className="h-6 w-6 rounded-full border-2 border-orange-500 bg-orange-500/20" />
+                      ) : isPast ? (
+                        <div className="h-6 w-6 rounded-full border-2 border-muted-foreground/50" />
+                      ) : (
+                        <div className="h-6 w-6 rounded-full border-2 border-muted-foreground/30" />
+                      )}
+                    </div>
+                  );
+                });
+              })()}
+            </div>
           </div>
         </div>
       </div>
