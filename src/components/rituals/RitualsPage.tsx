@@ -4,7 +4,7 @@ import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
-import { Plus, Play, Clock, MoreHorizontal, RotateCcw, Trash2 } from 'lucide-react';
+import { Plus, Play, Clock, X, RotateCcw, Trash2 } from 'lucide-react';
 import { CreateRitualModal } from './CreateRitualModal';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { supabase } from '@/integrations/supabase/client';
@@ -130,12 +130,18 @@ export const RitualsPage = () => {
         <TabsContent value={activeTab} className="space-y-4">
           {/* Create New Ritual Button */}
           <Button 
-            onClick={() => setShowCreateModal(true)}
+            onClick={() => {
+              if (activeTab === 'Endurance') {
+                navigate('/log-run');
+              } else {
+                setShowCreateModal(true);
+              }
+            }}
             className="w-full h-14 text-lg bg-primary hover:bg-primary/90"
             size="lg"
           >
             <Plus className="mr-2 h-5 w-5" />
-            Create New Ritual
+            {activeTab === 'Endurance' ? 'Log a Run' : 'Create New Ritual'}
           </Button>
 
           {/* Rituals List */}
@@ -163,27 +169,19 @@ export const RitualsPage = () => {
                         <Badge variant="secondary" className="bg-primary/10 text-primary border-primary/20">
                           {ritual.category}
                         </Badge>
-                        <DropdownMenu>
-                          <DropdownMenuTrigger asChild>
-                            <Button variant="ghost" size="sm">
-                              <MoreHorizontal className="h-4 w-4" />
-                            </Button>
-                          </DropdownMenuTrigger>
-                          <DropdownMenuContent align="end">
-                            <DropdownMenuItem 
-                              className="text-destructive focus:text-destructive"
-                              onClick={() => {
-                                if (window.confirm('Are you sure you want to delete this ritual? This action cannot be undone.')) {
-                                  handleDeleteRitual(ritual.id);
-                                }
-                              }}
-                              disabled={deleteTemplateMutation.isPending}
-                            >
-                              <Trash2 className="h-4 w-4 mr-2" />
-                              Delete Ritual
-                            </DropdownMenuItem>
-                          </DropdownMenuContent>
-                        </DropdownMenu>
+                        <Button 
+                          variant="ghost" 
+                          size="sm"
+                          onClick={() => {
+                            if (window.confirm('Are you sure you want to delete this ritual? This action cannot be undone.')) {
+                              handleDeleteRitual(ritual.id);
+                            }
+                          }}
+                          disabled={deleteTemplateMutation.isPending}
+                          className="text-destructive hover:text-destructive hover:bg-destructive/10"
+                        >
+                          <X className="h-4 w-4" />
+                        </Button>
                       </div>
                     </div>
 
