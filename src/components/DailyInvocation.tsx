@@ -25,6 +25,21 @@ export const DailyInvocation = () => {
   const { stats } = useHeroCallData();
   const navigate = useNavigate();
 
+  // Daily rotating phrases
+  const getDailyPhrase = () => {
+    const phrases = [
+      "How will you ready yourself for the trials ahead?",
+      "What will you forge within yourself today?", 
+      "How will you earn your place among the worthy?",
+      "What effort will you offer the forge today?",
+      "How will you steel yourself for the path?",
+      "How will you rise to meet your calling today?"
+    ];
+    const today = new Date();
+    const dayIndex = today.getDay(); // 0 = Sunday, 1 = Monday, etc.
+    return phrases[dayIndex % phrases.length];
+  };
+
   // Check if recovery is unlocked (example: 3+ active days this week)
   const weeklyWorkouts = stats.weeklyCount || 0;
   const isRecoveryUnlocked = weeklyWorkouts >= 3;
@@ -115,16 +130,13 @@ export const DailyInvocation = () => {
       <CardContent className="p-6 space-y-6">
         {/* Header */}
         <div className="text-center space-y-3">
-          <h1 className="text-3xl font-bold text-primary">Will you answer the Hero's Call?</h1>
+          <h1 className="text-3xl font-bold text-primary">{getDailyPhrase()}</h1>
           <div className="space-y-2">
             <p className="text-lg text-muted-foreground">
               Each dawn brings a choice:
             </p>
             <p className="text-muted-foreground italic">
               To remain unchanged, or to rise anew.
-            </p>
-            <p className="text-muted-foreground font-medium">
-              How will you prepare yourself today?
             </p>
           </div>
         </div>
