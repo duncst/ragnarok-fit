@@ -53,7 +53,7 @@ const ForgeProgressSection = () => {
         <div className="flex items-center gap-2">
           <Flame className="h-6 w-6 text-orange-500" />
           <div className="text-left">
-            <h1 className="text-xl font-bold text-foreground">Daily Forging Progress</h1>
+            <h1 className="text-xl font-bold text-foreground">How will you answer the Hero's Call?</h1>
             <p className="text-sm text-muted-foreground">Complete daily challenges or your own workouts to advance</p>
           </div>
         </div>
@@ -92,7 +92,7 @@ const ForgeProgressSection = () => {
           {/* Weekly Progress Circles */}
           <div className="space-y-3">
             <div className="flex items-center justify-center gap-2 text-sm text-muted-foreground">
-              <span>This week's progress ({stats.weeklyCount}/5 days to forge the week)</span>
+              <span>This Week's Forge ({stats.weeklyCount}/5 days to forge the week)</span>
             </div>
             <div className="flex items-center justify-center gap-3">
               {weeklyStatus.map((day, index) => (
