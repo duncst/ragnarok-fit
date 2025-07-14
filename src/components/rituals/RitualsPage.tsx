@@ -3,12 +3,14 @@ import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { Plus, Play, Clock, MoreHorizontal, RotateCcw } from 'lucide-react';
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
+import { Plus, Play, Clock, MoreHorizontal, RotateCcw, Trash2 } from 'lucide-react';
 import { CreateRitualModal } from './CreateRitualModal';
-import { useQuery } from '@tanstack/react-query';
+import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { supabase } from '@/integrations/supabase/client';
 import { useNavigate } from 'react-router-dom';
 import { formatDistanceToNow } from 'date-fns';
+import { toast as sonnerToast } from 'sonner';
 
 interface Ritual {
   id: string;
@@ -29,6 +31,7 @@ export const RitualsPage = () => {
   const [showCreateModal, setShowCreateModal] = useState(false);
   const [activeTab, setActiveTab] = useState('All Rituals');
   const navigate = useNavigate();
+  const queryClient = useQueryClient();
 
   const { data: templates = [], isLoading } = useQuery({
     queryKey: ['workout-templates'],
@@ -67,6 +70,20 @@ export const RitualsPage = () => {
     ? rituals 
     : rituals.filter(ritual => ritual.category === activeTab);
 
+  const deleteTemplateMutation = useMutation({
+    mutationFn: async (templateId: string) => {
+      const { error } = await supabase.from('workout_templates').delete().eq('id', templateId);
+      if (error) throw error;
+    },
+    onSuccess: () => {
+      sonnerToast.success('Ritual deleted successfully.');
+      queryClient.invalidateQueries({ queryKey: ['workout-templates'] });
+    },
+    onError: (error) => {
+      sonnerToast.error('Failed to delete ritual.', { description: (error as Error).message });
+    },
+  });
+
   const handleBeginRitual = (ritual: Ritual) => {
     // Navigate to ritual workout execution page
     navigate(`/ritual/${ritual.id}/workout`, { 
@@ -74,6 +91,10 @@ export const RitualsPage = () => {
         templateName: ritual.name 
       } 
     });
+  };
+
+  const handleDeleteRitual = (ritualId: string) => {
+    deleteTemplateMutation.mutate(ritualId);
   };
 
   if (isLoading) {
@@ -142,9 +163,27 @@ export const RitualsPage = () => {
                         <Badge variant="secondary" className="bg-primary/10 text-primary border-primary/20">
                           {ritual.category}
                         </Badge>
-                        <Button variant="ghost" size="sm">
-                          <MoreHorizontal className="h-4 w-4" />
-                        </Button>
+                        <DropdownMenu>
+                          <DropdownMenuTrigger asChild>
+                            <Button variant="ghost" size="sm">
+                              <MoreHorizontal className="h-4 w-4" />
+                            </Button>
+                          </DropdownMenuTrigger>
+                          <DropdownMenuContent align="end">
+                            <DropdownMenuItem 
+                              className="text-destructive focus:text-destructive"
+                              onClick={() => {
+                                if (window.confirm('Are you sure you want to delete this ritual? This action cannot be undone.')) {
+                                  handleDeleteRitual(ritual.id);
+                                }
+                              }}
+                              disabled={deleteTemplateMutation.isPending}
+                            >
+                              <Trash2 className="h-4 w-4 mr-2" />
+                              Delete Ritual
+                            </DropdownMenuItem>
+                          </DropdownMenuContent>
+                        </DropdownMenu>
                       </div>
                     </div>
 
