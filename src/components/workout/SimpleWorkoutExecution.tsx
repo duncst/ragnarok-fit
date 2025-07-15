@@ -3,6 +3,8 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { ArrowLeft, Settings, ChevronUp, ChevronDown, Trash2, Plus } from 'lucide-react';
 import type { Exercise } from '@/types';
+import { useExerciseHistory } from '@/hooks/useExerciseHistory';
+import { SimpleExerciseSelector } from '@/components/workout/SimpleExerciseSelector';
 
 interface SimpleWorkoutExecutionProps {
   workoutName: string;
@@ -33,6 +35,7 @@ export const SimpleWorkoutExecution: React.FC<SimpleWorkoutExecutionProps> = ({
   onCancelWorkout,
   workoutTimer
 }) => {
+  const { getExercisePrevious } = useExerciseHistory();
   return (
     <div className="min-h-screen bg-background text-foreground">
       {/* Header */}
@@ -124,8 +127,10 @@ export const SimpleWorkoutExecution: React.FC<SimpleWorkoutExecutionProps> = ({
 
                 {/* Previous Performance */}
                 <div className="text-xs sm:text-sm text-muted-foreground text-center">
-                  {/* This would need to come from exercise history */}
-                  -
+                  {(() => {
+                    const previous = getExercisePrevious(exercise.name);
+                    return previous ? `${previous.weight}kg × ${previous.reps}` : '-';
+                  })()}
                 </div>
 
                 {/* Weight Input */}
@@ -171,12 +176,25 @@ export const SimpleWorkoutExecution: React.FC<SimpleWorkoutExecutionProps> = ({
         ))}
 
         {/* Add Exercises Button */}
+        <SimpleExerciseSelector
+          onExerciseSelect={onAddExercise}
+          trigger={
+            <Button
+              variant="outline"
+              className="w-full border-border bg-card hover:bg-muted text-blue-400"
+            >
+              Add Exercises
+            </Button>
+          }
+        />
+
+        {/* Cancel Workout Button */}
         <Button
           variant="outline"
-          onClick={() => onAddExercise('New Exercise')}
-          className="w-full border-border bg-card hover:bg-muted text-blue-400"
+          onClick={onCancelWorkout}
+          className="w-full border-border bg-card hover:bg-muted text-destructive"
         >
-          Add Exercises
+          Cancel Workout
         </Button>
       </div>
     </div>
