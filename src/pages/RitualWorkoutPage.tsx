@@ -80,7 +80,7 @@ const RitualWorkoutPage = () => {
 
   // Initialize workout from template
   useEffect(() => {
-    if (template && template.workout_template_exercises) {
+    if (template && template.workout_template_exercises && exercises.length === 0) {
       const templateExercises: Exercise[] = template.workout_template_exercises
         .sort((a, b) => a.order - b.order)
         .map((templateEx, index) => ({
@@ -103,7 +103,7 @@ const RitualWorkoutPage = () => {
         startWorkout();
       }
     }
-  }, [template, isWorkoutActive, startWorkout, setExercises]);
+  }, [template?.id, exercises.length, isWorkoutActive]);
 
   const isValhallaWorkout = (name: string) => {
     return !!name.match(/^(THOR|FENRIR|HEL|NJORD|ODIN)$/i);
