@@ -106,7 +106,7 @@ export const SimpleWorkoutExecution: React.FC<SimpleWorkoutExecutionProps> = ({
             </div>
 
             {/* Sets Header */}
-            <div className="grid grid-cols-[60px_80px_80px_80px_40px] gap-2 mb-2 text-sm text-muted-foreground">
+            <div className="grid grid-cols-[50px_1fr_1fr_1fr_40px] gap-1 sm:gap-2 mb-2 text-xs sm:text-sm text-muted-foreground">
               <div>Set</div>
               <div>Prev</div>
               <div>kg</div>
@@ -116,14 +116,14 @@ export const SimpleWorkoutExecution: React.FC<SimpleWorkoutExecutionProps> = ({
 
             {/* Sets */}
             {exercise.sets.map((set, setIndex) => (
-              <div key={set.id} className="grid grid-cols-[60px_80px_80px_80px_40px] gap-2 mb-2 items-center">
+              <div key={set.id} className="grid grid-cols-[50px_1fr_1fr_1fr_40px] gap-1 sm:gap-2 mb-2 items-center">
                 {/* Set Number */}
-                <div className="flex items-center justify-center w-8 h-8 rounded-full bg-muted text-sm font-medium">
+                <div className="flex items-center justify-center w-7 h-7 sm:w-8 sm:h-8 rounded-full bg-muted text-xs sm:text-sm font-medium">
                   {setIndex + 1}
                 </div>
 
                 {/* Previous Performance */}
-                <div className="text-sm text-muted-foreground">
+                <div className="text-xs sm:text-sm text-muted-foreground text-center">
                   {/* This would need to come from exercise history */}
                   -
                 </div>
@@ -134,7 +134,7 @@ export const SimpleWorkoutExecution: React.FC<SimpleWorkoutExecutionProps> = ({
                   placeholder="0"
                   value={set.weight || ''}
                   onChange={(e) => onUpdateSet(exercise.id, set.id, 'weight', parseFloat(e.target.value) || 0)}
-                  className="h-8 text-center bg-muted border-border"
+                  className="h-7 sm:h-8 text-xs sm:text-sm text-center bg-muted border-border"
                 />
 
                 {/* Reps Input */}
@@ -143,13 +143,13 @@ export const SimpleWorkoutExecution: React.FC<SimpleWorkoutExecutionProps> = ({
                   placeholder="0"
                   value={set.reps || ''}
                   onChange={(e) => onUpdateSet(exercise.id, set.id, 'reps', parseInt(e.target.value) || 0)}
-                  className="h-8 text-center bg-muted border-border"
+                  className="h-7 sm:h-8 text-xs sm:text-sm text-center bg-muted border-border"
                 />
 
                 {/* Completion Circle */}
                 <button
                   onClick={() => onToggleSet(exercise.id, set.id)}
-                  className={`w-6 h-6 rounded-full border-2 ${
+                  className={`w-5 h-5 sm:w-6 sm:h-6 rounded-full border-2 ${
                     set.completed 
                       ? 'bg-green-500 border-green-500' 
                       : 'border-muted-foreground'
