@@ -65,7 +65,7 @@ export const useWorkoutInitialization = () => {
     }
     
     setIsInitialized(true);
-  }, [template, workout, loadWorkout, isInitialized]);
+  }, [template, workout]);
 
   return {
     exercises,
