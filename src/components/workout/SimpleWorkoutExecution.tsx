@@ -1,13 +1,8 @@
-
-import React, { useState } from 'react';
+import React from 'react';
 import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardHeader } from '@/components/ui/card';
-import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from '@/components/ui/dialog';
-import { RestTimerSettings } from './RestTimerSettings';
-import { RotateCcw, Settings, Plus } from 'lucide-react';
-import { SimpleExerciseSelector } from './SimpleExerciseSelector';
-import { ExerciseCard } from './ExerciseCard';
-import { useExerciseHistory } from '@/hooks/useExerciseHistory';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Input } from '@/components/ui/input';
+import { Plus, Minus, Check } from 'lucide-react';
 import type { Exercise } from '@/types';
 
 interface SimpleWorkoutExecutionProps {
@@ -26,178 +21,100 @@ interface SimpleWorkoutExecutionProps {
   onRestDurationChange: (duration: number) => void;
 }
 
-export const SimpleWorkoutExecution = ({
+export const SimpleWorkoutExecution: React.FC<SimpleWorkoutExecutionProps> = ({
   workoutName,
   exercises,
-  onAddExercise,
-  onRemoveExercise,
-  onMoveExercise,
   onAddSet,
   onUpdateSet,
   onToggleSet,
   onFinishWorkout,
   onCancelWorkout,
-  workoutTimer,
-  restDuration,
-  onRestDurationChange,
-}: SimpleWorkoutExecutionProps) => {
-  const [showFinishDialog, setShowFinishDialog] = useState(false);
-  const [showRestSettings, setShowRestSettings] = useState(false);
-
-  const handleFinishClick = () => {
-    const hasIncompleteSets = exercises.some(ex => ex.sets.some(set => !set.completed && (set.weight > 0 || set.reps > 0 || set.duration > 0 || set.distance > 0)));
-    if (hasIncompleteSets) {
-      setShowFinishDialog(true);
-    } else {
-      onFinishWorkout();
-    }
-  };
-
-  const handleCompleteAllSets = () => {
-    exercises.forEach(exercise => {
-      exercise.sets.forEach(set => {
-        if (!set.completed && (set.weight > 0 || set.reps > 0 || set.duration > 0 || set.distance > 0)) {
-          onToggleSet(exercise.id, set.id);
-        }
-      });
-    });
-    setShowFinishDialog(false);
-    onFinishWorkout();
-  };
-
-  const formatRestTime = (seconds: number) => {
-    const minutes = Math.floor(seconds / 60);
-    const remainingSeconds = seconds % 60;
-    return `${minutes}:${remainingSeconds.toString().padStart(2, '0')}`;
-  };
-
+  workoutTimer
+}) => {
   return (
-    <div className="min-h-screen bg-background">
+    <div className="p-4 space-y-4">
       {/* Header */}
-      <div className="sticky top-0 z-50 bg-background/95 backdrop-blur-sm border-b">
-        <div className="flex items-center justify-between p-4">
-          <Button variant="ghost" size="icon" onClick={onCancelWorkout}>
-            <RotateCcw className="h-5 w-5" />
-          </Button>
-          <div className="text-center">
-            <h1 className="text-lg font-semibold">{workoutName}</h1>
-            <p className="text-sm text-muted-foreground">{workoutTimer}</p>
-          </div>
-          <div className="flex items-center gap-2">
-            <Button variant="ghost" size="icon" onClick={() => setShowRestSettings(true)}>
-              <Settings className="h-5 w-5" />
-            </Button>
-            <Button 
-              onClick={handleFinishClick}
-              className="bg-green-500 hover:bg-green-600"
-            >
-              Finish
-            </Button>
-          </div>
-        </div>
+      <div className="text-center">
+        <h1 className="text-2xl font-bold">{workoutName}</h1>
+        <p className="text-muted-foreground">{workoutTimer}</p>
       </div>
 
-      {/* Content */}
-      <div className="p-4 space-y-4 pb-20">
-        {/* Exercise Cards */}
-        {exercises.map((exercise, exerciseIndex) => (
-          <ExerciseCard
-            key={exercise.id}
-            exercise={exercise}
-            exerciseIndex={exerciseIndex}
-            totalExercises={exercises.length}
-            onRemove={onRemoveExercise}
-            onMove={onMoveExercise}
-            onUpdateName={() => {}} // Read-only during workout
-            onAddSet={onAddSet}
-            onUpdateSet={onUpdateSet}
-            onToggleSet={onToggleSet}
-          />
-        ))}
-        
-        {/* Add Exercise */}
-        <SimpleExerciseSelector
-          onExerciseSelect={onAddExercise}
-          trigger={
-            <Card className="border-dashed border-2 hover:border-primary/50 transition-colors cursor-pointer">
-              <CardContent className="flex items-center justify-center py-8">
-                <div className="flex items-center gap-2 text-muted-foreground">
-                  <Plus className="h-5 w-5" />
-                  <span>Add Exercise</span>
+      {/* Exercises */}
+      {exercises.map((exercise) => (
+        <Card key={exercise.id}>
+          <CardHeader>
+            <CardTitle>{exercise.name}</CardTitle>
+          </CardHeader>
+          <CardContent className="space-y-2">
+            {exercise.sets.map((set, setIndex) => (
+              <div key={set.id} className="flex items-center gap-2 p-2 border rounded">
+                <span className="w-8 text-sm text-muted-foreground">
+                  {setIndex + 1}
+                </span>
+                
+                <div className="flex items-center gap-1">
+                  <Input
+                    type="number"
+                    placeholder="Weight"
+                    value={set.weight || ''}
+                    onChange={(e) => onUpdateSet(exercise.id, set.id, 'weight', parseFloat(e.target.value) || 0)}
+                    className="w-20 h-8"
+                  />
+                  <span className="text-xs text-muted-foreground">kg</span>
                 </div>
-              </CardContent>
-            </Card>
-          }
-        />
 
-        {/* Workout Actions */}
-        <div className="space-y-2">
-          <Button
-            onClick={handleFinishClick}
-            className="w-full bg-green-500 hover:bg-green-600"
-            size="lg"
-          >
-            Finish Workout
-          </Button>
-          <Button
-            variant="ghost"
-            onClick={onCancelWorkout}
-            className="w-full text-red-500 hover:text-red-600 hover:bg-red-50"
-          >
-            Cancel Workout
-          </Button>
-        </div>
-      </div>
+                <div className="flex items-center gap-1">
+                  <Input
+                    type="number"
+                    placeholder="Reps"
+                    value={set.reps || ''}
+                    onChange={(e) => onUpdateSet(exercise.id, set.id, 'reps', parseInt(e.target.value) || 0)}
+                    className="w-16 h-8"
+                  />
+                  <span className="text-xs text-muted-foreground">reps</span>
+                </div>
 
-      {/* Finish Workout Dialog */}
-      <Dialog open={showFinishDialog} onOpenChange={setShowFinishDialog}>
-        <DialogContent>
-          <DialogHeader>
-            <DialogTitle className="text-center">🎉 Finish Workout?</DialogTitle>
-            <DialogDescription className="text-center">
-              There are valid sets in this workout that have not been marked as complete.
-            </DialogDescription>
-          </DialogHeader>
-          <div className="space-y-3">
+                <Button
+                  size="sm"
+                  variant={set.completed ? "default" : "outline"}
+                  onClick={() => onToggleSet(exercise.id, set.id)}
+                  className="ml-auto"
+                >
+                  <Check className="h-4 w-4" />
+                </Button>
+              </div>
+            ))}
+            
             <Button
-              onClick={handleCompleteAllSets}
-              className="w-full bg-green-500 hover:bg-green-600"
-            >
-              Complete Unfinished Sets
-            </Button>
-            <Button
-              onClick={onCancelWorkout}
               variant="outline"
-              className="w-full text-red-500 border-red-200 hover:bg-red-50"
-            >
-              Cancel Workout
-            </Button>
-            <Button
-              onClick={() => setShowFinishDialog(false)}
-              variant="ghost"
+              size="sm"
+              onClick={() => onAddSet(exercise.id)}
               className="w-full"
             >
-              Continue Workout
+              <Plus className="h-4 w-4 mr-2" />
+              Add Set
             </Button>
-          </div>
-        </DialogContent>
-      </Dialog>
+          </CardContent>
+        </Card>
+      ))}
 
-      {/* Rest Timer Settings Dialog */}
-      <Dialog open={showRestSettings} onOpenChange={setShowRestSettings}>
-        <DialogContent>
-          <DialogHeader>
-            <DialogTitle>Rest Timer Settings</DialogTitle>
-          </DialogHeader>
-          <RestTimerSettings
-            restDuration={restDuration}
-            onRestDurationChange={onRestDurationChange}
-          />
-          <Button onClick={() => setShowRestSettings(false)} className="mt-4">
-            Done
-          </Button>
-        </DialogContent>
-      </Dialog>
+      {/* Actions */}
+      <div className="space-y-2 pt-4">
+        <Button
+          onClick={onFinishWorkout}
+          className="w-full"
+          size="lg"
+        >
+          Finish Workout
+        </Button>
+        <Button
+          variant="outline"
+          onClick={onCancelWorkout}
+          className="w-full"
+        >
+          Cancel
+        </Button>
+      </div>
     </div>
   );
 };
