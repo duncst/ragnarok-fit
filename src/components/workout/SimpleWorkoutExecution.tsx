@@ -221,14 +221,14 @@ export const SimpleWorkoutExecution = ({
                             step="0.1"
                             value={set.weight === 0 ? '' : set.weight}
                             onChange={(e) => handleNumberChange(exercise.id, set.id, 'weight', e.target.value)}
-                            className="text-center h-8 text-sm pointer-events-auto"
+                            className="text-center h-8 text-sm pointer-events-auto relative z-10"
                             placeholder="0"
                           />
                           <Input
                             type="number"
                             value={set.reps === 0 ? '' : set.reps}
                             onChange={(e) => handleNumberChange(exercise.id, set.id, 'reps', e.target.value)}
-                            className="text-center h-8 text-sm pointer-events-auto"
+                            className="text-center h-8 text-sm pointer-events-auto relative z-10"
                             placeholder="0"
                           />
                         </>
@@ -240,14 +240,14 @@ export const SimpleWorkoutExecution = ({
                             type="text"
                             value={set.duration ? formatDuration(set.duration) : ''}
                             onChange={(e) => handleDurationChange(exercise.id, set.id, e.target.value)}
-                            className="text-center h-8 text-sm pointer-events-auto"
+                            className="text-center h-8 text-sm pointer-events-auto relative z-10"
                             placeholder="MM:SS"
                           />
                           <Input
                             type="number"
                             value={set.reps === 0 ? '' : set.reps}
                             onChange={(e) => handleNumberChange(exercise.id, set.id, 'reps', e.target.value)}
-                            className="text-center h-8 text-sm pointer-events-auto"
+                            className="text-center h-8 text-sm pointer-events-auto relative z-10"
                             placeholder="0"
                           />
                         </>
@@ -259,14 +259,14 @@ export const SimpleWorkoutExecution = ({
                             type="text"
                             value={set.duration ? formatDuration(set.duration) : ''}
                             onChange={(e) => handleDurationChange(exercise.id, set.id, e.target.value)}
-                            className="text-center h-8 text-sm pointer-events-auto"
+                            className="text-center h-8 text-sm pointer-events-auto relative z-10"
                             placeholder="MM:SS"
                           />
                           <Input
                             type="text"
                             value={set.distance ? `${set.distance}` : ''}
                             onChange={(e) => handleDistanceChange(exercise.id, set.id, e.target.value)}
-                            className="text-center h-8 text-sm pointer-events-auto"
+                            className="text-center h-8 text-sm pointer-events-auto relative z-10"
                             placeholder="Distance"
                           />
                         </>
@@ -279,7 +279,7 @@ export const SimpleWorkoutExecution = ({
                             step="0.1"
                             value={set.weight === 0 ? '' : set.weight}
                             onChange={(e) => handleNumberChange(exercise.id, set.id, 'weight', e.target.value)}
-                            className="text-center h-8 text-sm pointer-events-auto"
+                            className="text-center h-8 text-sm pointer-events-auto relative z-10"
                             placeholder="0"
                           />
                           <div className="flex flex-col gap-0.5">
@@ -287,14 +287,14 @@ export const SimpleWorkoutExecution = ({
                               type="text"
                               value={set.duration ? formatDuration(set.duration) : ''}
                               onChange={(e) => handleDurationChange(exercise.id, set.id, e.target.value)}
-                              className="text-center h-6 text-xs pointer-events-auto"
+                              className="text-center h-6 text-xs pointer-events-auto relative z-10"
                               placeholder="MM:SS"
                             />
                             <Input
                               type="text"
                               value={set.distance ? `${set.distance}` : ''}
                               onChange={(e) => handleDistanceChange(exercise.id, set.id, e.target.value)}
-                              className="text-center h-6 text-xs pointer-events-auto"
+                              className="text-center h-6 text-xs pointer-events-auto relative z-10"
                               placeholder="Dist"
                             />
                           </div>
@@ -308,7 +308,7 @@ export const SimpleWorkoutExecution = ({
                             type="number"
                             value={set.reps === 0 ? '' : set.reps}
                             onChange={(e) => handleNumberChange(exercise.id, set.id, 'reps', e.target.value)}
-                            className="text-center h-8 text-sm pointer-events-auto"
+                            className="text-center h-8 text-sm pointer-events-auto relative z-10"
                             placeholder="0"
                           />
                         </>
