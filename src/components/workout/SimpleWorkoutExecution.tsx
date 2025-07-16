@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import { ArrowLeft, Settings, ChevronUp, ChevronDown, Trash2, Plus, GripVertical, Pause, SkipForward } from 'lucide-react';
+import { ArrowLeft, Settings, ChevronUp, ChevronDown, X, Plus, GripVertical, Pause, SkipForward } from 'lucide-react';
 import type { Exercise } from '@/types';
 import { useExerciseHistory } from '@/hooks/useExerciseHistory';
 import { SimpleExerciseSelector } from '@/components/workout/SimpleExerciseSelector';
@@ -183,7 +183,7 @@ export const SimpleWorkoutExecution: React.FC<SimpleWorkoutExecutionProps> = ({
                         }}
                         className="h-8 w-8 p-0 text-red-500 hover:text-red-600 hover:bg-red-50"
                       >
-                        <Trash2 className="h-4 w-4" />
+                        <X className="h-4 w-4" />
                       </Button>
                       {previous && (
                         <span className="text-sm text-muted-foreground bg-muted px-3 py-1 rounded-lg">
@@ -264,7 +264,7 @@ export const SimpleWorkoutExecution: React.FC<SimpleWorkoutExecutionProps> = ({
                           size="icon"
                           className="h-8 w-8 text-red-500 hover:text-red-600"
                         >
-                          <Trash2 className="h-4 w-4" />
+                          <X className="h-4 w-4" />
                         </Button>
                       </div>
                     ))}
