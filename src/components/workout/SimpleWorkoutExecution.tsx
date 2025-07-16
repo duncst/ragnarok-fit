@@ -16,9 +16,11 @@ interface SimpleWorkoutExecutionProps {
   onAddSet: (exerciseId: string) => void;
   onUpdateSet: (exerciseId: string, setId: string, field: 'weight' | 'reps' | 'duration' | 'distance', value: number) => void;
   onToggleSet: (exerciseId: string, setId: string) => void;
+  onStartWorkout: () => void;
   onFinishWorkout: () => void;
   onCancelWorkout: () => void;
   workoutTimer: string;
+  isStarted: boolean;
   restDuration: number;
   onRestDurationChange: (duration: number) => void;
   showRestTimer: boolean;
@@ -37,9 +39,11 @@ export const SimpleWorkoutExecution: React.FC<SimpleWorkoutExecutionProps> = ({
   onAddSet,
   onUpdateSet,
   onToggleSet,
+  onStartWorkout,
   onFinishWorkout,
   onCancelWorkout,
   workoutTimer,
+  isStarted,
   showRestTimer,
   restTimerDuration,
   isPaused,
@@ -76,10 +80,10 @@ export const SimpleWorkoutExecution: React.FC<SimpleWorkoutExecutionProps> = ({
           <p className="text-sm text-muted-foreground">Duration: {workoutTimer}</p>
         </div>
         <Button
-          onClick={onFinishWorkout}
+          onClick={isStarted ? onFinishWorkout : onStartWorkout}
           className="bg-green-500 hover:bg-green-600 text-white px-6"
         >
-          Finish Workout
+          {isStarted ? 'Finish' : 'Start'}
         </Button>
       </div>
 

@@ -210,9 +210,11 @@ const RitualWorkoutPage = () => {
         onAddSet={addSet}
         onUpdateSet={updateSet}
         onToggleSet={handleToggleSetWithRest}
+        onStartWorkout={startWorkout}
         onFinishWorkout={handleFinishWorkout}
         onCancelWorkout={handleCancelWorkout}
         workoutTimer={formattedDuration}
+        isStarted={isWorkoutActive}
         restDuration={restDuration}
         onRestDurationChange={setRestDuration}
         showRestTimer={showRestTimer}

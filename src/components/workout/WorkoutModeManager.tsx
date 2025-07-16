@@ -11,6 +11,7 @@ interface WorkoutModeManagerProps {
   exercises: Exercise[];
   restDuration: number;
   formattedDuration: string;
+  isStarted: boolean;
   
   // Rest timer
   showRestTimer?: boolean;
@@ -47,6 +48,7 @@ export const WorkoutModeManager = ({
   exercises,
   restDuration,
   formattedDuration,
+  isStarted,
   showRestTimer = false,
   restTimerDuration = 0,
   onDismissRestTimer = () => {},
@@ -106,9 +108,11 @@ export const WorkoutModeManager = ({
         onAddSet={onAddSet}
         onUpdateSet={onUpdateSet}
         onToggleSet={onToggleSet}
+        onStartWorkout={onStartWorkout}
         onFinishWorkout={onFinishWorkout}
         onCancelWorkout={onCancelWorkout}
         workoutTimer={formattedDuration}
+        isStarted={isStarted}
         restDuration={restDuration}
         onRestDurationChange={onRestDurationChange}
         showRestTimer={showRestTimer}
