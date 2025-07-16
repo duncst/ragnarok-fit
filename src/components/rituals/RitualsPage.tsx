@@ -30,7 +30,7 @@ interface Ritual {
 
 export const RitualsPage = () => {
   const [showCreateModal, setShowCreateModal] = useState(false);
-  const [activeTab, setActiveTab] = useState('Valhalla');
+  const [activeTab, setActiveTab] = useState('Strength');
   const navigate = useNavigate();
   const queryClient = useQueryClient();
 
@@ -122,10 +122,10 @@ export const RitualsPage = () => {
       {/* Tabs */}
       <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
         <TabsList className="w-full justify-start bg-muted/30">
-          <TabsTrigger value="Valhalla" className="flex-1">Valhalla</TabsTrigger>
           <TabsTrigger value="Strength" className="flex-1">Strength</TabsTrigger>
           <TabsTrigger value="Endurance" className="flex-1">Endurance</TabsTrigger>
           <TabsTrigger value="Mobility" className="flex-1">Mobility</TabsTrigger>
+          <TabsTrigger value="Valhalla" className="flex-1">Valhalla</TabsTrigger>
         </TabsList>
 
         {/* Valhalla Tab Content */}
