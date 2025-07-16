@@ -121,9 +121,6 @@ export const SimpleWorkoutExecution: React.FC<SimpleWorkoutExecutionProps> = ({
                   <div className="flex items-center justify-between">
                     <div className="flex items-center gap-3">
                       <GripVertical className="h-5 w-5 text-muted-foreground" />
-                      <div className="w-8 h-8 rounded-full bg-orange-500 flex items-center justify-center">
-                        <div className="w-6 h-6 rounded-full border-2 border-white" />
-                      </div>
                       <div className="text-left">
                         <h3 className="text-lg font-medium text-foreground">{exercise.name}</h3>
                         <p className="text-sm text-muted-foreground">
