@@ -137,12 +137,35 @@ export const SimpleWorkoutExecution: React.FC<SimpleWorkoutExecutionProps> = ({
           const previous = getExercisePrevious(exercise.name);
           
           return (
-            <div key={exercise.id} className="border border-border rounded-2xl bg-card">
+            <div 
+              key={exercise.id} 
+              className="border border-border rounded-2xl bg-card"
+              draggable
+              onDragStart={(e) => {
+                e.dataTransfer.setData('text/plain', exercise.id);
+              }}
+              onDragOver={(e) => {
+                e.preventDefault();
+              }}
+              onDrop={(e) => {
+                e.preventDefault();
+                const draggedId = e.dataTransfer.getData('text/plain');
+                if (draggedId !== exercise.id) {
+                  const draggedIndex = exercises.findIndex(ex => ex.id === draggedId);
+                  const targetIndex = exerciseIndex;
+                  if (draggedIndex < targetIndex) {
+                    onMoveExercise(draggedId, 'down');
+                  } else {
+                    onMoveExercise(draggedId, 'up');
+                  }
+                }
+              }}
+            >
               <Collapsible open={isExpanded} onOpenChange={() => toggleExercise(exercise.id)}>
                 <CollapsibleTrigger className="w-full p-4">
                   <div className="flex items-center justify-between">
                     <div className="flex items-center gap-3">
-                      <GripVertical className="h-5 w-5 text-muted-foreground" />
+                      <GripVertical className="h-5 w-5 text-muted-foreground cursor-grab" />
                       <div className="text-left">
                         <h3 className="text-lg font-medium text-foreground">{exercise.name}</h3>
                         <p className="text-sm text-muted-foreground">
@@ -151,6 +174,17 @@ export const SimpleWorkoutExecution: React.FC<SimpleWorkoutExecutionProps> = ({
                       </div>
                     </div>
                     <div className="flex items-center gap-2">
+                      <Button
+                        variant="ghost"
+                        size="sm"
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          onRemoveExercise(exercise.id);
+                        }}
+                        className="h-8 w-8 p-0 text-red-500 hover:text-red-600 hover:bg-red-50"
+                      >
+                        <Trash2 className="h-4 w-4" />
+                      </Button>
                       {previous && (
                         <span className="text-sm text-muted-foreground bg-muted px-3 py-1 rounded-lg">
                           Last: {previous.weight}kg × {previous.reps}
