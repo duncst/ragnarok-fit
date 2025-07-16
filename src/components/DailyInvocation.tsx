@@ -47,7 +47,7 @@ export const DailyInvocation = () => {
   const workoutOptions: WorkoutOption[] = [
     {
       id: 'hero-call',
-      title: '🛡 The Hero\'s Call',
+      title: 'The Hero\'s Call',
       subtitle: 'A daily, all-around challenge—bodyweight and grit.',
       description: 'The forge is hot. Step into it.',
       icon: Swords,
@@ -55,7 +55,7 @@ export const DailyInvocation = () => {
     },
     {
       id: 'strength',
-      title: '🏋️ Strength Trial',
+      title: 'Strength Trial',
       subtitle: 'Focused feats of power and control.',
       description: 'Test your sinew, and earn the right to bear the iron.',
       icon: Shield,
@@ -63,7 +63,7 @@ export const DailyInvocation = () => {
     },
     {
       id: 'endurance',
-      title: '💨 Endurance March',
+      title: 'Endurance March',
       subtitle: 'Runs, rucks, and relentless motion.',
       description: 'Prove you can endure, not just prevail.',
       icon: Zap,
@@ -71,7 +71,7 @@ export const DailyInvocation = () => {
     },
     {
       id: 'recovery',
-      title: '🧘 Recovery & Ritual',
+      title: 'Recovery & Ritual',
       subtitle: 'Active recovery, mobility, or reflection.',
       description: 'Even the gods must rest before the next battle.',
       icon: Leaf,
