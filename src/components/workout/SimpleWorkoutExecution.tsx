@@ -1,10 +1,11 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import { ArrowLeft, Settings, ChevronUp, ChevronDown, Trash2, Plus } from 'lucide-react';
+import { ArrowLeft, Settings, ChevronUp, ChevronDown, Trash2, Plus, GripVertical, Pause, SkipForward } from 'lucide-react';
 import type { Exercise } from '@/types';
 import { useExerciseHistory } from '@/hooks/useExerciseHistory';
 import { SimpleExerciseSelector } from '@/components/workout/SimpleExerciseSelector';
+import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '@/components/ui/collapsible';
 
 interface SimpleWorkoutExecutionProps {
   workoutName: string;
@@ -36,144 +37,196 @@ export const SimpleWorkoutExecution: React.FC<SimpleWorkoutExecutionProps> = ({
   workoutTimer
 }) => {
   const { getExercisePrevious } = useExerciseHistory();
+  const [expandedExercises, setExpandedExercises] = useState<Record<string, boolean>>({});
+  const [showRestTimer, setShowRestTimer] = useState(true);
+  const [restTime, setRestTime] = useState(40); // Mock rest time
+
+  const totalSets = exercises.reduce((total, exercise) => total + exercise.sets.length, 0);
+  const completedSets = exercises.reduce((total, exercise) => 
+    total + exercise.sets.filter(set => set.completed).length, 0
+  );
+
+  const toggleExercise = (exerciseId: string) => {
+    setExpandedExercises(prev => ({
+      ...prev,
+      [exerciseId]: !prev[exerciseId]
+    }));
+  };
+
+  const formatTime = (seconds: number) => {
+    const mins = Math.floor(seconds / 60);
+    const secs = seconds % 60;
+    return `${mins}:${secs.toString().padStart(2, '0')}`;
+  };
+
   return (
     <div className="min-h-screen bg-background text-foreground">
-      {/* Header */}
+      {/* Overall Progress Header */}
       <div className="flex items-center justify-between p-4 border-b border-border">
-        <Button
-          variant="ghost"
-          size="icon"
-          onClick={onCancelWorkout}
-          className="text-muted-foreground"
-        >
-          <ArrowLeft className="h-6 w-6" />
-        </Button>
-        
-        <div className="text-center">
-          <h1 className="text-xl font-semibold text-foreground">{workoutName}</h1>
-          <p className="text-sm text-muted-foreground">{workoutTimer}</p>
+        <h2 className="text-lg font-medium text-muted-foreground">Overall Progress</h2>
+        <span className="text-lg font-medium text-foreground">
+          {completedSets} / {totalSets} sets
+        </span>
+      </div>
+
+      {/* Rest Timer */}
+      {showRestTimer && (
+        <div className="m-4 p-6 bg-card border border-border rounded-2xl">
+          <div className="text-center">
+            <div className="text-4xl font-bold text-orange-500 mb-2">
+              {formatTime(restTime)}
+            </div>
+            <div className="text-lg text-muted-foreground mb-6">Rest Time</div>
+            <div className="flex gap-3">
+              <Button
+                variant="outline"
+                className="flex-1 h-12 bg-muted/20"
+                onClick={() => {/* Pause timer logic */}}
+              >
+                <Pause className="h-4 w-4 mr-2" />
+                Pause
+              </Button>
+              <Button
+                className="flex-1 h-12 bg-orange-500 hover:bg-orange-600 text-white"
+                onClick={() => setShowRestTimer(false)}
+              >
+                Skip Rest
+              </Button>
+            </div>
+          </div>
         </div>
-        
-        <div className="flex items-center gap-2">
-          <Button
-            variant="ghost"
-            size="icon"
-            className="text-muted-foreground"
-          >
-            <Settings className="h-6 w-6" />
-          </Button>
-          <Button
-            onClick={onFinishWorkout}
-            className="bg-green-500 hover:bg-green-600 text-white px-6 py-2 rounded-lg"
-          >
-            Finish
-          </Button>
-        </div>
+      )}
+
+      {/* Drag to reorder hint */}
+      <div className="flex items-center justify-center gap-2 py-3 text-muted-foreground">
+        <GripVertical className="h-4 w-4" />
+        <span className="text-sm">Drag exercises to reorder them</span>
       </div>
 
       {/* Exercises */}
-      <div className="p-4 space-y-4">
-        {exercises.map((exercise, exerciseIndex) => (
-          <div key={exercise.id} className="border border-border rounded-lg p-4 bg-card">
-            {/* Exercise Header */}
-            <div className="flex items-center justify-between mb-4">
-              <h3 className="text-lg font-medium text-blue-400">{exercise.name}</h3>
-              <div className="flex items-center gap-2">
-                <Button
-                  variant="ghost"
-                  size="icon"
-                  onClick={() => onMoveExercise(exercise.id, 'up')}
-                  disabled={exerciseIndex === 0}
-                  className="h-8 w-8 text-muted-foreground"
-                >
-                  <ChevronUp className="h-4 w-4" />
-                </Button>
-                <Button
-                  variant="ghost"
-                  size="icon"
-                  onClick={() => onMoveExercise(exercise.id, 'down')}
-                  disabled={exerciseIndex === exercises.length - 1}
-                  className="h-8 w-8 text-muted-foreground"
-                >
-                  <ChevronDown className="h-4 w-4" />
-                </Button>
-                <Button
-                  variant="ghost"
-                  size="icon"
-                  onClick={() => onRemoveExercise(exercise.id)}
-                  className="h-8 w-8 text-muted-foreground"
-                >
-                  <Trash2 className="h-4 w-4" />
-                </Button>
-              </div>
+      <div className="px-4 pb-4 space-y-4">
+        {exercises.map((exercise, exerciseIndex) => {
+          const completedSetsCount = exercise.sets.filter(set => set.completed).length;
+          const isExpanded = expandedExercises[exercise.id] ?? true;
+          const previous = getExercisePrevious(exercise.name);
+          
+          return (
+            <div key={exercise.id} className="border border-border rounded-2xl bg-card">
+              <Collapsible open={isExpanded} onOpenChange={() => toggleExercise(exercise.id)}>
+                <CollapsibleTrigger className="w-full p-4">
+                  <div className="flex items-center justify-between">
+                    <div className="flex items-center gap-3">
+                      <GripVertical className="h-5 w-5 text-muted-foreground" />
+                      <div className="w-8 h-8 rounded-full bg-orange-500 flex items-center justify-center">
+                        <div className="w-6 h-6 rounded-full border-2 border-white" />
+                      </div>
+                      <div className="text-left">
+                        <h3 className="text-lg font-medium text-foreground">{exercise.name}</h3>
+                        <p className="text-sm text-muted-foreground">
+                          {completedSetsCount} / {exercise.sets.length} sets completed
+                        </p>
+                      </div>
+                    </div>
+                    <div className="flex items-center gap-2">
+                      {previous && (
+                        <span className="text-sm text-muted-foreground bg-muted px-3 py-1 rounded-lg">
+                          Last: {previous.weight}kg × {previous.reps}
+                        </span>
+                      )}
+                      {isExpanded ? (
+                        <ChevronUp className="h-5 w-5 text-muted-foreground" />
+                      ) : (
+                        <ChevronDown className="h-5 w-5 text-muted-foreground" />
+                      )}
+                    </div>
+                  </div>
+                </CollapsibleTrigger>
+
+                <CollapsibleContent>
+                  <div className="px-4 pb-4">
+                    {/* Column Headers */}
+                    <div className="grid grid-cols-[auto_1fr_1fr_1fr_auto_auto] gap-3 mb-3 text-sm text-muted-foreground">
+                      <div className="text-center">Set</div>
+                      <div className="text-center">Prev</div>
+                      <div className="text-center">kg</div>
+                      <div className="text-center">Reps</div>
+                      <div className="text-center">Done</div>
+                      <div className="text-center">Actions</div>
+                    </div>
+
+                    {/* Sets */}
+                    {exercise.sets.map((set, setIndex) => (
+                      <div key={set.id} className="grid grid-cols-[auto_1fr_1fr_1fr_auto_auto] gap-3 mb-3 items-center">
+                        {/* Set Number */}
+                        <div className="w-8 h-8 rounded-full bg-muted flex items-center justify-center text-sm font-medium">
+                          {setIndex + 1}
+                        </div>
+
+                        {/* Previous Performance */}
+                        <div className="text-sm text-center">
+                          {previous ? previous.reps : '-'}
+                        </div>
+
+                        {/* Weight Input */}
+                        <Input
+                          type="number"
+                          placeholder="0"
+                          value={set.weight || ''}
+                          onChange={(e) => onUpdateSet(exercise.id, set.id, 'weight', parseFloat(e.target.value) || 0)}
+                          className="h-10 text-center bg-muted/50 border-border rounded-lg"
+                        />
+
+                        {/* Reps Input */}
+                        <Input
+                          type="number"
+                          placeholder="15"
+                          value={set.reps || ''}
+                          onChange={(e) => onUpdateSet(exercise.id, set.id, 'reps', parseInt(e.target.value) || 0)}
+                          className="h-10 text-center bg-muted/50 border-border rounded-lg"
+                        />
+
+                        {/* Completion Circle */}
+                        <button
+                          onClick={() => onToggleSet(exercise.id, set.id)}
+                          className={`w-8 h-8 rounded-full border-2 ${
+                            set.completed 
+                              ? 'bg-green-500 border-green-500' 
+                              : 'border-orange-500'
+                          }`}
+                        >
+                          {set.completed && (
+                            <div className="w-full h-full rounded-full bg-green-500 flex items-center justify-center">
+                              <div className="w-3 h-3 rounded-full bg-white" />
+                            </div>
+                          )}
+                        </button>
+
+                        {/* Delete Button */}
+                        <Button
+                          variant="ghost"
+                          size="icon"
+                          className="h-8 w-8 text-red-500 hover:text-red-600"
+                        >
+                          <Trash2 className="h-4 w-4" />
+                        </Button>
+                      </div>
+                    ))}
+
+                    {/* Add Set Button */}
+                    <Button
+                      variant="outline"
+                      onClick={() => onAddSet(exercise.id)}
+                      className="w-full mt-4 h-12 border-dashed border-muted-foreground/30 bg-transparent hover:bg-muted/50"
+                    >
+                      <Plus className="h-4 w-4 mr-2" />
+                      Add Set (1:30)
+                    </Button>
+                  </div>
+                </CollapsibleContent>
+              </Collapsible>
             </div>
-
-            {/* Sets Header */}
-            <div className="grid grid-cols-[50px_1fr_1fr_1fr_40px] gap-1 sm:gap-2 mb-2 text-xs sm:text-sm text-muted-foreground">
-              <div>Set</div>
-              <div>Prev</div>
-              <div>kg</div>
-              <div>Reps</div>
-              <div></div>
-            </div>
-
-            {/* Sets */}
-            {exercise.sets.map((set, setIndex) => (
-              <div key={set.id} className="grid grid-cols-[50px_1fr_1fr_1fr_40px] gap-1 sm:gap-2 mb-2 items-center">
-                {/* Set Number */}
-                <div className="flex items-center justify-center w-7 h-7 sm:w-8 sm:h-8 rounded-full bg-muted text-xs sm:text-sm font-medium">
-                  {setIndex + 1}
-                </div>
-
-                {/* Previous Performance */}
-                <div className="text-xs sm:text-sm text-muted-foreground text-center">
-                  {(() => {
-                    const previous = getExercisePrevious(exercise.name);
-                    return previous ? `${previous.weight}kg × ${previous.reps}` : '-';
-                  })()}
-                </div>
-
-                {/* Weight Input */}
-                <Input
-                  type="number"
-                  placeholder="0"
-                  value={set.weight || ''}
-                  onChange={(e) => onUpdateSet(exercise.id, set.id, 'weight', parseFloat(e.target.value) || 0)}
-                  className="h-7 sm:h-8 text-xs sm:text-sm text-center bg-muted border-border"
-                />
-
-                {/* Reps Input */}
-                <Input
-                  type="number"
-                  placeholder="0"
-                  value={set.reps || ''}
-                  onChange={(e) => onUpdateSet(exercise.id, set.id, 'reps', parseInt(e.target.value) || 0)}
-                  className="h-7 sm:h-8 text-xs sm:text-sm text-center bg-muted border-border"
-                />
-
-                {/* Completion Circle */}
-                <button
-                  onClick={() => onToggleSet(exercise.id, set.id)}
-                  className={`w-5 h-5 sm:w-6 sm:h-6 rounded-full border-2 ${
-                    set.completed 
-                      ? 'bg-green-500 border-green-500' 
-                      : 'border-muted-foreground'
-                  }`}
-                />
-              </div>
-            ))}
-
-            {/* Add Set Button */}
-            <Button
-              variant="outline"
-              onClick={() => onAddSet(exercise.id)}
-              className="w-full mt-4 border-border bg-card hover:bg-muted"
-            >
-              <Plus className="h-4 w-4 mr-2" />
-              Add Set (1:30)
-            </Button>
-          </div>
-        ))}
+          );
+        })}
 
         {/* Add Exercises Button */}
         <SimpleExerciseSelector
@@ -181,7 +234,7 @@ export const SimpleWorkoutExecution: React.FC<SimpleWorkoutExecutionProps> = ({
           trigger={
             <Button
               variant="outline"
-              className="w-full border-border bg-card hover:bg-muted text-blue-400"
+              className="w-full h-12 border-border bg-card hover:bg-muted text-blue-400"
             >
               Add Exercises
             </Button>
@@ -192,7 +245,7 @@ export const SimpleWorkoutExecution: React.FC<SimpleWorkoutExecutionProps> = ({
         <Button
           variant="outline"
           onClick={onCancelWorkout}
-          className="w-full border-border bg-card hover:bg-muted text-destructive"
+          className="w-full h-12 border-border bg-card hover:bg-muted text-destructive"
         >
           Cancel Workout
         </Button>
