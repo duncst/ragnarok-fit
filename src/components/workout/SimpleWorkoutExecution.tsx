@@ -69,6 +69,20 @@ export const SimpleWorkoutExecution: React.FC<SimpleWorkoutExecutionProps> = ({
 
   return (
     <div className="min-h-screen bg-background text-foreground">
+      {/* Workout Header */}
+      <div className="flex items-center justify-between p-4 border-b border-border">
+        <div>
+          <h1 className="text-xl font-bold text-foreground">{workoutName}</h1>
+          <p className="text-sm text-muted-foreground">Duration: {workoutTimer}</p>
+        </div>
+        <Button
+          onClick={onFinishWorkout}
+          className="bg-green-500 hover:bg-green-600 text-white px-6"
+        >
+          Finish Workout
+        </Button>
+      </div>
+
       {/* Overall Progress Header */}
       <div className="flex items-center justify-between p-4 border-b border-border">
         <h2 className="text-lg font-medium text-muted-foreground">Overall Progress</h2>
