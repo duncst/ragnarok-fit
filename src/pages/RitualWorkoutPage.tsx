@@ -49,7 +49,9 @@ const RitualWorkoutPage = () => {
   const { 
     showRestTimer, 
     restTimerDuration, 
+    isPaused,
     handleSetCompletion, 
+    handleTogglePause,
     handleDismissRestTimer 
   } = useRestTimer(restDuration, false);
 
@@ -215,6 +217,8 @@ const RitualWorkoutPage = () => {
         onRestDurationChange={setRestDuration}
         showRestTimer={showRestTimer}
         restTimerDuration={restTimerDuration}
+        isPaused={isPaused}
+        onTogglePause={handleTogglePause}
         onDismissRestTimer={handleDismissRestTimer}
       />
 

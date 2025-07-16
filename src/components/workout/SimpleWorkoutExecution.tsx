@@ -23,6 +23,8 @@ interface SimpleWorkoutExecutionProps {
   onRestDurationChange: (duration: number) => void;
   showRestTimer: boolean;
   restTimerDuration: number;
+  isPaused?: boolean;
+  onTogglePause?: () => void;
   onDismissRestTimer: () => void;
 }
 
@@ -40,6 +42,8 @@ export const SimpleWorkoutExecution: React.FC<SimpleWorkoutExecutionProps> = ({
   workoutTimer,
   showRestTimer,
   restTimerDuration,
+  isPaused,
+  onTogglePause,
   onDismissRestTimer
 }) => {
   const { getExercisePrevious } = useExerciseHistory();
@@ -85,10 +89,10 @@ export const SimpleWorkoutExecution: React.FC<SimpleWorkoutExecutionProps> = ({
               <Button
                 variant="outline"
                 className="flex-1 h-12 bg-muted/20"
-                onClick={() => {/* Pause timer logic */}}
+                onClick={onTogglePause}
               >
                 <Pause className="h-4 w-4 mr-2" />
-                Pause
+                {isPaused ? 'Resume' : 'Pause'}
               </Button>
               <Button
                 className="flex-1 h-12 bg-orange-500 hover:bg-orange-600 text-white"
