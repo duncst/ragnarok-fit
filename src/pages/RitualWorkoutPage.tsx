@@ -213,6 +213,9 @@ const RitualWorkoutPage = () => {
         workoutTimer={formattedDuration}
         restDuration={restDuration}
         onRestDurationChange={setRestDuration}
+        showRestTimer={showRestTimer}
+        restTimerDuration={restTimerDuration}
+        onDismissRestTimer={handleDismissRestTimer}
       />
 
       <ValhallaScoreDialog
@@ -222,12 +225,6 @@ const RitualWorkoutPage = () => {
         workoutDuration={workoutDuration}
       />
 
-      {showRestTimer && (
-        <RestTimerToast
-          duration={restTimerDuration}
-          onDismiss={handleDismissRestTimer}
-        />
-      )}
     </>
   );
 };

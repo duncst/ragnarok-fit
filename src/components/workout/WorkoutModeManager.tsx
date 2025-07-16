@@ -12,6 +12,11 @@ interface WorkoutModeManagerProps {
   restDuration: number;
   formattedDuration: string;
   
+  // Rest timer
+  showRestTimer?: boolean;
+  restTimerDuration?: number;
+  onDismissRestTimer?: () => void;
+  
   // Equipment and focus
   selectedEquipment: string[];
   focusArea: string;
@@ -42,6 +47,9 @@ export const WorkoutModeManager = ({
   exercises,
   restDuration,
   formattedDuration,
+  showRestTimer = false,
+  restTimerDuration = 0,
+  onDismissRestTimer = () => {},
   selectedEquipment,
   focusArea,
   isGenerating,
@@ -103,6 +111,9 @@ export const WorkoutModeManager = ({
         workoutTimer={formattedDuration}
         restDuration={restDuration}
         onRestDurationChange={onRestDurationChange}
+        showRestTimer={showRestTimer}
+        restTimerDuration={restTimerDuration}
+        onDismissRestTimer={onDismissRestTimer}
       />
     );
   }

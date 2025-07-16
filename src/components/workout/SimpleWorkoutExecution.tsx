@@ -21,6 +21,9 @@ interface SimpleWorkoutExecutionProps {
   workoutTimer: string;
   restDuration: number;
   onRestDurationChange: (duration: number) => void;
+  showRestTimer: boolean;
+  restTimerDuration: number;
+  onDismissRestTimer: () => void;
 }
 
 export const SimpleWorkoutExecution: React.FC<SimpleWorkoutExecutionProps> = ({
@@ -34,12 +37,13 @@ export const SimpleWorkoutExecution: React.FC<SimpleWorkoutExecutionProps> = ({
   onToggleSet,
   onFinishWorkout,
   onCancelWorkout,
-  workoutTimer
+  workoutTimer,
+  showRestTimer,
+  restTimerDuration,
+  onDismissRestTimer
 }) => {
   const { getExercisePrevious } = useExerciseHistory();
   const [expandedExercises, setExpandedExercises] = useState<Record<string, boolean>>({});
-  const [showRestTimer, setShowRestTimer] = useState(true);
-  const [restTime, setRestTime] = useState(40); // Mock rest time
 
   const totalSets = exercises.reduce((total, exercise) => total + exercise.sets.length, 0);
   const completedSets = exercises.reduce((total, exercise) => 
@@ -74,7 +78,7 @@ export const SimpleWorkoutExecution: React.FC<SimpleWorkoutExecutionProps> = ({
         <div className="m-4 p-6 bg-card border border-border rounded-2xl">
           <div className="text-center">
             <div className="text-4xl font-bold text-orange-500 mb-2">
-              {formatTime(restTime)}
+              {formatTime(restTimerDuration)}
             </div>
             <div className="text-lg text-muted-foreground mb-6">Rest Time</div>
             <div className="flex gap-3">
@@ -88,7 +92,7 @@ export const SimpleWorkoutExecution: React.FC<SimpleWorkoutExecutionProps> = ({
               </Button>
               <Button
                 className="flex-1 h-12 bg-orange-500 hover:bg-orange-600 text-white"
-                onClick={() => setShowRestTimer(false)}
+                onClick={onDismissRestTimer}
               >
                 Skip Rest
               </Button>
