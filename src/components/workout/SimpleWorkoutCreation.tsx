@@ -176,7 +176,7 @@ export const SimpleWorkoutCreation = ({
             isGenerating={isGenerating}
           />
           
-          {/* Valhalla Section */}
+          {/* Valhalla Section - moved to last */}
           <ValhallaSection />
         </div>
       </div>

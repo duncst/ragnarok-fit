@@ -262,21 +262,21 @@ export const ValhallaSection = () => {
                             )}
                           </div>
                           
-                          <div className="grid grid-cols-3 gap-2 text-xs">
-                            <div className="text-center p-2 bg-gray-50 rounded border border-gray-200">
-                              <Target className="h-4 w-4 mx-auto mb-1 text-gray-500" />
-                              <div className="font-medium">Adept</div>
-                              <div className="text-gray-600">{workout.tierThresholds.warrior + 1}+ min</div>
+                          <div className="grid grid-cols-3 gap-1 text-xs">
+                            <div className="text-center p-1.5 bg-muted/20 rounded border">
+                              <Target className="h-3 w-3 mx-auto mb-0.5 text-muted-foreground" />
+                              <div className="font-medium text-xs">Adept</div>
+                              <div className="text-muted-foreground text-[10px]">{workout.tierThresholds.warrior + 1}+ min</div>
                             </div>
-                            <div className="text-center p-2 bg-slate-50 rounded border border-slate-200">
-                              <Trophy className="h-4 w-4 mx-auto mb-1 text-slate-600" />
-                              <div className="font-medium">Warrior</div>
-                              <div className="text-slate-600">{workout.tierThresholds.berserker + 1}-{workout.tierThresholds.warrior} min</div>
+                            <div className="text-center p-1.5 bg-muted/20 rounded border">
+                              <Trophy className="h-3 w-3 mx-auto mb-0.5 text-muted-foreground" />
+                              <div className="font-medium text-xs">Warrior</div>
+                              <div className="text-muted-foreground text-[10px]">{workout.tierThresholds.berserker + 1}-{workout.tierThresholds.warrior} min</div>
                             </div>
-                            <div className="text-center p-2 bg-amber-50 rounded border border-amber-200">
-                              <Trophy className="h-4 w-4 mx-auto mb-1 text-amber-600" />
-                              <div className="font-medium">Berserker</div>
-                              <div className="text-amber-600">≤{workout.tierThresholds.berserker} min</div>
+                            <div className="text-center p-1.5 bg-primary/10 rounded border border-primary/20">
+                              <Trophy className="h-3 w-3 mx-auto mb-0.5 text-primary" />
+                              <div className="font-medium text-xs text-primary">Berserker</div>
+                              <div className="text-primary text-[10px]">≤{workout.tierThresholds.berserker} min</div>
                             </div>
                           </div>
                           
