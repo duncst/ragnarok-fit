@@ -1,6 +1,7 @@
 
 import React from 'react';
 import { cn } from '@/lib/utils';
+import { Zap, Dog, Snowflake, Waves, Brain, Swords, Circle, Dot } from 'lucide-react';
 
 interface RuneDisplayProps {
   runeName: string;
@@ -17,9 +18,9 @@ const tierStyles = {
 };
 
 const tierIcons = {
-  Adept: '⚪',
-  Warrior: '⚫',
-  Berserker: '🟡',
+  Adept: Circle,
+  Warrior: Dot,
+  Berserker: Circle,
 };
 
 const sizeStyles = {
@@ -35,16 +36,18 @@ export const RuneDisplay = ({
   size = 'md', 
   className 
 }: RuneDisplayProps) => {
-  const runeSymbol = React.useMemo(() => {
+  const RuneIcon = React.useMemo(() => {
     switch (challengeName) {
-      case 'THOR': return '⚡';
-      case 'FENRIR': return '🐺';
-      case 'HEL': return '🧊';
-      case 'NJORD': return '🌊';
-      case 'ODIN': return '🧠';
-      default: return '⚔️';
+      case 'THOR': return Zap;
+      case 'FENRIR': return Dog;
+      case 'HEL': return Snowflake;
+      case 'NJORD': return Waves;
+      case 'ODIN': return Brain;
+      default: return Swords;
     }
   }, [challengeName]);
+
+  const TierIcon = tierIcons[tier];
 
   return (
     <div className={cn(
@@ -54,9 +57,9 @@ export const RuneDisplay = ({
       sizeStyles[size],
       className
     )}>
-      <div className="text-2xl mb-1">{runeSymbol}</div>
-      <div className="absolute -top-1 -right-1 text-xs">
-        {tierIcons[tier]}
+      <RuneIcon className="w-6 h-6 mb-1" />
+      <div className="absolute -top-1 -right-1">
+        <TierIcon className="w-3 h-3" />
       </div>
       {size === 'lg' && (
         <div className="text-center mt-2">
