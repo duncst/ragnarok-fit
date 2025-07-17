@@ -81,10 +81,11 @@ export const useSaveWorkout = () => {
         }
     });
 
-    const finishWorkout = ({ exercises, name, onValhallaScorePrompt }: { 
+    const finishWorkout = ({ exercises, name, onValhallaScorePrompt, onCelebration }: { 
         exercises: Exercise[], 
         name: string,
-        onValhallaScorePrompt?: (workoutName: string) => void 
+        onValhallaScorePrompt?: (workoutName: string) => void,
+        onCelebration?: (workoutName: string, duration: string) => void
     }) => {
         const workoutNameOrDefault = name.trim() || `Workout - ${new Date().toLocaleDateString()}`;
         
@@ -99,8 +100,11 @@ export const useSaveWorkout = () => {
                 if (isValhallaWorkout && onValhallaScorePrompt) {
                     // Prompt user to record their Valhalla score
                     onValhallaScorePrompt(workoutNameOrDefault);
+                } else if (!isHeroCallWorkout && onCelebration) {
+                    // Show celebration for regular workouts (not Hero's Call)
+                    onCelebration(workoutNameOrDefault, '');
                 } else {
-                    // Navigate to history for non-Valhalla workouts (including Hero's Call)
+                    // Navigate to history for Hero's Call or if no celebration handler
                     navigate('/history');
                 }
             }

@@ -8,6 +8,7 @@ import { useSaveWorkout } from '@/hooks/useSaveWorkout';
 import { useRestTimer } from '@/hooks/useRestTimer';
 import { SimpleWorkoutExecution } from '@/components/workout/SimpleWorkoutExecution';
 import { ValhallaScoreDialog } from '@/components/workout/ValhallaScoreDialog';
+import { ForgeCelebration } from '@/components/forge/ForgeCelebration';
 import { RestTimerToast } from '@/components/workout/RestTimerToast';
 import { toast } from 'sonner';
 import type { Exercise } from '@/types';
@@ -21,6 +22,8 @@ const RitualWorkoutPage = () => {
   const [showValhallaScoreDialog, setShowValhallaScoreDialog] = useState(false);
   const [currentValhallaWorkout, setCurrentValhallaWorkout] = useState('');
   const [workoutDuration, setWorkoutDuration] = useState(0);
+  const [showCelebration, setShowCelebration] = useState(false);
+  const [celebrationData, setCelebrationData] = useState<{workoutName: string, duration: string} | null>(null);
 
   const {
     isActive: isWorkoutActive,
@@ -126,20 +129,26 @@ const RitualWorkoutPage = () => {
 
   const handleFinishWorkout = () => {
     const totalTime = Math.floor(totalDuration / 1000);
+    const formattedTime = `${Math.floor(totalTime / 60)}:${(totalTime % 60).toString().padStart(2, '0')}`;
     
     finishWorkout({ 
       exercises, 
       name: templateName,
-      onValhallaScorePrompt: (name) => handleValhallaScorePrompt(name, totalTime)
+      onValhallaScorePrompt: (name) => handleValhallaScorePrompt(name, totalTime),
+      onCelebration: (workoutName, duration) => {
+        setCelebrationData({ workoutName, duration: formattedTime });
+        setShowCelebration(true);
+      }
     });
     
     pauseWorkout();
     resetTimer();
-    
-    if (!isValhallaWorkout(templateName)) {
-      toast.success('Ritual completed! Well done.');
-      navigate('/workout/new');
-    }
+  };
+
+  const handleCloseCelebration = () => {
+    setShowCelebration(false);
+    setCelebrationData(null);
+    navigate('/history');
   };
 
   const handleCancelWorkout = () => {
@@ -231,6 +240,14 @@ const RitualWorkoutPage = () => {
         workoutDuration={workoutDuration}
       />
 
+      {celebrationData && (
+        <ForgeCelebration
+          isOpen={showCelebration}
+          onClose={handleCloseCelebration}
+          workoutName={celebrationData.workoutName}
+          workoutDuration={celebrationData.duration}
+        />
+      )}
     </>
   );
 };
