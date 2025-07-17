@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { Dialog, DialogContent } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
+import { Progress } from '@/components/ui/progress';
 import { cn } from '@/lib/utils';
 import { useForgeData } from '@/hooks/useForgeData';
 
@@ -68,10 +69,6 @@ export const ForgeCelebration = ({
   // Get rotating quote based on current week
   const currentQuote = ROTATING_QUOTES[forgeProgress.currentWeek % ROTATING_QUOTES.length];
   
-  // Progress bar filled blocks
-  const totalBlocks = 10;
-  const filledBlocks = Math.floor((forgeProgress.progressPercentage / 100) * totalBlocks);
-  const progressBar = '🔶 ' + '█'.repeat(filledBlocks) + '░'.repeat(totalBlocks - filledBlocks);
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
@@ -79,10 +76,14 @@ export const ForgeCelebration = ({
         <div className="relative p-6 text-center space-y-6 bg-gradient-to-b from-card to-card/80">
           {/* Large Animated Rune */}
           <div className="relative mx-auto flex items-center justify-center">
-            <div className={cn(
-              "text-8xl font-bold transition-all duration-2000 ease-out transform",
-              showRune ? "scale-100 opacity-100 text-primary" : "scale-50 opacity-0 text-muted-foreground"
-            )}>
+            <div 
+              className="text-8xl font-bold transition-all duration-3000 ease-out transform"
+              style={{
+                color: showRune ? 'hsl(var(--primary))' : 'hsl(var(--muted-foreground))',
+                transform: showRune ? 'scale(1)' : 'scale(0.8)',
+                opacity: showRune ? 1 : 0.3
+              }}
+            >
               {currentDayRune}
             </div>
           </div>
@@ -121,9 +122,10 @@ export const ForgeCelebration = ({
                     <span className="text-muted-foreground">Progress to Next Title:</span>
                     <span className="text-primary font-medium">{forgeProgress.progressPercentage}%</span>
                   </div>
-                  <div className="text-sm font-mono">
-                    {progressBar}
-                  </div>
+                  <Progress 
+                    value={forgeProgress.progressPercentage} 
+                    className="h-3 bg-muted"
+                  />
                 </div>
               </div>
               <p className="text-muted-foreground italic text-sm">
