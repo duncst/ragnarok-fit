@@ -2,7 +2,6 @@ import React, { useEffect, useState } from 'react';
 import { Dialog, DialogContent } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
-import { Flame, Sparkles, Zap } from 'lucide-react';
 import { useForgeData } from '@/hooks/useForgeData';
 
 interface ForgeCelebrationProps {
@@ -11,6 +10,26 @@ interface ForgeCelebrationProps {
   workoutName: string;
   workoutDuration: string;
 }
+
+// Weekday runes mapping
+const WEEKDAY_RUNES = {
+  0: 'ᛊ', // Sunday - Sowilo (Sun)
+  1: 'ᛗ', // Monday - Mannaz (Moon/Man)
+  2: 'ᛏ', // Tuesday - Tiwaz (Tyr/War)
+  3: 'ᚹ', // Wednesday - Wunjo (Odin/Wisdom)
+  4: 'ᚨ', // Thursday - Ansuz (Thor)
+  5: 'ᚠ', // Friday - Fehu (Freya/Prosperity)
+  6: 'ᛋ', // Saturday - Sowilo (Saturn/Structure)
+};
+
+const ROTATING_QUOTES = [
+  "You struck the steel again. You grow sharper with each blow.",
+  "The fire remembers. So does your future self.",
+  "Discipline leaves marks the eye can't see.",
+  "Every rep, a rune. Every breath, a vow.",
+  "The forge knows no shortcuts, only dedication.",
+  "Your will is the hammer. Your body is the anvil."
+];
 
 export const ForgeCelebration = ({ 
   isOpen, 
@@ -21,7 +40,7 @@ export const ForgeCelebration = ({
   const [showRune, setShowRune] = useState(false);
   const [showMessage, setShowMessage] = useState(false);
   const [showProgress, setShowProgress] = useState(false);
-  const { forgeProgress, currentQuote } = useForgeData();
+  const { forgeProgress } = useForgeData();
 
   useEffect(() => {
     if (isOpen) {
@@ -32,8 +51,8 @@ export const ForgeCelebration = ({
       
       // Animate sequence
       const timer1 = setTimeout(() => setShowRune(true), 300);
-      const timer2 = setTimeout(() => setShowMessage(true), 800);
-      const timer3 = setTimeout(() => setShowProgress(true), 1300);
+      const timer2 = setTimeout(() => setShowMessage(true), 1000);
+      const timer3 = setTimeout(() => setShowProgress(true), 1500);
       
       return () => {
         clearTimeout(timer1);
@@ -43,77 +62,83 @@ export const ForgeCelebration = ({
     }
   }, [isOpen]);
 
-  const encouragingMessages = [
-    "The forge burns brighter with your dedication.",
-    "Another step forged in the fires of discipline.",
-    "Your commitment shapes the steel of your spirit.",
-    "The anvil of effort rings with your progress.",
-    "Each workout is a hammer blow upon greatness.",
-    "The flames of consistency forge legends."
-  ];
-
-  const randomMessage = encouragingMessages[Math.floor(Math.random() * encouragingMessages.length)];
+  // Get today's rune based on current day of week
+  const currentDayRune = WEEKDAY_RUNES[new Date().getDay() as keyof typeof WEEKDAY_RUNES];
+  
+  // Get rotating quote based on current week
+  const currentQuote = ROTATING_QUOTES[forgeProgress.currentWeek % ROTATING_QUOTES.length];
+  
+  // Progress bar filled blocks
+  const totalBlocks = 10;
+  const filledBlocks = Math.floor((forgeProgress.progressPercentage / 100) * totalBlocks);
+  const progressBar = '🔶 ' + '█'.repeat(filledBlocks) + '░'.repeat(totalBlocks - filledBlocks);
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
       <DialogContent className="max-w-md mx-auto bg-card border-border p-0 overflow-hidden">
-        <div className="relative p-8 text-center space-y-6 bg-gradient-to-b from-card to-card/80">
-          {/* Animated Rune */}
-          <div className="relative mx-auto">
+        <div className="relative p-6 text-center space-y-6 bg-gradient-to-b from-card to-card/80">
+          {/* Large Animated Rune */}
+          <div className="relative mx-auto flex items-center justify-center">
             <div className={cn(
-              "w-24 h-24 rounded-full border-4 border-primary/30 flex items-center justify-center transition-all duration-1000 ease-out",
-              showRune ? "scale-100 opacity-100 border-primary bg-primary/10" : "scale-75 opacity-0"
+              "text-8xl font-bold transition-all duration-2000 ease-out transform",
+              showRune ? "scale-100 opacity-100 text-primary" : "scale-50 opacity-0 text-muted-foreground"
             )}>
-              <Flame className={cn(
-                "h-12 w-12 transition-all duration-1000",
-                showRune ? "text-primary animate-pulse" : "text-muted-foreground"
-              )} />
+              {currentDayRune}
             </div>
-            
-            {/* Sparkle effects */}
-            {showRune && (
-              <>
-                <Sparkles className="absolute -top-2 -right-2 h-6 w-6 text-yellow-500 animate-bounce" style={{animationDelay: '0s'}} />
-                <Zap className="absolute -bottom-2 -left-2 h-5 w-5 text-primary animate-bounce" style={{animationDelay: '0.5s'}} />
-                <Sparkles className="absolute top-1/2 -right-4 h-4 w-4 text-yellow-400 animate-bounce" style={{animationDelay: '1s'}} />
-              </>
-            )}
           </div>
 
           {/* Victory Message */}
           <div className={cn(
-            "space-y-3 transition-all duration-700 transform",
+            "space-y-4 transition-all duration-700 transform",
             showMessage ? "translate-y-0 opacity-100" : "translate-y-4 opacity-0"
           )}>
-            <h2 className="text-2xl font-bold text-primary">The Forge Remembers</h2>
-            <p className="text-muted-foreground text-lg">
-              {randomMessage}
+            <h1 className="text-xl font-bold text-foreground">You have answered the call.</h1>
+            <p className="text-primary text-lg italic font-medium">
+              "Every rep, a rune. Every breath, a vow."
             </p>
-            <div className="text-sm text-muted-foreground space-y-1">
-              <p><span className="font-medium">Workout:</span> {workoutName}</p>
-              <p><span className="font-medium">Duration:</span> {workoutDuration}</p>
+            
+            <div className="space-y-2">
+              <h3 className="text-lg font-semibold text-foreground">Challenge Completed:</h3>
+              <p className="text-primary font-medium">{workoutName}</p>
+              <p className="text-muted-foreground">Duration: {workoutDuration}</p>
             </div>
           </div>
 
-          {/* Progress Update */}
+          {/* Progress Section */}
           <div className={cn(
-            "space-y-3 transition-all duration-700 transform",
+            "space-y-4 transition-all duration-700 transform",
             showProgress ? "translate-y-0 opacity-100" : "translate-y-4 opacity-0"
           )}>
-            <div className="bg-muted/50 rounded-lg p-4 space-y-2">
-              <div className="flex items-center justify-between text-sm">
-                <span className="text-muted-foreground">Forge Progress</span>
-                <span className="font-medium text-primary">{forgeProgress.currentTitle}</span>
+            <div className="space-y-3">
+              <h3 className="text-lg font-semibold text-foreground">Your Flame Grows</h3>
+              <div className="space-y-2">
+                <div className="flex items-center justify-between">
+                  <span className="text-muted-foreground">Forge Rank:</span>
+                  <span className="font-bold text-primary">{forgeProgress.currentTitle}</span>
+                </div>
+                <div className="space-y-1">
+                  <div className="flex items-center justify-between text-sm">
+                    <span className="text-muted-foreground">Progress to Next Title:</span>
+                    <span className="text-primary font-medium">{forgeProgress.progressPercentage}%</span>
+                  </div>
+                  <div className="text-sm font-mono">
+                    {progressBar}
+                  </div>
+                </div>
               </div>
-              <div className="w-full bg-muted rounded-full h-2">
-                <div 
-                  className="bg-primary h-2 rounded-full transition-all duration-1000 ease-out"
-                  style={{ width: `${forgeProgress.progressPercentage}%` }}
-                />
-              </div>
-              <p className="text-xs text-muted-foreground italic">
+              <p className="text-muted-foreground italic text-sm">
                 "{currentQuote}"
               </p>
+            </div>
+
+            {/* What You Forged Today */}
+            <div className="bg-muted/50 rounded-lg p-4 space-y-3">
+              <h4 className="font-semibold text-foreground">What You Forged Today:</h4>
+              <ul className="text-left space-y-1 text-muted-foreground">
+                <li>• Your Willpower</li>
+                <li>• Your Body</li>
+                <li>• Momentum</li>
+              </ul>
             </div>
           </div>
 
@@ -124,7 +149,7 @@ export const ForgeCelebration = ({
           )}>
             <Button 
               onClick={onClose}
-              className="w-full bg-primary hover:bg-primary/90 text-primary-foreground"
+              className="w-full bg-primary hover:bg-primary/90 text-primary-foreground font-semibold"
             >
               Continue Your Journey
             </Button>
