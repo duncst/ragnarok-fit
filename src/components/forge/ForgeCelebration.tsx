@@ -76,14 +76,12 @@ export const ForgeCelebration = ({
         <div className="relative p-6 text-center space-y-6 bg-gradient-to-b from-card to-card/80">
           {/* Large Animated Rune */}
           <div className="relative mx-auto flex items-center justify-center">
-            <div 
-              className="text-8xl font-bold transition-all duration-3000 ease-out transform"
-              style={{
-                color: showRune ? 'hsl(var(--primary))' : 'hsl(var(--muted-foreground))',
-                transform: showRune ? 'scale(1)' : 'scale(0.8)',
-                opacity: showRune ? 1 : 0.3
-              }}
-            >
+            <div className={cn(
+              "text-8xl font-bold transition-all duration-3000 ease-out transform",
+              showRune 
+                ? "text-red-500 drop-shadow-[0_0_16px_rgba(239,68,68,0.8)] animate-pulse scale-100 opacity-100" 
+                : "text-muted-foreground/30 scale-75 opacity-40"
+            )}>
               {currentDayRune}
             </div>
           </div>
