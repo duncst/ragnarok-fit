@@ -110,22 +110,22 @@ export const RitualsPage = () => {
   }
 
   return (
-    <div className="space-y-6 p-6 max-w-4xl mx-auto">
+    <div className="space-y-4 sm:space-y-6 p-4 sm:p-6 max-w-4xl mx-auto">
       {/* Header */}
       <div className="text-center space-y-2">
-        <h1 className="text-4xl font-bold text-primary">Your Rituals</h1>
-        <p className="text-lg text-muted-foreground">
+        <h1 className="text-2xl sm:text-4xl font-bold text-primary">Your Rituals</h1>
+        <p className="text-base sm:text-lg text-muted-foreground px-2">
           Create and track your personal training rituals to forge your own path.
         </p>
       </div>
 
       {/* Tabs */}
       <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
-        <TabsList className="w-full justify-start bg-muted/30">
-          <TabsTrigger value="Strength" className="flex-1">Strength</TabsTrigger>
-          <TabsTrigger value="Endurance" className="flex-1">Endurance</TabsTrigger>
-          <TabsTrigger value="Mobility" className="flex-1">Mobility</TabsTrigger>
-          <TabsTrigger value="Valhalla" className="flex-1">Valhalla</TabsTrigger>
+        <TabsList className="w-full justify-start bg-muted/30 grid grid-cols-4 h-auto">
+          <TabsTrigger value="Strength" className="text-xs sm:text-sm py-2 px-1">Strength</TabsTrigger>
+          <TabsTrigger value="Endurance" className="text-xs sm:text-sm py-2 px-1">Endurance</TabsTrigger>
+          <TabsTrigger value="Mobility" className="text-xs sm:text-sm py-2 px-1">Mobility</TabsTrigger>
+          <TabsTrigger value="Valhalla" className="text-xs sm:text-sm py-2 px-1">Valhalla</TabsTrigger>
         </TabsList>
 
         {/* Valhalla Tab Content */}
@@ -146,11 +146,13 @@ export const RitualsPage = () => {
                     setShowCreateModal(true);
                   }
                 }}
-                className="w-full h-14 text-lg bg-primary hover:bg-primary/90"
+                className="w-full h-12 sm:h-14 text-base sm:text-lg bg-primary hover:bg-primary/90"
                 size="lg"
               >
-                <Plus className="mr-2 h-5 w-5" />
-                {activeTab === 'Endurance' ? 'Log a Run' : 'Create New Ritual'}
+                <Plus className="mr-2 h-4 w-4 sm:h-5 sm:w-5" />
+                <span className="truncate">
+                  {activeTab === 'Endurance' ? 'Log a Run' : 'Create New Ritual'}
+                </span>
               </Button>
 
               {/* Rituals List */}
@@ -167,15 +169,15 @@ export const RitualsPage = () => {
                 ) : (
                   filteredRituals.map((ritual) => (
                     <Card key={ritual.id} className="border-border/50 bg-card/50 backdrop-blur">
-                      <CardContent className="p-6 space-y-4">
+                      <CardContent className="p-4 sm:p-6 space-y-3 sm:space-y-4">
                         {/* Ritual Header */}
-                        <div className="flex items-start justify-between">
-                          <div className="space-y-1">
-                            <h3 className="text-xl font-bold text-primary">{ritual.name}</h3>
-                            <p className="text-muted-foreground">{ritual.description}</p>
+                        <div className="flex flex-col sm:flex-row items-start gap-3 sm:justify-between">
+                          <div className="space-y-1 flex-1 min-w-0">
+                            <h3 className="text-lg sm:text-xl font-bold text-primary truncate">{ritual.name}</h3>
+                            <p className="text-sm text-muted-foreground">{ritual.description}</p>
                           </div>
-                          <div className="flex items-center gap-2">
-                            <Badge variant="secondary" className="bg-primary/10 text-primary border-primary/20">
+                          <div className="flex items-center gap-2 flex-shrink-0">
+                            <Badge variant="secondary" className="bg-primary/10 text-primary border-primary/20 text-xs">
                               {ritual.category}
                             </Badge>
                             <Button 
@@ -187,21 +189,21 @@ export const RitualsPage = () => {
                                 }
                               }}
                               disabled={deleteTemplateMutation.isPending}
-                              className="text-destructive hover:text-destructive hover:bg-destructive/10"
+                              className="text-destructive hover:text-destructive hover:bg-destructive/10 h-8 w-8"
                             >
-                              <X className="h-4 w-4" />
+                              <X className="h-3 w-3 sm:h-4 sm:w-4" />
                             </Button>
                           </div>
                         </div>
 
                         {/* Exercises */}
-                        <div className="space-y-3">
-                          <h4 className="font-semibold text-foreground">Exercises</h4>
-                          <div className="space-y-2">
+                        <div className="space-y-2 sm:space-y-3">
+                          <h4 className="font-semibold text-foreground text-sm sm:text-base">Exercises</h4>
+                          <div className="space-y-1 sm:space-y-2">
                             {ritual.exercises.map((exercise, index) => (
-                              <div key={index} className="flex justify-between items-center py-2 border-b border-border/20 last:border-0">
-                                <span className="text-foreground">{exercise.name}</span>
-                                <span className="text-primary font-medium">
+                              <div key={index} className="flex justify-between items-center py-1.5 sm:py-2 border-b border-border/20 last:border-0 gap-2">
+                                <span className="text-foreground text-sm sm:text-base truncate flex-1">{exercise.name}</span>
+                                <span className="text-primary font-medium text-sm flex-shrink-0">
                                   {exercise.sets} x {exercise.reps || exercise.duration || exercise.distance}
                                 </span>
                               </div>
@@ -210,25 +212,26 @@ export const RitualsPage = () => {
                         </div>
 
                         {/* Footer */}
-                        <div className="flex items-center justify-between pt-2">
-                          <div className="flex items-center gap-2 text-sm text-muted-foreground">
-                            <Clock className="h-4 w-4" />
-                            <span>
+                        <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between pt-2 gap-3">
+                          <div className="flex items-center gap-2 text-xs sm:text-sm text-muted-foreground">
+                            <Clock className="h-3 w-3 sm:h-4 sm:w-4 flex-shrink-0" />
+                            <span className="truncate">
                               Last performed: {ritual.lastPerformed 
                                 ? formatDistanceToNow(new Date(ritual.lastPerformed), { addSuffix: true })
                                 : 'Never'
                               }
                             </span>
                           </div>
-                          <div className="flex items-center gap-2">
-                            <Button variant="ghost" size="sm">
-                              <RotateCcw className="h-4 w-4" />
+                          <div className="flex items-center gap-2 w-full sm:w-auto">
+                            <Button variant="ghost" size="sm" className="flex-1 sm:flex-none">
+                              <RotateCcw className="h-3 w-3 sm:h-4 sm:w-4" />
                             </Button>
                             <Button 
                               onClick={() => handleBeginRitual(ritual)}
-                              className="bg-primary hover:bg-primary/90"
+                              className="bg-primary hover:bg-primary/90 flex-1 sm:flex-none text-sm"
+                              size="sm"
                             >
-                              <Play className="mr-2 h-4 w-4" />
+                              <Play className="mr-1 sm:mr-2 h-3 w-3 sm:h-4 sm:w-4" />
                               Begin Ritual
                             </Button>
                           </div>
