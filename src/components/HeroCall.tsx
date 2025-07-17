@@ -49,7 +49,7 @@ export const HeroCall = () => {
 
   const handleStartWorkout = () => {
     setIsInWorkoutMode(true);
-    toggleWorkout(); // Start the timer
+    // Don't start timer automatically - user will start it manually
   };
 
   const handleFinishWorkout = () => {
@@ -119,6 +119,7 @@ export const HeroCall = () => {
         isWorkoutActive={isWorkoutActive}
         formattedDuration={formattedDuration}
         onToggleWorkout={toggleWorkout}
+        onRestartTimer={resetTimer}
       />
     );
   }

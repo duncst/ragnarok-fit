@@ -9,6 +9,7 @@ interface TrialWorkoutModeProps {
   isWorkoutActive: boolean;
   formattedDuration: string;
   onToggleWorkout: () => void;
+  onRestartTimer?: () => void;
 }
 
 export const TrialWorkoutMode = ({
@@ -19,6 +20,7 @@ export const TrialWorkoutMode = ({
   isWorkoutActive,
   formattedDuration,
   onToggleWorkout,
+  onRestartTimer = () => {},
 }: TrialWorkoutModeProps) => {
   return (
     <HeroCallWorkoutMode
@@ -29,6 +31,7 @@ export const TrialWorkoutMode = ({
       isWorkoutActive={isWorkoutActive}
       formattedDuration={formattedDuration}
       onToggleWorkout={onToggleWorkout}
+      onRestartTimer={onRestartTimer}
     />
   );
 };

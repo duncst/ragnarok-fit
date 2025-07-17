@@ -3,7 +3,7 @@ import React from 'react';
 import { Card, CardContent, CardHeader } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
-import { Swords, Shield, Flame, X, Play, Pause, Check, Clock, Target } from 'lucide-react';
+import { Swords, Shield, Flame, X, Play, Pause, Check, Clock, Target, RotateCcw } from 'lucide-react';
 import { HeroCallWorkout } from './WorkoutTemplates';
 
 interface HeroCallWorkoutModeProps {
@@ -14,6 +14,7 @@ interface HeroCallWorkoutModeProps {
   isWorkoutActive: boolean;
   formattedDuration: string;
   onToggleWorkout: () => void;
+  onRestartTimer: () => void;
 }
 
 const getIcon = (iconName: string) => {
@@ -37,6 +38,7 @@ export const HeroCallWorkoutMode = ({
   isWorkoutActive,
   formattedDuration,
   onToggleWorkout,
+  onRestartTimer,
 }: HeroCallWorkoutModeProps) => {
   const currentLevel = workout.levels.find(level => level.difficulty === selectedLevel);
   
@@ -75,8 +77,17 @@ export const HeroCallWorkoutMode = ({
             >
               {isWorkoutActive ? <Pause className="h-4 w-4" /> : <Play className="h-4 w-4" />}
               <span className="hidden sm:inline">
-                {isWorkoutActive ? 'Pause' : 'Resume'}
+                {isWorkoutActive ? 'Pause' : 'Start'}
               </span>
+            </Button>
+            <Button 
+              variant="outline" 
+              size="sm"
+              onClick={onRestartTimer}
+              className="flex items-center gap-2"
+            >
+              <RotateCcw className="h-4 w-4" />
+              <span className="hidden sm:inline">Restart</span>
             </Button>
             <Button 
               onClick={onFinish}
