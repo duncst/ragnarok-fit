@@ -92,9 +92,6 @@ export const ForgeCelebration = ({
             showMessage ? "translate-y-0 opacity-100" : "translate-y-4 opacity-0"
           )}>
             <h1 className="text-xl font-bold text-foreground">You have answered the call.</h1>
-            <p className="text-primary text-lg italic font-medium">
-              "Every rep, a rune. Every breath, a vow."
-            </p>
             
             <div className="space-y-2">
               <h3 className="text-lg font-semibold text-foreground">Challenge Completed:</h3>
