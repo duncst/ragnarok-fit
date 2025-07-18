@@ -14,7 +14,7 @@
     --popover: 222 47% 16%; /* Fjord Stone */
     --popover-foreground: 210 40% 98%; /* Snow Drift */
 
-    --primary: 22 100% 60%; /* Brighter Orange */
+    --primary: 25 95% 53%; /* Orange-500 #f97316 */
     --primary-foreground: 222 47% 11%; /* Deep Fjord */
 
     --secondary: 215 28% 47%; /* Misted Fjord */
@@ -23,7 +23,7 @@
     --muted: 215 28% 47%; /* Misted Fjord */
     --muted-foreground: 215 15% 65%; /* Grey Subtext */
 
-    --accent: 22 100% 60%; /* Brighter Orange */
+    --accent: 25 95% 53%; /* Orange-500 #f97316 */
     --accent-foreground: 222 47% 11%; /* Deep Fjord */
 
     --destructive: 0 84% 60%; /* Berserker Red */
@@ -31,7 +31,7 @@
 
     --border: 215 20% 30%; /* Fjord Cliff */
     --input: 215 20% 30%; /* Fjord Cliff */
-    --ring: 22 100% 60%; /* Brighter Orange */
+    --ring: 25 95% 53%; /* Orange-500 #f97316 */
 
     --radius: 0.5rem;
   }
