@@ -7,6 +7,7 @@ import { StrengthChart } from "@/components/StrengthChart";
 import { RunChart } from "@/components/RunChart";
 import { StatItem } from "@/components/StatItem";
 import { ImageIcon } from "@/components/ImageIcon";
+import { CalendarSection } from "@/components/forge/CalendarSection";
 import type { Workout, Run } from '@/types';
 import { useState } from 'react';
 
@@ -62,6 +63,8 @@ export const AnalyticsSection = ({
     <div>
       <h2 className="text-2xl font-bold mb-4">Your Saga</h2>
       <div className="space-y-4">
+        <CalendarSection />
+        
         <Collapsible open={strengthOpen} onOpenChange={setStrengthOpen}>
           <Card>
             <CollapsibleTrigger className="w-full">
