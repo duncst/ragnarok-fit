@@ -56,14 +56,14 @@ export const ForgeStatsGrid = () => {
       {stats_data.map((stat, index) => (
         <Card key={index} className="bg-card/50 border-border/50 hover:bg-card/70 transition-colors">
           <CardContent className="p-6 text-center">
-            <div className="text-3xl font-bold text-primary mb-1">
-              {stat.value}
-            </div>
             {stat.suffix && (
               <div className="text-xs text-primary font-medium mb-1">
                 {stat.suffix}
               </div>
             )}
+            <div className="text-3xl font-bold text-primary mb-1">
+              {stat.value}
+            </div>
             <div className="text-sm text-muted-foreground">
               {stat.label}
             </div>
