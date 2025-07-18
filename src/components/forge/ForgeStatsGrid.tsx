@@ -1,15 +1,14 @@
 import { Card, CardContent } from "@/components/ui/card";
-import { useHeroCallData } from "@/hooks/useHeroCallData";
 import { useForgeData } from "@/hooks/useForgeData";
-import { useChallengeCount } from "@/hooks/useChallengeCount";
+import { useChallengeCount, useActiveDaysCount } from "@/hooks/useChallengeCount";
 import { Skeleton } from "@/components/ui/skeleton";
 
 export const ForgeStatsGrid = () => {
-  const { stats, isLoading: heroCallLoading } = useHeroCallData();
   const { forgeProgress, isLoading: forgeLoading } = useForgeData();
   const { challengeCount, isLoading: challengeLoading } = useChallengeCount();
+  const { activeDaysCount, isLoading: activeDaysLoading } = useActiveDaysCount();
   
-  const isLoading = heroCallLoading || forgeLoading || challengeLoading;
+  const isLoading = forgeLoading || challengeLoading || activeDaysLoading;
 
   const stats_data = [
     {
@@ -18,7 +17,7 @@ export const ForgeStatsGrid = () => {
       className: "text-primary"
     },
     {
-      value: stats.currentStreak || 0,
+      value: forgeProgress.currentWeek || 0,
       label: "Current Streak",
       suffix: "WEEKS",
       className: "text-primary"
@@ -29,9 +28,9 @@ export const ForgeStatsGrid = () => {
       className: "text-primary"
     },
     {
-      value: stats.currentStreak > 0 ? 1 : 0,
+      value: activeDaysCount || 0,
       label: "You Answered the Call",
-      suffix: "DAY",
+      suffix: "DAYS",
       className: "text-primary"
     }
   ];
