@@ -4,12 +4,14 @@ import { useNavigate } from 'react-router-dom';
 import { toast as sonnerToast } from "sonner";
 import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/contexts/AuthContext';
+import { useForgedWeekCheck } from '@/contexts/ForgedWeekContext';
 import type { Exercise } from '@/types';
 
 export const useSaveWorkout = () => {
     const { user } = useAuth();
     const queryClient = useQueryClient();
     const navigate = useNavigate();
+    const { checkForNewForgedWeek } = useForgedWeekCheck();
 
     const saveWorkoutMutation = useMutation({
         mutationFn: async ({ exercises, name }: { exercises: Exercise[], name: string }) => {
@@ -72,6 +74,9 @@ export const useSaveWorkout = () => {
             queryClient.invalidateQueries({ queryKey: ['hero-call-stats', user?.id] });
             // Invalidate forge progress since it depends on all workout completions
             queryClient.invalidateQueries({ queryKey: ['forge-progress', user?.id] });
+            
+            // Check for new forged week
+            checkForNewForgedWeek();
             
             // Return workout data and name for potential Valhalla score recording
             return { workoutData, name };

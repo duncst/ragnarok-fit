@@ -1,6 +1,7 @@
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { useAuth } from '@/contexts/AuthContext';
 import { supabase } from '@/integrations/supabase/client';
+import { useForgedWeekCheck } from '@/contexts/ForgedWeekContext';
 
 interface HeroCallCompletion {
   id: string;
@@ -20,6 +21,7 @@ interface HeroCallStats {
 export const useHeroCallData = () => {
   const { user } = useAuth();
   const queryClient = useQueryClient();
+  const { checkForNewForgedWeek } = useForgedWeekCheck();
 
   // Fetch Hero's Call statistics including all workout completions
   const { data: stats, isLoading } = useQuery<HeroCallStats>({
@@ -153,6 +155,9 @@ export const useHeroCallData = () => {
       queryClient.invalidateQueries({ queryKey: ['workouts', user?.id] });
       // Invalidate forge progress since it depends on hero call data
       queryClient.invalidateQueries({ queryKey: ['forge-progress', user?.id] });
+      
+      // Check for new forged week
+      checkForNewForgedWeek();
     },
   });
 

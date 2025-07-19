@@ -9,11 +9,15 @@ import { supabase } from "@/integrations/supabase/client";
 import { toast as sonnerToast } from "sonner";
 import { useOnboarding } from "@/hooks/useOnboarding";
 import OnboardingFlow from "./onboarding/OnboardingFlow";
+import { ForgedWeekCelebration } from "./forge/ForgedWeekCelebration";
+import { useForgedWeekCelebration } from "@/hooks/useForgedWeekCelebration";
+import { ForgedWeekProvider } from "@/contexts/ForgedWeekContext";
 
 const Layout = () => {
   const { session } = useAuth();
   const navigate = useNavigate();
   const { hasCompletedOnboarding, completeOnboarding } = useOnboarding();
+  const { showCelebration, newlyForgedWeek, closeCelebration } = useForgedWeekCelebration();
 
   useEffect(() => {
     if (!session) {
@@ -50,23 +54,32 @@ const Layout = () => {
   }
 
   return (
-    <div className="flex flex-col h-full max-w-md mx-auto bg-background">
-      <header className="sticky top-0 bg-background/95 backdrop-blur-sm z-10">
-        <div className="flex items-center justify-between p-4 border-b">
-            <div className="flex items-center gap-2">
-              <Mountain className="h-6 w-6 text-primary" />
-              <h1 className="font-bold text-lg tracking-tight">Ragnarok Fit</h1>
-            </div>
-            <Button variant="ghost" size="icon" onClick={handleLogout} aria-label="Log out">
-              <LogOut className="h-5 w-5" />
-            </Button>
-        </div>
-      </header>
-      <main className="flex-grow p-4 overflow-y-auto">
-        <Outlet />
-      </main>
-      <BottomNav />
-    </div>
+    <ForgedWeekProvider>
+      <div className="flex flex-col h-full max-w-md mx-auto bg-background">
+        <header className="sticky top-0 bg-background/95 backdrop-blur-sm z-10">
+          <div className="flex items-center justify-between p-4 border-b">
+              <div className="flex items-center gap-2">
+                <Mountain className="h-6 w-6 text-primary" />
+                <h1 className="font-bold text-lg tracking-tight">Ragnarok Fit</h1>
+              </div>
+              <Button variant="ghost" size="icon" onClick={handleLogout} aria-label="Log out">
+                <LogOut className="h-5 w-5" />
+              </Button>
+          </div>
+        </header>
+        <main className="flex-grow p-4 overflow-y-auto">
+          <Outlet />
+        </main>
+        <BottomNav />
+        
+        {/* Forged Week Celebration */}
+        <ForgedWeekCelebration 
+          isOpen={showCelebration}
+          onClose={closeCelebration}
+          weekNumber={newlyForgedWeek}
+        />
+      </div>
+    </ForgedWeekProvider>
   );
 };
 
