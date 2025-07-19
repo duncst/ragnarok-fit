@@ -130,7 +130,13 @@ export const ValhallaSection = () => {
       is_public: true,
       created_at: new Date().toISOString(),
     };
-    navigate("/workout/new", { state: { template } });
+    navigate(`/ritual/valhalla-${valhallaWorkout.id}/workout`, { 
+      state: { 
+        template,
+        templateName: valhallaWorkout.name,
+        isValhalla: true
+      } 
+    });
   };
 
   const toggleWorkout = (workoutId: string) => {

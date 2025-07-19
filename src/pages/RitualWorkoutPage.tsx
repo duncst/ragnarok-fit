@@ -58,8 +58,11 @@ const RitualWorkoutPage = () => {
     handleDismissRestTimer 
   } = useRestTimer(restDuration, false);
 
-  // Load template data
-  const { data: template, isLoading } = useQuery({
+  // Load template data - either from database or from location state for Valhalla
+  const valhallaTemplate = location.state?.template;
+  const isValhalla = location.state?.isValhalla || templateId?.startsWith('valhalla-');
+  
+  const { data: dbTemplate, isLoading } = useQuery({
     queryKey: ['workout-template', templateId],
     queryFn: async () => {
       if (!templateId) throw new Error('No template ID provided');
@@ -80,35 +83,58 @@ const RitualWorkoutPage = () => {
       if (error) throw error;
       return data;
     },
-    enabled: !!templateId
+    enabled: !!templateId && !isValhalla
   });
+
+  const template = isValhalla ? valhallaTemplate : dbTemplate;
 
   // Initialize workout from template
   useEffect(() => {
-    if (template && template.workout_template_exercises && exercises.length === 0) {
-      const templateExercises: Exercise[] = template.workout_template_exercises
-        .sort((a, b) => a.order - b.order)
-        .map((templateEx, index) => ({
+    if (template && exercises.length === 0) {
+      let templateExercises: Exercise[];
+      
+      if (isValhalla && template.exercises) {
+        // Handle Valhalla template with exercises array
+        templateExercises = template.exercises.map((ex: any, index: number) => ({
           id: `${Date.now()}_${index}`,
-          name: templateEx.exercise_name,
-          sets: Array.from({ length: templateEx.sets }, (_, setIndex) => ({
+          name: ex.name,
+          sets: Array.from({ length: ex.sets }, (_, setIndex) => ({
             id: `${Date.now()}_${index}_set${setIndex}`,
-            reps: 0,
+            reps: ex.suggestedReps || 0,
             weight: 0,
             completed: false,
             duration: 0,
             distance: 0,
           }))
         }));
+      } else if (template.workout_template_exercises) {
+        // Handle regular database template
+        templateExercises = template.workout_template_exercises
+          .sort((a, b) => a.order - b.order)
+          .map((templateEx, index) => ({
+            id: `${Date.now()}_${index}`,
+            name: templateEx.exercise_name,
+            sets: Array.from({ length: templateEx.sets }, (_, setIndex) => ({
+              id: `${Date.now()}_${index}_set${setIndex}`,
+              reps: 0,
+              weight: 0,
+              completed: false,
+              duration: 0,
+              distance: 0,
+            }))
+          }));
+      } else {
+        return;
+      }
 
       setExercises(templateExercises);
       
-      // Start the workout timer automatically
-      if (!isWorkoutActive) {
+      // Only auto-start for non-Valhalla workouts
+      if (!isWorkoutActive && !isValhalla) {
         startWorkout();
       }
     }
-  }, [template?.id, exercises.length, isWorkoutActive]);
+  }, [template?.id, exercises.length, isWorkoutActive, isValhalla]);
 
   const isValhallaWorkout = (name: string) => {
     return !!name.match(/^(THOR|FENRIR|HEL|NJORD|ODIN)$/i);
