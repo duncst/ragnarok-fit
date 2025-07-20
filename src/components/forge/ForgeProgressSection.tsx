@@ -77,7 +77,7 @@ const ForgeProgressSection = () => {
               <div className="pt-2 border-t border-orange-500/20">
                 <div className="text-center space-y-1">
                   <p className="text-sm text-muted-foreground">
-                    {nextTitleInfo.weeksNeeded} more Forging Week{nextTitleInfo.weeksNeeded !== 1 ? 's' : ''} to ascend:
+                    Next challenge to ascend:
                   </p>
                   <div className="flex items-center justify-center gap-2 text-sm font-medium">
                     <span className="text-orange-600 dark:text-orange-400">{nextTitleInfo.currentTitle}</span>

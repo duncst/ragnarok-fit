@@ -1,9 +1,7 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Progress } from "@/components/ui/progress";
 import { Check, Trophy } from "lucide-react";
-import { useHeroCallData } from "@/hooks/useHeroCallData";
 import { useForgeData } from "@/hooks/useForgeData";
-import { useChallengeCount } from "@/hooks/useChallengeCount";
 
 interface ProgressionLevel {
   id: string;
@@ -19,98 +17,128 @@ interface ProgressionLevel {
 }
 
 export const ProgressionLadder = () => {
-  const { stats } = useHeroCallData();
-  const { forgeProgress } = useForgeData();
-  const { challengeCount } = useChallengeCount();
+  const { forgeProgress, forgeTitles } = useForgeData();
   
-  const progressionLevels: ProgressionLevel[] = [
-    {
-      id: "sparked",
-      title: "Sparked",
-      description: "The journey begins. You have answered the call.",
-      achieved: challengeCount > 0,
-      current: false,
-    },
-    {
-      id: "ember-soul",
-      title: "Ember Soul",
-      description: "The fire grows. You have completed 10 challenges.",
-      achieved: challengeCount >= 10,
-      current: false,
-    },
-    {
-      id: "iron-soul",
-      title: "Iron Soul",
-      description: "Your will hardens. You have completed 25 challenges and 3 capability tiers.",
-      achieved: false,
-      current: challengeCount < 25 && challengeCount >= 1,
-      requirements: [
-        {
-          label: "Complete 25 daily challenges",
-          current: Math.min(challengeCount, 25),
-          target: 25,
-        },
-        {
-          label: "Reach Tier 3 in any capability",
-          current: 0,
-          target: 3,
-        },
-        {
-          label: "Complete 5 consecutive days",
-          current: Math.min(stats.currentStreak, 5),
-          target: 5,
-        },
-      ],
-    },
-    {
-      id: "steel-heart",
-      title: "Steel Heart",
-      description: "Your dedication is unwavering. Master multiple paths.",
-      achieved: false,
-      current: false,
-      requirements: [
-        {
-          label: "Complete Tier 2 in 3 different capabilities",
-          current: 0,
-          target: 3,
-        },
-        {
-          label: "Maintain a 14-day workout streak",
-          current: Math.min(stats.currentStreak, 14),
-          target: 14,
-        },
-        {
-          label: "Complete 50 total challenges",
-          current: Math.min(challengeCount, 50),
-          target: 50,
-        },
-      ],
-    },
-    {
-      id: "forge-master",
-      title: "Forge Master",
-      description: "You have become legend. The forge bends to your will.",
-      achieved: false,
-      current: false,
-      requirements: [
-        {
-          label: "Reach Tier 4 in all capability paths",
-          current: 0,
-          target: 5,
-        },
-        {
-          label: "Maintain a 30-day workout streak",
-          current: Math.min(stats.currentStreak, 30),
-          target: 30,
-        },
-        {
-          label: "Complete 100 total challenges",
-          current: Math.min(challengeCount, 100),
-          target: 100,
-        },
-      ],
-    },
-  ];
+  const progressionLevels: ProgressionLevel[] = forgeTitles.map((title, index) => {
+    const isAchieved = forgeProgress.tier >= title.tier;
+    const isCurrent = forgeProgress.tier === title.tier;
+    
+    // Build requirements based on tier
+    const requirements = [];
+    
+    switch (title.tier) {
+      case 1: // Sparked
+        requirements.push({
+          label: "Complete any challenge",
+          current: Math.min(forgeProgress.completedChallenges, 1),
+          target: 1
+        });
+        break;
+        
+      case 2: // Kindled
+        requirements.push({
+          label: "Complete 1 Forging Week",
+          current: Math.min(forgeProgress.currentWeek, 1),
+          target: 1
+        });
+        break;
+        
+      case 3: // Forge Adept
+        requirements.push(
+          {
+            label: "Complete 3 Forging Weeks",
+            current: Math.min(forgeProgress.currentWeek, 3),
+            target: 3
+          },
+          {
+            label: "Complete at least one Hero's Call",
+            current: forgeProgress.hasHeroCall ? 1 : 0,
+            target: 1
+          }
+        );
+        break;
+        
+      case 4: // Disciple of Flame
+        requirements.push(
+          {
+            label: "Complete 4 Forging Weeks",
+            current: Math.min(forgeProgress.currentWeek, 4),
+            target: 4
+          },
+          {
+            label: "Complete at least 1 Endurance Activity",
+            current: forgeProgress.hasEndurance ? 1 : 0,
+            target: 1
+          }
+        );
+        break;
+        
+      case 5: // Ironbound
+        requirements.push(
+          {
+            label: "Complete 6 Forging Weeks",
+            current: Math.min(forgeProgress.currentWeek, 6),
+            target: 6
+          },
+          {
+            label: "Complete Hero's Call activity",
+            current: forgeProgress.hasHeroCall ? 1 : 0,
+            target: 1
+          },
+          {
+            label: "Complete Endurance activity",
+            current: forgeProgress.hasEndurance ? 1 : 0,
+            target: 1
+          },
+          {
+            label: "Complete Strength activity",
+            current: forgeProgress.hasStrength ? 1 : 0,
+            target: 1
+          }
+        );
+        break;
+        
+      case 6: // Ashwalker
+        requirements.push(
+          {
+            label: "Complete 12 Forging Weeks",
+            current: Math.min(forgeProgress.currentWeek, 12),
+            target: 12
+          },
+          {
+            label: "Complete 1 Valhalla Challenge",
+            current: forgeProgress.hasValhalla ? 1 : 0,
+            target: 1
+          }
+        );
+        break;
+        
+      case 7: // Blazeborn
+        requirements.push({
+          label: "Complete 26 Forging Weeks",
+          current: Math.min(forgeProgress.currentWeek, 26),
+          target: 26
+        });
+        break;
+        
+      case 8: // Unbroken
+        requirements.push({
+          label: "Complete 52 Forging Weeks",
+          current: Math.min(forgeProgress.currentWeek, 52),
+          target: 52
+        });
+        break;
+    }
+    
+    return {
+      id: `tier-${title.tier}`,
+      title: title.title,
+      description: title.description,
+      achieved: isAchieved,
+      current: isCurrent && !isAchieved,
+      requirements: requirements.length > 0 ? requirements : undefined
+    };
+  });
 
   const renderProgressionLevel = (level: ProgressionLevel, index: number) => {
     const isLast = index === progressionLevels.length - 1;
