@@ -26,11 +26,8 @@ const ForgePage = () => {
           The forge awaits your next offering
         </h2>
         <div className="space-y-2">
-          <p className="text-lg font-medium text-foreground">
-            "Every hammer strike upon the anvil of discipline"
-          </p>
-          <p className="text-base text-muted-foreground italic">
-            shapes not just your body, but your legend.
+          <p className="text-lg font-medium text-foreground italic">
+            Every hammer strike upon the anvil of discipline shapes not just your body, but your legend.
           </p>
         </div>
       </div>
