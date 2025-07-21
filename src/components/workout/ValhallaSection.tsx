@@ -122,18 +122,9 @@ export const ValhallaSection = () => {
   const { progress, isLoading } = useValhallaProgress();
 
   const handleStartWorkout = (valhallaWorkout: ValhallaWorkout) => {
-    const template: WorkoutTemplate = {
-      id: valhallaWorkout.id,
-      name: valhallaWorkout.name,
-      exercises: valhallaWorkout.exercises,
-      user_id: "valhalla",
-      is_public: true,
-      created_at: new Date().toISOString(),
-    };
-    navigate(`/ritual/valhalla-${valhallaWorkout.id}/workout`, { 
+    navigate(`/ritual/valhalla-${valhallaWorkout.id}/setup`, { 
       state: { 
-        template,
-        templateName: valhallaWorkout.name,
+        valhallaWorkout,
         isValhalla: true
       } 
     });

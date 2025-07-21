@@ -18,6 +18,7 @@ import LandingPage from "./pages/LandingPage";
 import WorkoutHistoryPage from "./pages/WorkoutHistoryPage";
 import { AuthProvider } from "./contexts/AuthContext";
 import LogBodyMetricsPage from "./pages/LogBodyMetricsPage";
+import ValhallaTierSetupPage from "./pages/ValhallaTierSetupPage";
 
 const queryClient = new QueryClient();
 
@@ -38,6 +39,7 @@ const App = () => (
               <Route path="/run" element={<RunPage />} />
               <Route path="/log-run" element={<LogRunPage />} />
                 <Route path="/workout/new" element={<NewWorkoutPage />} />
+                <Route path="/ritual/:templateId/setup" element={<ValhallaTierSetupPage />} />
                 <Route path="/ritual/:templateId/workout" element={<RitualWorkoutPage />} />
               <Route path="/1rm-calculator" element={<OneRepMaxCalculatorPage />} />
               <Route path="/log-body-metrics" element={<LogBodyMetricsPage />} />
