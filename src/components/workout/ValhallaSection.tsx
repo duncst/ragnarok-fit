@@ -1,18 +1,11 @@
 
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Play, ChevronDown, Trophy, Clock, Target } from "lucide-react";
+import { Play, Clock, Users } from "lucide-react";
 import { useNavigate } from "react-router-dom";
-import type { WorkoutTemplate, TemplateExercise } from "@/types";
+import type { TemplateExercise } from "@/types";
 import { Badge } from "@/components/ui/badge";
-import {
-  Collapsible,
-  CollapsibleContent,
-  CollapsibleTrigger,
-} from "@/components/ui/collapsible";
-import { useState } from "react";
 import { useValhallaProgress } from "@/hooks/useValhallaProgress";
-import { RuneDisplay } from "../valhalla/RuneDisplay";
 
 interface ValhallaWorkout {
   id: string;
@@ -117,8 +110,6 @@ const valhallaWorkouts: ValhallaWorkout[] = [
 
 export const ValhallaSection = () => {
   const navigate = useNavigate();
-  const [isOpen, setIsOpen] = useState(false);
-  const [expandedWorkouts, setExpandedWorkouts] = useState<Set<string>>(new Set());
   const { progress, isLoading } = useValhallaProgress();
 
   const handleStartWorkout = (valhallaWorkout: ValhallaWorkout) => {
@@ -130,177 +121,92 @@ export const ValhallaSection = () => {
     });
   };
 
-  const toggleWorkout = (workoutId: string) => {
-    setExpandedWorkouts(prev => {
-      const newSet = new Set(prev);
-      if (newSet.has(workoutId)) {
-        newSet.delete(workoutId);
-      } else {
-        newSet.add(workoutId);
-      }
-      return newSet;
-    });
-  };
-
-  const getUserRune = (challengeName: string) => {
-    return progress?.runes?.find(rune => rune.challenge_name === challengeName);
-  };
-
-  const getBestTime = (challengeName: string) => {
-    return progress?.best_times?.[challengeName];
+  const getWorkoutDuration = (workout: ValhallaWorkout) => {
+    if (workout.format.includes("For time")) {
+      // Estimate based on exercise difficulty
+      const exerciseCount = workout.exercises.reduce((sum, ex) => sum + (ex.suggestedReps || 0), 0);
+      return exerciseCount > 200 ? "20min" : exerciseCount > 150 ? "15min" : "10min";
+    }
+    if (workout.format.includes("3 rounds")) return "15min";
+    if (workout.format.includes("2 rounds")) return "20min";
+    return "15min";
   };
 
   return (
-    <Collapsible open={isOpen} onOpenChange={setIsOpen}>
-      <Card className="border-2 border-primary/20 bg-gradient-to-br from-background to-muted/20">
-        <CollapsibleTrigger asChild>
-          <CardHeader className="cursor-pointer hover:bg-muted/10 transition-colors">
-            <div className="flex items-center justify-between">
-              <div className="flex items-center gap-3">
-                <span className="text-3xl">⚔️</span>
+    <div className="space-y-6">
+      {/* Header Section */}
+      <Card className="border-primary/20 bg-gradient-to-br from-primary/5 to-orange-500/10">
+        <CardContent className="p-8 text-center">
+          <div className="w-16 h-16 mx-auto mb-4 bg-primary/20 rounded-full flex items-center justify-center">
+            <span className="text-2xl">⚔️</span>
+          </div>
+          <CardTitle className="text-3xl font-bold text-primary mb-2">Enter Valhalla</CardTitle>
+          <p className="text-muted-foreground text-lg">
+            Face the trials of the gods. Pure flow, raw endurance, no distractions.
+          </p>
+        </CardContent>
+      </Card>
+
+      {/* Workout Cards */}
+      <div className="space-y-4">
+        {valhallaWorkouts.map((workout) => (
+          <Card key={workout.id} className="border-primary/20 bg-gradient-to-br from-background to-muted/10 hover:border-primary/30 transition-colors">
+            <CardContent className="p-6">
+              <div className="flex items-start justify-between mb-4">
                 <div>
-                  <CardTitle className="text-2xl font-bold text-primary">
-                    Valhalla
-                  </CardTitle>
-                  <Badge variant="secondary" className="bg-primary/10 text-primary border-primary/20 mt-1">
-                    Tiered Challenges
-                  </Badge>
+                  <div className="flex items-center gap-3 mb-2">
+                    <CardTitle className="text-2xl font-bold text-primary">{workout.name}</CardTitle>
+                    <Badge 
+                      variant="secondary" 
+                      className={
+                        workout.format.includes("For Time") 
+                          ? "bg-orange-500/20 text-orange-600 border-orange-500/30" 
+                          : "bg-red-500/20 text-red-600 border-red-500/30"
+                      }
+                    >
+                      {workout.format.includes("For Time") ? "For Time" : "AMRAP"}
+                    </Badge>
+                  </div>
+                  <p className="text-muted-foreground mb-3">{workout.description}</p>
+                  
+                  <div className="flex items-center gap-4 text-sm text-muted-foreground mb-4">
+                    <div className="flex items-center gap-1">
+                      <Clock className="h-4 w-4" />
+                      <span>{getWorkoutDuration(workout)}</span>
+                    </div>
+                    <div className="flex items-center gap-1">
+                      <Users className="h-4 w-4" />
+                      <span>{workout.exercises.length} movements</span>
+                    </div>
+                  </div>
                 </div>
               </div>
-              <div className="flex items-center gap-2">
-                {!isLoading && progress?.runes && progress.runes.length > 0 && (
-                  <div className="flex -space-x-1">
-                    {progress.runes.slice(0, 3).map((rune, index) => (
-                      <RuneDisplay
-                        key={rune.challenge_name}
-                        runeName={rune.rune_name}
-                        tier={rune.highest_tier}
-                        challengeName={rune.challenge_name}
-                        size="sm"
-                        className={`z-${30 - index * 10}`}
-                      />
-                    ))}
-                    {progress.runes.length > 3 && (
-                      <div className="w-8 h-8 rounded-full bg-muted border-2 border-muted-foreground/20 flex items-center justify-center text-xs font-bold text-muted-foreground">
-                        +{progress.runes.length - 3}
-                      </div>
-                    )}
+
+              {/* Exercise List */}
+              <div className="space-y-2 mb-6">
+                {workout.exercises.map((exercise, index) => (
+                  <div key={index} className="flex justify-between items-center py-2">
+                    <span className="text-base">{exercise.name}</span>
+                    <span className="text-xl font-bold text-primary">
+                      {exercise.suggestedReps}
+                      {exercise.type === 'time' ? ' min' : exercise.type === 'distance' ? 'm' : ''}
+                    </span>
                   </div>
-                )}
-                <ChevronDown className={`h-6 w-6 text-primary transition-transform duration-200 ${isOpen ? 'rotate-180' : ''}`} />
+                ))}
               </div>
-            </div>
-            <p className="text-muted-foreground mt-2">Epic tiered challenges named after the Norse Gods. Earn runes and prove your worth.</p>
-          </CardHeader>
-        </CollapsibleTrigger>
-        
-        <CollapsibleContent>
-          <CardContent className="space-y-3">
-            {valhallaWorkouts.map((workout) => {
-              const userRune = getUserRune(workout.name);
-              const bestTime = getBestTime(workout.name);
-              
-              return (
-                <Collapsible 
-                  key={workout.id} 
-                  open={expandedWorkouts.has(workout.id)} 
-                  onOpenChange={() => toggleWorkout(workout.id)}
-                >
-                  <Card className="border border-primary/10 hover:border-primary/20 transition-colors">
-                    <CollapsibleTrigger asChild>
-                      <CardHeader className="pb-3 cursor-pointer hover:bg-muted/5 transition-colors">
-                        <div className="flex items-center justify-between">
-                          <div className="flex items-center gap-3">
-                            <span className="text-2xl">{workout.icon}</span>
-                            <div>
-                              <CardTitle className="text-lg text-primary">{workout.name}</CardTitle>
-                              <p className="text-sm font-medium text-muted-foreground">{workout.godName}</p>
-                              <p className="text-sm text-muted-foreground italic">{workout.description}</p>
-                            </div>
-                          </div>
-                          <div className="flex items-center gap-2">
-                            {userRune && (
-                              <RuneDisplay
-                                runeName={userRune.rune_name}
-                                tier={userRune.highest_tier}
-                                challengeName={userRune.challenge_name}
-                                size="sm"
-                              />
-                            )}
-                            <Button
-                              variant="ghost"
-                              size="icon"
-                              onClick={(e) => {
-                                e.stopPropagation();
-                                handleStartWorkout(workout);
-                              }}
-                              className="text-primary hover:text-primary hover:bg-primary/10"
-                            >
-                              <Play className="h-5 w-5" />
-                            </Button>
-                            <ChevronDown className={`h-5 w-5 text-muted-foreground transition-transform duration-200 ${expandedWorkouts.has(workout.id) ? 'rotate-180' : ''}`} />
-                          </div>
-                        </div>
-                      </CardHeader>
-                    </CollapsibleTrigger>
-                    
-                    <CollapsibleContent>
-                      <CardContent className="pt-0">
-                        <div className="space-y-4">
-                          <div className="flex items-center gap-4 text-sm">
-                            <Badge variant="outline" className="border-primary/30 text-primary">
-                              {workout.format}
-                            </Badge>
-                            {bestTime && (
-                              <div className="flex items-center gap-2 text-muted-foreground">
-                                <Clock className="h-4 w-4" />
-                                <span>Best: {bestTime.best_time_minutes}min ({bestTime.best_tier})</span>
-                              </div>
-                            )}
-                          </div>
-                          
-                          <div className="grid grid-cols-3 gap-1 text-xs">
-                            <div className="text-center p-1.5 bg-muted/20 rounded border">
-                              <Target className="h-3 w-3 mx-auto mb-0.5 text-muted-foreground" />
-                              <div className="font-medium text-xs">Adept</div>
-                              <div className="text-muted-foreground text-[10px]">{workout.tierThresholds.warrior + 1}+ min</div>
-                            </div>
-                            <div className="text-center p-1.5 bg-muted/20 rounded border">
-                              <Trophy className="h-3 w-3 mx-auto mb-0.5 text-muted-foreground" />
-                              <div className="font-medium text-xs">Warrior</div>
-                              <div className="text-muted-foreground text-[10px]">{workout.tierThresholds.berserker + 1}-{workout.tierThresholds.warrior} min</div>
-                            </div>
-                            <div className="text-center p-1.5 bg-primary/10 rounded border border-primary/20">
-                              <Trophy className="h-3 w-3 mx-auto mb-0.5 text-primary" />
-                              <div className="font-medium text-xs text-primary">Berserker</div>
-                              <div className="text-primary text-[10px]">≤{workout.tierThresholds.berserker} min</div>
-                            </div>
-                          </div>
-                          
-                          <div className="space-y-1">
-                            {workout.exercises.map((exercise, index) => (
-                              <div key={index} className="flex justify-between text-sm py-1">
-                                <span className="truncate">{exercise.name}</span>
-                                <span className="text-muted-foreground ml-2 shrink-0">
-                                  {exercise.suggestedReps}{exercise.type === 'time' ? ' min' : exercise.type === 'distance' ? 'm' : ''}
-                                </span>
-                              </div>
-                            ))}
-                          </div>
-                          
-                          <div className="pt-2 border-t border-border">
-                            <p className="text-xs italic text-muted-foreground">{workout.theme}</p>
-                          </div>
-                        </div>
-                      </CardContent>
-                    </CollapsibleContent>
-                  </Card>
-                </Collapsible>
-              );
-            })}
-          </CardContent>
-        </CollapsibleContent>
-      </Card>
-    </Collapsible>
+
+              {/* Enter Button */}
+              <Button 
+                onClick={() => handleStartWorkout(workout)}
+                className="w-full bg-gradient-to-r from-primary to-orange-500 hover:from-primary/90 hover:to-orange-500/90 text-white font-bold py-3 text-lg"
+              >
+                <Play className="mr-2 h-5 w-5" />
+                Enter the Trial
+              </Button>
+            </CardContent>
+          </Card>
+        ))}
+      </div>
+    </div>
   );
 };
