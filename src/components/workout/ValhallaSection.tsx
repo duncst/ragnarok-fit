@@ -113,10 +113,21 @@ export const ValhallaSection = () => {
   const { progress, isLoading } = useValhallaProgress();
 
   const handleStartWorkout = (valhallaWorkout: ValhallaWorkout) => {
-    navigate(`/ritual/valhalla-${valhallaWorkout.id}/setup`, { 
+    const template = {
+      id: valhallaWorkout.id,
+      name: valhallaWorkout.name,
+      exercises: valhallaWorkout.exercises,
+      user_id: "valhalla",
+      is_public: true,
+      created_at: new Date().toISOString(),
+    };
+    
+    navigate(`/ritual/valhalla-${valhallaWorkout.id}/workout`, { 
       state: { 
-        valhallaWorkout,
-        isValhalla: true
+        template,
+        templateName: valhallaWorkout.name,
+        isValhalla: true,
+        selectedTier: 'Warrior' // Default tier
       } 
     });
   };
