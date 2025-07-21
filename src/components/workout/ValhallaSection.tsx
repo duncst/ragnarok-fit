@@ -150,59 +150,60 @@ export const ValhallaSection = () => {
       {/* Workout Cards */}
       <div className="space-y-4">
         {valhallaWorkouts.map((workout) => (
-          <Card key={workout.id} className="border-primary/20 bg-gradient-to-br from-background to-muted/10 hover:border-primary/30 transition-colors">
-            <CardContent className="p-6">
-              <div className="flex items-start justify-between mb-4">
+          <Card key={workout.id} className="border-primary/30 bg-slate-800/90 backdrop-blur-sm">
+            <CardContent className="p-8">
+              <div className="space-y-6">
+                {/* Header */}
                 <div>
-                  <div className="flex items-center gap-3 mb-2">
-                    <CardTitle className="text-2xl font-bold text-primary">{workout.name}</CardTitle>
+                  <div className="flex items-center gap-3 mb-3">
+                    <h2 className="text-3xl font-bold text-white">{workout.name}</h2>
                     <Badge 
                       variant="secondary" 
                       className={
                         workout.format.includes("For Time") 
-                          ? "bg-orange-500/20 text-orange-600 border-orange-500/30" 
-                          : "bg-red-500/20 text-red-600 border-red-500/30"
+                          ? "bg-orange-500/20 text-orange-400 border-orange-500/30 px-3 py-1" 
+                          : "bg-red-500/20 text-red-400 border-red-500/30 px-3 py-1"
                       }
                     >
                       {workout.format.includes("For Time") ? "For Time" : "AMRAP"}
                     </Badge>
                   </div>
-                  <p className="text-muted-foreground mb-3">{workout.description}</p>
+                  <p className="text-slate-400 text-lg mb-4">{workout.description}</p>
                   
-                  <div className="flex items-center gap-4 text-sm text-muted-foreground mb-4">
-                    <div className="flex items-center gap-1">
+                  <div className="flex items-center gap-6 text-slate-400">
+                    <div className="flex items-center gap-2">
                       <Clock className="h-4 w-4" />
                       <span>{getWorkoutDuration(workout)}</span>
                     </div>
-                    <div className="flex items-center gap-1">
+                    <div className="flex items-center gap-2">
                       <Users className="h-4 w-4" />
                       <span>{workout.exercises.length} movements</span>
                     </div>
                   </div>
                 </div>
-              </div>
 
-              {/* Exercise List */}
-              <div className="space-y-2 mb-6">
-                {workout.exercises.map((exercise, index) => (
-                  <div key={index} className="flex justify-between items-center py-2">
-                    <span className="text-base">{exercise.name}</span>
-                    <span className="text-xl font-bold text-primary">
-                      {exercise.suggestedReps}
-                      {exercise.type === 'time' ? ' min' : exercise.type === 'distance' ? 'm' : ''}
-                    </span>
-                  </div>
-                ))}
-              </div>
+                {/* Exercise List */}
+                <div className="space-y-4">
+                  {workout.exercises.map((exercise, index) => (
+                    <div key={index} className="flex justify-between items-center">
+                      <span className="text-white text-lg">{exercise.name}</span>
+                      <span className="text-orange-400 text-2xl font-bold">
+                        {exercise.suggestedReps}
+                        {exercise.type === 'time' ? ' min' : exercise.type === 'distance' ? 'm' : ''}
+                      </span>
+                    </div>
+                  ))}
+                </div>
 
-              {/* Enter Button */}
-              <Button 
-                onClick={() => handleStartWorkout(workout)}
-                className="w-full bg-gradient-to-r from-primary to-orange-500 hover:from-primary/90 hover:to-orange-500/90 text-white font-bold py-3 text-lg"
-              >
-                <Play className="mr-2 h-5 w-5" />
-                Enter the Trial
-              </Button>
+                {/* Enter Button */}
+                <Button 
+                  onClick={() => handleStartWorkout(workout)}
+                  className="w-full bg-gradient-to-r from-red-500 to-orange-500 hover:from-red-600 hover:to-orange-600 text-white font-bold py-4 text-lg rounded-lg"
+                >
+                  <Play className="mr-2 h-5 w-5" />
+                  Enter the Trial
+                </Button>
+              </div>
             </CardContent>
           </Card>
         ))}
