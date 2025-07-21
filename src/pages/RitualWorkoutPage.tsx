@@ -7,6 +7,7 @@ import { useWorkoutState } from '@/hooks/useWorkoutState';
 import { useSaveWorkout } from '@/hooks/useSaveWorkout';
 import { useRestTimer } from '@/hooks/useRestTimer';
 import { SimpleWorkoutExecution } from '@/components/workout/SimpleWorkoutExecution';
+import { ValhallaWorkoutMode } from '@/components/workout/ValhallaWorkoutMode';
 import { ValhallaScoreDialog } from '@/components/workout/ValhallaScoreDialog';
 import { ForgeCelebration } from '@/components/forge/ForgeCelebration';
 import { RestTimerToast } from '@/components/workout/RestTimerToast';
@@ -153,6 +154,17 @@ const RitualWorkoutPage = () => {
     navigate('/workout/new');
   };
 
+  const handleValhallaComplete = (rounds: number, notes?: string) => {
+    const workoutDurationInMinutes = Math.round(totalDuration / 60000);
+    handleValhallaScorePrompt(templateName, workoutDurationInMinutes);
+  };
+
+  const handleValhallaExit = () => {
+    pauseWorkout();
+    resetTimer();
+    navigate('/workout/new');
+  };
+
   const handleFinishWorkout = () => {
     const totalTime = Math.floor(totalDuration / 1000);
     const formattedTime = `${Math.floor(totalTime / 60)}:${(totalTime % 60).toString().padStart(2, '0')}`;
@@ -234,30 +246,51 @@ const RitualWorkoutPage = () => {
     );
   }
 
+  // Prepare Valhalla workout data if needed
+  const valhallaExercises = isValhalla && template?.exercises ? 
+    template.exercises.map((ex: any) => ({
+      name: ex.name,
+      reps: ex.suggestedReps || 0
+    })) : [];
+
+  // Determine default duration for Valhalla workouts (20 minutes = 1200 seconds)
+  const valhallaDuration = 1200;
+
   return (
     <>
-      <SimpleWorkoutExecution
-        workoutName={templateName}
-        exercises={exercises}
-        onAddExercise={handleAddExerciseByName}
-        onRemoveExercise={removeExercise}
-        onMoveExercise={moveExercise}
-        onAddSet={addSet}
-        onUpdateSet={updateSet}
-        onToggleSet={handleToggleSetWithRest}
-        onStartWorkout={startWorkout}
-        onFinishWorkout={handleFinishWorkout}
-        onCancelWorkout={handleCancelWorkout}
-        workoutTimer={formattedDuration}
-        isStarted={isWorkoutActive}
-        restDuration={restDuration}
-        onRestDurationChange={setRestDuration}
-        showRestTimer={showRestTimer}
-        restTimerDuration={restTimerDuration}
-        isPaused={isPaused}
-        onTogglePause={handleTogglePause}
-        onDismissRestTimer={handleDismissRestTimer}
-      />
+      {isValhalla ? (
+        <ValhallaWorkoutMode
+          workoutName={templateName}
+          workoutSubtitle={template?.theme || template?.description || "Face the trials of the gods"}
+          exercises={valhallaExercises}
+          duration={valhallaDuration}
+          onComplete={handleValhallaComplete}
+          onExit={handleValhallaExit}
+        />
+      ) : (
+        <SimpleWorkoutExecution
+          workoutName={templateName}
+          exercises={exercises}
+          onAddExercise={handleAddExerciseByName}
+          onRemoveExercise={removeExercise}
+          onMoveExercise={moveExercise}
+          onAddSet={addSet}
+          onUpdateSet={updateSet}
+          onToggleSet={handleToggleSetWithRest}
+          onStartWorkout={startWorkout}
+          onFinishWorkout={handleFinishWorkout}
+          onCancelWorkout={handleCancelWorkout}
+          workoutTimer={formattedDuration}
+          isStarted={isWorkoutActive}
+          restDuration={restDuration}
+          onRestDurationChange={setRestDuration}
+          showRestTimer={showRestTimer}
+          restTimerDuration={restTimerDuration}
+          isPaused={isPaused}
+          onTogglePause={handleTogglePause}
+          onDismissRestTimer={handleDismissRestTimer}
+        />
+      )}
 
       <ValhallaScoreDialog
         isOpen={showValhallaScoreDialog}
