@@ -62,7 +62,7 @@ const valhallaWorkouts: ValhallaWorkout[] = [
     description: "cold and relentless",
     theme: "Unforgiving and creeping—no flash, all grind.",
     icon: "🧊",
-    format: "2 rounds",
+    format: "3 rounds for time",
     tierThresholds: { berserker: 20, warrior: 30 },
     exercises: [
       { name: "Pike Push-ups", bodyPart: "shoulders", equipment: "bodyweight", targetMuscles: ["shoulders", "triceps"], description: "Pike position push-ups", sets: 2, suggestedReps: 20, type: "reps" },
@@ -79,7 +79,7 @@ const valhallaWorkouts: ValhallaWorkout[] = [
     description: "flow and mobility",
     theme: "Graceful pacing with strong undertow—stamina and control.",
     icon: "🌊",
-    format: "3 rounds",
+    format: "3 rounds for time",
     tierThresholds: { berserker: 18, warrior: 28 },
     exercises: [
       { name: "Jump Rope", bodyPart: "cardio", equipment: "jump rope", targetMuscles: ["calves", "shoulders"], description: "Jump rope for time", sets: 3, suggestedReps: 1, type: "time" },
@@ -96,7 +96,7 @@ const valhallaWorkouts: ValhallaWorkout[] = [
     description: "balance, wisdom, pain",
     theme: "Discipline through repetition. The wise suffer willingly.",
     icon: "🧠",
-    format: "For time (or 2 rounds of 25)",
+    format: "For time",
     tierThresholds: { berserker: 12, warrior: 20 },
     exercises: [
       { name: "Push-ups", bodyPart: "chest", equipment: "bodyweight", targetMuscles: ["chest", "triceps"], description: "Standard push-ups", sets: 1, suggestedReps: 50, type: "reps" },
@@ -171,12 +171,12 @@ export const ValhallaSection = () => {
                     <Badge 
                       variant="secondary" 
                       className={
-                        workout.format.includes("For Time") 
+                        workout.format.includes("For time") 
                           ? "bg-orange-500/20 text-orange-400 border-orange-500/30 px-3 py-1" 
                           : "bg-red-500/20 text-red-400 border-red-500/30 px-3 py-1"
                       }
                     >
-                      {workout.format.includes("For Time") ? "For Time" : "AMRAP"}
+                      {workout.format.includes("For time") ? workout.format.toUpperCase() : "AMRAP"}
                     </Badge>
                   </div>
                   <p className="text-slate-400 text-lg mb-4">{workout.description}</p>
