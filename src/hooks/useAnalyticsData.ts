@@ -11,6 +11,11 @@ export const useAnalyticsData = (workoutHistory?: Workout[], runHistory?: Run[])
   const workoutsThisWeek = workoutHistory?.filter(w => isSameWeek(w.startTime, today, { weekStartsOn: 1 })).length || 0;
   
   const totalVolume = workoutHistory?.reduce((total, workout) => {
+    // Only count workouts from this week
+    if (!isSameWeek(workout.startTime, today, { weekStartsOn: 1 })) {
+      return total;
+    }
+    
     // For Hero's Call workouts, we don't have traditional sets/reps/weight data
     // So we only count regular workouts for volume calculation
     if (isHeroCallWorkout(workout.name || '')) {
