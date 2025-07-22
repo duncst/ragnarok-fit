@@ -29,6 +29,10 @@ export const NotificationSettings = ({ isOpen, onClose }: NotificationSettingsPr
     // Check if user has previously enabled notifications
     const enabled = localStorage.getItem('heroCallNotifications') === 'true';
     setNotificationsEnabled(enabled);
+    
+    // Load saved notification time
+    const savedTime = localStorage.getItem('heroCallNotificationTime') || '09:00';
+    setNotificationTime(savedTime);
   }, [isOpen]);
 
   const requestNotificationPermission = async () => {
@@ -42,12 +46,14 @@ export const NotificationSettings = ({ isOpen, onClose }: NotificationSettingsPr
 
   const scheduleNotification = () => {
     if ('serviceWorker' in navigator && 'Notification' in window) {
-      // Schedule daily notification at 9 AM
+      // Parse the selected time
+      const [hours, minutes] = notificationTime.split(':').map(Number);
+      
       const now = new Date();
       const scheduledTime = new Date();
-      scheduledTime.setHours(9, 0, 0, 0);
+      scheduledTime.setHours(hours, minutes, 0, 0);
       
-      // If it's already past 9 AM today, schedule for tomorrow
+      // If it's already past the scheduled time today, schedule for tomorrow
       if (now > scheduledTime) {
         scheduledTime.setDate(scheduledTime.getDate() + 1);
       }
@@ -96,6 +102,17 @@ export const NotificationSettings = ({ isOpen, onClose }: NotificationSettingsPr
       setNotificationsEnabled(false);
       localStorage.setItem('heroCallNotifications', 'false');
       sonnerToast.success("Daily reminders disabled");
+    }
+  };
+
+  const handleTimeChange = (time: string) => {
+    setNotificationTime(time);
+    localStorage.setItem('heroCallNotificationTime', time);
+    
+    // If notifications are already enabled, reschedule with new time
+    if (notificationsEnabled) {
+      scheduleNotification();
+      sonnerToast.success(`Reminder time updated to ${time}`);
     }
   };
 
@@ -154,6 +171,34 @@ export const NotificationSettings = ({ isOpen, onClose }: NotificationSettingsPr
               disabled={notificationPermission === 'denied'}
             />
           </div>
+          
+          {notificationsEnabled && (
+            <div className="p-4 border rounded-lg bg-card space-y-3">
+              <div className="flex items-center gap-3">
+                <div className="p-2 rounded-full bg-primary/10">
+                  <Clock className="h-5 w-5 text-primary" />
+                </div>
+                <div>
+                  <h4 className="font-medium">Reminder Time</h4>
+                  <p className="text-sm text-muted-foreground">
+                    Choose when you want to receive your daily reminder
+                  </p>
+                </div>
+              </div>
+              <div className="flex items-center gap-2">
+                <Label htmlFor="notification-time" className="text-sm font-medium">
+                  Time:
+                </Label>
+                <input
+                  id="notification-time"
+                  type="time"
+                  value={notificationTime}
+                  onChange={(e) => handleTimeChange(e.target.value)}
+                  className="px-3 py-2 border border-input rounded-md bg-background text-sm focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2"
+                />
+              </div>
+            </div>
+          )}
         </div>
         
         <DialogFooter className="flex gap-2">
