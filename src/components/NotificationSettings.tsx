@@ -8,8 +8,9 @@ import {
 } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
 import { Switch } from '@/components/ui/switch';
-import { Bell, BellOff } from 'lucide-react';
+import { Bell, BellOff, Clock } from 'lucide-react';
 import { toast as sonnerToast } from 'sonner';
+import { Label } from '@/components/ui/label';
 
 interface NotificationSettingsProps {
   isOpen: boolean;
@@ -19,6 +20,7 @@ interface NotificationSettingsProps {
 export const NotificationSettings = ({ isOpen, onClose }: NotificationSettingsProps) => {
   const [notificationsEnabled, setNotificationsEnabled] = useState(false);
   const [notificationPermission, setNotificationPermission] = useState<NotificationPermission>('default');
+  const [notificationTime, setNotificationTime] = useState('09:00');
 
   useEffect(() => {
     // Check current notification permission
