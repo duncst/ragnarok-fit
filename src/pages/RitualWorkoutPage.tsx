@@ -7,6 +7,7 @@ import { useWorkoutState } from '@/hooks/useWorkoutState';
 import { useSaveWorkout } from '@/hooks/useSaveWorkout';
 import { useRestTimer } from '@/hooks/useRestTimer';
 import { SimpleWorkoutExecution } from '@/components/workout/SimpleWorkoutExecution';
+import { ForTimeWorkoutMode } from '@/components/workout/ForTimeWorkoutMode';
 import { ValhallaWorkoutMode } from '@/components/workout/ValhallaWorkoutMode';
 import { ValhallaScoreDialog } from '@/components/workout/ValhallaScoreDialog';
 import { ForgeCelebration } from '@/components/forge/ForgeCelebration';
@@ -141,6 +142,11 @@ const RitualWorkoutPage = () => {
     return !!name.match(/^(THOR|FENRIR|HEL|NJORD|ODIN)$/i);
   };
 
+  const isForTimeWorkout = (workoutName: string) => {
+    // THOR, FENRIR, NJORD, and ODIN are FOR TIME workouts
+    return !!workoutName.match(/^(THOR|FENRIR|NJORD|ODIN)$/i);
+  };
+
   const handleValhallaScorePrompt = (workoutName: string, duration: number) => {
     setCurrentValhallaWorkout(workoutName);
     setWorkoutDuration(duration);
@@ -157,6 +163,10 @@ const RitualWorkoutPage = () => {
   const handleValhallaComplete = (rounds: number, notes?: string) => {
     const workoutDurationInMinutes = Math.round(totalDuration / 60000);
     handleValhallaScorePrompt(templateName, workoutDurationInMinutes);
+  };
+
+  const handleForTimeComplete = (completionTimeMinutes: number, notes?: string) => {
+    handleValhallaScorePrompt(templateName, completionTimeMinutes);
   };
 
   const handleValhallaExit = () => {
@@ -259,14 +269,24 @@ const RitualWorkoutPage = () => {
   return (
     <>
       {isValhalla ? (
-        <ValhallaWorkoutMode
-          workoutName={templateName}
-          workoutSubtitle={template?.theme || template?.description || "Face the trials of the gods"}
-          exercises={valhallaExercises}
-          duration={valhallaDuration}
-          onComplete={handleValhallaComplete}
-          onExit={handleValhallaExit}
-        />
+        isForTimeWorkout(templateName) ? (
+          <ForTimeWorkoutMode
+            workoutName={templateName}
+            workoutSubtitle={template?.theme || template?.description || "Complete as fast as possible"}
+            exercises={valhallaExercises}
+            onComplete={handleForTimeComplete}
+            onExit={handleValhallaExit}
+          />
+        ) : (
+          <ValhallaWorkoutMode
+            workoutName={templateName}
+            workoutSubtitle={template?.theme || template?.description || "Face the trials of the gods"}
+            exercises={valhallaExercises}
+            duration={valhallaDuration}
+            onComplete={handleValhallaComplete}
+            onExit={handleValhallaExit}
+          />
+        )
       ) : (
         <SimpleWorkoutExecution
           workoutName={templateName}
