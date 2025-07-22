@@ -4,6 +4,7 @@ import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { InputSanitizer } from "@/components/security/InputSanitizer";
 import NotFound from "./pages/NotFound";
 import Layout from "./components/Layout";
 import HomePage from "./pages/HomePage";
@@ -28,25 +29,27 @@ const App = () => (
       <Toaster />
       <Sonner />
       <AuthProvider>
-        <BrowserRouter>
-          <Routes>
-            <Route path="/" element={<LandingPage />} />
-            <Route element={<Layout />}>
-              <Route path="/home" element={<HomePage />} />
-              <Route path="/exercises" element={<ExercisesPage />} />
-              <Route path="/forge" element={<ForgePage />} />
-              <Route path="/history" element={<WorkoutHistoryPage />} />
-              <Route path="/run" element={<RunPage />} />
-              <Route path="/log-run" element={<LogRunPage />} />
-                <Route path="/workout/new" element={<NewWorkoutPage />} />
-                
-                <Route path="/ritual/:templateId/workout" element={<RitualWorkoutPage />} />
-              <Route path="/1rm-calculator" element={<OneRepMaxCalculatorPage />} />
-              <Route path="/log-body-metrics" element={<LogBodyMetricsPage />} />
-            </Route>
-            <Route path="*" element={<NotFound />} />
-          </Routes>
-        </BrowserRouter>
+        <InputSanitizer>
+          <BrowserRouter>
+            <Routes>
+              <Route path="/" element={<LandingPage />} />
+              <Route element={<Layout />}>
+                <Route path="/home" element={<HomePage />} />
+                <Route path="/exercises" element={<ExercisesPage />} />
+                <Route path="/forge" element={<ForgePage />} />
+                <Route path="/history" element={<WorkoutHistoryPage />} />
+                <Route path="/run" element={<RunPage />} />
+                <Route path="/log-run" element={<LogRunPage />} />
+                  <Route path="/workout/new" element={<NewWorkoutPage />} />
+                  
+                  <Route path="/ritual/:templateId/workout" element={<RitualWorkoutPage />} />
+                <Route path="/1rm-calculator" element={<OneRepMaxCalculatorPage />} />
+                <Route path="/log-body-metrics" element={<LogBodyMetricsPage />} />
+              </Route>
+              <Route path="*" element={<NotFound />} />
+            </Routes>
+          </BrowserRouter>
+        </InputSanitizer>
       </AuthProvider>
     </TooltipProvider>
   </QueryClientProvider>

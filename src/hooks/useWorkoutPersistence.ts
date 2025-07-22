@@ -1,6 +1,7 @@
 
 import { useEffect } from 'react';
 import type { Exercise } from '@/types';
+import { secureStorage } from '@/lib/secureStorage';
 
 const WORKOUT_STORAGE_KEY = 'ragnarok-workout-in-progress';
 
@@ -14,20 +15,19 @@ export interface PersistedWorkout {
 }
 
 export const useWorkoutPersistence = () => {
-  const saveWorkout = (workout: Omit<PersistedWorkout, 'timestamp'>) => {
+  const saveWorkout = async (workout: Omit<PersistedWorkout, 'timestamp'>) => {
     const persistedWorkout: PersistedWorkout = {
       ...workout,
       timestamp: Date.now(),
     };
-    localStorage.setItem(WORKOUT_STORAGE_KEY, JSON.stringify(persistedWorkout));
+    await secureStorage.setItem(WORKOUT_STORAGE_KEY, persistedWorkout);
   };
 
-  const loadWorkout = (): PersistedWorkout | null => {
+  const loadWorkout = async (): Promise<PersistedWorkout | null> => {
     try {
-      const stored = localStorage.getItem(WORKOUT_STORAGE_KEY);
-      if (!stored) return null;
+      const workout = await secureStorage.getItem(WORKOUT_STORAGE_KEY) as PersistedWorkout;
+      if (!workout) return null;
       
-      const workout = JSON.parse(stored) as PersistedWorkout;
       // Check if workout is less than 24 hours old
       const isRecent = Date.now() - workout.timestamp < 24 * 60 * 60 * 1000;
       
@@ -45,11 +45,12 @@ export const useWorkoutPersistence = () => {
   };
 
   const clearWorkout = () => {
-    localStorage.removeItem(WORKOUT_STORAGE_KEY);
+    secureStorage.removeItem(WORKOUT_STORAGE_KEY);
   };
 
-  const hasPersistedWorkout = (): boolean => {
-    return loadWorkout() !== null;
+  const hasPersistedWorkout = async (): Promise<boolean> => {
+    const workout = await loadWorkout();
+    return workout !== null;
   };
 
   return {

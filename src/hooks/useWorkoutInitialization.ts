@@ -54,14 +54,15 @@ export const useWorkoutInitialization = () => {
       setExercises(exercisesFromWorkout);
     } else {
       // Try to load persisted workout
-      const persistedWorkout = loadWorkout();
-      if (persistedWorkout) {
-        setWorkoutName(persistedWorkout.workoutName);
-        setExercises(persistedWorkout.exercises);
-        setSelectedEquipment(persistedWorkout.selectedEquipment);
-        setFocusArea(persistedWorkout.focusArea);
-        setRestDuration(persistedWorkout.restDuration);
-      }
+      loadWorkout().then(persistedWorkout => {
+        if (persistedWorkout) {
+          setWorkoutName(persistedWorkout.workoutName);
+          setExercises(persistedWorkout.exercises);
+          setSelectedEquipment(persistedWorkout.selectedEquipment);
+          setFocusArea(persistedWorkout.focusArea);
+          setRestDuration(persistedWorkout.restDuration);
+        }
+      });
     }
     
     setIsInitialized(true);
