@@ -1,0 +1,24 @@
+{
+  "name": "Ragnarok Fit",
+  "short_name": "Ragnarok Fit",
+  "description": "The ultimate workout tracker for hybrid athletes",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#0c0a09",
+  "theme_color": "#e8904f",
+  "orientation": "portrait-primary",
+  "icons": [
+    {
+      "src": "/lovable-uploads/46f13240-6944-45b6-8432-a683e2a1c6c7.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "/lovable-uploads/46f13240-6944-45b6-8432-a683e2a1c6c7.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ],
+  "categories": ["health", "fitness", "sports"],
+  "lang": "en"
+}

@@ -1,0 +1,16 @@
+# Ragnarok Fit - The Ultimate Workout Tracker
+
+/* TEAM */
+Built with passion for fitness and Norse mythology
+
+/* THANKS */
+To all the hybrid athletes pushing their limits
+
+/* SITE */
+Technology: React, TypeScript, Tailwind CSS, Supabase
+Last update: 2025-01-22
+Languages: English
+Doctype: HTML5
+Standards: HTML5, CSS3, ES6+
+Components: Progressive Web App
+Software: Built on Lovable platform
