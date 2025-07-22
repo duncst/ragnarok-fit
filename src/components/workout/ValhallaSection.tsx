@@ -30,7 +30,7 @@ const valhallaWorkouts: ValhallaWorkout[] = [
     description: "explosive and strength-focused",
     theme: "Like Mjölnir, short, heavy, and hammering.",
     icon: "⚡",
-    format: "3 rounds",
+    format: "For time",
     tierThresholds: { berserker: 8, warrior: 12 },
     exercises: [
       { name: "Jump Squats", bodyPart: "legs", equipment: "bodyweight", targetMuscles: ["quadriceps", "glutes"], description: "Explosive squat jumps", sets: 3, suggestedReps: 40, type: "reps" },
