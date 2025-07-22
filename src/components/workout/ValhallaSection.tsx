@@ -171,12 +171,12 @@ export const ValhallaSection = () => {
                     <Badge 
                       variant="secondary" 
                       className={
-                        workout.format.includes("for time") 
+                        workout.format.toLowerCase().includes("for time") 
                           ? "bg-orange-500/20 text-orange-400 border-orange-500/30 px-3 py-1" 
                           : "bg-red-500/20 text-red-400 border-red-500/30 px-3 py-1"
                       }
                     >
-                      {workout.format.includes("for time") ? workout.format.toUpperCase() : "AMRAP"}
+                      {workout.format.toUpperCase()}
                     </Badge>
                   </div>
                   <p className="text-slate-400 text-lg mb-4">{workout.description}</p>
