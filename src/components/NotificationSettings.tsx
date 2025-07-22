@@ -44,6 +44,33 @@ export const NotificationSettings = ({ isOpen, onClose }: NotificationSettingsPr
     return false;
   };
 
+  const getRandomNotificationText = () => {
+    const notifications = [
+      {
+        title: "🛡️ The horn sounds.",
+        body: "Rise, warrior. The Hero's Call awaits."
+      },
+      {
+        title: "🔥 Ritual. Not motivation.",
+        body: "Open the Forge. Shape your soul."
+      },
+      {
+        title: "⚔️ Today, you train for the man you must become.",
+        body: "Begin the Call."
+      },
+      {
+        title: "⛓ Discipline is your weapon. The Call is your grindstone.",
+        body: "Sharpen yourself."
+      },
+      {
+        title: "🌄 Effort. Not perfection. Just one act of courage.",
+        body: "Answer the Call."
+      }
+    ];
+    
+    return notifications[Math.floor(Math.random() * notifications.length)];
+  };
+
   const scheduleNotification = () => {
     if ('serviceWorker' in navigator && 'Notification' in window) {
       // Parse the selected time
@@ -62,8 +89,9 @@ export const NotificationSettings = ({ isOpen, onClose }: NotificationSettingsPr
 
       setTimeout(() => {
         if (Notification.permission === 'granted') {
-          new Notification("Hero's Call Reminder", {
-            body: "A warrior's discipline is forged through consistent action. Let the horn of Heimdall remind you of your daily quest.",
+          const randomText = getRandomNotificationText();
+          new Notification(randomText.title, {
+            body: randomText.body,
             icon: "/lovable-uploads/6ace109c-b935-4cbe-ae24-b2adfe21bde8.png",
             badge: "/lovable-uploads/6ace109c-b935-4cbe-ae24-b2adfe21bde8.png",
             tag: "hero-call-reminder",
@@ -74,8 +102,9 @@ export const NotificationSettings = ({ isOpen, onClose }: NotificationSettingsPr
         // Schedule the next day's notification
         setInterval(() => {
           if (Notification.permission === 'granted' && localStorage.getItem('heroCallNotifications') === 'true') {
-            new Notification("Hero's Call Reminder", {
-              body: "A warrior's discipline is forged through consistent action. Let the horn of Heimdall remind you of your daily quest.",
+            const randomText = getRandomNotificationText();
+            new Notification(randomText.title, {
+              body: randomText.body,
               icon: "/lovable-uploads/6ace109c-b935-4cbe-ae24-b2adfe21bde8.png",
               badge: "/lovable-uploads/6ace109c-b935-4cbe-ae24-b2adfe21bde8.png",
               tag: "hero-call-reminder",
