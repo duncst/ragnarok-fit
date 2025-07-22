@@ -133,7 +133,7 @@ export const ValhallaSection = () => {
   };
 
   const getWorkoutDuration = (workout: ValhallaWorkout) => {
-    if (workout.format.includes("For time")) {
+    if (workout.format.includes("for time")) {
       // Estimate based on exercise difficulty
       const exerciseCount = workout.exercises.reduce((sum, ex) => sum + (ex.suggestedReps || 0), 0);
       return exerciseCount > 200 ? "20min" : exerciseCount > 150 ? "15min" : "10min";
@@ -171,12 +171,12 @@ export const ValhallaSection = () => {
                     <Badge 
                       variant="secondary" 
                       className={
-                        workout.format.includes("For time") 
+                        workout.format.includes("for time") 
                           ? "bg-orange-500/20 text-orange-400 border-orange-500/30 px-3 py-1" 
                           : "bg-red-500/20 text-red-400 border-red-500/30 px-3 py-1"
                       }
                     >
-                      {workout.format.includes("For time") ? workout.format.toUpperCase() : "AMRAP"}
+                      {workout.format.includes("for time") ? workout.format.toUpperCase() : "AMRAP"}
                     </Badge>
                   </div>
                   <p className="text-slate-400 text-lg mb-4">{workout.description}</p>
