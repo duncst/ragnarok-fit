@@ -11,8 +11,8 @@ export const useAnalyticsData = (workoutHistory?: Workout[], runHistory?: Run[])
   const workoutsThisWeek = workoutHistory?.filter(w => isSameWeek(w.startTime, today, { weekStartsOn: 1 })).length || 0;
   
   const totalVolume = workoutHistory?.reduce((total, workout) => {
-    // Only count workouts from this week
-    if (!isSameWeek(workout.startTime, today, { weekStartsOn: 1 })) {
+    // Only count workouts from the last 7 days
+    if (!isWithinInterval(workout.startTime, last7DaysInterval)) {
       return total;
     }
     

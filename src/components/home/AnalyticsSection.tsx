@@ -96,7 +96,7 @@ export const AnalyticsSection = ({
                       <StatItem icon={Zap} value={totalWorkouts} label="Workouts" />
                       <StatItem icon={TargetIcon} value={workoutsThisWeek} label="This Week" />
                       <StatItem icon={TrendingUp} value={totalPRs} label="PR's Set" />
-                      <StatItem icon={VolumeIcon} value={`${(totalVolume / 1000).toFixed(1)}K`} label="Weekly Volume" />
+                      <StatItem icon={VolumeIcon} value={`${(totalVolume / 1000).toFixed(1)}K`} label="Last 7-days Volume" />
                     </div>
                     <StrengthChart data={strengthChartData} />
                   </>
