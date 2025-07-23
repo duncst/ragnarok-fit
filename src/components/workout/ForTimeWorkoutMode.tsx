@@ -164,21 +164,20 @@ export const ForTimeWorkoutMode: React.FC<ForTimeWorkoutModeProps> = ({
   }
 
   return (
-    <div className="min-h-screen bg-slate-900 text-white flex flex-col">
-      {/* Header */}
-      <div className="text-center py-8 px-4">
-        <div className="inline-flex items-center gap-2 bg-orange-500/20 border border-orange-500/40 px-6 py-3 rounded-full mb-6">
-          <Flame className="h-5 w-5 text-orange-500" />
-          <span className="text-orange-500 font-bold text-xl">{workoutName}</span>
+    <div className="h-screen bg-slate-900 text-white flex flex-col overflow-hidden">
+      {/* Compact Header */}
+      <div className="text-center py-4 px-4 flex-shrink-0">
+        <div className="inline-flex items-center gap-2 bg-orange-500/20 border border-orange-500/40 px-4 py-2 rounded-full mb-2">
+          <Flame className="h-4 w-4 text-orange-500" />
+          <span className="text-orange-500 font-bold text-lg">{workoutName}</span>
         </div>
-        <h2 className="text-xl text-slate-300 mb-4">{workoutSubtitle}</h2>
-        <div className="text-slate-400 mb-8">FOR TIME • Complete as Fast as Possible</div>
+        <div className="text-sm text-slate-400">FOR TIME • Complete as Fast as Possible</div>
       </div>
 
-      {/* Timer Section */}
-      <div className="bg-slate-800/50 border border-slate-700 rounded-lg mx-4 mb-6 p-8">
+      {/* Timer Section - Fixed Height */}
+      <div className="bg-slate-800/50 border border-slate-700 rounded-lg mx-4 mb-4 p-6 flex-shrink-0">
         {/* Main Timer - counts UP */}
-        <div className="text-8xl font-bold text-center mb-6 text-orange-500">
+        <div className="text-6xl font-bold text-center mb-4 text-orange-500">
           {formatTime(timeElapsed)}
         </div>
 
@@ -186,7 +185,7 @@ export const ForTimeWorkoutMode: React.FC<ForTimeWorkoutModeProps> = ({
         {!hasStarted ? (
           <Button
             onClick={handleBegin}
-            className="w-full bg-gradient-to-r from-red-500 to-orange-500 hover:from-red-600 hover:to-orange-600 text-white font-bold py-4 text-lg rounded-lg"
+            className="w-full bg-gradient-to-r from-red-500 to-orange-500 hover:from-red-600 hover:to-orange-600 text-white font-bold py-3 text-lg rounded-lg"
           >
             <Play className="h-5 w-5 mr-2" />
             Begin
@@ -194,7 +193,7 @@ export const ForTimeWorkoutMode: React.FC<ForTimeWorkoutModeProps> = ({
         ) : (
           <Button
             onClick={handleFinish}
-            className="w-full bg-gradient-to-r from-green-500 to-emerald-500 hover:from-green-600 hover:to-emerald-600 text-white font-bold py-4 text-lg rounded-lg"
+            className="w-full bg-gradient-to-r from-green-500 to-emerald-500 hover:from-green-600 hover:to-emerald-600 text-white font-bold py-3 text-lg rounded-lg"
           >
             <Square className="h-5 w-5 mr-2" />
             Finish
@@ -202,25 +201,25 @@ export const ForTimeWorkoutMode: React.FC<ForTimeWorkoutModeProps> = ({
         )}
       </div>
 
-      {/* Exercise List */}
-      <div className="bg-slate-800/50 border border-slate-700 rounded-lg mx-4 mb-6">
-        <div className="p-6">
-          <h3 className="text-2xl font-bold text-center text-white mb-6">Complete For Time</h3>
+      {/* Exercise List - Scrollable but contained */}
+      <div className="bg-slate-800/50 border border-slate-700 rounded-lg mx-4 mb-4 flex-1 min-h-0">
+        <div className="p-4 h-full flex flex-col">
+          <h3 className="text-xl font-bold text-center text-white mb-4 flex-shrink-0">Complete For Time</h3>
           
-          <div className="space-y-4">
+          <div className="space-y-3 overflow-y-auto flex-1">
             {exercises.map((exercise, index) => (
               <div
                 key={index}
-                className="bg-slate-700/50 border border-slate-600 rounded-lg p-4"
+                className="bg-slate-700/50 border border-slate-600 rounded-lg p-3 flex-shrink-0"
               >
                 <div className="flex items-center justify-between">
-                  <div className="flex items-center gap-4">
-                    <div className="w-10 h-10 rounded-full bg-orange-500/20 border border-orange-500/40 text-orange-500 flex items-center justify-center text-lg font-bold">
+                  <div className="flex items-center gap-3">
+                    <div className="w-8 h-8 rounded-full bg-orange-500/20 border border-orange-500/40 text-orange-500 flex items-center justify-center text-sm font-bold">
                       {index + 1}
                     </div>
-                    <span className="text-xl text-white">{exercise.name}</span>
+                    <span className="text-lg text-white">{exercise.name}</span>
                   </div>
-                  <span className="text-2xl font-bold text-orange-500">
+                  <span className="text-xl font-bold text-orange-500">
                     {exercise.reps}
                   </span>
                 </div>
