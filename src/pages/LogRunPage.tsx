@@ -96,6 +96,8 @@ const LogRunPage = () => {
         description: `Your ${data.distance}km ${data.run_type} has been saved.`,
       });
       queryClient.invalidateQueries({ queryKey: ['runs', user?.id] });
+      queryClient.invalidateQueries({ queryKey: ['hero-call-stats', user?.id] });
+      queryClient.invalidateQueries({ queryKey: ['forge-progress', user?.id] });
       checkForNewForgedWeek();
     },
     onError: (error) => {

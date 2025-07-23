@@ -29,8 +29,8 @@ export const useHeroCallData = () => {
     queryFn: async () => {
       if (!user) throw new Error('User not authenticated');
 
-      // Get all completions (Hero's Call + regular workouts) for streak calculation
-      const [heroCallResult, workoutsResult] = await Promise.all([
+      // Get all completions (Hero's Call + regular workouts + runs + valhalla) for streak calculation
+      const [heroCallResult, workoutsResult, runsResult, valhallaResult] = await Promise.all([
         supabase
           .from('hero_call_completions')
           .select('completed_at')
@@ -39,16 +39,28 @@ export const useHeroCallData = () => {
           .from('workouts')
           .select('end_time')
           .not('end_time', 'is', null)
-          .order('end_time', { ascending: false })
+          .order('end_time', { ascending: false }),
+        supabase
+          .from('runs')
+          .select('date')
+          .order('date', { ascending: false }),
+        supabase
+          .from('valhalla_challenges')
+          .select('completed_at')
+          .order('completed_at', { ascending: false })
       ]);
 
       if (heroCallResult.error) throw heroCallResult.error;
       if (workoutsResult.error) throw workoutsResult.error;
+      if (runsResult.error) throw runsResult.error;
+      if (valhallaResult.error) throw valhallaResult.error;
 
       // Combine and sort all completion dates
       const allCompletions = [
         ...(heroCallResult.data || []).map(item => new Date(item.completed_at)),
-        ...(workoutsResult.data || []).map(item => new Date(item.end_time!))
+        ...(workoutsResult.data || []).map(item => new Date(item.end_time!)),
+        ...(runsResult.data || []).map(item => new Date(item.date)),
+        ...(valhallaResult.data || []).map(item => new Date(item.completed_at))
       ].sort((a, b) => b.getTime() - a.getTime());
 
       // Calculate streak from combined completions
