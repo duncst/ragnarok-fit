@@ -8,8 +8,9 @@ import { useForgeData } from '@/hooks/useForgeData';
 interface ForgeCelebrationProps {
   isOpen: boolean;
   onClose: () => void;
-  workoutName: string;
-  workoutDuration: string;
+  activityName: string;
+  activityDuration: string;
+  activityType?: 'workout' | 'endurance' | 'challenge';
 }
 
 // Weekday runes mapping
@@ -35,8 +36,9 @@ const ROTATING_QUOTES = [
 export const ForgeCelebration = ({ 
   isOpen, 
   onClose, 
-  workoutName, 
-  workoutDuration 
+  activityName, 
+  activityDuration,
+  activityType = 'workout'
 }: ForgeCelebrationProps) => {
   const [showRune, setShowRune] = useState(false);
   const [showMessage, setShowMessage] = useState(false);
@@ -94,9 +96,11 @@ export const ForgeCelebration = ({
             <h1 className="text-xl font-bold text-foreground">You have answered the call.</h1>
             
             <div className="space-y-2">
-              <h3 className="text-lg font-semibold text-foreground">Challenge Completed:</h3>
-              <p className="text-primary font-medium">{workoutName}</p>
-              <p className="text-muted-foreground">Duration: {workoutDuration}</p>
+              <h3 className="text-lg font-semibold text-foreground">
+                {activityType === 'endurance' ? 'Endurance Challenge Completed:' : 'Challenge Completed:'}
+              </h3>
+              <p className="text-primary font-medium">{activityName}</p>
+              <p className="text-muted-foreground">Duration: {activityDuration}</p>
             </div>
           </div>
 

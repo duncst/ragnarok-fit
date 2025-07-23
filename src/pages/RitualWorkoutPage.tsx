@@ -323,8 +323,8 @@ const RitualWorkoutPage = () => {
         <ForgeCelebration
           isOpen={showCelebration}
           onClose={handleCloseCelebration}
-          workoutName={celebrationData.workoutName}
-          workoutDuration={celebrationData.duration}
+          activityName={celebrationData.workoutName}
+          activityDuration={celebrationData.duration}
         />
       )}
     </>

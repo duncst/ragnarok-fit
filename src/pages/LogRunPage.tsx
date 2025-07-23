@@ -19,6 +19,8 @@ import { useToast } from "@/hooks/use-toast";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/contexts/AuthContext";
 import { TablesInsert } from "@/integrations/supabase/types";
+import { ForgeCelebration } from "@/components/forge/ForgeCelebration";
+import { useForgedWeekCheck } from "@/contexts/ForgedWeekContext";
 
 const runTypes = [
   "Easy Run", "Tempo Run", "Interval Training", "Long Run",
@@ -47,6 +49,12 @@ const LogRunPage = () => {
   const { toast } = useToast();
   const { user } = useAuth();
   const queryClient = useQueryClient();
+  const { checkForNewForgedWeek } = useForgedWeekCheck();
+  const [showCelebration, setShowCelebration] = React.useState(false);
+  const [celebrationData, setCelebrationData] = React.useState<{
+    activityName: string;
+    duration: string;
+  } | null>(null);
 
   const form = useForm<LogRunFormValues>({
     resolver: zodResolver(logRunFormSchema),
@@ -68,12 +76,27 @@ const LogRunPage = () => {
       return runData;
     },
     onSuccess: (data) => {
+      // Format duration for celebration
+      const hours = Math.floor(data.duration / 3600);
+      const minutes = Math.floor((data.duration % 3600) / 60);
+      const seconds = data.duration % 60;
+      
+      let durationStr = '';
+      if (hours > 0) durationStr += `${hours}:`;
+      durationStr += `${minutes.toString().padStart(hours > 0 ? 2 : 1, '0')}:${seconds.toString().padStart(2, '0')}`;
+      
+      setCelebrationData({
+        activityName: data.run_type,
+        duration: durationStr
+      });
+      setShowCelebration(true);
+      
       toast({
         title: "Run Logged!",
         description: `Your ${data.distance}km ${data.run_type} has been saved.`,
       });
       queryClient.invalidateQueries({ queryKey: ['runs', user?.id] });
-      navigate("/history");
+      checkForNewForgedWeek();
     },
     onError: (error) => {
       toast({
@@ -104,6 +127,11 @@ const LogRunPage = () => {
     };
     logRun(runData);
   }
+
+  const handleCloseCelebration = () => {
+    setShowCelebration(false);
+    navigate("/history");
+  };
 
   return (
     <div className="space-y-6">
@@ -257,6 +285,16 @@ const LogRunPage = () => {
           </div>
         </form>
       </Form>
+      
+      {celebrationData && (
+        <ForgeCelebration
+          isOpen={showCelebration}
+          onClose={handleCloseCelebration}
+          activityName={celebrationData.activityName}
+          activityDuration={celebrationData.duration}
+          activityType="endurance"
+        />
+      )}
     </div>
   );
 };
