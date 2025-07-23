@@ -132,23 +132,19 @@ export const useForgeProgress = () => {
       ];
 
       // Calculate forged weeks (weeks with 5+ activities)
-      const weekCounts = new Map<string, Set<string>>();
+      const weekCounts = new Map<string, number>();
       
       allCompletions.forEach(completion => {
         const date = new Date(completion.completed_at);
         const monday = new Date(date);
         monday.setDate(date.getDate() - (date.getDay() + 6) % 7);
         const weekKey = monday.toISOString().split('T')[0];
-        const dayKey = date.toISOString().split('T')[0];
         
-        if (!weekCounts.has(weekKey)) {
-          weekCounts.set(weekKey, new Set());
-        }
-        weekCounts.get(weekKey)!.add(dayKey);
+        weekCounts.set(weekKey, (weekCounts.get(weekKey) || 0) + 1);
       });
 
       const forgedWeeks = Array.from(weekCounts.values())
-        .filter(days => days.size >= 5).length;
+        .filter(count => count >= 5).length;
 
       // Determine current tier and title based on complex requirements
       let currentTier = 1;
