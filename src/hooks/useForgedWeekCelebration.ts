@@ -20,7 +20,7 @@ export const useForgedWeekCelebration = () => {
       endOfWeek.setDate(endOfWeek.getDate() + 6);
       endOfWeek.setHours(23, 59, 59, 999);
 
-      const [heroCallResult, workoutsResult] = await Promise.all([
+      const [heroCallResult, workoutsResult, runsResult, valhallaResult] = await Promise.all([
         supabase
           .from('hero_call_completions')
           .select('completed_at')
@@ -31,10 +31,20 @@ export const useForgedWeekCelebration = () => {
           .select('end_time')
           .not('end_time', 'is', null)
           .gte('end_time', startOfWeek.toISOString())
-          .lte('end_time', endOfWeek.toISOString())
+          .lte('end_time', endOfWeek.toISOString()),
+        supabase
+          .from('runs')
+          .select('date')
+          .gte('date', startOfWeek.toISOString())
+          .lte('date', endOfWeek.toISOString()),
+        supabase
+          .from('valhalla_challenges')
+          .select('completed_at')
+          .gte('completed_at', startOfWeek.toISOString())
+          .lte('completed_at', endOfWeek.toISOString())
       ]);
 
-      if (heroCallResult.error || workoutsResult.error) return;
+      if (heroCallResult.error || workoutsResult.error || runsResult.error || valhallaResult.error) return;
 
       // Count unique days this week
       const completionDates = new Set<string>();
@@ -48,6 +58,16 @@ export const useForgedWeekCelebration = () => {
         const date = new Date(item.end_time!).toISOString().split('T')[0];
         completionDates.add(date);
       });
+      
+      (runsResult.data || []).forEach(item => {
+        const date = new Date(item.date).toISOString().split('T')[0];
+        completionDates.add(date);
+      });
+      
+      (valhallaResult.data || []).forEach(item => {
+        const date = new Date(item.completed_at).toISOString().split('T')[0];
+        completionDates.add(date);
+      });
 
       // If we just hit 5 days, check if this is a new forge week
       if (completionDates.size === 5) {
@@ -57,7 +77,7 @@ export const useForgedWeekCelebration = () => {
         
         if (!alreadyCelebrated) {
           // Calculate total forged weeks to show the week number
-          const [allHeroCallResult, allWorkoutsResult] = await Promise.all([
+          const [allHeroCallResult, allWorkoutsResult, allRunsResult, allValhallaResult] = await Promise.all([
             supabase
               .from('hero_call_completions')
               .select('completed_at')
@@ -66,15 +86,25 @@ export const useForgedWeekCelebration = () => {
               .from('workouts')
               .select('end_time')
               .not('end_time', 'is', null)
-              .order('end_time', { ascending: true })
+              .order('end_time', { ascending: true }),
+            supabase
+              .from('runs')
+              .select('date')
+              .order('date', { ascending: true }),
+            supabase
+              .from('valhalla_challenges')
+              .select('completed_at')
+              .order('completed_at', { ascending: true })
           ]);
 
-          if (allHeroCallResult.error || allWorkoutsResult.error) return;
+          if (allHeroCallResult.error || allWorkoutsResult.error || allRunsResult.error || allValhallaResult.error) return;
 
           // Calculate all forged weeks
           const allCompletions = [
             ...(allHeroCallResult.data || []).map(item => ({ completed_at: item.completed_at })),
-            ...(allWorkoutsResult.data || []).map(item => ({ completed_at: item.end_time! }))
+            ...(allWorkoutsResult.data || []).map(item => ({ completed_at: item.end_time! })),
+            ...(allRunsResult.data || []).map(item => ({ completed_at: item.date })),
+            ...(allValhallaResult.data || []).map(item => ({ completed_at: item.completed_at }))
           ];
 
           const weekCounts = new Map<string, Set<string>>();
