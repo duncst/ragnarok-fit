@@ -47,6 +47,7 @@ const RitualWorkoutPage = () => {
     handleToggleSet,
     restDuration,
     setRestDuration,
+    clearPersistedWorkout,
   } = useWorkoutState();
 
   const { saveWorkoutMutation, finishWorkout } = useSaveWorkout();
@@ -92,7 +93,10 @@ const RitualWorkoutPage = () => {
 
   // Initialize workout from template
   useEffect(() => {
-    if (template && exercises.length === 0) {
+    if (template) {
+      // Clear any persisted workout data when starting a ritual
+      clearPersistedWorkout();
+      
       let templateExercises: Exercise[];
       
       if (isValhalla && template.exercises) {
@@ -136,7 +140,7 @@ const RitualWorkoutPage = () => {
         startWorkout();
       }
     }
-  }, [template?.id, exercises.length, isWorkoutActive, isValhalla]);
+  }, [template?.id, isValhalla]);
 
   const isValhallaWorkout = (name: string) => {
     return !!name.match(/^(THOR|FENRIR|HEL|NJORD|ODIN)$/i);
