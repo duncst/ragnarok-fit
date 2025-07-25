@@ -50,7 +50,7 @@ const CapabilityPathsPage = () => {
         {/* Header */}
         <div className="mb-8">
           <h1 className="text-3xl font-bold text-foreground mb-2">CAPABILITY PATHS</h1>
-          <p className="text-muted-foreground">Master the skills of a modern warrior</p>
+          <p className="text-muted-foreground">Choose your path and forge your legend through disciplined progression</p>
         </div>
 
         {/* Path Selection Tabs */}
