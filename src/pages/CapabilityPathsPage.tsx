@@ -23,13 +23,17 @@ const CapabilityPathsPage = () => {
 
   const getPathIcon = (name: string) => {
     switch (name.toLowerCase()) {
-      case 'strength': return '💪';
+      case 'strength': return <span className="text-blue-400">ᚢ</span>;
       case 'endurance': return <span className="text-blue-400">ᛇ</span>;
       case 'survival': return '⚠️';
       case 'mobility': return '📈';
       case 'urban readiness': return '🏙️';
       default: return '🎯';
     }
+  };
+
+  const formatPathName = (name: string) => {
+    return name.charAt(0).toUpperCase() + name.slice(1).toLowerCase();
   };
 
   const getTierStatus = (tierIndex: number, isCompleted: boolean) => {
@@ -67,7 +71,7 @@ const CapabilityPathsPage = () => {
               )}
             >
               <span>{getPathIcon(path.name)}</span>
-              {path.name}
+              {formatPathName(path.name)}
             </button>
           ))}
         </div>
@@ -79,7 +83,7 @@ const CapabilityPathsPage = () => {
           </div>
           
           <h2 className="text-4xl font-bold text-foreground mb-3">
-            {currentPath.name}
+            {formatPathName(currentPath.name)}
           </h2>
           
           <p className="text-muted-foreground text-xl italic">{currentPath.subtitle}</p>
