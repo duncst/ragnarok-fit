@@ -73,24 +73,18 @@ const CapabilityPathsPage = () => {
         </div>
 
         {/* Selected Path Details */}
-        <div className="bg-card border rounded-lg p-6 mb-6">
-          <div className="flex items-center justify-between mb-4">
-            <h2 className="text-2xl font-bold" style={{ color: currentPath.color }}>
-              {currentPath.name} PATH
-            </h2>
-            <div className="text-right">
-              <div className="text-lg font-bold text-foreground">
-                {progress.completed}/{progress.total}
-              </div>
+        <div className="bg-card border rounded-lg p-8 mb-6 text-center">
+          <div className="mb-4">
+            <div className="w-16 h-16 bg-primary/20 rounded-full flex items-center justify-center mx-auto mb-4">
+              <span className="text-2xl">{getPathIcon(currentPath.name)}</span>
             </div>
           </div>
           
-          <p className="text-muted-foreground mb-4">{currentPath.subtitle}</p>
+          <h2 className="text-3xl font-bold text-foreground mb-2">
+            {currentPath.name}
+          </h2>
           
-          <Progress 
-            value={progress.percentage} 
-            className="h-3"
-          />
+          <p className="text-muted-foreground text-lg">{currentPath.subtitle}</p>
         </div>
 
         {/* Tiers List */}
