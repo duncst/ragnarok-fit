@@ -7,11 +7,19 @@ import { CheckCircle, Lock } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
 const CapabilityPathsPage = () => {
-  const { capabilities, toggleCapability, getPathProgress } = useCapabilityProgress();
+  const { capabilities: allCapabilities, toggleCapability, getPathProgress } = useCapabilityProgress();
+  
+  // Filter to only show Strength and Endurance paths
+  const capabilities = allCapabilities.filter(path => 
+    path.name.toLowerCase() === 'strength' || path.name.toLowerCase() === 'endurance'
+  );
+  
   const [selectedPath, setSelectedPath] = useState(0);
 
   const currentPath = capabilities[selectedPath];
-  const progress = getPathProgress(selectedPath);
+  // Need to get the original index in the full capabilities array for progress
+  const originalPathIndex = allCapabilities.findIndex(path => path.name === currentPath?.name);
+  const progress = getPathProgress(originalPathIndex);
 
   const getPathIcon = (name: string) => {
     switch (name.toLowerCase()) {
@@ -151,7 +159,7 @@ const CapabilityPathsPage = () => {
                   {/* Toggle Button */}
                   {!isLocked && (
                     <button
-                      onClick={() => toggleCapability(selectedPath, index)}
+                      onClick={() => toggleCapability(originalPathIndex, index)}
                       className={cn(
                         "px-4 py-2 rounded-md text-sm font-medium transition-colors",
                         isCompleted
