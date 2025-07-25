@@ -63,10 +63,9 @@ export const CAPABILITY_PATHS: CapabilityPath[] = [
       { tier: 13, title: 'Vanquisher', requirement: '20 push-ups + 10 pull-ups (same session)', completed: false },
       { tier: 14, title: 'Champion', requirement: 'Turkish get-up 24kg ×3 per side', completed: false },
       { tier: 15, title: 'Gatecrusher', requirement: 'Bodyweight farmers walk 1:00', completed: false },
-      { tier: 16, title: 'Special Operations Load Test', requirement: 'Deadlift 1.5× bodyweight + Carry 50kg 100m (combination of SOF prep standards)', completed: false },
-      { tier: 17, title: 'Navy Seal PFT', requirement: '100 push-ups in 2 minutes, 100 sit-ups in 2 minutes, 10 strict pull-ups', completed: false },
-      { tier: 18, title: 'Chosen of Odin', requirement: 'Carry 100kg over 20m', completed: false },
-      { tier: 19, title: 'Einherjar', requirement: 'Ragnarök Trial: Deadlift 2× bodyweight + 20 pull-ups + 5 Turkish get-ups @24kg in one session (rest as needed)', completed: false },
+      { tier: 16, title: 'Navy Seal PFT', requirement: '100 push-ups in 2 minutes, 100 sit-ups in 2 minutes, 10 strict pull-ups', completed: false },
+      { tier: 17, title: 'Chosen of Odin', requirement: 'Carry 100kg over 20m', completed: false },
+      { tier: 18, title: 'Einherjar', requirement: 'Ragnarök Trial: Deadlift 2× bodyweight + 20 pull-ups + 5 Turkish get-ups @24kg in one session (rest as needed)', completed: false },
     ]
   },
   {
