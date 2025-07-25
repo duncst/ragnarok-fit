@@ -78,15 +78,15 @@ const CapabilityPathsPage = () => {
 
         {/* Selected Path Details */}
         <div className="text-center mb-8">
-          <div className="w-20 h-20 bg-primary/10 rounded-full flex items-center justify-center mx-auto mb-6">
+          <div className="w-20 h-20 bg-blue-500/20 rounded-full flex items-center justify-center mx-auto mb-6">
             <span className="text-3xl">{getPathIcon(currentPath.name)}</span>
           </div>
           
-          <h2 className="text-4xl font-bold text-foreground mb-3">
+          <h2 className="text-3xl font-bold text-foreground mb-3">
             {formatPathName(currentPath.name)}
           </h2>
           
-          <p className="text-muted-foreground text-xl italic">{currentPath.subtitle}</p>
+          <p className="text-muted-foreground text-lg italic">{currentPath.subtitle}</p>
         </div>
 
         {/* Tiers List */}
