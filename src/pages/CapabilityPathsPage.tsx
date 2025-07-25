@@ -111,7 +111,7 @@ const CapabilityPathsPage = () => {
                   isLocked && "opacity-60 cursor-not-allowed"
                 )}
               >
-                <div className="flex items-center gap-4">
+                <div className="flex items-center gap-4 mb-2">
                   {/* Status Icon */}
                   <div className="flex-shrink-0">
                     {isCompleted ? (
@@ -134,18 +134,17 @@ const CapabilityPathsPage = () => {
                     Tier {tier.tier}
                   </Badge>
 
-                  {/* Content */}
-                  <div className="flex-grow min-w-0">
-                    <h3 className="text-lg font-bold text-foreground mb-1">
-                      {tier.title}
-                    </h3>
-                    <p className={cn(
-                      "text-sm",
-                      isLocked ? "text-muted-foreground" : "text-muted-foreground"
-                    )}>
-                      {tier.requirement}
-                    </p>
-                  </div>
+                  {/* Title */}
+                  <h3 className="text-lg font-bold text-foreground">
+                    {tier.title}
+                  </h3>
+                </div>
+
+                {/* Requirement */}
+                <div className="ml-10">
+                  <p className="text-sm text-muted-foreground">
+                    {tier.requirement}
+                  </p>
                 </div>
               </div>
             );
