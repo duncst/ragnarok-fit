@@ -122,54 +122,57 @@ const CapabilityPathsPage = () => {
                     )}
                   </div>
 
-                  {/* Tier Badge */}
-                  <div className="flex-shrink-0">
-                    <Badge 
-                      variant={isCompleted ? "default" : "secondary"}
-                      className={cn(
-                        "font-bold px-3 py-1",
-                        isCompleted && "bg-green-600 text-white"
-                      )}
-                    >
-                      Tier {tier.tier}
-                    </Badge>
-                  </div>
+                  {/* Main Content */}
+                  <div className="flex-grow min-w-0">
+                    <div className="flex flex-col sm:flex-row sm:items-start gap-3 mb-3">
+                      {/* Tier Badge */}
+                      <Badge 
+                        variant={isCompleted ? "default" : "secondary"}
+                        className={cn(
+                          "font-bold px-3 py-1 w-fit",
+                          isCompleted && "bg-green-600 text-white"
+                        )}
+                      >
+                        Tier {tier.tier}
+                      </Badge>
 
-                  {/* Content */}
-                  <div className="flex-grow">
-                    <div className="flex items-center gap-3 mb-2">
-                      <h3 className="text-lg font-bold text-foreground">
-                        {tier.title}
-                      </h3>
-                      {isMilitary && (
-                        <Badge variant="destructive" className="text-xs">
-                          Military/Police Standard
-                        </Badge>
-                      )}
+                      {/* Title and Military Badge */}
+                      <div className="flex-grow min-w-0">
+                        <div className="flex flex-col sm:flex-row sm:items-center gap-2 mb-2">
+                          <h3 className="text-lg font-bold text-foreground truncate">
+                            {tier.title}
+                          </h3>
+                          {isMilitary && (
+                            <Badge variant="destructive" className="text-xs w-fit">
+                              Military/Police Standard
+                            </Badge>
+                          )}
+                        </div>
+                        
+                        <p className={cn(
+                          "text-sm",
+                          isLocked ? "text-muted-foreground" : "text-foreground"
+                        )}>
+                          {tier.requirement}
+                        </p>
+                      </div>
                     </div>
-                    
-                    <p className={cn(
-                      "text-sm",
-                      isLocked ? "text-muted-foreground" : "text-foreground"
-                    )}>
-                      {tier.requirement}
-                    </p>
-                  </div>
 
-                  {/* Toggle Button */}
-                  {!isLocked && (
-                    <button
-                      onClick={() => toggleCapability(originalPathIndex, index)}
-                      className={cn(
-                        "px-4 py-2 rounded-md text-sm font-medium transition-colors",
-                        isCompleted
-                          ? "bg-green-600 text-white hover:bg-green-700"
-                          : "bg-primary text-primary-foreground hover:bg-primary/90"
-                      )}
-                    >
-                      {isCompleted ? 'Completed' : 'Mark Complete'}
-                    </button>
-                  )}
+                    {/* Toggle Button */}
+                    {!isLocked && (
+                      <button
+                        onClick={() => toggleCapability(originalPathIndex, index)}
+                        className={cn(
+                          "px-4 py-2 rounded-md text-sm font-medium transition-colors w-full sm:w-auto",
+                          isCompleted
+                            ? "bg-green-600 text-white hover:bg-green-700"
+                            : "bg-primary text-primary-foreground hover:bg-primary/90"
+                        )}
+                      >
+                        {isCompleted ? 'Completed' : 'Mark Complete'}
+                      </button>
+                    )}
+                  </div>
                 </div>
               </div>
             );
