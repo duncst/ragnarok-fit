@@ -24,7 +24,7 @@ const CapabilityPathsPage = () => {
   const getPathIcon = (name: string) => {
     switch (name.toLowerCase()) {
       case 'strength': return '💪';
-      case 'endurance': return '⏱️';
+      case 'endurance': return <span className="text-blue-400">ᛇ</span>;
       case 'survival': return '⚠️';
       case 'mobility': return '📈';
       case 'urban readiness': return '🏙️';
@@ -73,7 +73,7 @@ const CapabilityPathsPage = () => {
         </div>
 
         {/* Selected Path Details */}
-        <div className="bg-card border rounded-lg p-12 mb-6 text-center">
+        <div className="text-center mb-8">
           <div className="w-20 h-20 bg-primary/10 rounded-full flex items-center justify-center mx-auto mb-6">
             <span className="text-3xl">{getPathIcon(currentPath.name)}</span>
           </div>
