@@ -230,7 +230,7 @@ const CapabilityPathsPage = () => {
 
         {/* Tabs */}
         <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
-          <TabsList className="grid w-full grid-cols-3">
+          <TabsList className="grid w-full grid-cols-2">
             <TabsTrigger value="strength" className="flex items-center gap-2">
               <span>ᚢ</span>
               Strength
@@ -238,10 +238,6 @@ const CapabilityPathsPage = () => {
             <TabsTrigger value="endurance" className="flex items-center gap-2">
               <span>ᛇ</span>
               Endurance
-            </TabsTrigger>
-            <TabsTrigger value="clan" className="flex items-center gap-2">
-              <Users className="w-4 h-4" />
-              Clan
             </TabsTrigger>
           </TabsList>
 
@@ -251,10 +247,6 @@ const CapabilityPathsPage = () => {
 
           <TabsContent value="endurance" className="mt-6">
             {renderPathContent('endurance')}
-          </TabsContent>
-
-          <TabsContent value="clan" className="mt-6">
-            {renderClanContent()}
           </TabsContent>
         </Tabs>
       </div>

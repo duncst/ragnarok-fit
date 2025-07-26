@@ -2,7 +2,7 @@
 import { NavLink } from "react-router-dom";
 import { cn } from "@/lib/utils";
 import { ImageIcon } from "./ImageIcon";
-import { Anvil, Target } from "lucide-react";
+import { Anvil, Target, Users } from "lucide-react";
 
 const HomeIcon = ({ className }: { className?: string }) => (
     <ImageIcon src="/lovable-uploads/5415ad51-d2ec-4830-ae93-73416fc1e5ee.png" alt="Home icon" className={className} />
@@ -21,10 +21,11 @@ const ExerciseIcon = ({ className }: { className?: string }) => (
 );
 
 const navItems = [
-  { to: "/", icon: HomeIcon, label: "Home" },
+  { to: "/home", icon: HomeIcon, label: "Home" },
   { to: "/workout/new", icon: StartWorkoutIcon, label: "Start Workout" },
   { to: "/forge", icon: Anvil, label: "Forge" },
   { to: "/capability-paths", icon: Target, label: "Paths" },
+  { to: "/clan", icon: Users, label: "Clan" },
 ];
 
 const BottomNav = () => {

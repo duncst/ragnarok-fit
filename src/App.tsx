@@ -20,6 +20,7 @@ import LandingPage from "./pages/LandingPage";
 import WorkoutHistoryPage from "./pages/WorkoutHistoryPage";
 import { AuthProvider } from "./contexts/AuthContext";
 import LogBodyMetricsPage from "./pages/LogBodyMetricsPage";
+import ClanPage from "./pages/ClanPage";
 
 
 const queryClient = new QueryClient();
@@ -47,6 +48,7 @@ const App = () => (
                   <Route path="/ritual/:templateId/workout" element={<RitualWorkoutPage />} />
                 <Route path="/1rm-calculator" element={<OneRepMaxCalculatorPage />} />
                 <Route path="/log-body-metrics" element={<LogBodyMetricsPage />} />
+                <Route path="/clan" element={<ClanPage />} />
               </Route>
               <Route path="*" element={<NotFound />} />
             </Routes>
