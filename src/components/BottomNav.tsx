@@ -36,16 +36,16 @@ const BottomNav = () => {
           <NavLink
             key={item.label}
             to={item.to}
-            end={item.to === '/'}
+            end={item.to === '/home'}
             className={({ isActive }) =>
               cn(
-                "flex flex-col items-center justify-center w-full text-muted-foreground transition-colors",
+                "flex flex-col items-center justify-center w-full text-muted-foreground transition-colors text-center",
                 isActive ? "text-primary" : "hover:text-foreground"
               )
             }
           >
             <item.icon className={cn("mb-1", item.label === 'Running' ? 'h-8 w-8' : 'h-7 w-7')} />
-            <span className="text-xs font-medium">{item.label}</span>
+            <span className="text-xs font-medium leading-tight">{item.label}</span>
           </NavLink>
         ))}
       </div>
