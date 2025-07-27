@@ -48,6 +48,7 @@ export type Database = {
           challenge_name: string | null
           created_at: string
           id: string
+          notes: string | null
           user_id: string
         }
         Insert: {
@@ -56,6 +57,7 @@ export type Database = {
           challenge_name?: string | null
           created_at?: string
           id?: string
+          notes?: string | null
           user_id: string
         }
         Update: {
@@ -64,6 +66,7 @@ export type Database = {
           challenge_name?: string | null
           created_at?: string
           id?: string
+          notes?: string | null
           user_id?: string
         }
         Relationships: []

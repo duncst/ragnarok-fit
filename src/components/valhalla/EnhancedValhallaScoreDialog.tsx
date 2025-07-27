@@ -101,7 +101,7 @@ export const EnhancedValhallaScoreDialog = ({
       
       const activityDescription = `Completed "${workoutName}" Valhalla Challenge ${tierDescriptions[result.tier as keyof typeof tierDescriptions]} (${Math.round(result.completion_time_minutes * 10) / 10} minutes)`;
       
-      await addActivity('valhalla_challenge', activityDescription, workoutName);
+      await addActivity('valhalla_challenge', activityDescription, workoutName, notes || undefined);
 
       setCeremonyData({
         challengeName: workoutName,

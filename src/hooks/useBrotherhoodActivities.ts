@@ -7,6 +7,7 @@ interface BrotherhoodActivity {
   activity_type: string;
   activity_description: string;
   challenge_name?: string;
+  notes?: string;
   created_at: string;
   banner_name?: string;
 }
@@ -90,7 +91,7 @@ export const useBrotherhoodActivities = () => {
     };
   }, []);
 
-  const addActivity = async (activityType: string, description: string, challengeName?: string) => {
+  const addActivity = async (activityType: string, description: string, challengeName?: string, notes?: string) => {
     try {
       const { data: { user } } = await supabase.auth.getUser();
       if (!user) return;
@@ -101,7 +102,8 @@ export const useBrotherhoodActivities = () => {
           user_id: user.id,
           activity_type: activityType,
           activity_description: description,
-          challenge_name: challengeName
+          challenge_name: challengeName,
+          notes: notes
         });
 
       if (error) {

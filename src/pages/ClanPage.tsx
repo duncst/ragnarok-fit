@@ -120,6 +120,11 @@ const ClanPage = () => {
                       <p className="text-sm text-muted-foreground">
                         {activity.activity_description}
                       </p>
+                      {activity.notes && (
+                        <p className="text-sm text-foreground mt-1 italic">
+                          "{activity.notes}"
+                        </p>
+                      )}
                       <div className="flex items-center gap-1 mt-1">
                         <Clock className="w-3 h-3 text-muted-foreground" />
                         <span className="text-xs text-muted-foreground">

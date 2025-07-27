@@ -16,12 +16,12 @@ export const useSaveWorkout = () => {
     const { addActivity } = useBrotherhoodActivities();
 
     const saveWorkoutMutation = useMutation({
-        mutationFn: async ({ exercises, name }: { exercises: Exercise[], name: string }) => {
+        mutationFn: async ({ exercises, name, notes }: { exercises: Exercise[], name: string, notes?: string }) => {
             if (!user) throw new Error("You must be logged in to save a workout.");
 
             const { data: workoutData, error: workoutError } = await supabase
                 .from('workouts')
-                .insert({ user_id: user.id, name: name || null, end_time: new Date().toISOString() })
+                .insert({ user_id: user.id, name: name || null, notes: notes || null, end_time: new Date().toISOString() })
                 .select()
                 .single();
 
@@ -69,12 +69,12 @@ export const useSaveWorkout = () => {
             }
             return workoutData;
         },
-        onSuccess: async (workoutData, { name }) => {
+        onSuccess: async (workoutData, { name, notes }) => {
             sonnerToast.success("Workout saved successfully!");
             
             // Record brotherhood activity for non-Hero's Call workouts
             if (!name.startsWith("Hero's Call:")) {
-                await addActivity('workout', `Completed strength training: ${name}`);
+                await addActivity('workout', `Completed strength training: ${name}`, undefined, notes);
             }
             
             queryClient.invalidateQueries({ queryKey: ['workouts'] });
@@ -94,9 +94,10 @@ export const useSaveWorkout = () => {
         }
     });
 
-    const finishWorkout = ({ exercises, name, onValhallaScorePrompt, onCelebration }: { 
+    const finishWorkout = ({ exercises, name, notes, onValhallaScorePrompt, onCelebration }: { 
         exercises: Exercise[], 
         name: string,
+        notes?: string,
         onValhallaScorePrompt?: (workoutName: string) => void,
         onCelebration?: (workoutName: string, duration: string) => void
     }) => {
@@ -108,7 +109,7 @@ export const useSaveWorkout = () => {
         // Check if this is a Hero's Call workout
         const isHeroCallWorkout = workoutNameOrDefault.startsWith("Hero's Call:");
         
-        saveWorkoutMutation.mutate({ exercises, name: workoutNameOrDefault }, {
+        saveWorkoutMutation.mutate({ exercises, name: workoutNameOrDefault, notes }, {
             onSuccess: () => {
                 if (isValhallaWorkout && onValhallaScorePrompt) {
                     // Prompt user to record their Valhalla score

@@ -78,8 +78,8 @@ const LogRunPage = () => {
       return runData;
     },
     onSuccess: async (data) => {
-      // Record brotherhood activity
-      await addActivity('run', `Completed a ${data.distance}km ${data.run_type}`);
+      // Record brotherhood activity with notes
+      await addActivity('run', `Completed a ${data.distance}km ${data.run_type}`, undefined, data.notes || undefined);
       
       // Format duration for celebration
       const hours = Math.floor(data.duration / 3600);
