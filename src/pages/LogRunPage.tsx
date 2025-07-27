@@ -300,6 +300,10 @@ const LogRunPage = () => {
           activityName={celebrationData.activityName}
           activityDuration={celebrationData.duration}
           activityType="endurance"
+          onShareWithClan={(shouldShare) => {
+            // Clan sharing is already handled when the run is saved
+            // This callback can be used for future enhancements
+          }}
         />
       )}
     </div>

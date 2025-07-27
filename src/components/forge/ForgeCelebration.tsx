@@ -2,6 +2,8 @@ import React, { useEffect, useState } from 'react';
 import { Dialog, DialogContent } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
 import { Progress } from '@/components/ui/progress';
+import { Switch } from '@/components/ui/switch';
+import { Label } from '@/components/ui/label';
 import { cn } from '@/lib/utils';
 import { useForgeData } from '@/hooks/useForgeData';
 
@@ -11,6 +13,7 @@ interface ForgeCelebrationProps {
   activityName: string;
   activityDuration: string;
   activityType?: 'workout' | 'endurance' | 'challenge';
+  onShareWithClan?: (shouldShare: boolean) => void;
 }
 
 // Weekday runes mapping
@@ -38,11 +41,13 @@ export const ForgeCelebration = ({
   onClose, 
   activityName, 
   activityDuration,
-  activityType = 'workout'
+  activityType = 'workout',
+  onShareWithClan
 }: ForgeCelebrationProps) => {
   const [showRune, setShowRune] = useState(false);
   const [showMessage, setShowMessage] = useState(false);
   const [showProgress, setShowProgress] = useState(false);
+  const [shareWithClan, setShareWithClan] = useState(true);
   const { forgeProgress } = useForgeData();
 
   useEffect(() => {
@@ -143,13 +148,32 @@ export const ForgeCelebration = ({
             </div>
           </div>
 
-          {/* Continue Button */}
+          {/* Share with Clan Toggle */}
           <div className={cn(
-            "transition-all duration-500",
+            "transition-all duration-500 space-y-4",
             showProgress ? "opacity-100" : "opacity-0"
           )}>
+            <div className="flex items-center justify-between bg-muted/30 rounded-lg p-3">
+              <div className="space-y-1">
+                <Label htmlFor="share-toggle" className="text-sm font-medium">
+                  Share with Clan
+                </Label>
+                <p className="text-xs text-muted-foreground">
+                  Let your brothers see your victory
+                </p>
+              </div>
+              <Switch
+                id="share-toggle"
+                checked={shareWithClan}
+                onCheckedChange={setShareWithClan}
+              />
+            </div>
+            
             <Button 
-              onClick={onClose}
+              onClick={() => {
+                onShareWithClan?.(shareWithClan);
+                onClose();
+              }}
               className="w-full bg-primary hover:bg-primary/90 text-primary-foreground font-semibold"
             >
               Continue Your Journey

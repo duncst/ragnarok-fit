@@ -329,6 +329,10 @@ const RitualWorkoutPage = () => {
           onClose={handleCloseCelebration}
           activityName={celebrationData.workoutName}
           activityDuration={celebrationData.duration}
+          onShareWithClan={(shouldShare) => {
+            // Clan sharing is already handled when the workout is saved
+            // This callback can be used for future enhancements
+          }}
         />
       )}
     </>
