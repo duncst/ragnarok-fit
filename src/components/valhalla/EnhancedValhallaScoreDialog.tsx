@@ -13,6 +13,7 @@ import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
 import { useValhallaProgress } from '@/hooks/useValhallaProgress';
 import { ValhallaCompletionCeremony } from './ValhallaCompletionCeremony';
+import { useBrotherhoodActivities } from '@/hooks/useBrotherhoodActivities';
 
 interface EnhancedValhallaScoreDialogProps {
   isOpen: boolean;
@@ -33,6 +34,7 @@ export const EnhancedValhallaScoreDialog = ({
   const [ceremonyData, setCeremonyData] = useState<any>(null);
   
   const { recordChallenge, isRecording } = useValhallaProgress();
+  const { addActivity } = useBrotherhoodActivities();
 
   // Format duration from milliseconds to HH:MM:SS
   const formatDurationToTime = (ms: number) => {
@@ -89,6 +91,17 @@ export const EnhancedValhallaScoreDialog = ({
           completion_time_minutes: scoreValue,
         });
       });
+
+      // Record brotherhood activity
+      const tierDescriptions = {
+        'Berserker': 'with legendary prowess',
+        'Warrior': 'with skilled execution',
+        'Adept': 'with determination'
+      };
+      
+      const activityDescription = `Completed "${workoutName}" Valhalla Challenge ${tierDescriptions[result.tier as keyof typeof tierDescriptions]} (${Math.round(result.completion_time_minutes * 10) / 10} minutes)`;
+      
+      await addActivity('valhalla_challenge', activityDescription, workoutName);
 
       setCeremonyData({
         challengeName: workoutName,

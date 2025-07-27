@@ -1,9 +1,31 @@
 import React from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { CheckCircle, Users, Award, Clock } from 'lucide-react';
+import { CheckCircle, Users, Award, Clock, Swords } from 'lucide-react';
+import { useBrotherhoodActivities } from '@/hooks/useBrotherhoodActivities';
+import { useBannerName } from '@/hooks/useBannerName';
+import { formatDistanceToNow } from 'date-fns';
 
 const ClanPage = () => {
+  const { activities, isLoading } = useBrotherhoodActivities();
+  const { bannerName } = useBannerName();
+
+  const getActivityIcon = (activityType: string) => {
+    switch (activityType) {
+      case 'valhalla_challenge':
+        return <Swords className="w-4 h-4 text-primary" />;
+      case 'hero_call':
+        return <Award className="w-4 h-4 text-primary" />;
+      default:
+        return <Award className="w-4 h-4 text-primary" />;
+    }
+  };
+
+  const getBannerInitials = (name?: string) => {
+    if (!name) return 'UW';
+    return name.split(' ').map(word => word[0]).join('').toUpperCase().slice(0, 2);
+  };
+
   return (
     <div className="min-h-screen bg-background p-4">
       <div className="max-w-4xl mx-auto space-y-6">
@@ -67,23 +89,48 @@ const ClanPage = () => {
             <CardTitle>Brotherhood Activity</CardTitle>
           </CardHeader>
           <CardContent>
-            <div className="space-y-4">
-              <div className="flex items-center gap-3 p-3 bg-muted/30 rounded-lg">
-                <div className="w-10 h-10 bg-primary/20 rounded-full flex items-center justify-center">
-                  <span className="text-sm font-bold text-primary">JT</span>
-                </div>
-                <div className="flex-1">
-                  <div className="flex items-center gap-2 mb-1">
-                    <span className="font-semibold text-foreground">Jason T.</span>
-                  </div>
-                  <p className="text-sm text-muted-foreground">Completed "Forge of Thunder" challenge</p>
-                  <div className="flex items-center gap-1 mt-1">
-                    <Clock className="w-3 h-3 text-muted-foreground" />
-                    <span className="text-xs text-muted-foreground">2 hours ago</span>
-                  </div>
-                </div>
+            {isLoading ? (
+              <div className="flex items-center justify-center py-8">
+                <div className="animate-spin rounded-full h-6 w-6 border-b-2 border-primary"></div>
               </div>
-            </div>
+            ) : activities.length === 0 ? (
+              <div className="text-center py-8">
+                <Users className="w-12 h-12 text-muted-foreground mx-auto mb-3" />
+                <p className="text-muted-foreground">No brotherhood activity yet.</p>
+                <p className="text-sm text-muted-foreground mt-1">
+                  Complete challenges to see activities here.
+                </p>
+              </div>
+            ) : (
+              <div className="space-y-4">
+                {activities.map((activity) => (
+                  <div key={activity.id} className="flex items-center gap-3 p-3 bg-muted/30 rounded-lg">
+                    <div className="w-10 h-10 bg-primary/20 rounded-full flex items-center justify-center">
+                      <span className="text-sm font-bold text-primary">
+                        {getBannerInitials(activity.banner_name)}
+                      </span>
+                    </div>
+                    <div className="flex-1">
+                      <div className="flex items-center gap-2 mb-1">
+                        <span className="font-semibold text-foreground">
+                          {activity.banner_name || 'Unknown Warrior'}
+                        </span>
+                        {getActivityIcon(activity.activity_type)}
+                      </div>
+                      <p className="text-sm text-muted-foreground">
+                        {activity.activity_description}
+                      </p>
+                      <div className="flex items-center gap-1 mt-1">
+                        <Clock className="w-3 h-3 text-muted-foreground" />
+                        <span className="text-xs text-muted-foreground">
+                          {formatDistanceToNow(new Date(activity.created_at), { addSuffix: true })}
+                        </span>
+                      </div>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            )}
           </CardContent>
         </Card>
       </div>

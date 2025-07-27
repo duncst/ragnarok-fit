@@ -9,6 +9,8 @@ import { supabase } from "@/integrations/supabase/client";
 import { toast as sonnerToast } from "sonner";
 import { useOnboarding } from "@/hooks/useOnboarding";
 import OnboardingFlow from "./onboarding/OnboardingFlow";
+import { useBannerName } from "@/hooks/useBannerName";
+import BannerNameModal from "./onboarding/BannerNameModal";
 import { ForgedWeekCelebration } from "./forge/ForgedWeekCelebration";
 import { useForgedWeekCelebration } from "@/hooks/useForgedWeekCelebration";
 import { ForgedWeekProvider } from "@/contexts/ForgedWeekContext";
@@ -20,6 +22,7 @@ const Layout = () => {
   const navigate = useNavigate();
   const { hasCompletedOnboarding, completeOnboarding } = useOnboarding();
   const { showCelebration, newlyForgedWeek, closeCelebration } = useForgedWeekCelebration();
+  const { showBannerNameModal, completeBannerNameSetup } = useBannerName();
   const [showNotificationSettings, setShowNotificationSettings] = useState(false);
 
   useEffect(() => {
@@ -100,6 +103,12 @@ const Layout = () => {
         <NotificationSettings
           isOpen={showNotificationSettings}
           onClose={() => setShowNotificationSettings(false)}
+        />
+        
+        {/* Banner Name Modal */}
+        <BannerNameModal
+          open={showBannerNameModal}
+          onComplete={completeBannerNameSetup}
         />
       </div>
     </ForgedWeekProvider>
