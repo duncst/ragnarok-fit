@@ -21,6 +21,7 @@ import { useAuth } from "@/contexts/AuthContext";
 import { TablesInsert } from "@/integrations/supabase/types";
 import { ForgeCelebration } from "@/components/forge/ForgeCelebration";
 import { useForgedWeekCheck } from "@/contexts/ForgedWeekContext";
+import { useBrotherhoodActivities } from "@/hooks/useBrotherhoodActivities";
 
 const runTypes = [
   "Easy Run", "Tempo Run", "Interval Training", "Long Run",
@@ -50,6 +51,7 @@ const LogRunPage = () => {
   const { user } = useAuth();
   const queryClient = useQueryClient();
   const { checkForNewForgedWeek } = useForgedWeekCheck();
+  const { addActivity } = useBrotherhoodActivities();
   const [showCelebration, setShowCelebration] = React.useState(false);
   const [celebrationData, setCelebrationData] = React.useState<{
     activityName: string;
@@ -75,7 +77,10 @@ const LogRunPage = () => {
       }
       return runData;
     },
-    onSuccess: (data) => {
+    onSuccess: async (data) => {
+      // Record brotherhood activity
+      await addActivity('run', `Completed a ${data.distance}km ${data.run_type}`);
+      
       // Format duration for celebration
       const hours = Math.floor(data.duration / 3600);
       const minutes = Math.floor((data.duration % 3600) / 60);

@@ -8,6 +8,7 @@ import { HeroCallChallenge } from './hero-call/HeroCallChallenge';
 import { useWorkoutTimer } from '@/hooks/useWorkoutTimer';
 import { useHeroCallData } from '@/hooks/useHeroCallData';
 import { useSaveWorkout } from '@/hooks/useSaveWorkout';
+import { useBrotherhoodActivities } from '@/hooks/useBrotherhoodActivities';
 import type { Exercise } from '@/types';
 
 export const HeroCall = () => {
@@ -18,6 +19,7 @@ export const HeroCall = () => {
   
   const { stats, isLoading, completeHeroCall, migrateLocalStorageData } = useHeroCallData();
   const { finishWorkout } = useSaveWorkout();
+  const { addActivity } = useBrotherhoodActivities();
   
   const {
     isActive: isWorkoutActive,
@@ -64,6 +66,12 @@ export const HeroCall = () => {
         workoutName: currentWorkout.name,
         difficulty: selectedLevel
       });
+
+      // Record brotherhood activity
+      await addActivity(
+        'hero_call',
+        `Answered the Hero's Call: ${currentWorkout.name}`
+      );
 
       // Also save as a regular workout for analytics
       const currentLevel = currentWorkout.levels.find(level => level.difficulty === selectedLevel);

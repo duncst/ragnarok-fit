@@ -5,6 +5,7 @@ import { toast as sonnerToast } from "sonner";
 import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/contexts/AuthContext';
 import { useForgedWeekCheck } from '@/contexts/ForgedWeekContext';
+import { useBrotherhoodActivities } from '@/hooks/useBrotherhoodActivities';
 import type { Exercise } from '@/types';
 
 export const useSaveWorkout = () => {
@@ -12,6 +13,7 @@ export const useSaveWorkout = () => {
     const queryClient = useQueryClient();
     const navigate = useNavigate();
     const { checkForNewForgedWeek } = useForgedWeekCheck();
+    const { addActivity } = useBrotherhoodActivities();
 
     const saveWorkoutMutation = useMutation({
         mutationFn: async ({ exercises, name }: { exercises: Exercise[], name: string }) => {
@@ -67,8 +69,14 @@ export const useSaveWorkout = () => {
             }
             return workoutData;
         },
-        onSuccess: (workoutData, { name }) => {
+        onSuccess: async (workoutData, { name }) => {
             sonnerToast.success("Workout saved successfully!");
+            
+            // Record brotherhood activity for non-Hero's Call workouts
+            if (!name.startsWith("Hero's Call:")) {
+                await addActivity('workout', `Completed strength training: ${name}`);
+            }
+            
             queryClient.invalidateQueries({ queryKey: ['workouts'] });
             // Invalidate hero call stats since regular workouts now count towards streaks
             queryClient.invalidateQueries({ queryKey: ['hero-call-stats', user?.id] });
