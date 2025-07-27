@@ -41,6 +41,33 @@ export type Database = {
         }
         Relationships: []
       }
+      brotherhood_activities: {
+        Row: {
+          activity_description: string
+          activity_type: string
+          challenge_name: string | null
+          created_at: string
+          id: string
+          user_id: string
+        }
+        Insert: {
+          activity_description: string
+          activity_type: string
+          challenge_name?: string | null
+          created_at?: string
+          id?: string
+          user_id: string
+        }
+        Update: {
+          activity_description?: string
+          activity_type?: string
+          challenge_name?: string | null
+          created_at?: string
+          id?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       hero_call_completions: {
         Row: {
           completed_at: string
@@ -91,6 +118,30 @@ export type Database = {
           exercise_name?: string
           id?: string
           one_rep_max?: number
+          user_id?: string
+        }
+        Relationships: []
+      }
+      profiles: {
+        Row: {
+          banner_name: string | null
+          created_at: string
+          id: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          banner_name?: string | null
+          created_at?: string
+          id?: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          banner_name?: string | null
+          created_at?: string
+          id?: string
+          updated_at?: string
           user_id?: string
         }
         Relationships: []
