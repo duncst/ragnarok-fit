@@ -70,9 +70,10 @@ export const useBrotherhoodActivities = () => {
   useEffect(() => {
     fetchActivities();
 
-    // Set up real-time subscription for new activities
+    // Set up real-time subscription for new activities with unique channel name
+    const channelName = `brotherhood-activities-${Math.random().toString(36).substr(2, 9)}`;
     const channel = supabase
-      .channel('brotherhood-activities')
+      .channel(channelName)
       .on(
         'postgres_changes',
         {
