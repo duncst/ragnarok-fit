@@ -2,6 +2,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
 import { CalendarCheck, ChevronDown } from "lucide-react";
 import { MonthlyActivityCalendar } from "./MonthlyActivityCalendar";
+import ForgeWorkoutHistory from "./ForgeWorkoutHistory";
 import { useState } from 'react';
 
 export const CalendarSection = () => {
@@ -22,8 +23,12 @@ export const CalendarSection = () => {
           </CardHeader>
         </CollapsibleTrigger>
         <CollapsibleContent>
-          <CardContent className="space-y-4 pt-0">
+          <CardContent className="space-y-6 pt-0">
             <MonthlyActivityCalendar />
+            <div>
+              <h3 className="text-lg font-semibold mb-4 text-foreground">Recent Activities</h3>
+              <ForgeWorkoutHistory />
+            </div>
           </CardContent>
         </CollapsibleContent>
       </Card>
