@@ -28,6 +28,7 @@ interface AnalyticsSectionProps {
   runChartData: Array<{ day: string; distance: number; date: Date }>;
   workoutsThisWeek: number;
   runsThisWeek: number;
+  last7DaysDistance: number;
   totalVolume: number;
   totalDistance: number;
   bestPace: number;
@@ -49,6 +50,7 @@ export const AnalyticsSection = ({
   runChartData,
   workoutsThisWeek,
   runsThisWeek,
+  last7DaysDistance,
   totalVolume,
   totalDistance,
   bestPace
@@ -135,7 +137,7 @@ export const AnalyticsSection = ({
                   <>
                     <div className="grid grid-cols-2 gap-4">
                       <StatItem icon={Zap} value={totalRuns} label="Total Runs" />
-                      <StatItem icon={TargetIcon} value={runsThisWeek} label="This Week" />
+                      <StatItem icon={TargetIcon} value={`${last7DaysDistance.toFixed(1)} km`} label="Last 7 Days Distance" />
                       <StatItem icon={Zap} value={`${totalDistance.toFixed(1)} km`} label="Total Distance" />
                       <StatItem icon={TrendingUp} value={formatPace(bestPace)} label="Best Pace (min/km)" />
                     </div>

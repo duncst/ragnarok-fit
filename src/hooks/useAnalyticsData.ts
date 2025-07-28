@@ -51,6 +51,7 @@ export const useAnalyticsData = (workoutHistory?: Workout[], runHistory?: Run[])
   
   // Running Stats
   const runsThisWeek = runHistory?.filter(r => isSameWeek(r.date, today, { weekStartsOn: 1 })).length || 0;
+  const last7DaysDistance = runHistory?.filter(r => isWithinInterval(r.date, last7DaysInterval)).reduce((total, run) => total + run.distance, 0) || 0;
   const totalDistance = runHistory?.reduce((total, run) => total + run.distance, 0) || 0;
   
   const bestPace = runHistory && runHistory.length > 0
@@ -74,8 +75,9 @@ export const useAnalyticsData = (workoutHistory?: Workout[], runHistory?: Run[])
     runChartData,
     workoutsThisWeek,
     runsThisWeek,
+    last7DaysDistance,
     totalVolume,
     totalDistance,
-    bestPace
+    bestPace,
   };
 };

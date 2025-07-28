@@ -19,6 +19,7 @@ const HomePage = () => {
     runChartData,
     workoutsThisWeek,
     runsThisWeek,
+    last7DaysDistance,
     totalVolume,
     totalDistance,
     bestPace,
@@ -116,6 +117,7 @@ const HomePage = () => {
         runChartData={runChartData}
         workoutsThisWeek={workoutsThisWeek}
         runsThisWeek={runsThisWeek}
+        last7DaysDistance={last7DaysDistance}
         totalVolume={totalVolume}
         totalDistance={totalDistance}
         bestPace={bestPace}
