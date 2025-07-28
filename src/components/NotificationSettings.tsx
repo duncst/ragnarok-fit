@@ -23,8 +23,10 @@ export const NotificationSettings = ({ isOpen, onClose }: NotificationSettingsPr
   const [notificationTime, setNotificationTime] = useState('09:00');
 
   useEffect(() => {
-    // Check current notification permission
-    setNotificationPermission(Notification.permission);
+    // Check current notification permission only if Notification API is available
+    if ('Notification' in window) {
+      setNotificationPermission(Notification.permission);
+    }
     
     // Check if user has previously enabled notifications
     const enabled = localStorage.getItem('heroCallNotifications') === 'true';
@@ -88,7 +90,7 @@ export const NotificationSettings = ({ isOpen, onClose }: NotificationSettingsPr
       const timeUntilNotification = scheduledTime.getTime() - now.getTime();
 
       setTimeout(() => {
-        if (Notification.permission === 'granted') {
+        if ('Notification' in window && Notification.permission === 'granted') {
           const randomText = getRandomNotificationText();
           new Notification(randomText.title, {
             body: randomText.body,
@@ -101,7 +103,7 @@ export const NotificationSettings = ({ isOpen, onClose }: NotificationSettingsPr
         
         // Schedule the next day's notification
         setInterval(() => {
-          if (Notification.permission === 'granted' && localStorage.getItem('heroCallNotifications') === 'true') {
+          if ('Notification' in window && Notification.permission === 'granted' && localStorage.getItem('heroCallNotifications') === 'true') {
             const randomText = getRandomNotificationText();
             new Notification(randomText.title, {
               body: randomText.body,
