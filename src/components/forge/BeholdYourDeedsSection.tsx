@@ -3,6 +3,7 @@ import { AccordionContent, AccordionItem, AccordionTrigger } from '@/components/
 import { CalendarCheck } from 'lucide-react';
 import { MonthlyActivityCalendar } from './MonthlyActivityCalendar';
 import PersonalRecordsSection from './PersonalRecordsSection';
+import ForgeWorkoutHistory from './ForgeWorkoutHistory';
 
 const BeholdYourDeedsSection = () => {
   return (
@@ -15,6 +16,10 @@ const BeholdYourDeedsSection = () => {
       </AccordionTrigger>
       <AccordionContent className="px-6 pb-6 space-y-8">
         <MonthlyActivityCalendar />
+        <div>
+          <h3 className="text-lg font-semibold mb-4 text-foreground">Recent Activities</h3>
+          <ForgeWorkoutHistory />
+        </div>
         <PersonalRecordsSection />
       </AccordionContent>
     </AccordionItem>
