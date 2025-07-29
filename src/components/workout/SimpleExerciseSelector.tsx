@@ -76,23 +76,21 @@ export const SimpleExerciseSelector = ({ onExerciseSelect, trigger }: SimpleExer
               />
             </div>
             
-            {/* Body Part Filter with improved mobile scrolling */}
-            <div className="w-full">
-              <ScrollArea className="w-full">
-                <div className="flex gap-2 pb-2">
-                  {bodyParts.map((part) => (
-                    <Button
-                      key={part}
-                      variant={selectedBodyPart === part ? 'default' : 'secondary'}
-                      size="sm"
-                      className="shrink-0 whitespace-nowrap px-3 py-1.5 text-xs"
-                      onClick={() => setSelectedBodyPart(part)}
-                    >
-                      {part}
-                    </Button>
-                  ))}
-                </div>
-              </ScrollArea>
+            {/* Body Part Filter with horizontal scrolling */}
+            <div className="w-full overflow-x-auto">
+              <div className="flex gap-2 pb-2 px-1 min-w-max">
+                {bodyParts.map((part) => (
+                  <Button
+                    key={part}
+                    variant={selectedBodyPart === part ? 'default' : 'secondary'}
+                    size="sm"
+                    className="shrink-0 whitespace-nowrap px-3 py-1.5 text-xs"
+                    onClick={() => setSelectedBodyPart(part)}
+                  >
+                    {part}
+                  </Button>
+                ))}
+              </div>
             </div>
           </div>
 
