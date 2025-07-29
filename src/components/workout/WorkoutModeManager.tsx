@@ -32,7 +32,7 @@ interface WorkoutModeManagerProps {
   onUpdateSet: (exerciseId: string, setId: string, field: string, value: any) => void;
   onToggleSet: (exerciseId: string, setId: string) => void;
   onStartWorkout: () => void;
-  onFinishWorkout: () => void;
+  onFinishWorkout: (forgeMessage?: string) => void;
   onCancelWorkout: () => void;
   onEquipmentChange: (equipment: string[]) => void;
   onFocusChange: (focus: string) => void;
@@ -110,6 +110,7 @@ export const WorkoutModeManager = ({
         onToggleSet={onToggleSet}
         onStartWorkout={onStartWorkout}
         onFinishWorkout={onFinishWorkout}
+        isFinishLoading={false}
         onCancelWorkout={onCancelWorkout}
         workoutTimer={formattedDuration}
         isStarted={isStarted}

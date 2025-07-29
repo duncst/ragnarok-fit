@@ -3,8 +3,8 @@ import React, { useState, useEffect } from 'react';
 import { Card, CardContent } from '@/components/ui/card';
 import { getDailyWorkout } from './hero-call/utils';
 import { HeroCallWorkoutMode } from './hero-call/HeroCallWorkoutMode';
-import { HeroCallCompletionView } from './hero-call/HeroCallCompletionView';
 import { HeroCallChallenge } from './hero-call/HeroCallChallenge';
+import { WorkoutCompletionDialog } from './workout/WorkoutCompletionDialog';
 import { useWorkoutTimer } from '@/hooks/useWorkoutTimer';
 import { useHeroCallData } from '@/hooks/useHeroCallData';
 import { useSaveWorkout } from '@/hooks/useSaveWorkout';
@@ -59,7 +59,7 @@ export const HeroCall = () => {
     setIsInWorkoutMode(false);
   };
 
-  const handleMarkComplete = async () => {
+  const handleMarkComplete = async (forgeMessage?: string) => {
     try {
       // Save to Hero's Call completions table
       await completeHeroCall.mutateAsync({
@@ -70,7 +70,9 @@ export const HeroCall = () => {
       // Record brotherhood activity
       await addActivity(
         'hero_call',
-        `Answered the Hero's Call: ${currentWorkout.name}`
+        `Answered the Hero's Call: ${currentWorkout.name}`,
+        undefined,
+        forgeMessage
       );
 
       // Also save as a regular workout for analytics
@@ -90,6 +92,7 @@ export const HeroCall = () => {
         finishWorkout({
           exercises,
           name: `Hero's Call: ${currentWorkout.name}`,
+          forgeMessage,
         });
       }
 
@@ -135,11 +138,12 @@ export const HeroCall = () => {
   // Completion View
   if (showCompletion) {
     return (
-      <HeroCallCompletionView
-        workoutName={currentWorkout.name}
-        formattedDuration={formattedDuration}
-        onMarkComplete={handleMarkComplete}
-        onExit={handleExitWorkout}
+      <WorkoutCompletionDialog
+        isOpen={showCompletion}
+        workoutName={`Hero's Call: ${currentWorkout.name}`}
+        workoutDuration={formattedDuration}
+        onComplete={handleMarkComplete}
+        onCancel={handleExitWorkout}
         isLoading={completeHeroCall.isPending}
       />
     );

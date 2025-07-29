@@ -6,6 +6,7 @@ import type { Exercise } from '@/types';
 import { useExerciseHistory } from '@/hooks/useExerciseHistory';
 import { SimpleExerciseSelector } from '@/components/workout/SimpleExerciseSelector';
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '@/components/ui/collapsible';
+import { WorkoutCompletionDialog } from './WorkoutCompletionDialog';
 
 interface SimpleWorkoutExecutionProps {
   workoutName: string;
@@ -17,7 +18,7 @@ interface SimpleWorkoutExecutionProps {
   onUpdateSet: (exerciseId: string, setId: string, field: 'weight' | 'reps' | 'duration' | 'distance', value: number) => void;
   onToggleSet: (exerciseId: string, setId: string) => void;
   onStartWorkout: () => void;
-  onFinishWorkout: () => void;
+  onFinishWorkout: (forgeMessage?: string) => void;
   onCancelWorkout: () => void;
   workoutTimer: string;
   isStarted: boolean;
@@ -28,6 +29,7 @@ interface SimpleWorkoutExecutionProps {
   isPaused?: boolean;
   onTogglePause?: () => void;
   onDismissRestTimer: () => void;
+  isFinishLoading?: boolean;
 }
 
 export const SimpleWorkoutExecution: React.FC<SimpleWorkoutExecutionProps> = ({
@@ -48,10 +50,12 @@ export const SimpleWorkoutExecution: React.FC<SimpleWorkoutExecutionProps> = ({
   restTimerDuration,
   isPaused,
   onTogglePause,
-  onDismissRestTimer
+  onDismissRestTimer,
+  isFinishLoading
 }) => {
   const { getExercisePrevious } = useExerciseHistory();
   const [expandedExercises, setExpandedExercises] = useState<Record<string, boolean>>({});
+  const [showCompletionDialog, setShowCompletionDialog] = useState(false);
 
   const totalSets = exercises.reduce((total, exercise) => total + exercise.sets.length, 0);
   const completedSets = exercises.reduce((total, exercise) => 
@@ -71,6 +75,19 @@ export const SimpleWorkoutExecution: React.FC<SimpleWorkoutExecutionProps> = ({
     return `${mins}:${secs.toString().padStart(2, '0')}`;
   };
 
+  const handleFinishClick = () => {
+    setShowCompletionDialog(true);
+  };
+
+  const handleCompleteWorkout = (forgeMessage?: string) => {
+    setShowCompletionDialog(false);
+    onFinishWorkout(forgeMessage);
+  };
+
+  const handleCancelCompletion = () => {
+    setShowCompletionDialog(false);
+  };
+
   return (
     <div className="min-h-screen bg-background text-foreground">
       {/* Workout Header */}
@@ -80,7 +97,7 @@ export const SimpleWorkoutExecution: React.FC<SimpleWorkoutExecutionProps> = ({
           <p className="text-sm text-muted-foreground">Duration: {workoutTimer}</p>
         </div>
         <Button
-          onClick={isStarted ? onFinishWorkout : onStartWorkout}
+          onClick={isStarted ? handleFinishClick : onStartWorkout}
           className="bg-green-500 hover:bg-green-600 text-white px-6"
         >
           {isStarted ? 'Finish' : 'Start'}
@@ -307,6 +324,15 @@ export const SimpleWorkoutExecution: React.FC<SimpleWorkoutExecutionProps> = ({
           Cancel Workout
         </Button>
       </div>
+
+      <WorkoutCompletionDialog
+        isOpen={showCompletionDialog}
+        workoutName={workoutName}
+        workoutDuration={workoutTimer}
+        onComplete={handleCompleteWorkout}
+        onCancel={handleCancelCompletion}
+        isLoading={isFinishLoading}
+      />
     </div>
   );
 };

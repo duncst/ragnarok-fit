@@ -191,13 +191,14 @@ const RitualWorkoutPage = () => {
     navigate('/workout/new');
   };
 
-  const handleFinishWorkout = () => {
+  const handleFinishWorkout = (forgeMessage?: string) => {
     const totalTime = Math.floor(totalDuration / 1000);
     const formattedTime = `${Math.floor(totalTime / 60)}:${(totalTime % 60).toString().padStart(2, '0')}`;
     
     finishWorkout({ 
       exercises, 
       name: templateName,
+      forgeMessage,
       onValhallaScorePrompt: (name) => handleValhallaScorePrompt(name, totalTime),
       onCelebration: (workoutName, duration) => {
         setCelebrationData({ workoutName, duration: formattedTime });
@@ -315,6 +316,7 @@ const RitualWorkoutPage = () => {
           onToggleSet={handleToggleSetWithRest}
           onStartWorkout={startWorkout}
           onFinishWorkout={handleFinishWorkout}
+          isFinishLoading={saveWorkoutMutation.isPending}
           onCancelWorkout={handleCancelWorkout}
           workoutTimer={formattedDuration}
           isStarted={isWorkoutActive}
