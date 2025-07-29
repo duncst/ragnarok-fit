@@ -127,11 +127,8 @@ export const CreateRitualModal = ({ open, onOpenChange }: CreateRitualModalProps
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto">
-        <DialogHeader className="flex flex-row items-center justify-between space-y-0">
+        <DialogHeader>
           <DialogTitle className="text-2xl font-bold text-primary">Create New Ritual</DialogTitle>
-          <Button variant="ghost" size="sm" onClick={handleClose}>
-            <X className="h-4 w-4" />
-          </Button>
         </DialogHeader>
 
         <div className="space-y-6 py-4">
