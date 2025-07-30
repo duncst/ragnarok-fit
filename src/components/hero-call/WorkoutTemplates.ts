@@ -27,6 +27,21 @@ export const workoutTemplates: HeroCallWorkout[] = [
         difficulty: 'easy',
         icon: 'Swords',
         label: 'Pup\'s Path',
+        duration: '8-12 min',
+        exercises: [
+          '2 rounds:',
+          '• 5 Push-ups (knee variation allowed)',
+          '• 8 Bodyweight squats',
+          '• 10 sec plank hold',
+          '• 3 Burpees (step back variation)',
+          '• 1 min rest between rounds'
+        ],
+        rest: '1 min between rounds'
+      },
+      {
+        difficulty: 'medium',
+        icon: 'Shield',
+        label: 'Wolf\'s Hunt',
         duration: '10-15 min',
         exercises: [
           '3 rounds:',
@@ -39,9 +54,9 @@ export const workoutTemplates: HeroCallWorkout[] = [
         rest: '1 min between rounds'
       },
       {
-        difficulty: 'medium',
-        icon: 'Shield',
-        label: 'Wolf\'s Hunt',
+        difficulty: 'hard',
+        icon: 'Flame',
+        label: 'Alpha\'s Dominion',
         duration: '15-20 min',
         exercises: [
           '4 rounds:',
@@ -53,23 +68,6 @@ export const workoutTemplates: HeroCallWorkout[] = [
           '• 45 sec rest between rounds'
         ],
         rest: '45 sec between rounds'
-      },
-      {
-        difficulty: 'hard',
-        icon: 'Flame',
-        label: 'Alpha\'s Dominion',
-        duration: '20-30 min',
-        exercises: [
-          '5 rounds:',
-          '• 15 Push-ups (diamond variation)',
-          '• 20 Jump squats',
-          '• 45 sec plank hold',
-          '• 12 Burpees',
-          '• 20 Mountain climbers (each leg)',
-          '• 10 Pike push-ups',
-          '• 30 sec rest between rounds'
-        ],
-        rest: '30 sec between rounds'
       }
     ]
   },
@@ -82,6 +80,22 @@ export const workoutTemplates: HeroCallWorkout[] = [
         difficulty: 'easy',
         icon: 'Swords',
         label: 'Apprentice Smith',
+        duration: '8-12 min',
+        exercises: [
+          '2 rounds:',
+          '• 4 Push-ups (knee variation allowed)',
+          '• 8 Air squats',
+          '• 5 Lunges (each leg)',
+          '• 15 sec wall sit',
+          '• 8 Jumping jacks',
+          '• 90 sec rest between rounds'
+        ],
+        rest: '90 sec between rounds'
+      },
+      {
+        difficulty: 'medium',
+        icon: 'Shield',
+        label: 'Thunder Striker',
         duration: '12-15 min',
         exercises: [
           '3 rounds:',
@@ -95,9 +109,9 @@ export const workoutTemplates: HeroCallWorkout[] = [
         rest: '1 min between rounds'
       },
       {
-        difficulty: 'medium',
-        icon: 'Shield',
-        label: 'Thunder Striker',
+        difficulty: 'hard',
+        icon: 'Flame',
+        label: 'Mjölnir\'s Might',
         duration: '18-22 min',
         exercises: [
           '4 rounds:',
@@ -110,24 +124,6 @@ export const workoutTemplates: HeroCallWorkout[] = [
           '• 45 sec rest between rounds'
         ],
         rest: '45 sec between rounds'
-      },
-      {
-        difficulty: 'hard',
-        icon: 'Flame',
-        label: 'Mjölnir\'s Might',
-        duration: '25-30 min',
-        exercises: [
-          '5 rounds:',
-          '• 15 Push-ups',
-          '• 20 Jump squats',
-          '• 15 Bulgarian split squats (each leg)',
-          '• 45 sec wall sit',
-          '• 15 Burpees',
-          '• 30 High knees',
-          '• 10 Pike push-ups',
-          '• 30 sec rest between rounds'
-        ],
-        rest: '30 sec between rounds'
       }
     ]
   },
@@ -140,6 +136,22 @@ export const workoutTemplates: HeroCallWorkout[] = [
         difficulty: 'easy',
         icon: 'Swords',
         label: 'Seeker\'s Path',
+        duration: '8-10 min',
+        exercises: [
+          '2 rounds:',
+          '• 3 Slow push-ups (knee variation allowed)',
+          '• 6 Controlled squats',
+          '• 20 sec plank',
+          '• 5 Slow mountain climbers',
+          '• 10 sec dead hang (or hang from bar)',
+          '• 2 min rest between rounds'
+        ],
+        rest: '2 min between rounds'
+      },
+      {
+        difficulty: 'medium',
+        icon: 'Shield',
+        label: 'Raven\'s Flight',
         duration: '10-12 min',
         exercises: [
           '3 rounds:',
@@ -153,9 +165,9 @@ export const workoutTemplates: HeroCallWorkout[] = [
         rest: '90 sec between rounds'
       },
       {
-        difficulty: 'medium',
-        icon: 'Shield',
-        label: 'Raven\'s Flight',
+        difficulty: 'hard',
+        icon: 'Flame',
+        label: 'All-Father\'s Trial',
         duration: '16-20 min',
         exercises: [
           '4 rounds:',
@@ -168,24 +180,6 @@ export const workoutTemplates: HeroCallWorkout[] = [
           '• 60 sec rest between rounds'
         ],
         rest: '60 sec between rounds'
-      },
-      {
-        difficulty: 'hard',
-        icon: 'Flame',
-        label: 'All-Father\'s Trial',
-        duration: '22-28 min',
-        exercises: [
-          '5 rounds:',
-          '• 12 Slow push-ups (4 sec down)',
-          '• 15 Controlled squats (4 sec down)',
-          '• 60 sec plank',
-          '• 16 Slow mountain climbers',
-          '• 30 sec dead hang',
-          '• 8 Slow burpees',
-          '• 10 Slow lunges (each leg)',
-          '• 45 sec rest between rounds'
-        ],
-        rest: '45 sec between rounds'
       }
     ]
   },
@@ -198,6 +192,23 @@ export const workoutTemplates: HeroCallWorkout[] = [
         difficulty: 'easy',
         icon: 'Swords',
         label: 'Shield Maiden',
+        duration: '8-12 min',
+        exercises: [
+          '2 rounds:',
+          '• 5 Push-ups (knee variation allowed)',
+          '• 6 Jump squats',
+          '• 4 Reverse lunges (each leg)',
+          '• 10 sec single-leg stand (each leg)',
+          '• 8 Arm circles (forward & back)',
+          '• 6 Glute bridges',
+          '• 90 sec rest between rounds'
+        ],
+        rest: '90 sec between rounds'
+      },
+      {
+        difficulty: 'medium',
+        icon: 'Shield',
+        label: 'Battle Dancer',
         duration: '12-15 min',
         exercises: [
           '3 rounds:',
@@ -212,9 +223,9 @@ export const workoutTemplates: HeroCallWorkout[] = [
         rest: '1 min between rounds'
       },
       {
-        difficulty: 'medium',
-        icon: 'Shield',
-        label: 'Battle Dancer',
+        difficulty: 'hard',
+        icon: 'Flame',
+        label: 'Chooser of the Slain',
         duration: '18-22 min',
         exercises: [
           '4 rounds:',
@@ -228,25 +239,6 @@ export const workoutTemplates: HeroCallWorkout[] = [
           '• 45 sec rest between rounds'
         ],
         rest: '45 sec between rounds'
-      },
-      {
-        difficulty: 'hard',
-        icon: 'Flame',
-        label: 'Chooser of the Slain',
-        duration: '24-30 min',
-        exercises: [
-          '5 rounds:',
-          '• 15 Push-ups',
-          '• 20 Jump squats',
-          '• 12 Lateral lunges (each side)',
-          '• 30 sec single-leg stand (each leg)',
-          '• 20 Arm circles (each direction)',
-          '• 15 Single-leg glute bridges (each leg)',
-          '• 12 Burpees',
-          '• 10 Pike push-ups',
-          '• 30 sec rest between rounds'
-        ],
-        rest: '30 sec between rounds'
       }
     ]
   },
@@ -259,6 +251,23 @@ export const workoutTemplates: HeroCallWorkout[] = [
         difficulty: 'easy',
         icon: 'Swords',
         label: 'Hatchling\'s Writhe',
+        duration: '8-10 min',
+        exercises: [
+          '2 rounds:',
+          '• 20 sec plank',
+          '• 6 Dead bugs (each side)',
+          '• 5 Bird dogs (each side)',
+          '• 8 Bicycle crunches (each side)',
+          '• 10 sec side plank (each side)',
+          '• 6 Glute bridges',
+          '• 2 min rest between rounds'
+        ],
+        rest: '2 min between rounds'
+      },
+      {
+        difficulty: 'medium',
+        icon: 'Shield',
+        label: 'Serpent\'s Flow',
         duration: '10-14 min',
         exercises: [
           '3 rounds:',
@@ -273,9 +282,9 @@ export const workoutTemplates: HeroCallWorkout[] = [
         rest: '90 sec between rounds'
       },
       {
-        difficulty: 'medium',
-        icon: 'Shield',
-        label: 'Serpent\'s Flow',
+        difficulty: 'hard',
+        icon: 'Flame',
+        label: 'World Serpent\'s Grasp',
         duration: '16-20 min',
         exercises: [
           '4 rounds:',
@@ -289,25 +298,6 @@ export const workoutTemplates: HeroCallWorkout[] = [
           '• 60 sec rest between rounds'
         ],
         rest: '60 sec between rounds'
-      },
-      {
-        difficulty: 'hard',
-        icon: 'Flame',
-        label: 'World Serpent\'s Grasp',
-        duration: '22-28 min',
-        exercises: [
-          '5 rounds:',
-          '• 60 sec plank',
-          '• 15 Dead bugs (each side)',
-          '• 12 Bird dogs (each side)',
-          '• 20 Bicycle crunches (each side)',
-          '• 30 sec side plank (each side)',
-          '• 15 Single-leg glute bridges (each leg)',
-          '• 12 Push-ups',
-          '• 10 Mountain climbers (each leg)',
-          '• 45 sec rest between rounds'
-        ],
-        rest: '45 sec between rounds'
       }
     ]
   },
@@ -320,6 +310,22 @@ export const workoutTemplates: HeroCallWorkout[] = [
         difficulty: 'easy',
         icon: 'Swords',
         label: 'Gate Keeper',
+        duration: '8-10 min',
+        exercises: [
+          '2 rounds:',
+          '• 20 sec wall sit',
+          '• 5 Push-ups (knee variation allowed)',
+          '• 30 sec plank hold',
+          '• 6 Squats',
+          '• 10 sec single-arm hold (each arm)',
+          '• 2 min rest between rounds'
+        ],
+        rest: '2 min between rounds'
+      },
+      {
+        difficulty: 'medium',
+        icon: 'Shield',
+        label: 'Bridge Guardian',
         duration: '10-12 min',
         exercises: [
           '3 rounds:',
@@ -333,9 +339,9 @@ export const workoutTemplates: HeroCallWorkout[] = [
         rest: '90 sec between rounds'
       },
       {
-        difficulty: 'medium',
-        icon: 'Shield',
-        label: 'Bridge Guardian',
+        difficulty: 'hard',
+        icon: 'Flame',
+        label: 'All-Seeing Sentinel',
         duration: '16-18 min',
         exercises: [
           '4 rounds:',
@@ -348,24 +354,6 @@ export const workoutTemplates: HeroCallWorkout[] = [
           '• 75 sec rest between rounds'
         ],
         rest: '75 sec between rounds'
-      },
-      {
-        difficulty: 'hard',
-        icon: 'Flame',
-        label: 'All-Seeing Sentinel',
-        duration: '22-26 min',
-        exercises: [
-          '5 rounds:',
-          '• 60 sec wall sit',
-          '• 15 Push-ups',
-          '• 75 sec plank hold',
-          '• 20 Squats',
-          '• 30 sec single-arm hold (each arm)',
-          '• 12 Burpees',
-          '• 10 Pike push-ups',
-          '• 60 sec rest between rounds'
-        ],
-        rest: '60 sec between rounds'
       }
     ]
   },
@@ -378,6 +366,22 @@ export const workoutTemplates: HeroCallWorkout[] = [
         difficulty: 'easy',
         icon: 'Swords',
         label: 'Royal Maiden',
+        duration: '8-12 min',
+        exercises: [
+          '2 rounds:',
+          '• 4 Slow push-ups (knee variation allowed)',
+          '• 10 Bodyweight squats',
+          '• 5 Reverse lunges (each leg)',
+          '• 20 sec plank',
+          '• 8 Glute bridges',
+          '• 2 min rest between rounds'
+        ],
+        rest: '2 min between rounds'
+      },
+      {
+        difficulty: 'medium',
+        icon: 'Shield',
+        label: 'Throne Protector',
         duration: '12-14 min',
         exercises: [
           '3 rounds:',
@@ -391,9 +395,9 @@ export const workoutTemplates: HeroCallWorkout[] = [
         rest: '2 min between rounds'
       },
       {
-        difficulty: 'medium',
-        icon: 'Shield',
-        label: 'Throne Protector',
+        difficulty: 'hard',
+        icon: 'Flame',
+        label: 'Queen\'s Command',
         duration: '18-20 min',
         exercises: [
           '4 rounds:',
@@ -406,24 +410,6 @@ export const workoutTemplates: HeroCallWorkout[] = [
           '• 90 sec rest between rounds'
         ],
         rest: '90 sec between rounds'
-      },
-      {
-        difficulty: 'hard',
-        icon: 'Flame',
-        label: 'Queen\'s Command',
-        duration: '24-28 min',
-        exercises: [
-          '5 rounds:',
-          '• 15 Push-ups',
-          '• 25 Bodyweight squats',
-          '• 15 Reverse lunges (each leg)',
-          '• 60 sec plank',
-          '• 20 Single-leg glute bridges (each leg)',
-          '• 15 Tricep dips',
-          '• 8 Burpees',
-          '• 75 sec rest between rounds'
-        ],
-        rest: '75 sec between rounds'
       }
     ]
   },
@@ -436,6 +422,23 @@ export const workoutTemplates: HeroCallWorkout[] = [
         difficulty: 'easy',
         icon: 'Swords',
         label: 'Clever Apprentice',
+        duration: '8-12 min',
+        exercises: [
+          '2 rounds (mix up the order each round):',
+          '• 5 Push-ups (knee variation allowed)',
+          '• 8 Jump squats',
+          '• 3 Burpees (step back variation)',
+          '• 15 High knees',
+          '• 20 sec plank',
+          '• 6 Lunges (alternating)',
+          '• 2 min rest between rounds'
+        ],
+        rest: '2 min between rounds'
+      },
+      {
+        difficulty: 'medium',
+        icon: 'Shield',
+        label: 'Shapeshifter',
         duration: '10-14 min',
         exercises: [
           '3 rounds (mix up the order each round):',
@@ -450,9 +453,9 @@ export const workoutTemplates: HeroCallWorkout[] = [
         rest: '90 sec between rounds'
       },
       {
-        difficulty: 'medium',
-        icon: 'Shield',
-        label: 'Shapeshifter',
+        difficulty: 'hard',
+        icon: 'Flame',
+        label: 'Trickster\'s Gambit',
         duration: '16-22 min',
         exercises: [
           '4 rounds (randomize exercise order):',
@@ -466,25 +469,6 @@ export const workoutTemplates: HeroCallWorkout[] = [
           '• 75 sec rest between rounds'
         ],
         rest: '75 sec between rounds'
-      },
-      {
-        difficulty: 'hard',
-        icon: 'Flame',
-        label: 'Trickster\'s Gambit',
-        duration: '20-30 min',
-        exercises: [
-          '5 rounds (change order every round):',
-          '• 15 Push-ups',
-          '• 20 Jump squats',
-          '• 12 Burpees',
-          '• 40 High knees',
-          '• 60 sec plank',
-          '• 18 Lunges (alternating)',
-          '• 15 Mountain climbers (each leg)',
-          '• 10 Pike push-ups',
-          '• 60 sec rest between rounds'
-        ],
-        rest: '60 sec between rounds'
       }
     ]
   },
@@ -497,6 +481,22 @@ export const workoutTemplates: HeroCallWorkout[] = [
         difficulty: 'easy',
         icon: 'Swords',
         label: 'Dawn\'s First Ray',
+        duration: '8-12 min',
+        exercises: [
+          '2 rounds:',
+          '• 3 Perfect push-ups (knee variation allowed)',
+          '• 8 Slow squats',
+          '• 5 Controlled lunges (each leg)',
+          '• 30 sec perfect plank',
+          '• 6 Slow glute bridges',
+          '• 2 min rest between rounds'
+        ],
+        rest: '2 min rest between rounds'
+      },
+      {
+        difficulty: 'medium',
+        icon: 'Shield',
+        label: 'Midday Radiance',
         duration: '12-15 min',
         exercises: [
           '3 rounds:',
@@ -510,9 +510,9 @@ export const workoutTemplates: HeroCallWorkout[] = [
         rest: '2 min rest between rounds'
       },
       {
-        difficulty: 'medium',
-        icon: 'Shield',
-        label: 'Midday Radiance',
+        difficulty: 'hard',
+        icon: 'Flame',
+        label: 'Eternal Brilliance',
         duration: '18-22 min',
         exercises: [
           '4 rounds:',
@@ -525,24 +525,6 @@ export const workoutTemplates: HeroCallWorkout[] = [
           '• 90 sec rest between rounds'
         ],
         rest: '90 sec rest between rounds'
-      },
-      {
-        difficulty: 'hard',
-        icon: 'Flame',
-        label: 'Eternal Brilliance',
-        duration: '24-30 min',
-        exercises: [
-          '5 rounds:',
-          '• 12 Perfect push-ups (4 sec down, 2 sec up)',
-          '• 20 Slow squats (4 sec down)',
-          '• 12 Controlled lunges (each leg)',
-          '• 75 sec perfect plank',
-          '• 15 Slow single-leg glute bridges (each leg)',
-          '• 8 Slow burpees',
-          '• 10 Controlled pike push-ups',
-          '• 75 sec rest between rounds'
-        ],
-        rest: '75 sec rest between rounds'
       }
     ]
   },
@@ -555,6 +537,22 @@ export const workoutTemplates: HeroCallWorkout[] = [
         difficulty: 'easy',
         icon: 'Swords',
         label: 'Fair Judgment',
+        duration: '8-12 min',
+        exercises: [
+          '2 rounds:',
+          '• 4 Push-ups (knee variation allowed)',
+          '• 6 Assisted single-leg squats (each leg)',
+          '• 6 Single-leg glute bridges (each leg)',
+          '• 10 sec single-leg stand (each leg)',
+          '• 15 sec side plank (each side)',
+          '• 2 min rest between rounds'
+        ],
+        rest: '2 min rest between rounds'
+      },
+      {
+        difficulty: 'medium',
+        icon: 'Shield',
+        label: 'Scales of War',
         duration: '10-14 min',
         exercises: [
           '3 rounds:',
@@ -568,9 +566,9 @@ export const workoutTemplates: HeroCallWorkout[] = [
         rest: '90 sec between rounds'
       },
       {
-        difficulty: 'medium',
-        icon: 'Shield',
-        label: 'Scales of War',
+        difficulty: 'hard',
+        icon: 'Flame',
+        label: 'One-Handed Warrior',
         duration: '16-20 min',
         exercises: [
           '4 rounds:',
@@ -583,24 +581,6 @@ export const workoutTemplates: HeroCallWorkout[] = [
           '• 75 sec rest between rounds'
         ],
         rest: '75 sec between rounds'
-      },
-      {
-        difficulty: 'hard',
-        icon: 'Flame',
-        label: 'One-Handed Warrior',
-        duration: '22-28 min',
-        exercises: [
-          '5 rounds:',
-          '• 6 Single-arm push-ups (each arm)',
-          '• 8 Pistol squats (each leg)',
-          '• 15 Single-leg glute bridges (each leg)',
-          '• 30 sec single-leg stand (each leg)',
-          '• 45 sec side plank (each side)',
-          '• 10 Single-leg burpees (5 each leg)',
-          '• 6 Single-arm pike push-ups (each arm)',
-          '• 60 sec rest between rounds'
-        ],
-        rest: '60 sec between rounds'
       }
     ]
   },
@@ -613,6 +593,23 @@ export const workoutTemplates: HeroCallWorkout[] = [
         difficulty: 'easy',
         icon: 'Swords',
         label: 'Seidr Apprentice',
+        duration: '8-12 min',
+        exercises: [
+          '2 rounds:',
+          '• 5 Push-ups (knee variation allowed)',
+          '• 8 Sumo squats',
+          '• 6 Lateral lunges (each side)',
+          '• 3 Burpees (step back variation)',
+          '• 10 Glute bridges',
+          '• 20 sec warrior III hold (each leg)',
+          '• 2 min rest between rounds'
+        ],
+        rest: '2 min rest between rounds'
+      },
+      {
+        difficulty: 'medium',
+        icon: 'Shield',
+        label: 'Battle Maiden',
         duration: '12-15 min',
         exercises: [
           '3 rounds:',
@@ -627,9 +624,9 @@ export const workoutTemplates: HeroCallWorkout[] = [
         rest: '90 sec between rounds'
       },
       {
-        difficulty: 'medium',
-        icon: 'Shield',
-        label: 'Battle Maiden',
+        difficulty: 'hard',
+        icon: 'Flame',
+        label: 'Goddess of War',
         duration: '18-22 min',
         exercises: [
           '4 rounds:',
@@ -643,25 +640,6 @@ export const workoutTemplates: HeroCallWorkout[] = [
           '• 75 sec rest between rounds'
         ],
         rest: '75 sec between rounds'
-      },
-      {
-        difficulty: 'hard',
-        icon: 'Flame',
-        label: 'Goddess of War',
-        duration: '24-30 min',
-        exercises: [
-          '5 rounds:',
-          '• 15 Push-ups',
-          '• 20 Jump sumo squats',
-          '• 15 Lateral lunges (each side)',
-          '• 12 Burpees',
-          '• 20 Single-leg glute bridges (each leg)',
-          '• 45 sec warrior III hold (each leg)',
-          '• 15 Pike push-ups',
-          '• 20 Mountain climbers (each leg)',
-          '• 60 sec rest between rounds'
-        ],
-        rest: '60 sec between rounds'
       }
     ]
   },
@@ -674,6 +652,22 @@ export const workoutTemplates: HeroCallWorkout[] = [
         difficulty: 'easy',
         icon: 'Swords',
         label: 'Silent Stalker',
+        duration: '8-12 min',
+        exercises: [
+          '2 rounds:',
+          '• 4 Slow push-ups (knee variation allowed)',
+          '• 8 Silent squats',
+          '• 5 Quiet lunges (each leg)',
+          '• 30 sec plank (focus on breathing)',
+          '• 6 Controlled mountain climbers',
+          '• 2 min rest between rounds'
+        ],
+        rest: '2 min between rounds'
+      },
+      {
+        difficulty: 'medium',
+        icon: 'Shield',
+        label: 'Vengeance Seeker',
         duration: '10-14 min',
         exercises: [
           '3 rounds:',
@@ -687,9 +681,9 @@ export const workoutTemplates: HeroCallWorkout[] = [
         rest: '2 min between rounds'
       },
       {
-        difficulty: 'medium',
-        icon: 'Shield',
-        label: 'Vengeance Seeker',
+        difficulty: 'hard',
+        icon: 'Flame',
+        label: 'Father\'s Avenger',
         duration: '16-20 min',
         exercises: [
           '4 rounds:',
@@ -702,24 +696,6 @@ export const workoutTemplates: HeroCallWorkout[] = [
           '• 90 sec rest between rounds'
         ],
         rest: '90 sec between rounds'
-      },
-      {
-        difficulty: 'hard',
-        icon: 'Flame',
-        label: 'Father\'s Avenger',
-        duration: '22-28 min',
-        exercises: [
-          '5 rounds:',
-          '• 15 Silent push-ups',
-          '• 20 Controlled squats',
-          '• 12 Quiet lunges (each leg)',
-          '• 75 sec focused plank',
-          '• 20 Controlled mountain climbers (each leg)',
-          '• 10 Silent burpees',
-          '• 12 Controlled pike push-ups',
-          '• 75 sec rest between rounds'
-        ],
-        rest: '75 sec between rounds'
       }
     ]
   },
@@ -732,6 +708,21 @@ export const workoutTemplates: HeroCallWorkout[] = [
         difficulty: 'easy',
         icon: 'Swords',
         label: 'Border Walker',
+        duration: '8-12 min',
+        exercises: [
+          '2 rounds (alternate fast/slow):',
+          '• 4 Fast push-ups (knee variation), then 2 slow push-ups',
+          '• 8 Jump squats, then 4 slow squats',
+          '• 20 sec fast high knees, then 20 sec slow march',
+          '• 3 Fast burpees (step back), then 20 sec plank hold',
+          '• 2 min rest between rounds'
+        ],
+        rest: '2 min between rounds'
+      },
+      {
+        difficulty: 'medium',
+        icon: 'Shield',
+        label: 'Realm Guardian',
         duration: '12-15 min',
         exercises: [
           '3 rounds (alternate fast/slow):',
@@ -744,9 +735,9 @@ export const workoutTemplates: HeroCallWorkout[] = [
         rest: '90 sec between rounds'
       },
       {
-        difficulty: 'medium',
-        icon: 'Shield',
-        label: 'Realm Guardian',
+        difficulty: 'hard',
+        icon: 'Flame',
+        label: 'Death\'s Daughter',
         duration: '18-22 min',
         exercises: [
           '4 rounds (alternate intensity):',
@@ -758,23 +749,6 @@ export const workoutTemplates: HeroCallWorkout[] = [
           '• 75 sec rest between rounds'
         ],
         rest: '75 sec between rounds'
-      },
-      {
-        difficulty: 'hard',
-        icon: 'Flame',
-        label: 'Death\'s Daughter',
-        duration: '24-30 min',
-        exercises: [
-          '5 rounds (contrast training):',
-          '• 12 Fast push-ups, then 6 slow push-ups',
-          '• 20 Jump squats, then 10 slow squats',
-          '• 60 sec fast high knees, then 60 sec slow march',
-          '• 10 Fast burpees, then 60 sec plank hold',
-          '• 30 Fast mountain climbers, then 15 slow ones',
-          '• 10 Fast pike push-ups, then 5 slow ones',
-          '• 60 sec rest between rounds'
-        ],
-        rest: '60 sec between rounds'
       }
     ]
   }
