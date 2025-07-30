@@ -33,6 +33,7 @@ export const useWorkoutState = () => {
     addSet,
     updateSet,
     handleToggleSet,
+    removeSet,
   } = useSetManagement(exercises, setExercises);
 
   // Auto-save workout state when it changes
@@ -65,6 +66,7 @@ export const useWorkoutState = () => {
     moveExercise,
     updateExerciseName,
     addSet,
+    removeSet,
     updateSet,
     handleToggleSet,
     selectedEquipment,

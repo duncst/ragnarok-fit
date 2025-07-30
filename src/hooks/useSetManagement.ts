@@ -66,9 +66,29 @@ export const useSetManagement = (
     }));
   }, [exercises, setExercises]);
 
+  const removeSet = useCallback((exerciseId: string, setId: string) => {
+    console.log('Removing set:', { exerciseId, setId });
+    setExercises(exercises.map(exercise => {
+      if (exercise.id === exerciseId) {
+        // Don't allow removing the last set
+        if (exercise.sets.length <= 1) {
+          console.log('Cannot remove last set from exercise');
+          return exercise;
+        }
+        console.log('Removing set from exercise:', exercise.name);
+        return {
+          ...exercise,
+          sets: exercise.sets.filter(set => set.id !== setId)
+        };
+      }
+      return exercise;
+    }));
+  }, [exercises, setExercises]);
+
   return {
     addSet,
     updateSet,
     handleToggleSet,
+    removeSet,
   };
 };

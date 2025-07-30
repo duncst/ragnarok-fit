@@ -29,6 +29,7 @@ interface WorkoutModeManagerProps {
   onRemoveExercise: (id: string) => void;
   onMoveExercise: (exerciseId: string, direction: 'up' | 'down') => void;
   onAddSet: (exerciseId: string) => void;
+  onRemoveSet: (exerciseId: string, setId: string) => void;
   onUpdateSet: (exerciseId: string, setId: string, field: string, value: any) => void;
   onToggleSet: (exerciseId: string, setId: string) => void;
   onStartWorkout: () => void;
@@ -60,6 +61,7 @@ export const WorkoutModeManager = ({
   onRemoveExercise,
   onMoveExercise,
   onAddSet,
+  onRemoveSet,
   onUpdateSet,
   onToggleSet,
   onStartWorkout,
@@ -106,6 +108,7 @@ export const WorkoutModeManager = ({
         onRemoveExercise={onRemoveExercise}
         onMoveExercise={onMoveExercise}
         onAddSet={onAddSet}
+        onRemoveSet={onRemoveSet}
         onUpdateSet={onUpdateSet}
         onToggleSet={onToggleSet}
         onStartWorkout={onStartWorkout}

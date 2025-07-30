@@ -43,6 +43,7 @@ const RitualWorkoutPage = () => {
     removeExercise,
     moveExercise,
     addSet,
+    removeSet,
     updateSet,
     handleToggleSet,
     restDuration,
@@ -312,6 +313,7 @@ const RitualWorkoutPage = () => {
           onRemoveExercise={removeExercise}
           onMoveExercise={moveExercise}
           onAddSet={addSet}
+          onRemoveSet={removeSet}
           onUpdateSet={updateSet}
           onToggleSet={handleToggleSetWithRest}
           onStartWorkout={startWorkout}

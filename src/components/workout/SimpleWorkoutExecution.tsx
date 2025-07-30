@@ -15,6 +15,7 @@ interface SimpleWorkoutExecutionProps {
   onRemoveExercise: (exerciseId: string) => void;
   onMoveExercise: (exerciseId: string, direction: 'up' | 'down') => void;
   onAddSet: (exerciseId: string) => void;
+  onRemoveSet: (exerciseId: string, setId: string) => void;
   onUpdateSet: (exerciseId: string, setId: string, field: 'weight' | 'reps' | 'duration' | 'distance', value: number) => void;
   onToggleSet: (exerciseId: string, setId: string) => void;
   onStartWorkout: () => void;
@@ -39,6 +40,7 @@ export const SimpleWorkoutExecution: React.FC<SimpleWorkoutExecutionProps> = ({
   onRemoveExercise,
   onMoveExercise,
   onAddSet,
+  onRemoveSet,
   onUpdateSet,
   onToggleSet,
   onStartWorkout,
@@ -279,7 +281,9 @@ export const SimpleWorkoutExecution: React.FC<SimpleWorkoutExecutionProps> = ({
                         <Button
                           variant="ghost"
                           size="icon"
+                          onClick={() => onRemoveSet(exercise.id, set.id)}
                           className="h-8 w-8 text-red-500 hover:text-red-600"
+                          disabled={exercise.sets.length <= 1}
                         >
                           <X className="h-4 w-4" />
                         </Button>
