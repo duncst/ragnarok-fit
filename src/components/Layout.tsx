@@ -69,18 +69,6 @@ const Layout = () => {
                 <h1 className="font-bold text-lg tracking-tight">Ragnarok Fit</h1>
               </div>
               <div className="flex items-center gap-2">
-                <Button 
-                  variant="ghost" 
-                  size="icon" 
-                  onClick={() => setShowNotificationSettings(true)}
-                  aria-label="Notification settings"
-                >
-                  <ImageIcon 
-                    src="/lovable-uploads/6ace109c-b935-4cbe-ae24-b2adfe21bde8.png"
-                    alt="Horn"
-                    className="h-5 w-5"
-                  />
-                </Button>
                 <Button variant="ghost" size="icon" onClick={handleLogout} aria-label="Log out">
                   <LogOut className="h-5 w-5" />
                 </Button>
