@@ -59,29 +59,6 @@ const ClanPage = () => {
           </CardContent>
         </Card>
 
-        {/* Invites Section */}
-        <Card className="bg-card/50 border-border">
-          <CardHeader>
-            <CardTitle className="flex items-center gap-2">
-              <Users className="w-5 h-5 text-primary" />
-              Your Invites (2)
-            </CardTitle>
-          </CardHeader>
-          <CardContent>
-            <div className="space-y-4">
-              <div className="flex items-center gap-3 p-4 bg-muted/30 rounded-lg">
-                <Users className="w-8 h-8 text-muted-foreground" />
-                <div className="flex-1">
-                  <h3 className="font-semibold text-foreground">Invite a Warrior</h3>
-                  <p className="text-sm text-muted-foreground">Send an invitation to a worthy man</p>
-                </div>
-              </div>
-              <Button className="w-full bg-primary hover:bg-primary/90 text-primary-foreground">
-                Create Invite
-              </Button>
-            </div>
-          </CardContent>
-        </Card>
 
         {/* Brotherhood Activity */}
         <Card className="bg-card/50 border-border">
