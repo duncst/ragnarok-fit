@@ -70,7 +70,7 @@ const Layout = () => {
               </div>
               <div className="flex items-center gap-2">
                 <Button variant="ghost" size="icon" onClick={() => setShowNotificationSettings(true)} aria-label="Notifications">
-                  <ImageIcon src="/lovable-uploads/ab4c655d-5026-4d78-a7c3-f58ea6593cbc.png" alt="Notifications" className="h-5 w-5" />
+                  <ImageIcon src="/lovable-uploads/ab4c655d-5026-4d78-a7c3-f58ea6593cbc.png" alt="Notifications" className="h-6 w-6" />
                 </Button>
                 <Button variant="ghost" size="icon" onClick={handleLogout} aria-label="Log out">
                   <LogOut className="h-5 w-5" />
