@@ -86,7 +86,7 @@ const ClanPage = () => {
                 {activities.map((activity) => {
                   const activityLikes = likes[activity.id];
                   return (
-                    <div key={activity.id} className="flex items-center gap-3 p-3 bg-muted/30 rounded-lg">
+                    <div key={activity.id} className="flex items-start gap-3 p-3 bg-muted/30 rounded-lg">
                       <div className="w-10 h-10 bg-primary/20 rounded-full flex items-center justify-center">
                         <span className="text-sm font-bold text-primary">
                           {getBannerInitials(activity.banner_name)}
@@ -107,32 +107,34 @@ const ClanPage = () => {
                             "{activity.notes}"
                           </p>
                         )}
-                        <div className="flex items-center gap-1 mt-1">
-                          <Clock className="w-3 h-3 text-muted-foreground" />
-                          <span className="text-xs text-muted-foreground">
-                            {formatDistanceToNow(new Date(activity.created_at), { addSuffix: true })}
-                          </span>
+                        <div className="flex items-center justify-between mt-1">
+                          <div className="flex items-center gap-1">
+                            <Clock className="w-3 h-3 text-muted-foreground" />
+                            <span className="text-xs text-muted-foreground">
+                              {formatDistanceToNow(new Date(activity.created_at), { addSuffix: true })}
+                            </span>
+                          </div>
+                          <div className="flex items-center gap-1">
+                            {activityLikes && activityLikes.count > 0 && (
+                              <span className="text-xs text-muted-foreground">
+                                {activityLikes.count}
+                              </span>
+                            )}
+                            <Button
+                              variant="ghost"
+                              size="icon"
+                              onClick={() => toggleLike(activity.id)}
+                              className={`h-10 w-10 ${activityLikes?.userHasLiked ? 'text-primary' : 'text-muted-foreground hover:text-primary'}`}
+                              aria-label="Congratulate"
+                            >
+                              <ImageIcon 
+                                src="/lovable-uploads/87f4cc20-755c-412f-a511-4ea9911896fd.png" 
+                                alt="Horn"
+                                className="h-6 w-6"
+                              />
+                            </Button>
+                          </div>
                         </div>
-                      </div>
-                      <div className="flex flex-col items-center gap-1">
-                        <Button
-                          variant="ghost"
-                          size="icon"
-                          onClick={() => toggleLike(activity.id)}
-                          className={`h-8 w-8 ${activityLikes?.userHasLiked ? 'text-primary' : 'text-muted-foreground hover:text-primary'}`}
-                          aria-label="Congratulate"
-                        >
-                          <ImageIcon 
-                            src="/lovable-uploads/87f4cc20-755c-412f-a511-4ea9911896fd.png" 
-                            alt="Horn"
-                            className="h-4 w-4"
-                          />
-                        </Button>
-                        {activityLikes && activityLikes.count > 0 && (
-                          <span className="text-xs text-muted-foreground">
-                            {activityLikes.count}
-                          </span>
-                        )}
                       </div>
                     </div>
                   );
