@@ -61,74 +61,69 @@ const BannerNameModal = ({ open, onComplete }: BannerNameModalProps) => {
 
   return (
     <Dialog open={open} onOpenChange={() => {}}>
-      <DialogContent className="max-w-2xl p-8 bg-card border-border">
-        <DialogHeader className="space-y-6">
-          <DialogTitle className="text-3xl font-bold text-center text-foreground">
+      <DialogContent className="max-w-lg p-8 bg-slate-900 border-slate-700 text-white">
+        <DialogHeader className="space-y-4 text-center">
+          <DialogTitle className="text-2xl font-bold text-white">
             Choose Your Name
           </DialogTitle>
+          <p className="text-lg italic text-slate-300">
+            "A man is not born with a name. He earns it."
+          </p>
         </DialogHeader>
         
-        <div className="space-y-6">
+        <div className="space-y-6 mt-6">
           <div className="text-center">
-            <p className="text-lg italic text-muted-foreground mb-4">
-              "A man is not born with a name. He earns it."
-            </p>
-          </div>
-
-          <div className="space-y-4 text-muted-foreground">
-            <p>
-              This is not a username. This is your <span className="text-primary font-semibold">Banner Name</span>—the name you'll carry into the Forge, the name your brothers will call in the storm, the name you'll etch into legend.
+            <p className="text-lg font-medium text-white mb-6">
+              What name will you carry into Valhalla?
             </p>
             
-            <p className="font-medium text-foreground">
+            <div className="space-y-4">
+              <Input
+                value={bannerName}
+                onChange={(e) => setBannerName(e.target.value)}
+                placeholder="Tretten"
+                className="text-center text-lg py-3 bg-slate-800 border-orange-500 text-white placeholder:text-slate-400"
+                maxLength={50}
+              />
+              
+              <Button 
+                onClick={handleSubmit}
+                disabled={isSubmitting || !bannerName.trim()}
+                className="w-full py-3 text-lg bg-orange-500 hover:bg-orange-600 text-white font-semibold"
+              >
+                {isSubmitting ? 'Forging Your Name...' : 'Forge My Banner Name'}
+              </Button>
+            </div>
+          </div>
+
+          <div className="space-y-4">
+            <p className="text-sm text-slate-300">
+              This is not a username. This is your <span className="text-orange-400 font-semibold">Banner Name</span>—the name you'll carry into the Forge, the name your brothers will call in the storm, the name you'll etch into legend.
+            </p>
+            
+            <p className="text-sm font-medium text-white">
               Make it strong. Make it true. Make it yours.
             </p>
           </div>
 
-          <div className="bg-muted/30 rounded-lg p-4">
-            <h4 className="font-semibold text-foreground mb-3">Examples:</h4>
-            <div className="grid grid-cols-1 gap-2">
+          <div className="space-y-3">
+            <h4 className="font-semibold text-white">Examples:</h4>
+            <div className="space-y-1">
               {exampleNames.map((name, index) => (
-                <div key={index} className="text-muted-foreground italic">
+                <div key={index} className="text-slate-300 italic text-sm">
                   {name}
                 </div>
               ))}
             </div>
           </div>
 
-          <div className="space-y-4">
-            <div>
-              <h4 className="font-semibold text-foreground mb-2">This name will be:</h4>
-              <ul className="space-y-2 text-muted-foreground">
-                <li>• Your identity within the Brotherhood</li>
-                <li>• Engraved beneath your titles</li>
-                <li>• What others will remember when your fire burns bright</li>
-              </ul>
-            </div>
-
-            <div className="text-center">
-              <p className="text-lg font-medium text-foreground mb-4">
-                What name will you carry into Valhalla?
-              </p>
-              
-              <div className="space-y-4">
-                <Input
-                  value={bannerName}
-                  onChange={(e) => setBannerName(e.target.value)}
-                  placeholder="Enter your Banner Name"
-                  className="text-center text-lg py-3"
-                  maxLength={50}
-                />
-                
-                <Button 
-                  onClick={handleSubmit}
-                  disabled={isSubmitting || !bannerName.trim()}
-                  className="w-full py-3 text-lg bg-primary hover:bg-primary/90"
-                >
-                  {isSubmitting ? 'Forging Your Name...' : 'Forge My Banner Name'}
-                </Button>
-              </div>
-            </div>
+          <div className="space-y-3">
+            <h4 className="font-semibold text-white">This name will be:</h4>
+            <ul className="space-y-1 text-slate-300 text-sm">
+              <li>• Your identity within the Brotherhood</li>
+              <li>• Engraved beneath your titles</li>
+              <li>• What others will remember when your fire burns bright</li>
+            </ul>
           </div>
         </div>
       </DialogContent>
