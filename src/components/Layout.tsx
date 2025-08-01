@@ -1,7 +1,7 @@
 
 import { Outlet, useNavigate } from "react-router-dom";
 import BottomNav from "./BottomNav";
-import { Mountain, LogOut } from "lucide-react";
+import { Mountain, LogOut, Bell } from "lucide-react";
 import { useAuth } from "@/contexts/AuthContext";
 import { useEffect, useState } from "react";
 import { Button } from "./ui/button";
@@ -69,6 +69,9 @@ const Layout = () => {
                 <h1 className="font-bold text-lg tracking-tight">Ragnarok Fit</h1>
               </div>
               <div className="flex items-center gap-2">
+                <Button variant="ghost" size="icon" onClick={() => setShowNotificationSettings(true)} aria-label="Notifications">
+                  <Bell className="h-5 w-5" />
+                </Button>
                 <Button variant="ghost" size="icon" onClick={handleLogout} aria-label="Log out">
                   <LogOut className="h-5 w-5" />
                 </Button>
