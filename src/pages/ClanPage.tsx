@@ -124,13 +124,13 @@ const ClanPage = () => {
                               variant="ghost"
                               size="icon"
                               onClick={() => toggleLike(activity.id)}
-                              className={`h-10 w-10 ${activityLikes?.userHasLiked ? 'text-primary' : 'text-muted-foreground hover:text-primary'}`}
+                              className={`h-12 w-12 ${activityLikes?.userHasLiked ? 'text-primary' : 'text-muted-foreground hover:text-primary'}`}
                               aria-label="Congratulate"
                             >
                               <ImageIcon 
                                 src="/lovable-uploads/87f4cc20-755c-412f-a511-4ea9911896fd.png" 
                                 alt="Horn"
-                                className="h-6 w-6"
+                                className="h-8 w-8"
                               />
                             </Button>
                           </div>
