@@ -20,9 +20,8 @@ export const useBrotherhoodLikes = (activityIds: string[]) => {
     }
 
     try {
-      const { data: { user } } = await supabase.auth.getUser();
-      
-      // Initialize with default values for now
+      // Initialize with default values since we can't query the likes table yet
+      // This is a temporary workaround until the database types are updated
       const processedLikes: ActivityLikes = {};
       activityIds.forEach(activityId => {
         processedLikes[activityId] = {
@@ -60,8 +59,9 @@ export const useBrotherhoodLikes = (activityIds: string[]) => {
       const currentLikes = likes[activityId];
       if (!currentLikes) return;
 
+      // For now, just update the local state optimistically
+      // The actual database operations will work once the types are updated
       if (currentLikes.userHasLiked) {
-        // Update local state optimistically for now
         setLikes(prev => ({
           ...prev,
           [activityId]: {
@@ -70,7 +70,6 @@ export const useBrotherhoodLikes = (activityIds: string[]) => {
           }
         }));
       } else {
-        // Update local state optimistically for now
         setLikes(prev => ({
           ...prev,
           [activityId]: {
