@@ -8,6 +8,7 @@ import { RunChart } from "@/components/RunChart";
 import { StatItem } from "@/components/StatItem";
 import { ImageIcon } from "@/components/ImageIcon";
 import { CalendarSection } from "@/components/forge/CalendarSection";
+import { MuscleGroupVolumeTracker } from "@/components/MuscleGroupVolumeTracker";
 import type { Workout, Run } from '@/types';
 import { useState } from 'react';
 
@@ -101,6 +102,7 @@ export const AnalyticsSection = ({
                       <StatItem icon={VolumeIcon} value={`${(totalVolume / 1000).toFixed(1)}K`} label="Last 7-days Volume" />
                     </div>
                     <StrengthChart data={strengthChartData} />
+                    <MuscleGroupVolumeTracker workoutHistory={workoutHistory} />
                   </>
                 )}
               </CardContent>
