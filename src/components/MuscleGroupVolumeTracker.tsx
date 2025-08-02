@@ -35,7 +35,7 @@ const MUSCLE_GROUP_MAPPING: Record<string, string> = {
 
 const getMuscleGroupColor = (sets: number) => {
   if (sets >= 20) return 'bg-destructive text-destructive-foreground'; // Overtrained - Red
-  if (sets >= 10) return 'bg-primary text-primary-foreground'; // Optimal - Green (using primary color)
+  if (sets >= 10) return 'bg-green-500 text-white'; // Optimal - Green
   if (sets >= 6) return 'bg-orange-500 text-white'; // Slightly low but okay - Orange
   return 'bg-orange-600 text-white'; // Neglected - Dark Orange
 };
@@ -147,7 +147,7 @@ export const MuscleGroupVolumeTracker = ({ workoutHistory }: MuscleGroupVolumeTr
           <h4 className="text-xs font-medium mb-1">Weekly Targets</h4>
           <div className="text-xs text-muted-foreground space-y-1">
             <div className="flex items-center gap-2">
-              <div className="w-2 h-2 rounded bg-primary flex-shrink-0"></div>
+              <div className="w-2 h-2 rounded bg-green-500 flex-shrink-0"></div>
               <span>10-20 sets: Optimal range</span>
             </div>
             <div className="flex items-center gap-2">
