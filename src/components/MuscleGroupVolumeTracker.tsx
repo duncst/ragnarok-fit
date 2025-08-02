@@ -1,9 +1,11 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { Zap, AlertTriangle, CheckCircle2 } from "lucide-react";
+import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
+import { Zap, AlertTriangle, CheckCircle2, ChevronDown } from "lucide-react";
 import type { Workout } from '@/types';
-import { subDays, isWithinInterval, startOfDay } from 'date-fns';
+import { subDays, isWithinInterval, startOfDay, format } from 'date-fns';
 import { isHeroCallWorkout } from '@/lib/workoutUtils';
+import { useState } from 'react';
 
 interface MuscleGroupVolumeTrackerProps {
   workoutHistory?: Workout[];
@@ -50,64 +52,106 @@ const getMuscleGroupStatus = (sets: number) => {
 export const MuscleGroupVolumeTracker = ({ workoutHistory }: MuscleGroupVolumeTrackerProps) => {
   const today = new Date();
   const last7DaysInterval = { start: startOfDay(subDays(today, 6)), end: new Date() };
+  const [expandedGroups, setExpandedGroups] = useState<Set<string>>(new Set());
 
-  const muscleGroupSets = {
-    Chest: 0,
-    Back: 0,
-    Legs: 0,
-    Shoulders: 0,
-    Arms: 0,
-    Core: 0,
+  // Enhanced data structure to track detailed information
+  const muscleGroupData: Record<string, {
+    totalSets: number;
+    workoutDetails: Array<{
+      date: string;
+      workoutName: string;
+      exercises: Array<{
+        name: string;
+        completedSets: number;
+      }>;
+    }>;
+  }> = {
+    Chest: { totalSets: 0, workoutDetails: [] },
+    Back: { totalSets: 0, workoutDetails: [] },
+    Legs: { totalSets: 0, workoutDetails: [] },
+    Shoulders: { totalSets: 0, workoutDetails: [] },
+    Arms: { totalSets: 0, workoutDetails: [] },
+    Core: { totalSets: 0, workoutDetails: [] },
   };
 
-  // Calculate sets per muscle group from the last 7 days
+  const getMuscleGroupFromExercise = (exerciseName: string): string => {
+    const name = exerciseName.toLowerCase();
+    if (name.includes('bench') || name.includes('chest') || 
+        name.includes('push') || name.includes('dip') || 
+        name.includes('fly')) {
+      return 'Chest';
+    } else if (name.includes('pull') || name.includes('row') || 
+               name.includes('lat') || name.includes('deadlift') ||
+               name.includes('back')) {
+      return 'Back';
+    } else if (name.includes('squat') || name.includes('lunge') || 
+               name.includes('leg') || name.includes('calf') ||
+               name.includes('glute') || name.includes('hip')) {
+      return 'Legs';
+    } else if (name.includes('shoulder') || (name.includes('press') && 
+               !name.includes('bench')) || name.includes('raise') ||
+               name.includes('shrug')) {
+      return 'Shoulders';
+    } else if (name.includes('curl') || name.includes('tricep') || 
+               name.includes('bicep') || name.includes('arm')) {
+      return 'Arms';
+    } else if (name.includes('plank') || name.includes('crunch') || 
+               name.includes('core') || name.includes('abs') ||
+               name.includes('twist') || name.includes('sit-up')) {
+      return 'Core';
+    }
+    return 'Core'; // Default fallback
+  };
+
+  // Calculate detailed sets per muscle group from the last 7 days
   workoutHistory
     ?.filter(workout => 
       isWithinInterval(workout.startTime, last7DaysInterval) && 
       !isHeroCallWorkout(workout.name || '')
     )
     .forEach(workout => {
+      const workoutDate = format(workout.startTime, 'MMM d');
+      const workoutName = workout.name || 'Workout';
+      
+      // Group exercises by muscle group for this workout
+      const exercisesByMuscleGroup: Record<string, Array<{ name: string; completedSets: number; }>> = {};
+      
       workout.exercises.forEach(exercise => {
-        const bodyPart = exercise.name; // We'll need to map this to body parts
-        
-        // Try to find the exercise in our exercise database to get the proper body part
-        // For now, we'll use a simple mapping based on exercise name keywords
-        let muscleGroup = 'Core'; // Default fallback
-        
-        // Simple keyword-based mapping for common exercises
-        const exerciseName = exercise.name.toLowerCase();
-        if (exerciseName.includes('bench') || exerciseName.includes('chest') || 
-            exerciseName.includes('push') || exerciseName.includes('dip') || 
-            exerciseName.includes('fly')) {
-          muscleGroup = 'Chest';
-        } else if (exerciseName.includes('pull') || exerciseName.includes('row') || 
-                   exerciseName.includes('lat') || exerciseName.includes('deadlift') ||
-                   exerciseName.includes('back')) {
-          muscleGroup = 'Back';
-        } else if (exerciseName.includes('squat') || exerciseName.includes('lunge') || 
-                   exerciseName.includes('leg') || exerciseName.includes('calf') ||
-                   exerciseName.includes('glute') || exerciseName.includes('hip')) {
-          muscleGroup = 'Legs';
-        } else if (exerciseName.includes('shoulder') || exerciseName.includes('press') && 
-                   !exerciseName.includes('bench') || exerciseName.includes('raise') ||
-                   exerciseName.includes('shrug')) {
-          muscleGroup = 'Shoulders';
-        } else if (exerciseName.includes('curl') || exerciseName.includes('tricep') || 
-                   exerciseName.includes('bicep') || exerciseName.includes('arm')) {
-          muscleGroup = 'Arms';
-        } else if (exerciseName.includes('plank') || exerciseName.includes('crunch') || 
-                   exerciseName.includes('core') || exerciseName.includes('abs') ||
-                   exerciseName.includes('twist') || exerciseName.includes('sit-up')) {
-          muscleGroup = 'Core';
-        }
-
-        // Count completed sets
+        const muscleGroup = getMuscleGroupFromExercise(exercise.name);
         const completedSets = exercise.sets.filter(set => set.completed).length;
-        if (muscleGroup in muscleGroupSets) {
-          muscleGroupSets[muscleGroup as keyof typeof muscleGroupSets] += completedSets;
+        
+        if (completedSets > 0) {
+          if (!exercisesByMuscleGroup[muscleGroup]) {
+            exercisesByMuscleGroup[muscleGroup] = [];
+          }
+          exercisesByMuscleGroup[muscleGroup].push({
+            name: exercise.name,
+            completedSets
+          });
+          
+          muscleGroupData[muscleGroup].totalSets += completedSets;
         }
       });
+      
+      // Add workout details to each muscle group that was worked
+      Object.entries(exercisesByMuscleGroup).forEach(([muscleGroup, exercises]) => {
+        muscleGroupData[muscleGroup].workoutDetails.push({
+          date: workoutDate,
+          workoutName,
+          exercises
+        });
+      });
     });
+
+  const toggleExpanded = (muscleGroup: string) => {
+    const newExpanded = new Set(expandedGroups);
+    if (newExpanded.has(muscleGroup)) {
+      newExpanded.delete(muscleGroup);
+    } else {
+      newExpanded.add(muscleGroup);
+    }
+    setExpandedGroups(newExpanded);
+  };
 
   return (
     <Card className="w-full">
@@ -119,26 +163,58 @@ export const MuscleGroupVolumeTracker = ({ workoutHistory }: MuscleGroupVolumeTr
       </CardHeader>
       <CardContent className="space-y-3">
         <div className="space-y-2">
-          {Object.entries(muscleGroupSets).map(([muscleGroup, sets]) => {
-            const status = getMuscleGroupStatus(sets);
+          {Object.entries(muscleGroupData).map(([muscleGroup, data]) => {
+            const status = getMuscleGroupStatus(data.totalSets);
             const StatusIcon = status.icon;
+            const isExpanded = expandedGroups.has(muscleGroup);
             
             return (
-              <div key={muscleGroup} className="flex items-center justify-between p-2 bg-muted/50 rounded-md">
-                <div className="flex items-center gap-2 min-w-0 flex-1">
-                  <StatusIcon className="h-3 w-3 text-muted-foreground flex-shrink-0" />
-                  <div className="min-w-0">
-                    <p className="font-medium text-xs truncate">{muscleGroup}</p>
-                    <p className="text-xs text-muted-foreground">{sets} sets</p>
+              <Collapsible key={muscleGroup} open={isExpanded} onOpenChange={() => toggleExpanded(muscleGroup)}>
+                <CollapsibleTrigger className="w-full">
+                  <div className="flex items-center justify-between p-2 bg-muted/50 rounded-md hover:bg-muted/70 transition-colors">
+                    <div className="flex items-center gap-2 min-w-0 flex-1">
+                      <StatusIcon className="h-3 w-3 text-muted-foreground flex-shrink-0" />
+                      <div className="min-w-0 text-left">
+                        <p className="font-medium text-xs truncate">{muscleGroup}</p>
+                        <p className="text-xs text-muted-foreground">{data.totalSets} sets</p>
+                      </div>
+                    </div>
+                    <div className="flex items-center gap-2">
+                      <Badge 
+                        variant="secondary" 
+                        className={`text-xs px-1.5 py-0.5 flex-shrink-0 ${getMuscleGroupColor(data.totalSets)}`}
+                      >
+                        {status.label}
+                      </Badge>
+                      <ChevronDown className={`h-3 w-3 text-muted-foreground transition-transform ${isExpanded ? 'rotate-180' : ''}`} />
+                    </div>
                   </div>
-                </div>
-                <Badge 
-                  variant="secondary" 
-                  className={`text-xs px-1.5 py-0.5 flex-shrink-0 ${getMuscleGroupColor(sets)}`}
-                >
-                  {status.label}
-                </Badge>
-              </div>
+                </CollapsibleTrigger>
+                <CollapsibleContent>
+                  <div className="mt-2 ml-6 space-y-2">
+                    {data.workoutDetails.length > 0 ? (
+                      data.workoutDetails.map((workout, idx) => (
+                        <div key={idx} className="p-2 bg-muted/30 rounded-sm">
+                          <div className="flex justify-between items-center mb-1">
+                            <p className="text-xs font-medium">{workout.workoutName}</p>
+                            <p className="text-xs text-muted-foreground">{workout.date}</p>
+                          </div>
+                          <div className="space-y-1">
+                            {workout.exercises.map((exercise, exerciseIdx) => (
+                              <div key={exerciseIdx} className="flex justify-between items-center">
+                                <p className="text-xs text-muted-foreground truncate">{exercise.name}</p>
+                                <p className="text-xs font-medium">{exercise.completedSets} sets</p>
+                              </div>
+                            ))}
+                          </div>
+                        </div>
+                      ))
+                    ) : (
+                      <p className="text-xs text-muted-foreground italic">No workouts this week</p>
+                    )}
+                  </div>
+                </CollapsibleContent>
+              </Collapsible>
             );
           })}
         </div>
