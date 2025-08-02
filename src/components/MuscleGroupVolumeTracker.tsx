@@ -111,30 +111,30 @@ export const MuscleGroupVolumeTracker = ({ workoutHistory }: MuscleGroupVolumeTr
 
   return (
     <Card className="w-full">
-      <CardHeader>
-        <CardTitle className="flex items-center gap-2 text-lg">
-          <Zap className="h-5 w-5 text-primary" />
+      <CardHeader className="pb-3">
+        <CardTitle className="flex items-center gap-2 text-base">
+          <Zap className="h-4 w-4 text-primary" />
           Muscle Group Volume (7 Days)
         </CardTitle>
       </CardHeader>
-      <CardContent>
-        <div className="grid grid-cols-2 gap-3">
+      <CardContent className="space-y-3">
+        <div className="grid grid-cols-2 gap-2">
           {Object.entries(muscleGroupSets).map(([muscleGroup, sets]) => {
             const status = getMuscleGroupStatus(sets);
             const StatusIcon = status.icon;
             
             return (
-              <div key={muscleGroup} className="flex items-center justify-between p-3 bg-muted/50 rounded-lg">
-                <div className="flex items-center gap-2">
-                  <StatusIcon className="h-4 w-4 text-muted-foreground" />
-                  <div>
-                    <p className="font-medium text-sm">{muscleGroup}</p>
+              <div key={muscleGroup} className="flex items-center justify-between p-2 bg-muted/50 rounded-md">
+                <div className="flex items-center gap-2 min-w-0 flex-1">
+                  <StatusIcon className="h-3 w-3 text-muted-foreground flex-shrink-0" />
+                  <div className="min-w-0">
+                    <p className="font-medium text-xs truncate">{muscleGroup}</p>
                     <p className="text-xs text-muted-foreground">{sets} sets</p>
                   </div>
                 </div>
                 <Badge 
                   variant="secondary" 
-                  className={`text-xs ${getMuscleGroupColor(sets)}`}
+                  className={`text-xs px-1.5 py-0.5 flex-shrink-0 ${getMuscleGroupColor(sets)}`}
                 >
                   {status.label}
                 </Badge>
@@ -143,23 +143,23 @@ export const MuscleGroupVolumeTracker = ({ workoutHistory }: MuscleGroupVolumeTr
           })}
         </div>
         
-        <div className="mt-4 p-3 bg-muted/30 rounded-lg">
-          <h4 className="text-sm font-medium mb-2">Weekly Targets</h4>
+        <div className="p-2 bg-muted/30 rounded-md">
+          <h4 className="text-xs font-medium mb-1">Weekly Targets</h4>
           <div className="text-xs text-muted-foreground space-y-1">
             <div className="flex items-center gap-2">
-              <div className="w-3 h-3 rounded bg-primary"></div>
+              <div className="w-2 h-2 rounded bg-primary flex-shrink-0"></div>
               <span>10-20 sets: Optimal range</span>
             </div>
             <div className="flex items-center gap-2">
-              <div className="w-3 h-3 rounded bg-orange-500"></div>
+              <div className="w-2 h-2 rounded bg-orange-500 flex-shrink-0"></div>
               <span>6-9 sets: Low volume</span>
             </div>
             <div className="flex items-center gap-2">
-              <div className="w-3 h-3 rounded bg-destructive"></div>
+              <div className="w-2 h-2 rounded bg-destructive flex-shrink-0"></div>
               <span>20+ sets: Overtrained</span>
             </div>
             <div className="flex items-center gap-2">
-              <div className="w-3 h-3 rounded bg-orange-600"></div>
+              <div className="w-2 h-2 rounded bg-orange-600 flex-shrink-0"></div>
               <span>&lt;6 sets: Neglected Rune</span>
             </div>
           </div>
