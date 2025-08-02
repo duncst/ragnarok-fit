@@ -118,7 +118,7 @@ export const MuscleGroupVolumeTracker = ({ workoutHistory }: MuscleGroupVolumeTr
         </CardTitle>
       </CardHeader>
       <CardContent className="space-y-3">
-        <div className="grid grid-cols-2 gap-2">
+        <div className="space-y-2">
           {Object.entries(muscleGroupSets).map(([muscleGroup, sets]) => {
             const status = getMuscleGroupStatus(sets);
             const StatusIcon = status.icon;
