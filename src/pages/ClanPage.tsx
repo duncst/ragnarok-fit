@@ -68,11 +68,7 @@ const ClanPage = () => {
   };
 
   const getReactionButtons = () => [
-    { icon: <Flame className="w-4 h-4" />, label: 'Fire', color: 'text-orange-500' },
-    { icon: <Shield className="w-4 h-4" />, label: 'Worthy', color: 'text-slate-400' },
-    { icon: <ImageIcon src="/lovable-uploads/87f4cc20-755c-412f-a511-4ea9911896fd.png" alt="Horn" className="h-4 w-4" />, label: 'Honor', color: 'text-blue-500' },
-    { icon: <Heart className="w-4 h-4" />, label: 'Support', color: 'text-pink-500' },
-    { icon: <Zap className="w-4 h-4" />, label: 'Thunder', color: 'text-yellow-500' }
+    { icon: <ImageIcon src="/lovable-uploads/87f4cc20-755c-412f-a511-4ea9911896fd.png" alt="Horn" className="h-4 w-4" />, label: 'Honor', color: 'text-blue-500' }
   ];
 
   return (
@@ -174,7 +170,7 @@ const ClanPage = () => {
                     </div>
 
                     {/* Reaction Buttons Grid */}
-                    <div className="grid grid-cols-5 gap-1 sm:gap-2">
+                    <div className="grid grid-cols-1 gap-1 sm:gap-2 max-w-20">
                       {getReactionButtons().map((reaction, index) => (
                         <Button
                           key={reaction.label}
@@ -182,7 +178,7 @@ const ClanPage = () => {
                           size="sm"
                           onClick={() => toggleLike(activity.id)}
                           className={`flex flex-col items-center gap-0.5 sm:gap-1 py-2 sm:py-3 h-auto text-xs ${
-                            index === 2 && activityLikes?.userHasLiked 
+                            activityLikes?.userHasLiked 
                               ? 'bg-slate-600 text-blue-400' 
                               : 'text-slate-400 hover:text-white hover:bg-slate-600'
                           }`}
@@ -191,12 +187,9 @@ const ClanPage = () => {
                             {reaction.icon}
                           </div>
                           <span className="text-xs leading-none">{reaction.label}</span>
-                          {index === 0 && <span className="text-xs bg-slate-600 rounded px-1 leading-none">1</span>}
-                          {index === 1 && <span className="text-xs bg-slate-600 rounded px-1 leading-none">1</span>}
-                          {index === 2 && activityLikes?.userHasLiked && (
+                          {activityLikes?.userHasLiked && (
                             <span className="text-xs bg-blue-600 rounded px-1 leading-none">1</span>
                           )}
-                          {index === 4 && <span className="text-xs bg-slate-600 rounded px-1 leading-none">1</span>}
                         </Button>
                       ))}
                     </div>
