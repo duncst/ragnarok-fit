@@ -20,11 +20,15 @@ const ExerciseIcon = ({ className }: { className?: string }) => (
     <ImageIcon src="/lovable-uploads/1283fc3a-3186-4200-86ce-e6e99c46f46d.png" alt="Start Workout icon" className={className} />
 );
 
+const PathsIcon = ({ className }: { className?: string }) => (
+    <ImageIcon src="/lovable-uploads/ba349eee-18d7-4d58-8a2b-dee8c1703e5f.png" alt="Paths icon" className={className} />
+);
+
 const navItems = [
   { to: "/home", icon: HomeIcon, label: "Home" },
   { to: "/workout/new", icon: StartWorkoutIcon, label: "Start Workout" },
   { to: "/forge", icon: Anvil, label: "Forge" },
-  { to: "/capability-paths", icon: Target, label: "Paths" },
+  { to: "/capability-paths", icon: PathsIcon, label: "Paths" },
   { to: "/clan", icon: Users, label: "Clan" },
 ];
 
