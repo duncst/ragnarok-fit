@@ -165,7 +165,7 @@ const ClanPage = () => {
                         <Shield className="w-3 h-3 sm:w-4 sm:h-4 text-slate-400" />
                       </div>
                       <span className="text-xs sm:text-sm text-slate-400">
-                        {totalLikes > 0 ? `${totalLikes + 2} warriors honored this` : '3 warriors honored this'}
+                        {totalLikes > 0 ? `${totalLikes} warriors honored this` : 'No honors yet'}
                       </span>
                     </div>
 
