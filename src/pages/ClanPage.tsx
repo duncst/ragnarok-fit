@@ -177,7 +177,7 @@ const ClanPage = () => {
                           variant="ghost"
                           size="sm"
                           onClick={() => toggleLike(activity.id)}
-                          className={`flex flex-col items-center gap-0.5 sm:gap-1 py-2 sm:py-3 h-auto text-xs ${
+                          className={`flex items-center gap-2 py-2 sm:py-3 h-auto text-xs ${
                             activityLikes?.userHasLiked 
                               ? 'bg-slate-600 text-blue-400' 
                               : 'text-slate-400 hover:text-white hover:bg-slate-600'
@@ -186,7 +186,6 @@ const ClanPage = () => {
                           <div className="w-8 h-8 sm:w-12 sm:h-12 flex items-center justify-center">
                             {reaction.icon}
                           </div>
-                          <span className="text-xs leading-none">{reaction.label}</span>
                           {activityLikes?.userHasLiked && (
                             <span className="text-xs bg-blue-600 rounded px-1 leading-none">1</span>
                           )}
