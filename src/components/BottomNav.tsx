@@ -48,8 +48,8 @@ const BottomNav = () => {
               )
             }
           >
-            <item.icon className={cn("mb-1", item.label === 'Paths' ? 'h-10 w-10 mt-1' : ['Running', 'Home', 'Workout'].includes(item.label) ? 'h-8 w-8' : 'h-7 w-7')} />
-            <span className="text-xs font-medium leading-tight">{item.label}</span>
+            <item.icon className={cn("mb-1", item.label === 'Paths' ? 'h-10 w-10 mt-1 mb-0' : ['Running', 'Home', 'Workout'].includes(item.label) ? 'h-8 w-8' : 'h-7 w-7')} />
+            <span className={cn("text-xs font-medium leading-tight", item.label === 'Paths' ? 'mt-1' : '')}>{item.label}</span>
           </NavLink>
         ))}
       </div>
