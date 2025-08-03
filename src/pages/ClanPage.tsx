@@ -51,10 +51,9 @@ const ClanPage = () => {
             </CardTitle>
           </CardHeader>
           <CardContent>
-            <div className="bg-muted/50 rounded-lg p-4">
-              <div className="flex items-center gap-3 mb-2">
-                <CheckCircle className="w-5 h-5 text-green-500" />
-                <span className="text-lg font-semibold text-primary">Iron Soul Member</span>
+            <div className="space-y-4">
+              <div className="bg-primary/10 border border-primary/20 rounded-lg px-4 py-2 w-fit">
+                <span className="text-lg font-bold text-primary">Ironbound</span>
               </div>
               <p className="text-sm text-muted-foreground">
                 You've earned your place in the brotherhood. You have 2 invites available to bring worthy men into the forge.
