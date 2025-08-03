@@ -96,7 +96,7 @@ const ClanPage = () => {
                           <span className="font-semibold text-foreground">
                             {activity.banner_name || 'Unknown Warrior'}
                           </span>
-                          <div className="bg-muted border border-primary/20 rounded px-1 py-0.5">
+                          <div className="bg-muted border border-primary/20 rounded px-1 py-0">
                             <span className="text-xs font-medium text-primary">Ironbound</span>
                           </div>
                         </div>
