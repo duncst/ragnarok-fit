@@ -6,12 +6,14 @@ import { Users, Award, Swords, MoreHorizontal, Crown, Flame, Zap, Shield, Heart 
 import { useBrotherhoodActivities } from '@/hooks/useBrotherhoodActivities';
 import { useBrotherhoodLikes } from '@/hooks/useBrotherhoodLikes';
 import { useBannerName } from '@/hooks/useBannerName';
+import { useForgeData } from '@/hooks/useForgeData';
 import { formatDistanceToNow } from 'date-fns';
 import { ImageIcon } from '@/components/ImageIcon';
 
 const ClanPage = () => {
   const { activities, isLoading } = useBrotherhoodActivities();
   const { bannerName } = useBannerName();
+  const { forgeProgress } = useForgeData();
   const activityIds = activities.map(activity => activity.id);
   const { likes, toggleLike } = useBrotherhoodLikes(activityIds);
 
@@ -31,11 +33,11 @@ const ClanPage = () => {
     return name.split(' ').map(word => word[0]).join('').toUpperCase().slice(0, 2);
   };
 
-  const getUserTitle = (bannerName?: string, activityType?: string) => {
-    // TODO: Connect to actual forge progression data
-    if (activityType === 'valhalla_challenge') return 'Berserker';
-    if (activityType === 'hero_call') return 'Einherjar';
-    return 'Adept';
+  const getUserTitle = (activityUserId?: string) => {
+    // For the current user, use their actual forge title
+    // For other users, we would need to fetch their individual forge progress
+    // For now, use the current user's title as a fallback
+    return forgeProgress.currentTitle || 'Adept';
   };
 
   const formatActivityTitle = (activity: any) => {
@@ -187,7 +189,7 @@ const ClanPage = () => {
                               {activity.banner_name || 'Freya Stormborn'}
                             </span>
                             <Badge className="bg-slate-600 text-slate-200 px-1.5 sm:px-2 py-0.5 sm:py-1 text-xs flex-shrink-0">
-                              {getUserTitle(activity.banner_name, activity.activity_type)}
+                              {getUserTitle(activity.user_id)}
                             </Badge>
                             <Crown className="w-3 h-3 sm:w-4 sm:h-4 text-orange-500 flex-shrink-0" />
                           </div>
