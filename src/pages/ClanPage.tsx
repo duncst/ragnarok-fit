@@ -98,6 +98,9 @@ const ClanPage = () => {
                           </span>
                           {getActivityIcon(activity.activity_type)}
                         </div>
+                        <div className="bg-muted border border-primary/20 rounded px-3 py-1 w-fit mb-2">
+                          <span className="text-sm font-semibold text-primary">Ironbound</span>
+                        </div>
                         <p className="text-sm text-muted-foreground">
                           {activity.activity_description}
                         </p>
