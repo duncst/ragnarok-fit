@@ -151,7 +151,7 @@ const ClanPage = () => {
                       )}
                       {activity.activity_type === 'hero_call' && (
                         <div className="mt-3 sm:mt-4">
-                          <Badge className="bg-orange-600 text-white px-2 sm:px-3 py-1 text-xs sm:text-sm">
+                          <Badge className="bg-gradient-to-r from-orange-500 to-yellow-500 text-white px-3 sm:px-4 py-1.5 text-xs sm:text-sm font-semibold shadow-lg shadow-orange-500/30 border border-orange-400/50">
                             15 Days
                           </Badge>
                         </div>
