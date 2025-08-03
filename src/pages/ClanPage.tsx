@@ -55,7 +55,8 @@ const ClanPage = () => {
     } else if (activity.activity_type === 'hero_call') {
       return 'Unwavering discipline breeds legendary strength';
     }
-    return activity.notes || activity.activity_description;
+    // For regular activities, show notes if different from activity_description, otherwise show nothing
+    return activity.notes && activity.notes !== activity.activity_description ? activity.notes : null;
   };
 
   const formatActivityDetails = (activity: any) => {
@@ -137,9 +138,11 @@ const ClanPage = () => {
                       <h3 className="text-lg sm:text-xl font-bold text-white mb-2 sm:mb-3 leading-tight">
                         {formatActivityTitle(activity)}
                       </h3>
-                      <p className="text-slate-300 text-sm sm:text-base mb-2 sm:mb-4 leading-relaxed">
-                        {formatActivitySubtitle(activity)}
-                      </p>
+                      {formatActivitySubtitle(activity) && (
+                        <p className="text-slate-300 text-sm sm:text-base mb-2 sm:mb-4 leading-relaxed">
+                          {formatActivitySubtitle(activity)}
+                        </p>
+                      )}
                       {formatActivityDetails(activity) && (
                         <p className="text-slate-400 italic text-xs sm:text-sm leading-relaxed">
                           {formatActivityDetails(activity)}
