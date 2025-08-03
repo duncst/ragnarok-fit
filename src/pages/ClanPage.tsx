@@ -120,7 +120,6 @@ const ClanPage = () => {
                             <Badge className="bg-slate-600 text-slate-200 px-1.5 sm:px-2 py-0.5 sm:py-1 text-xs flex-shrink-0 rounded-sm">
                               {getUserTitle(activity.user_id)}
                             </Badge>
-                            <Crown className="w-3 h-3 sm:w-4 sm:h-4 text-orange-500 flex-shrink-0" />
                           </div>
                           <span className="text-xs sm:text-sm text-slate-400">
                             {formatDistanceToNow(new Date(activity.created_at), { addSuffix: true })}
