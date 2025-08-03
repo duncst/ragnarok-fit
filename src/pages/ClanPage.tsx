@@ -107,103 +107,101 @@ const ClanPage = () => {
               const totalLikes = activityLikes?.count || 0;
               
               return (
-                <Card key={activity.id} className="bg-slate-700/50 border-slate-600 shadow-lg overflow-hidden">
-                  <CardContent className="p-0">
-                    {/* Main Activity Card with User Profile */}
-                    <div className="bg-slate-800/80 border border-slate-600 rounded-lg m-2 sm:m-4 p-3 sm:p-6">
-                      {/* User Profile Header */}
-                      <div className="flex items-start justify-between mb-4 sm:mb-6">
-                        <div className="flex items-center gap-2 sm:gap-3 min-w-0 flex-1">
-                          <div className="w-8 h-8 sm:w-12 sm:h-12 bg-slate-600 rounded-full flex items-center justify-center flex-shrink-0">
-                            <Shield className="w-4 h-4 sm:w-6 sm:h-6 text-slate-300" />
-                          </div>
-                          <div className="min-w-0 flex-1">
-                            <div className="flex items-center gap-2 sm:gap-3 mb-1">
-                              <span className="font-semibold text-white text-sm sm:text-base truncate">
-                                {activity.banner_name || 'Freya Stormborn'}
-                              </span>
-                              <Badge className="bg-slate-600 text-slate-200 px-1.5 sm:px-2 py-0.5 sm:py-1 text-xs flex-shrink-0 rounded-sm">
-                                {getUserTitle(activity.user_id)}
-                              </Badge>
-                              <Crown className="w-3 h-3 sm:w-4 sm:h-4 text-orange-500 flex-shrink-0" />
-                            </div>
-                            <span className="text-xs sm:text-sm text-slate-400">
-                              {formatDistanceToNow(new Date(activity.created_at), { addSuffix: true })}
+                <div key={activity.id} className="mb-3 sm:mb-4">
+                  {/* Activity Card */}
+                  <div className="bg-slate-800/80 border border-slate-600 rounded-lg p-3 sm:p-6 shadow-lg">
+                    {/* User Profile Header */}
+                    <div className="flex items-start justify-between mb-4 sm:mb-6">
+                      <div className="flex items-center gap-2 sm:gap-3 min-w-0 flex-1">
+                        <div className="w-8 h-8 sm:w-12 sm:h-12 bg-slate-600 rounded-full flex items-center justify-center flex-shrink-0">
+                          <Shield className="w-4 h-4 sm:w-6 sm:h-6 text-slate-300" />
+                        </div>
+                        <div className="min-w-0 flex-1">
+                          <div className="flex items-center gap-2 sm:gap-3 mb-1">
+                            <span className="font-semibold text-white text-sm sm:text-base truncate">
+                              {activity.banner_name || 'Freya Stormborn'}
                             </span>
-                          </div>
-                        </div>
-                        <Button variant="ghost" size="icon" className="h-6 w-6 sm:h-8 sm:w-8 text-slate-400 hover:text-white flex-shrink-0">
-                          <MoreHorizontal className="w-3 h-3 sm:w-4 sm:h-4" />
-                        </Button>
-                      </div>
-
-                      {/* Activity Content */}
-                      <div className="mb-4 sm:mb-6">
-                        <h3 className="text-lg sm:text-xl font-bold text-white mb-2 sm:mb-3 leading-tight">
-                          {formatActivityTitle(activity)}
-                        </h3>
-                        <p className="text-slate-300 text-sm sm:text-base mb-2 sm:mb-4 leading-relaxed">
-                          {formatActivitySubtitle(activity)}
-                        </p>
-                        {formatActivityDetails(activity) && (
-                          <p className="text-slate-400 italic text-xs sm:text-sm leading-relaxed">
-                            {formatActivityDetails(activity)}
-                          </p>
-                        )}
-                        {activity.activity_type === 'hero_call' && (
-                          <div className="mt-3 sm:mt-4">
-                            <Badge className="bg-orange-600 text-white px-2 sm:px-3 py-1 text-xs sm:text-sm">
-                              🔥 15 Days
+                            <Badge className="bg-slate-600 text-slate-200 px-1.5 sm:px-2 py-0.5 sm:py-1 text-xs flex-shrink-0 rounded-sm">
+                              {getUserTitle(activity.user_id)}
                             </Badge>
+                            <Crown className="w-3 h-3 sm:w-4 sm:h-4 text-orange-500 flex-shrink-0" />
                           </div>
-                        )}
-                      </div>
-
-                      {/* Horizontal separator */}
-                      <div className="border-t border-slate-600 mb-3 sm:mb-4"></div>
-
-                      {/* Reactions Summary */}
-                      <div className="flex items-center gap-2 mb-3 sm:mb-4">
-                        <div className="flex items-center gap-1">
-                          <Zap className="w-3 h-3 sm:w-4 sm:h-4 text-yellow-500" />
-                          <Flame className="w-3 h-3 sm:w-4 sm:h-4 text-orange-500" />
-                          <Shield className="w-3 h-3 sm:w-4 sm:h-4 text-slate-400" />
+                          <span className="text-xs sm:text-sm text-slate-400">
+                            {formatDistanceToNow(new Date(activity.created_at), { addSuffix: true })}
+                          </span>
                         </div>
-                        <span className="text-xs sm:text-sm text-slate-400">
-                          {totalLikes > 0 ? `${totalLikes + 2} warriors honored this` : '3 warriors honored this'}
-                        </span>
                       </div>
-
-                      {/* Reaction Buttons Grid */}
-                      <div className="grid grid-cols-5 gap-1 sm:gap-2">
-                        {getReactionButtons().map((reaction, index) => (
-                          <Button
-                            key={reaction.label}
-                            variant="ghost"
-                            size="sm"
-                            onClick={() => toggleLike(activity.id)}
-                            className={`flex flex-col items-center gap-0.5 sm:gap-1 py-2 sm:py-3 h-auto text-xs ${
-                              index === 2 && activityLikes?.userHasLiked 
-                                ? 'bg-slate-600 text-blue-400' 
-                                : 'text-slate-400 hover:text-white hover:bg-slate-600'
-                            }`}
-                          >
-                            <div className="w-3 h-3 sm:w-4 sm:h-4 flex items-center justify-center">
-                              {reaction.icon}
-                            </div>
-                            <span className="text-xs leading-none">{reaction.label}</span>
-                            {index === 0 && <span className="text-xs bg-slate-600 rounded px-1 leading-none">1</span>}
-                            {index === 1 && <span className="text-xs bg-slate-600 rounded px-1 leading-none">1</span>}
-                            {index === 2 && activityLikes?.userHasLiked && (
-                              <span className="text-xs bg-blue-600 rounded px-1 leading-none">1</span>
-                            )}
-                            {index === 4 && <span className="text-xs bg-slate-600 rounded px-1 leading-none">1</span>}
-                          </Button>
-                        ))}
-                      </div>
+                      <Button variant="ghost" size="icon" className="h-6 w-6 sm:h-8 sm:w-8 text-slate-400 hover:text-white flex-shrink-0">
+                        <MoreHorizontal className="w-3 h-3 sm:w-4 sm:h-4" />
+                      </Button>
                     </div>
-                  </CardContent>
-                </Card>
+
+                    {/* Activity Content */}
+                    <div className="mb-4 sm:mb-6">
+                      <h3 className="text-lg sm:text-xl font-bold text-white mb-2 sm:mb-3 leading-tight">
+                        {formatActivityTitle(activity)}
+                      </h3>
+                      <p className="text-slate-300 text-sm sm:text-base mb-2 sm:mb-4 leading-relaxed">
+                        {formatActivitySubtitle(activity)}
+                      </p>
+                      {formatActivityDetails(activity) && (
+                        <p className="text-slate-400 italic text-xs sm:text-sm leading-relaxed">
+                          {formatActivityDetails(activity)}
+                        </p>
+                      )}
+                      {activity.activity_type === 'hero_call' && (
+                        <div className="mt-3 sm:mt-4">
+                          <Badge className="bg-orange-600 text-white px-2 sm:px-3 py-1 text-xs sm:text-sm">
+                            🔥 15 Days
+                          </Badge>
+                        </div>
+                      )}
+                    </div>
+
+                    {/* Horizontal separator */}
+                    <div className="border-t border-slate-600 mb-3 sm:mb-4"></div>
+
+                    {/* Reactions Summary */}
+                    <div className="flex items-center gap-2 mb-3 sm:mb-4">
+                      <div className="flex items-center gap-1">
+                        <Zap className="w-3 h-3 sm:w-4 sm:h-4 text-yellow-500" />
+                        <Flame className="w-3 h-3 sm:w-4 sm:h-4 text-orange-500" />
+                        <Shield className="w-3 h-3 sm:w-4 sm:h-4 text-slate-400" />
+                      </div>
+                      <span className="text-xs sm:text-sm text-slate-400">
+                        {totalLikes > 0 ? `${totalLikes + 2} warriors honored this` : '3 warriors honored this'}
+                      </span>
+                    </div>
+
+                    {/* Reaction Buttons Grid */}
+                    <div className="grid grid-cols-5 gap-1 sm:gap-2">
+                      {getReactionButtons().map((reaction, index) => (
+                        <Button
+                          key={reaction.label}
+                          variant="ghost"
+                          size="sm"
+                          onClick={() => toggleLike(activity.id)}
+                          className={`flex flex-col items-center gap-0.5 sm:gap-1 py-2 sm:py-3 h-auto text-xs ${
+                            index === 2 && activityLikes?.userHasLiked 
+                              ? 'bg-slate-600 text-blue-400' 
+                              : 'text-slate-400 hover:text-white hover:bg-slate-600'
+                          }`}
+                        >
+                          <div className="w-3 h-3 sm:w-4 sm:h-4 flex items-center justify-center">
+                            {reaction.icon}
+                          </div>
+                          <span className="text-xs leading-none">{reaction.label}</span>
+                          {index === 0 && <span className="text-xs bg-slate-600 rounded px-1 leading-none">1</span>}
+                          {index === 1 && <span className="text-xs bg-slate-600 rounded px-1 leading-none">1</span>}
+                          {index === 2 && activityLikes?.userHasLiked && (
+                            <span className="text-xs bg-blue-600 rounded px-1 leading-none">1</span>
+                          )}
+                          {index === 4 && <span className="text-xs bg-slate-600 rounded px-1 leading-none">1</span>}
+                        </Button>
+                      ))}
+                    </div>
+                  </div>
+                </div>
               );
             })
           )}
