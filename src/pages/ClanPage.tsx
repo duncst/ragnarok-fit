@@ -32,9 +32,10 @@ const ClanPage = () => {
   };
 
   const getUserTitle = (bannerName?: string, activityType?: string) => {
-    if (activityType === 'valhalla_challenge') return 'Shield Maiden';
-    if (activityType === 'hero_call') return 'Einherjar Elite';
-    return 'Warrior';
+    // TODO: Connect to actual forge progression data
+    if (activityType === 'valhalla_challenge') return 'Berserker';
+    if (activityType === 'hero_call') return 'Einherjar';
+    return 'Adept';
   };
 
   const formatActivityTitle = (activity: any) => {
@@ -74,14 +75,14 @@ const ClanPage = () => {
 
   return (
     <div className="min-h-screen bg-background">
-      <div className="max-w-4xl mx-auto p-4">
+      <div className="max-w-4xl mx-auto p-3 sm:p-4">
         {/* Header */}
-        <div className="mb-8">
-          <h1 className="text-4xl font-bold text-foreground mb-2">Hall of Victories</h1>
+        <div className="mb-6">
+          <h1 className="text-2xl sm:text-3xl font-bold text-foreground mb-2">Hall of Victories</h1>
         </div>
 
         {/* Activities */}
-        <div className="space-y-4">
+        <div className="space-y-3 sm:space-y-4">
           {isLoading ? (
             <div className="flex items-center justify-center py-8">
               <div className="animate-spin rounded-full h-6 w-6 border-b-2 border-primary"></div>
@@ -104,26 +105,26 @@ const ClanPage = () => {
               const totalLikes = activityLikes?.count || 0;
               
               return (
-                <Card key={activity.id} className="bg-slate-700/50 border-slate-600 shadow-lg">
+                <Card key={activity.id} className="bg-slate-700/50 border-slate-600 shadow-lg overflow-hidden">
                   <CardContent className="p-0">
                     {/* Main Activity Card */}
-                    <div className="bg-slate-800/80 border border-slate-600 rounded-lg m-4 p-6">
+                    <div className="bg-slate-800/80 border border-slate-600 rounded-lg m-2 sm:m-4 p-3 sm:p-6">
                       {/* Activity Content */}
-                      <div className="mb-6">
-                        <h3 className="text-2xl font-bold text-white mb-3">
+                      <div className="mb-4 sm:mb-6">
+                        <h3 className="text-lg sm:text-xl font-bold text-white mb-2 sm:mb-3 leading-tight">
                           {formatActivityTitle(activity)}
                         </h3>
-                        <p className="text-slate-300 text-lg mb-4">
+                        <p className="text-slate-300 text-sm sm:text-base mb-2 sm:mb-4 leading-relaxed">
                           {formatActivitySubtitle(activity)}
                         </p>
                         {formatActivityDetails(activity) && (
-                          <p className="text-slate-400 italic text-sm">
+                          <p className="text-slate-400 italic text-xs sm:text-sm leading-relaxed">
                             {formatActivityDetails(activity)}
                           </p>
                         )}
                         {activity.activity_type === 'hero_call' && (
-                          <div className="mt-4">
-                            <Badge className="bg-orange-600 text-white px-3 py-1 text-sm">
+                          <div className="mt-3 sm:mt-4">
+                            <Badge className="bg-orange-600 text-white px-2 sm:px-3 py-1 text-xs sm:text-sm">
                               🔥 15 Days
                             </Badge>
                           </div>
@@ -131,70 +132,72 @@ const ClanPage = () => {
                       </div>
 
                       {/* Horizontal separator */}
-                      <div className="border-t border-slate-600 mb-4"></div>
+                      <div className="border-t border-slate-600 mb-3 sm:mb-4"></div>
 
                       {/* Reactions Summary */}
-                      <div className="flex items-center gap-2 mb-4">
+                      <div className="flex items-center gap-2 mb-3 sm:mb-4">
                         <div className="flex items-center gap-1">
-                          <Zap className="w-4 h-4 text-yellow-500" />
-                          <Flame className="w-4 h-4 text-orange-500" />
-                          <Shield className="w-4 h-4 text-slate-400" />
+                          <Zap className="w-3 h-3 sm:w-4 sm:h-4 text-yellow-500" />
+                          <Flame className="w-3 h-3 sm:w-4 sm:h-4 text-orange-500" />
+                          <Shield className="w-3 h-3 sm:w-4 sm:h-4 text-slate-400" />
                         </div>
-                        <span className="text-sm text-slate-400">
+                        <span className="text-xs sm:text-sm text-slate-400">
                           {totalLikes > 0 ? `${totalLikes + 2} warriors honored this` : '3 warriors honored this'}
                         </span>
                       </div>
 
                       {/* Reaction Buttons Grid */}
-                      <div className="grid grid-cols-5 gap-2 mb-4">
+                      <div className="grid grid-cols-5 gap-1 sm:gap-2 mb-3 sm:mb-4">
                         {getReactionButtons().map((reaction, index) => (
                           <Button
                             key={reaction.label}
                             variant="ghost"
                             size="sm"
                             onClick={() => toggleLike(activity.id)}
-                            className={`flex flex-col items-center gap-1 py-3 h-auto ${
+                            className={`flex flex-col items-center gap-0.5 sm:gap-1 py-2 sm:py-3 h-auto text-xs ${
                               index === 2 && activityLikes?.userHasLiked 
                                 ? 'bg-slate-600 text-blue-400' 
                                 : 'text-slate-400 hover:text-white hover:bg-slate-600'
                             }`}
                           >
-                            {reaction.icon}
-                            <span className="text-xs">{reaction.label}</span>
-                            {index === 0 && <span className="text-xs bg-slate-600 rounded px-1">1</span>}
-                            {index === 1 && <span className="text-xs bg-slate-600 rounded px-1">1</span>}
+                            <div className="w-3 h-3 sm:w-4 sm:h-4 flex items-center justify-center">
+                              {reaction.icon}
+                            </div>
+                            <span className="text-xs leading-none">{reaction.label}</span>
+                            {index === 0 && <span className="text-xs bg-slate-600 rounded px-1 leading-none">1</span>}
+                            {index === 1 && <span className="text-xs bg-slate-600 rounded px-1 leading-none">1</span>}
                             {index === 2 && activityLikes?.userHasLiked && (
-                              <span className="text-xs bg-blue-600 rounded px-1">1</span>
+                              <span className="text-xs bg-blue-600 rounded px-1 leading-none">1</span>
                             )}
-                            {index === 4 && <span className="text-xs bg-slate-600 rounded px-1">1</span>}
+                            {index === 4 && <span className="text-xs bg-slate-600 rounded px-1 leading-none">1</span>}
                           </Button>
                         ))}
                       </div>
                     </div>
 
                     {/* User Profile Section */}
-                    <div className="px-6 pb-6">
-                      <div className="flex items-center justify-between">
-                        <div className="flex items-center gap-3">
-                          <div className="w-12 h-12 bg-slate-600 rounded-full flex items-center justify-center">
-                            <Shield className="w-6 h-6 text-slate-300" />
+                    <div className="px-3 sm:px-6 pb-3 sm:pb-6">
+                      <div className="flex items-center justify-between flex-wrap gap-2">
+                        <div className="flex items-center gap-2 sm:gap-3 min-w-0 flex-1">
+                          <div className="w-8 h-8 sm:w-12 sm:h-12 bg-slate-600 rounded-full flex items-center justify-center flex-shrink-0">
+                            <Shield className="w-4 h-4 sm:w-6 sm:h-6 text-slate-300" />
                           </div>
-                          <div className="flex items-center gap-3">
-                            <span className="font-semibold text-white">
+                          <div className="flex items-center gap-2 sm:gap-3 min-w-0 flex-1">
+                            <span className="font-semibold text-white text-sm sm:text-base truncate">
                               {activity.banner_name || 'Freya Stormborn'}
                             </span>
-                            <Badge className="bg-slate-600 text-slate-200 px-2 py-1">
+                            <Badge className="bg-slate-600 text-slate-200 px-1.5 sm:px-2 py-0.5 sm:py-1 text-xs flex-shrink-0">
                               {getUserTitle(activity.banner_name, activity.activity_type)}
                             </Badge>
-                            <Crown className="w-4 h-4 text-orange-500" />
+                            <Crown className="w-3 h-3 sm:w-4 sm:h-4 text-orange-500 flex-shrink-0" />
                           </div>
                         </div>
-                        <div className="flex items-center gap-2">
-                          <span className="text-sm text-slate-400">
+                        <div className="flex items-center gap-1 sm:gap-2 flex-shrink-0">
+                          <span className="text-xs sm:text-sm text-slate-400">
                             {formatDistanceToNow(new Date(activity.created_at), { addSuffix: true })}
                           </span>
-                          <Button variant="ghost" size="icon" className="h-8 w-8 text-slate-400 hover:text-white">
-                            <MoreHorizontal className="w-4 h-4" />
+                          <Button variant="ghost" size="icon" className="h-6 w-6 sm:h-8 sm:w-8 text-slate-400 hover:text-white">
+                            <MoreHorizontal className="w-3 h-3 sm:w-4 sm:h-4" />
                           </Button>
                         </div>
                       </div>
