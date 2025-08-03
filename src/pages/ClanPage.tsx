@@ -109,8 +109,34 @@ const ClanPage = () => {
               return (
                 <Card key={activity.id} className="bg-slate-700/50 border-slate-600 shadow-lg overflow-hidden">
                   <CardContent className="p-0">
-                    {/* Main Activity Card */}
+                    {/* Main Activity Card with User Profile */}
                     <div className="bg-slate-800/80 border border-slate-600 rounded-lg m-2 sm:m-4 p-3 sm:p-6">
+                      {/* User Profile Header */}
+                      <div className="flex items-start justify-between mb-4 sm:mb-6">
+                        <div className="flex items-center gap-2 sm:gap-3 min-w-0 flex-1">
+                          <div className="w-8 h-8 sm:w-12 sm:h-12 bg-slate-600 rounded-full flex items-center justify-center flex-shrink-0">
+                            <Shield className="w-4 h-4 sm:w-6 sm:h-6 text-slate-300" />
+                          </div>
+                          <div className="min-w-0 flex-1">
+                            <div className="flex items-center gap-2 sm:gap-3 mb-1">
+                              <span className="font-semibold text-white text-sm sm:text-base truncate">
+                                {activity.banner_name || 'Freya Stormborn'}
+                              </span>
+                              <Badge className="bg-slate-600 text-slate-200 px-1.5 sm:px-2 py-0.5 sm:py-1 text-xs flex-shrink-0 rounded-sm">
+                                {getUserTitle(activity.user_id)}
+                              </Badge>
+                              <Crown className="w-3 h-3 sm:w-4 sm:h-4 text-orange-500 flex-shrink-0" />
+                            </div>
+                            <span className="text-xs sm:text-sm text-slate-400">
+                              {formatDistanceToNow(new Date(activity.created_at), { addSuffix: true })}
+                            </span>
+                          </div>
+                        </div>
+                        <Button variant="ghost" size="icon" className="h-6 w-6 sm:h-8 sm:w-8 text-slate-400 hover:text-white flex-shrink-0">
+                          <MoreHorizontal className="w-3 h-3 sm:w-4 sm:h-4" />
+                        </Button>
+                      </div>
+
                       {/* Activity Content */}
                       <div className="mb-4 sm:mb-6">
                         <h3 className="text-lg sm:text-xl font-bold text-white mb-2 sm:mb-3 leading-tight">
@@ -149,7 +175,7 @@ const ClanPage = () => {
                       </div>
 
                       {/* Reaction Buttons Grid */}
-                      <div className="grid grid-cols-5 gap-1 sm:gap-2 mb-3 sm:mb-4">
+                      <div className="grid grid-cols-5 gap-1 sm:gap-2">
                         {getReactionButtons().map((reaction, index) => (
                           <Button
                             key={reaction.label}
@@ -174,34 +200,6 @@ const ClanPage = () => {
                             {index === 4 && <span className="text-xs bg-slate-600 rounded px-1 leading-none">1</span>}
                           </Button>
                         ))}
-                      </div>
-                    </div>
-
-                    {/* User Profile Section */}
-                    <div className="px-3 sm:px-6 pb-3 sm:pb-6">
-                      <div className="flex items-center justify-between flex-wrap gap-2">
-                        <div className="flex items-center gap-2 sm:gap-3 min-w-0 flex-1">
-                          <div className="w-8 h-8 sm:w-12 sm:h-12 bg-slate-600 rounded-full flex items-center justify-center flex-shrink-0">
-                            <Shield className="w-4 h-4 sm:w-6 sm:h-6 text-slate-300" />
-                          </div>
-                          <div className="flex items-center gap-2 sm:gap-3 min-w-0 flex-1">
-                            <span className="font-semibold text-white text-sm sm:text-base truncate">
-                              {activity.banner_name || 'Freya Stormborn'}
-                            </span>
-                            <Badge className="bg-slate-600 text-slate-200 px-1.5 sm:px-2 py-0.5 sm:py-1 text-xs flex-shrink-0 rounded-sm">
-                              {getUserTitle(activity.user_id)}
-                            </Badge>
-                            <Crown className="w-3 h-3 sm:w-4 sm:h-4 text-orange-500 flex-shrink-0" />
-                          </div>
-                        </div>
-                        <div className="flex items-center gap-1 sm:gap-2 flex-shrink-0">
-                          <span className="text-xs sm:text-sm text-slate-400">
-                            {formatDistanceToNow(new Date(activity.created_at), { addSuffix: true })}
-                          </span>
-                          <Button variant="ghost" size="icon" className="h-6 w-6 sm:h-8 sm:w-8 text-slate-400 hover:text-white">
-                            <MoreHorizontal className="w-3 h-3 sm:w-4 sm:h-4" />
-                          </Button>
-                        </div>
                       </div>
                     </div>
                   </CardContent>
