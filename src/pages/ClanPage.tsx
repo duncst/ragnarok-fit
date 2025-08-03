@@ -64,7 +64,8 @@ const ClanPage = () => {
     } else if (activity.activity_type === 'hero_call') {
       return null; // Will show streak badge instead
     }
-    return activity.notes;
+    // For other activity types, don't show details if they're the same as subtitle
+    return null;
   };
 
   const getReactionButtons = () => [
