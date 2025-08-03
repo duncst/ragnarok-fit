@@ -35,7 +35,6 @@ const ClanPage = () => {
       <div className="max-w-4xl mx-auto space-y-6">
         {/* Header */}
         <div className="text-center mb-8">
-          <h2 className="text-sm text-muted-foreground mb-2">EXCLUSIVE ACCESS</h2>
           <h1 className="text-4xl font-bold text-foreground mb-4">Brotherhood</h1>
           <p className="text-muted-foreground text-lg max-w-2xl mx-auto">
             Ragnarök Fit is an invite-only brotherhood of men committed to forging themselves into capable, disciplined warriors.
