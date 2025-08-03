@@ -66,7 +66,7 @@ const ClanPage = () => {
         {/* Brotherhood Activity */}
         <Card className="bg-card/50 border-border">
           <CardHeader>
-            <CardTitle>Brotherhood Activity</CardTitle>
+            <CardTitle>Hall of Victories</CardTitle>
           </CardHeader>
           <CardContent>
             {isLoading ? (
