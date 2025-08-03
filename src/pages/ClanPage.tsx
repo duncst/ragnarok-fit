@@ -68,7 +68,7 @@ const ClanPage = () => {
   };
 
   const getReactionButtons = () => [
-    { icon: <ImageIcon src="/lovable-uploads/87f4cc20-755c-412f-a511-4ea9911896fd.png" alt="Horn" className="h-4 w-4" />, label: 'Honor', color: 'text-blue-500' }
+    { icon: <ImageIcon src="/lovable-uploads/87f4cc20-755c-412f-a511-4ea9911896fd.png" alt="Horn" className="h-8 w-8" />, label: '', color: 'text-blue-500' }
   ];
 
   return (
@@ -183,7 +183,7 @@ const ClanPage = () => {
                               : 'text-slate-400 hover:text-white hover:bg-slate-600'
                           }`}
                         >
-                          <div className="w-3 h-3 sm:w-4 sm:h-4 flex items-center justify-center">
+                          <div className="w-8 h-8 sm:w-12 sm:h-12 flex items-center justify-center">
                             {reaction.icon}
                           </div>
                           <span className="text-xs leading-none">{reaction.label}</span>
