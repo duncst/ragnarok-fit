@@ -4,7 +4,8 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Play, Square, MapPin } from "lucide-react";
 import React, { useState, useEffect, useRef } from "react";
 import { cn } from "@/lib/utils";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useNavigate, useLocation } from "react-router-dom";
+import { useActiveWorkout } from "@/contexts/ActiveWorkoutContext";
 
 const runTypes = [
   "Easy Run",
@@ -22,8 +23,11 @@ const RunPage = () => {
   const [isRunning, setIsRunning] = useState(false);
   const [time, setTime] = useState(0);
   const [runType, setRunType] = useState(runTypes[0]);
+  const [startTime, setStartTime] = useState<Date | null>(null);
   const timerRef = useRef<NodeJS.Timeout | null>(null);
   const navigate = useNavigate();
+  const location = useLocation();
+  const { setActiveWorkout } = useActiveWorkout();
 
   useEffect(() => {
     if (isRunning) {
@@ -43,12 +47,26 @@ const RunPage = () => {
       // For now, stopping the run resets it. We can add a summary page later.
       setTime(0);
       setIsRunning(false);
+      setStartTime(null);
+      setActiveWorkout(null);
     } else {
+      const newStartTime = new Date();
       setIsRunning(true);
+      setStartTime(newStartTime);
+      setActiveWorkout({
+        id: 'endurance-run',
+        name: runType,
+        type: 'ritual',
+        startTime: newStartTime,
+        returnPath: location.pathname,
+      });
     }
   };
   
   const handleCancel = () => {
+    if (isRunning) {
+      setActiveWorkout(null);
+    }
     navigate(-1);
   }
 

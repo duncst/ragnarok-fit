@@ -9,6 +9,8 @@ import { useWorkoutTimer } from '@/hooks/useWorkoutTimer';
 import { useHeroCallData } from '@/hooks/useHeroCallData';
 import { useSaveWorkout } from '@/hooks/useSaveWorkout';
 import { useBrotherhoodActivities } from '@/hooks/useBrotherhoodActivities';
+import { useActiveWorkout } from '@/contexts/ActiveWorkoutContext';
+import { useLocation } from 'react-router-dom';
 import type { Exercise } from '@/types';
 
 export const HeroCall = () => {
@@ -20,12 +22,15 @@ export const HeroCall = () => {
   const { stats, isLoading, completeHeroCall, migrateLocalStorageData } = useHeroCallData();
   const { finishWorkout } = useSaveWorkout();
   const { addActivity } = useBrotherhoodActivities();
+  const { setActiveWorkout } = useActiveWorkout();
+  const location = useLocation();
   
   const {
     isActive: isWorkoutActive,
     formattedDuration,
     toggleWorkout,
-    resetTimer
+    resetTimer,
+    startTime
   } = useWorkoutTimer();
 
   // Migrate localStorage data on component mount
@@ -51,6 +56,14 @@ export const HeroCall = () => {
 
   const handleStartWorkout = () => {
     setIsInWorkoutMode(true);
+    // Register active workout
+    setActiveWorkout({
+      id: 'hero-call',
+      name: currentWorkout.name,
+      type: 'hero_call',
+      startTime: new Date(),
+      returnPath: location.pathname,
+    });
     // Don't start timer automatically - user will start it manually
   };
 
@@ -98,6 +111,7 @@ export const HeroCall = () => {
 
       setShowCompletion(false);
       resetTimer();
+      setActiveWorkout(null);
     } catch (error) {
       console.error('Error completing Hero\'s Call:', error);
     }
@@ -105,8 +119,9 @@ export const HeroCall = () => {
 
   const handleExitWorkout = () => {
     setIsInWorkoutMode(false);
-    setShowCompletion(false);
-    resetTimer();
+      setShowCompletion(false);
+      resetTimer();
+      setActiveWorkout(null);
   };
 
   if (isLoading) {

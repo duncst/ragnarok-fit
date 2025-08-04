@@ -6,6 +6,7 @@ import { useWorkoutTimer } from '@/hooks/useWorkoutTimer';
 import { useWorkoutState } from '@/hooks/useWorkoutState';
 import { useSaveWorkout } from '@/hooks/useSaveWorkout';
 import { useRestTimer } from '@/hooks/useRestTimer';
+import { useActiveWorkout } from '@/contexts/ActiveWorkoutContext';
 import { SimpleWorkoutExecution } from '@/components/workout/SimpleWorkoutExecution';
 import { ForTimeWorkoutMode } from '@/components/workout/ForTimeWorkoutMode';
 import { ValhallaWorkoutMode } from '@/components/workout/ValhallaWorkoutMode';
@@ -52,6 +53,7 @@ const RitualWorkoutPage = () => {
   } = useWorkoutState();
 
   const { saveWorkoutMutation, finishWorkout } = useSaveWorkout();
+  const { setActiveWorkout } = useActiveWorkout();
   
   const { 
     showRestTimer, 
@@ -148,6 +150,16 @@ const RitualWorkoutPage = () => {
 
       setExercises(templateExercises);
       
+      // Register active workout
+      setActiveWorkout({
+        id: templateId || 'ritual',
+        name: templateName,
+        type: isValhalla ? 'valhalla' : 'ritual',
+        startTime: new Date(),
+        returnPath: location.pathname,
+        templateId,
+      });
+      
       // Only auto-start for non-Valhalla workouts
       if (!isWorkoutActive && !isValhalla) {
         startWorkout();
@@ -209,6 +221,7 @@ const RitualWorkoutPage = () => {
     
     pauseWorkout();
     resetTimer();
+    setActiveWorkout(null);
   };
 
   const handleCloseCelebration = () => {
@@ -220,6 +233,7 @@ const RitualWorkoutPage = () => {
   const handleCancelWorkout = () => {
     pauseWorkout();
     resetTimer();
+    setActiveWorkout(null);
     toast.success('Ritual cancelled');
     navigate('/workout/new');
   };

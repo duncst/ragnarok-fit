@@ -14,6 +14,8 @@ import BannerNameModal from "./onboarding/BannerNameModal";
 import { ForgedWeekCelebration } from "./forge/ForgedWeekCelebration";
 import { useForgedWeekCelebration } from "@/hooks/useForgedWeekCelebration";
 import { ForgedWeekProvider } from "@/contexts/ForgedWeekContext";
+import { ActiveWorkoutProvider } from "@/contexts/ActiveWorkoutContext";
+import { PersistentWorkoutBar } from "./PersistentWorkoutBar";
 import { ImageIcon } from "./ImageIcon";
 import { NotificationSettings } from "./NotificationSettings";
 
@@ -60,8 +62,9 @@ const Layout = () => {
   }
 
   return (
-    <ForgedWeekProvider>
-      <div className="flex flex-col h-full max-w-md mx-auto bg-background">
+    <ActiveWorkoutProvider>
+      <ForgedWeekProvider>
+        <div className="flex flex-col h-full max-w-md mx-auto bg-background">
         <header className="sticky top-0 bg-background/95 backdrop-blur-sm z-10">
           <div className="flex items-center justify-between p-4 border-b">
               <div className="flex items-center gap-2">
@@ -81,6 +84,7 @@ const Layout = () => {
         <main className="flex-grow p-4 overflow-y-auto">
           <Outlet />
         </main>
+        <PersistentWorkoutBar />
         <BottomNav />
         
         {/* Forged Week Celebration */}
@@ -101,8 +105,9 @@ const Layout = () => {
           open={showBannerNameModal}
           onComplete={completeBannerNameSetup}
         />
-      </div>
-    </ForgedWeekProvider>
+        </div>
+      </ForgedWeekProvider>
+    </ActiveWorkoutProvider>
   );
 };
 
