@@ -25,7 +25,7 @@ import { useBrotherhoodActivities } from "@/hooks/useBrotherhoodActivities";
 
 const runTypes = [
   "Easy Run", "Tempo Run", "Interval Training", "Long Run",
-  "Recovery Run", "Fartlek", "Hill Training", "Race",
+  "Recovery Run", "Fartlek", "Hill Training", "Race", "Bike",
 ];
 
 const logRunFormSchema = z.object({
@@ -248,7 +248,7 @@ const LogRunPage = () => {
             name="runType"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Run Type</FormLabel>
+                <FormLabel>Endurance Trial</FormLabel>
                 <Select onValueChange={field.onChange} defaultValue={field.value}>
                   <FormControl>
                     <SelectTrigger>

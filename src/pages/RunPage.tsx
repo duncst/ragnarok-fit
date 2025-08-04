@@ -8,13 +8,14 @@ import { Link, useNavigate } from "react-router-dom";
 
 const runTypes = [
   "Easy Run",
-  "Tempo Run",
+  "Tempo Run", 
   "Interval Training",
   "Long Run",
   "Recovery Run",
   "Fartlek",
   "Hill Training",
   "Race",
+  "Bike",
 ];
 
 const RunPage = () => {
@@ -68,7 +69,7 @@ const RunPage = () => {
   return (
     <div className="flex flex-col h-full space-y-6">
       <h1 className="text-2xl font-bold flex items-center gap-2">
-        <MapPin className="text-primary" /> Run Tracker
+        <MapPin className="text-primary" /> Endurance Tracker
       </h1>
       
       <Card>
@@ -79,7 +80,7 @@ const RunPage = () => {
           </p>
           {!isRunning && (
             <Button asChild variant="link" className="p-0 h-auto text-base">
-              <Link to="/log-run">Or, log a completed run</Link>
+              <Link to="/log-run">Or, log a completed trial</Link>
             </Button>
           )}
         </CardContent>
@@ -97,7 +98,7 @@ const RunPage = () => {
       </div>
 
       <div>
-        <label htmlFor="run-type" className="text-sm font-medium text-muted-foreground">Run Type</label>
+        <label htmlFor="run-type" className="text-sm font-medium text-muted-foreground">Endurance Trial</label>
         <Select value={runType} onValueChange={setRunType} disabled={isRunning}>
           <SelectTrigger id="run-type" className="w-full mt-1">
             <SelectValue placeholder="Select run type" />
@@ -120,7 +121,7 @@ const RunPage = () => {
           className="w-full h-14 text-xl"
         >
           {isRunning ? <Square className="mr-2 h-6 w-6" /> : <Play className="mr-2 h-6 w-6" />}
-          {isRunning ? "Stop" : "Start Run"}
+          {isRunning ? "Stop" : "Endure"}
         </Button>
         <Button variant="outline" size="lg" className="w-full h-14 text-xl" onClick={handleCancel}>
           Cancel
