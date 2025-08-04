@@ -9,7 +9,7 @@ export const ActionButtons = () => {
     <div className="grid grid-cols-2 gap-4">
       <Button asChild variant="secondary">
         <Link to="/run">
-          <ImageIcon src="/lovable-uploads/ce6da73b-d67b-4c6a-9101-65cfa425f67a.png" alt="Running icon" className="mr-2 h-7 w-7" /> Record Run
+          <ImageIcon src="/lovable-uploads/ce6da73b-d67b-4c6a-9101-65cfa425f67a.png" alt="Running icon" className="mr-2 h-7 w-7" /> Endure
         </Link>
       </Button>
       <Button asChild>
