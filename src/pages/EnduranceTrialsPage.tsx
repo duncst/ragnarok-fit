@@ -74,8 +74,7 @@ const EnduranceTrialsPage: React.FC = () => {
 
       <Card>
         <CardContent className="p-5 space-y-3">
-          <div className="text-sm text-muted-foreground">Session Configuration</div>
-          <Label htmlFor="name">Session Name</Label>
+          <Label htmlFor="name">Name this Trial</Label>
           <Input id="name" value={name} onChange={(e) => setName(e.target.value)} placeholder="Enter session name..." />
         </CardContent>
       </Card>
