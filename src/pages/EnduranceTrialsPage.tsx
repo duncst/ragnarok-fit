@@ -6,7 +6,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Separator } from "@/components/ui/separator";
 import { Slider } from "@/components/ui/slider";
-import { ArrowLeft, Clock3, Activity, Timer } from "lucide-react";
+import { ArrowLeft, Wind, Clock3, Activity, Timer } from "lucide-react";
 
 interface TemplateCfg {
   name: string;
@@ -67,7 +67,7 @@ const EnduranceTrialsPage: React.FC = () => {
       <div className="flex items-center gap-2">
         <ArrowLeft className="opacity-60" onClick={() => navigate(-1)} role="button" />
         <div className="flex items-center gap-2 text-xl font-semibold">
-          <img src="/lovable-uploads/6189fc49-001e-4eb7-b549-49e8beba0788.png" alt="Valhalla Trials" className="h-6 w-6" />
+          <Wind className="text-primary" />
           Valhalla Trials
         </div>
       </div>
