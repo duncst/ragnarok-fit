@@ -110,7 +110,7 @@ const EnduranceSessionPage: React.FC = () => {
   if (!config) return null;
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-6 pb-24">
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-2 text-xl font-semibold">
           <Wind className="text-primary" />
@@ -119,22 +119,22 @@ const EnduranceSessionPage: React.FC = () => {
         <div className="text-sm text-muted-foreground">Total Time</div>
       </div>
 
-      <Card>
+      <Card className="max-w-xl mx-auto">
         <CardContent className="p-6 text-center space-y-4">
           <div className="text-sm text-muted-foreground capitalize">{plan[idx]?.type === "work" ? "Trial" : plan[idx]?.type || ""}</div>
           <div className="text-3xl font-semibold">{plan[idx]?.label || (isComplete ? "Complete" : "")}</div>
           <div className="text-6xl font-bold tabular-nums">{formatMMSS(remaining)}</div>
           <div className="text-xs text-muted-foreground h-5">{nextLabel}</div>
 
-          <div className="flex items-center justify-center gap-3 pt-2">
-            <Button variant="outline" size="lg" onClick={onToggle} className="min-w-32">
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 pt-2">
+            <Button variant="outline" size="lg" onClick={onToggle} className="w-full">
               {running ? <Pause className="mr-2"/> : <Play className="mr-2"/>}
               {running ? "Pause" : "Begin Trial"}
             </Button>
-            <Button variant="secondary" size="lg" onClick={onSkip} disabled={isComplete}>
+            <Button variant="secondary" size="lg" onClick={onSkip} disabled={isComplete} className="w-full">
               <SkipForward className="mr-2"/> Skip
             </Button>
-            <Button size="lg" onClick={onFinish}>
+            <Button size="lg" onClick={onFinish} className="w-full">
               <CheckCircle2 className="mr-2"/> Finish
             </Button>
           </div>
