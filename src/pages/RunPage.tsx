@@ -93,7 +93,7 @@ const RunPage = () => {
       <Card>
         <CardContent className="p-6 space-y-3">
           <div className="flex items-center gap-2 text-lg font-semibold">
-            <img src="/lovable-uploads/6f8dd6a6-03a5-4d9b-b80c-88225f2bcfaa.png" alt="Wind" className="h-6 w-6" />
+            <img src="/lovable-uploads/6189fc49-001e-4eb7-b549-49e8beba0788.png" alt="Wind" className="h-6 w-6" />
             Create Custom Trial
           </div>
           <p className="text-sm text-muted-foreground">Design your own VO2 max interval session with custom warmup, work, and rest periods</p>
