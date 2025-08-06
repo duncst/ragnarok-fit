@@ -91,6 +91,21 @@ const RunPage = () => {
       </h1>
       
       <Card>
+        <CardContent className="p-6 space-y-3">
+          <div className="flex items-center gap-2 text-lg font-semibold">
+            <img src="/lovable-uploads/6f8dd6a6-03a5-4d9b-b80c-88225f2bcfaa.png" alt="Wind" className="h-6 w-6" />
+            Create Custom Trial
+          </div>
+          <p className="text-sm text-muted-foreground">Design your own VO2 max interval session with custom warmup, work, and rest periods</p>
+          <div>
+            <Button className="mt-2" onClick={() => navigate('/endure/trials')}>
+              Begin Trial Setup
+            </Button>
+          </div>
+        </CardContent>
+      </Card>
+
+      <Card>
         <CardContent className="text-center p-8 space-y-2">
           <p className="text-7xl font-bold tracking-tighter">{formatTime(time)}</p>
           <p className="text-muted-foreground">

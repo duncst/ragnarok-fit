@@ -20,6 +20,8 @@ import LandingPage from "./pages/LandingPage";
 import WorkoutHistoryPage from "./pages/WorkoutHistoryPage";
 import { AuthProvider } from "./contexts/AuthContext";
 import LogBodyMetricsPage from "./pages/LogBodyMetricsPage";
+import EnduranceTrialsPage from "./pages/EnduranceTrialsPage";
+import EnduranceSessionPage from "./pages/EnduranceSessionPage";
 import ClanPage from "./pages/ClanPage";
 
 
@@ -43,12 +45,13 @@ const App = () => (
                 <Route path="/history" element={<WorkoutHistoryPage />} />
                 <Route path="/run" element={<RunPage />} />
                 <Route path="/log-run" element={<LogRunPage />} />
-                  <Route path="/workout/new" element={<NewWorkoutPage />} />
-                  
-                  <Route path="/ritual/:templateId/workout" element={<RitualWorkoutPage />} />
+                <Route path="/workout/new" element={<NewWorkoutPage />} />
+                <Route path="/ritual/:templateId/workout" element={<RitualWorkoutPage />} />
                 <Route path="/1rm-calculator" element={<OneRepMaxCalculatorPage />} />
                 <Route path="/log-body-metrics" element={<LogBodyMetricsPage />} />
                 <Route path="/clan" element={<ClanPage />} />
+                <Route path="/endure/trials" element={<EnduranceTrialsPage />} />
+                <Route path="/endure/session" element={<EnduranceSessionPage />} />
               </Route>
               <Route path="*" element={<NotFound />} />
             </Routes>
