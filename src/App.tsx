@@ -13,7 +13,7 @@ import RitualWorkoutPage from "./pages/RitualWorkoutPage";
 import NewWorkoutPage from "./pages/NewWorkoutPage";
 import CapabilityPathsPage from "./pages/CapabilityPathsPage";
 import ExercisesPage from "./pages/ExercisesPage";
-import LogRunPage from "./pages/LogRunPage";
+
 import OneRepMaxCalculatorPage from "./pages/OneRepMaxCalculatorPage";
 import ForgePage from "./pages/ForgePage";
 import LandingPage from "./pages/LandingPage";
@@ -44,7 +44,7 @@ const App = () => (
                 <Route path="/capability-paths" element={<CapabilityPathsPage />} />
                 <Route path="/history" element={<WorkoutHistoryPage />} />
                 <Route path="/run" element={<RunPage />} />
-                <Route path="/log-run" element={<LogRunPage />} />
+                
                 <Route path="/workout/new" element={<NewWorkoutPage />} />
                 <Route path="/ritual/:templateId/workout" element={<RitualWorkoutPage />} />
                 <Route path="/1rm-calculator" element={<OneRepMaxCalculatorPage />} />

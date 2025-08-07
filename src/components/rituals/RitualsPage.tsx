@@ -141,7 +141,7 @@ export const RitualsPage = () => {
               <Button 
                 onClick={() => {
                   if (activeTab === 'Endurance') {
-                    navigate('/log-run');
+                    navigate('/run');
                   } else {
                     setShowCreateModal(true);
                   }

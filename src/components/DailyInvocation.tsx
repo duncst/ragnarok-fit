@@ -90,7 +90,7 @@ export const DailyInvocation = () => {
         navigate('/workout/new');
         break;
       case 'endurance':
-        navigate('/log-run');
+        navigate('/run');
         break;
       case 'recovery':
         // For now, show coming soon - could navigate to a recovery-specific page later

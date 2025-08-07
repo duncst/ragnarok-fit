@@ -111,11 +111,6 @@ const RunPage = () => {
           <p className="text-muted-foreground">
             {isRunning ? `Running - ${runType}` : "Ready to start"}
           </p>
-          {!isRunning && (
-            <Button asChild variant="link" className="p-0 h-auto text-base">
-              <Link to="/log-run">Or, log a completed trial</Link>
-            </Button>
-          )}
         </CardContent>
       </Card>
       
