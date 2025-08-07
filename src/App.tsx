@@ -8,7 +8,6 @@ import { InputSanitizer } from "@/components/security/InputSanitizer";
 import NotFound from "./pages/NotFound";
 import Layout from "./components/Layout";
 import HomePage from "./pages/HomePage";
-import RunPage from "./pages/RunPage";
 import RitualWorkoutPage from "./pages/RitualWorkoutPage";
 import NewWorkoutPage from "./pages/NewWorkoutPage";
 import CapabilityPathsPage from "./pages/CapabilityPathsPage";
@@ -43,8 +42,7 @@ const App = () => (
                 <Route path="/forge" element={<ForgePage />} />
                 <Route path="/capability-paths" element={<CapabilityPathsPage />} />
                 <Route path="/history" element={<WorkoutHistoryPage />} />
-                <Route path="/run" element={<RunPage />} />
-                <Route path="/log-run" element={<LogRunPage />} />
+                <Route path="/run" element={<LogRunPage />} />
                 <Route path="/workout/new" element={<NewWorkoutPage />} />
                 <Route path="/ritual/:templateId/workout" element={<RitualWorkoutPage />} />
                 <Route path="/1rm-calculator" element={<OneRepMaxCalculatorPage />} />
