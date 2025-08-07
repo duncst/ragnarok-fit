@@ -113,7 +113,7 @@ const RunPage = () => {
           </p>
           {!isRunning && (
             <Button asChild variant="link" className="p-0 h-auto text-base">
-              <Link to="/run">Or, log a completed trial</Link>
+              <Link to="/log-run">Or, log a completed trial</Link>
             </Button>
           )}
         </CardContent>
