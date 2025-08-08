@@ -4,6 +4,12 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Wind, Pause, Play, SkipForward, CheckCircle2 } from "lucide-react";
 import { useActiveWorkout } from "@/contexts/ActiveWorkoutContext";
+import { useAuth } from "@/contexts/AuthContext";
+import { useForgedWeekCheck } from "@/contexts/ForgedWeekContext";
+import { supabase } from "@/integrations/supabase/client";
+import { useBrotherhoodActivities } from "@/hooks/useBrotherhoodActivities";
+import { toast as sonnerToast } from "sonner";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 
 interface SessionState {
   session: {
@@ -27,6 +33,10 @@ const EnduranceSessionPage: React.FC = () => {
   const { state } = useLocation() as { state?: SessionState };
   const navigate = useNavigate();
   const { setActiveWorkout } = useActiveWorkout();
+  const { user } = useAuth();
+  const { checkForNewForgedWeek } = useForgedWeekCheck();
+  const { addActivity } = useBrotherhoodActivities();
+  const queryClient = useQueryClient();
 
   const config = state?.session;
 
@@ -51,18 +61,75 @@ const EnduranceSessionPage: React.FC = () => {
   const [idx, setIdx] = useState(0);
   const [remaining, setRemaining] = useState(() => (plan[0]?.duration ?? 0));
   const [running, setRunning] = useState(false);
+  const [sessionStartTime, setSessionStartTime] = useState<Date | null>(null);
   const intervalRef = useRef<number | null>(null);
   
   // Start persistent workout on first start
   const ensureActiveWorkout = () => {
+    const startTime = sessionStartTime || new Date();
+    if (!sessionStartTime) {
+      setSessionStartTime(startTime);
+    }
     setActiveWorkout({
       id: "endurance-session",
       name: config?.name || "Valhalla Trial",
       type: "ritual",
-      startTime: new Date(),
+      startTime,
       returnPath: "/endure/session",
     });
   };
+
+  // Save endurance trial mutation
+  const saveTrialMutation = useMutation({
+    mutationFn: async () => {
+      if (!user || !config || !sessionStartTime) {
+        throw new Error("Missing required data to save trial");
+      }
+
+      const totalDurationSeconds = plan.reduce((sum, phase) => sum + phase.duration, 0);
+      const endTime = new Date();
+
+      // Save to runs table
+      const { error: runError } = await supabase.from('runs').insert({
+        distance: 0, // Endurance trials are time-based, not distance-based
+        duration: totalDurationSeconds,
+        run_type: config.name,
+        date: endTime.toISOString(),
+        notes: `Endurance Trial: ${config.intervals} intervals of ${config.intervalMin}min with ${config.restMin}min rest`
+      });
+
+      if (runError) throw runError;
+
+      return { totalDurationSeconds, endTime };
+    },
+    onSuccess: async ({ totalDurationSeconds }) => {
+      // Invalidate queries to refresh data
+      queryClient.invalidateQueries({ queryKey: ['runs', user?.id] });
+      queryClient.invalidateQueries({ queryKey: ['home-page-data', user?.id] });
+      queryClient.invalidateQueries({ queryKey: ['forge-progress', user?.id] });
+
+      // Add to brotherhood activities
+      const durationMinutes = Math.round(totalDurationSeconds / 60);
+      await addActivity(
+        'endurance',
+        `Completed ${config?.name} - ${durationMinutes} minutes of structured interval training`,
+        undefined,
+        `${config?.intervals} intervals completed`
+      );
+
+      // Check for forged week celebration
+      checkForNewForgedWeek();
+
+      sonnerToast.success("Trial completed!", { 
+        description: `Your ${config?.name} has been logged successfully.` 
+      });
+    },
+    onError: (error) => {
+      sonnerToast.error("Failed to save trial", { 
+        description: (error as Error).message 
+      });
+    }
+  });
 
   useEffect(() => {
     if (!running) return;
@@ -101,9 +168,15 @@ const EnduranceSessionPage: React.FC = () => {
 
   const onToggle = () => setRunning((p) => !p);
   const onSkip = () => setIdx((i) => Math.min(i + 1, plan.length));
-  const onFinish = () => {
+  const onFinish = async () => {
     setRunning(false);
     setActiveWorkout(null);
+    
+    // Save the trial to database
+    if (config) {
+      saveTrialMutation.mutate();
+    }
+    
     navigate("/run", { replace: true });
   };
 
@@ -134,8 +207,9 @@ const EnduranceSessionPage: React.FC = () => {
             <Button variant="secondary" size="lg" onClick={onSkip} disabled={isComplete} className="w-full">
               <SkipForward className="mr-2"/> Skip
             </Button>
-            <Button size="lg" onClick={onFinish} className="w-full">
-              <CheckCircle2 className="mr-2"/> Finish
+            <Button size="lg" onClick={onFinish} disabled={saveTrialMutation.isPending} className="w-full">
+              <CheckCircle2 className="mr-2"/> 
+              {saveTrialMutation.isPending ? "Saving..." : "Complete"}
             </Button>
           </div>
         </CardContent>
