@@ -71,6 +71,35 @@ export type Database = {
         }
         Relationships: []
       }
+      brotherhood_activity_likes: {
+        Row: {
+          activity_id: string
+          created_at: string
+          id: string
+          user_id: string
+        }
+        Insert: {
+          activity_id: string
+          created_at?: string
+          id?: string
+          user_id: string
+        }
+        Update: {
+          activity_id?: string
+          created_at?: string
+          id?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "brotherhood_activity_likes_activity_id_fkey"
+            columns: ["activity_id"]
+            isOneToOne: false
+            referencedRelation: "brotherhood_activities"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       hero_call_completions: {
         Row: {
           completed_at: string
@@ -418,6 +447,10 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
+      add_activity_like: {
+        Args: { p_activity_id: string }
+        Returns: undefined
+      }
       calculate_valhalla_tier: {
         Args: { challenge_name: string; completion_time_minutes: number }
         Returns: string
@@ -425,6 +458,15 @@ export type Database = {
       can_view_template: {
         Args: { template_id: string }
         Returns: boolean
+      }
+      get_activity_likes: {
+        Args: { activity_ids: string[] }
+        Returns: {
+          id: string
+          user_id: string
+          activity_id: string
+          created_at: string
+        }[]
       }
       get_hero_call_streak: {
         Args: { p_user_id: string }
@@ -452,6 +494,15 @@ export type Database = {
         Args: Record<PropertyKey, never>
         Returns: Json
       }
+      get_users_forge_titles: {
+        Args: { p_user_ids: string[] }
+        Returns: {
+          user_id: string
+          current_title: string
+          current_tier: number
+          forged_weeks: number
+        }[]
+      }
       get_valhalla_progress: {
         Args: Record<PropertyKey, never>
         Returns: Json
@@ -471,6 +522,10 @@ export type Database = {
           p_notes?: string
         }
         Returns: Json
+      }
+      remove_activity_like: {
+        Args: { p_activity_id: string }
+        Returns: undefined
       }
       upsert_personal_record: {
         Args: { p_exercise_name: string; p_one_rep_max: number }
