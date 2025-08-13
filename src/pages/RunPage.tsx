@@ -42,6 +42,9 @@ const RunPage = () => {
   const [distance, setDistance] = useState<string>("");
   const [notes, setNotes] = useState("");
   const [isSaving, setIsSaving] = useState(false);
+  const [dHours, setDHours] = useState<string>("");
+  const [dMinutes, setDMinutes] = useState<string>("");
+  const [dSeconds, setDSeconds] = useState<string>("");
   useEffect(() => {
     if (isRunning) {
       timerRef.current = setInterval(() => {
@@ -59,7 +62,7 @@ const RunPage = () => {
     if (isRunning) {
       // Stop timer and open save dialog without resetting values
       setIsRunning(false);
-      setShowSaveDialog(true);
+      openSaveDialog(true);
     } else {
       const newStartTime = new Date();
       setIsRunning(true);
@@ -95,14 +98,42 @@ const RunPage = () => {
     return `${m}:${pad(s)}`;
   };
 
-  const handleSaveRun = async () => {
-    if (time === 0) {
-      sonnerToast.error("Nothing to save", { description: "Timer is at 0." });
-      return;
+  const getManualDurationSeconds = () => {
+    const h = parseInt(dHours || '0', 10);
+    const m = parseInt(dMinutes || '0', 10);
+    const s = parseInt(dSeconds || '0', 10);
+    if ([h, m, s].some((n) => isNaN(n) || n < 0)) return 0;
+    if (m > 59 || s > 59) return 0;
+    return h * 3600 + m * 60 + s;
+  };
+
+  const openSaveDialog = (prefillFromTimer: boolean) => {
+    if (prefillFromTimer && time > 0) {
+      const h = Math.floor(time / 3600);
+      const m = Math.floor((time % 3600) / 60);
+      const s = time % 60;
+      setDHours(h ? String(h) : "");
+      setDMinutes(m ? String(m) : "");
+      setDSeconds(s ? String(s) : "");
+    } else {
+      setDHours("");
+      setDMinutes("");
+      setDSeconds("");
     }
+    setShowSaveDialog(true);
+  };
+
+  const handleSaveRun = async () => {
     const dist = parseFloat(distance);
     if (isNaN(dist) || dist <= 0) {
       sonnerToast.error("Enter a valid distance", { description: "Distance must be greater than 0 km." });
+      return;
+    }
+
+    const manualSeconds = getManualDurationSeconds();
+    const durationSeconds = manualSeconds > 0 ? manualSeconds : time;
+    if (durationSeconds <= 0) {
+      sonnerToast.error("Enter a valid duration", { description: "Use the timer or enter HH:MM:SS." });
       return;
     }
 
@@ -110,7 +141,7 @@ const RunPage = () => {
     try {
       const { error } = await supabase.from('runs').insert({
         distance: dist,
-        duration: time,
+        duration: durationSeconds,
         run_type: runType,
         date: new Date().toISOString(),
         notes: notes || null,
@@ -121,13 +152,13 @@ const RunPage = () => {
         'endurance',
         `Logged ${runType}`,
         undefined,
-        `${dist.toFixed(2)} km in ${formatTime(time)}`
+        `${dist.toFixed(2)} km in ${formatTime(durationSeconds)}`
       );
 
       // Trigger forged day check
       checkForNewForgedWeek();
 
-      sonnerToast.success("Run saved", { description: `${dist.toFixed(2)} km - ${formatTime(time)}` });
+      sonnerToast.success("Run saved", { description: `${dist.toFixed(2)} km - ${formatTime(durationSeconds)}` });
 
       // Reset state
       setTime(0);
@@ -142,7 +173,6 @@ const RunPage = () => {
       setIsSaving(false);
     }
   };
-
   const handleDiscard = () => {
     setShowSaveDialog(false);
     setTime(0);
@@ -216,6 +246,14 @@ const RunPage = () => {
           {isRunning ? <Square className="mr-2 h-6 w-6" /> : <Play className="mr-2 h-6 w-6" />}
           {isRunning ? "Stop" : "Endure"}
         </Button>
+        <Button 
+          variant="secondary" 
+          size="lg" 
+          className="w-full h-14 text-xl" 
+          onClick={() => openSaveDialog(false)}
+        >
+          Quick Log (distance + time)
+        </Button>
         <Button variant="outline" size="lg" className="w-full h-14 text-xl" onClick={handleCancel}>
           Cancel
         </Button>
@@ -242,6 +280,46 @@ const RunPage = () => {
               />
             </div>
             <div className="grid grid-cols-1 gap-2">
+              <Label>Duration (HH:MM:SS)</Label>
+              <div className="flex items-center gap-2">
+                <Input
+                  aria-label="hours"
+                  type="number"
+                  inputMode="numeric"
+                  min="0"
+                  placeholder="0"
+                  className="w-20"
+                  value={dHours}
+                  onChange={(e) => setDHours(e.target.value)}
+                />
+                <span className="text-muted-foreground">:</span>
+                <Input
+                  aria-label="minutes"
+                  type="number"
+                  inputMode="numeric"
+                  min="0"
+                  max="59"
+                  placeholder="00"
+                  className="w-20"
+                  value={dMinutes}
+                  onChange={(e) => setDMinutes(e.target.value)}
+                />
+                <span className="text-muted-foreground">:</span>
+                <Input
+                  aria-label="seconds"
+                  type="number"
+                  inputMode="numeric"
+                  min="0"
+                  max="59"
+                  placeholder="00"
+                  className="w-20"
+                  value={dSeconds}
+                  onChange={(e) => setDSeconds(e.target.value)}
+                />
+              </div>
+              <p className="text-xs text-muted-foreground">Leave blank to use timer: {formatTime(time)}</p>
+            </div>
+            <div className="grid grid-cols-1 gap-2">
               <Label htmlFor="notes">Notes</Label>
               <Textarea
                 id="notes"
@@ -251,7 +329,7 @@ const RunPage = () => {
               />
             </div>
             <div className="text-sm text-muted-foreground">
-              Duration: {formatTime(time)} • Type: {runType}
+              Type: {runType}
             </div>
           </div>
           <DialogFooter>
