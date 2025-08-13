@@ -1,12 +1,19 @@
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from "@/components/ui/dialog";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Textarea } from "@/components/ui/textarea";
 import { Play, Square, MapPin, Wind } from "lucide-react";
 import React, { useState, useEffect, useRef } from "react";
-import { cn } from "@/lib/utils";
-import { Link, useNavigate, useLocation } from "react-router-dom";
-import { useActiveWorkout } from "@/contexts/ActiveWorkoutContext";
 
+import { useNavigate, useLocation } from "react-router-dom";
+import { useActiveWorkout } from "@/contexts/ActiveWorkoutContext";
+import { supabase } from "@/integrations/supabase/client";
+import { toast as sonnerToast } from "sonner";
+import { useForgedWeekCheck } from "@/contexts/ForgedWeekContext";
+import { useBrotherhoodActivities } from "@/hooks/useBrotherhoodActivities";
 const runTypes = [
   "Easy Run",
   "Tempo Run", 
@@ -28,7 +35,13 @@ const RunPage = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const { setActiveWorkout } = useActiveWorkout();
+  const { checkForNewForgedWeek } = useForgedWeekCheck();
+  const { addActivity } = useBrotherhoodActivities();
 
+  const [showSaveDialog, setShowSaveDialog] = useState(false);
+  const [distance, setDistance] = useState<string>("");
+  const [notes, setNotes] = useState("");
+  const [isSaving, setIsSaving] = useState(false);
   useEffect(() => {
     if (isRunning) {
       timerRef.current = setInterval(() => {
@@ -44,11 +57,9 @@ const RunPage = () => {
 
   const handleToggleRun = () => {
     if (isRunning) {
-      // For now, stopping the run resets it. We can add a summary page later.
-      setTime(0);
+      // Stop timer and open save dialog without resetting values
       setIsRunning(false);
-      setStartTime(null);
-      setActiveWorkout(null);
+      setShowSaveDialog(true);
     } else {
       const newStartTime = new Date();
       setIsRunning(true);
@@ -84,6 +95,60 @@ const RunPage = () => {
     return `${m}:${pad(s)}`;
   };
 
+  const handleSaveRun = async () => {
+    if (time === 0) {
+      sonnerToast.error("Nothing to save", { description: "Timer is at 0." });
+      return;
+    }
+    const dist = parseFloat(distance);
+    if (isNaN(dist) || dist <= 0) {
+      sonnerToast.error("Enter a valid distance", { description: "Distance must be greater than 0 km." });
+      return;
+    }
+
+    setIsSaving(true);
+    try {
+      const { error } = await supabase.from('runs').insert({
+        distance: dist,
+        duration: time,
+        run_type: runType,
+        date: new Date().toISOString(),
+        notes: notes || null,
+      });
+      if (error) throw error;
+
+      await addActivity(
+        'endurance',
+        `Logged ${runType}`,
+        undefined,
+        `${dist.toFixed(2)} km in ${formatTime(time)}`
+      );
+
+      // Trigger forged day check
+      checkForNewForgedWeek();
+
+      sonnerToast.success("Run saved", { description: `${dist.toFixed(2)} km - ${formatTime(time)}` });
+
+      // Reset state
+      setTime(0);
+      setStartTime(null);
+      setActiveWorkout(null);
+      setDistance("");
+      setNotes("");
+      setShowSaveDialog(false);
+    } catch (e) {
+      sonnerToast.error("Failed to save run", { description: (e as Error).message });
+    } finally {
+      setIsSaving(false);
+    }
+  };
+
+  const handleDiscard = () => {
+    setShowSaveDialog(false);
+    setTime(0);
+    setStartTime(null);
+    setActiveWorkout(null);
+  };
   return (
     <div className="flex flex-col h-full space-y-6">
       <h1 className="text-2xl font-bold flex items-center gap-2">
@@ -155,6 +220,48 @@ const RunPage = () => {
           Cancel
         </Button>
       </div>
+
+      <Dialog open={showSaveDialog} onOpenChange={setShowSaveDialog}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>Save run</DialogTitle>
+            <DialogDescription>Enter details to log your endurance session.</DialogDescription>
+          </DialogHeader>
+          <div className="space-y-4">
+            <div className="grid grid-cols-1 gap-2">
+              <Label htmlFor="distance">Distance (km)</Label>
+              <Input
+                id="distance"
+                type="number"
+                inputMode="decimal"
+                step="0.01"
+                min="0"
+                placeholder="e.g., 5.00"
+                value={distance}
+                onChange={(e) => setDistance(e.target.value)}
+              />
+            </div>
+            <div className="grid grid-cols-1 gap-2">
+              <Label htmlFor="notes">Notes</Label>
+              <Textarea
+                id="notes"
+                placeholder="How did it feel? Terrain, weather, etc."
+                value={notes}
+                onChange={(e) => setNotes(e.target.value)}
+              />
+            </div>
+            <div className="text-sm text-muted-foreground">
+              Duration: {formatTime(time)} • Type: {runType}
+            </div>
+          </div>
+          <DialogFooter>
+            <Button variant="ghost" onClick={handleDiscard} disabled={isSaving}>Discard</Button>
+            <Button onClick={handleSaveRun} disabled={isSaving || !distance}>
+              {isSaving ? "Saving..." : "Save run"}
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 };
