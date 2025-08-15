@@ -9,6 +9,7 @@ interface BrotherhoodActivity {
   challenge_name?: string;
   notes?: string;
   created_at: string;
+  is_public: boolean;
   banner_name?: string;
 }
 
@@ -92,7 +93,7 @@ export const useBrotherhoodActivities = () => {
     };
   }, []);
 
-  const addActivity = async (activityType: string, description: string, challengeName?: string, notes?: string) => {
+  const addActivity = async (activityType: string, description: string, challengeName?: string, notes?: string, isPublic: boolean = false) => {
     try {
       const { data: { user } } = await supabase.auth.getUser();
       if (!user) return;
@@ -104,7 +105,8 @@ export const useBrotherhoodActivities = () => {
           activity_type: activityType,
           activity_description: description,
           challenge_name: challengeName,
-          notes: notes
+          notes: notes,
+          is_public: isPublic
         });
 
       if (error) {
@@ -115,9 +117,36 @@ export const useBrotherhoodActivities = () => {
     }
   };
 
+  const updateActivityPrivacy = async (activityId: string, isPublic: boolean) => {
+    try {
+      const { error } = await supabase
+        .from('brotherhood_activities')
+        .update({ is_public: isPublic })
+        .eq('id', activityId);
+
+      if (error) {
+        console.error('Error updating activity privacy:', error);
+        return false;
+      }
+
+      // Update local state
+      setActivities(prev => prev.map(activity => 
+        activity.id === activityId 
+          ? { ...activity, is_public: isPublic }
+          : activity
+      ));
+
+      return true;
+    } catch (error) {
+      console.error('Error updating activity privacy:', error);
+      return false;
+    }
+  };
+
   return {
     activities,
     isLoading,
-    addActivity
+    addActivity,
+    updateActivityPrivacy
   };
 };

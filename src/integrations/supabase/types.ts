@@ -7,7 +7,7 @@ export type Json =
   | Json[]
 
 export type Database = {
-  // Allows to automatically instanciate createClient with right options
+  // Allows to automatically instantiate createClient with right options
   // instead of createClient<Database, { PostgrestVersion: 'XX' }>(URL, KEY)
   __InternalSupabase: {
     PostgrestVersion: "12.2.3 (519615d)"
@@ -48,6 +48,7 @@ export type Database = {
           challenge_name: string | null
           created_at: string
           id: string
+          is_public: boolean
           notes: string | null
           user_id: string
         }
@@ -57,6 +58,7 @@ export type Database = {
           challenge_name?: string | null
           created_at?: string
           id?: string
+          is_public?: boolean
           notes?: string | null
           user_id: string
         }
@@ -66,6 +68,7 @@ export type Database = {
           challenge_name?: string | null
           created_at?: string
           id?: string
+          is_public?: boolean
           notes?: string | null
           user_id?: string
         }
@@ -462,10 +465,10 @@ export type Database = {
       get_activity_likes: {
         Args: { activity_ids: string[] }
         Returns: {
-          id: string
-          user_id: string
           activity_id: string
           created_at: string
+          id: string
+          user_id: string
         }[]
       }
       get_hero_call_streak: {
@@ -479,11 +482,11 @@ export type Database = {
       get_last_exercise_data: {
         Args: { p_exercise_name: string }
         Returns: {
-          last_weight: number
-          last_reps: number
-          last_duration: number
           last_distance: number
+          last_duration: number
+          last_reps: number
           last_used: string
+          last_weight: number
         }[]
       }
       get_last_exercise_weight: {
@@ -497,10 +500,10 @@ export type Database = {
       get_users_forge_titles: {
         Args: { p_user_ids: string[] }
         Returns: {
-          user_id: string
-          current_title: string
           current_tier: number
+          current_title: string
           forged_weeks: number
+          user_id: string
         }[]
       }
       get_valhalla_progress: {
