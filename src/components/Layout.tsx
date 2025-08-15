@@ -68,7 +68,7 @@ const Layout = () => {
         <header className="sticky top-0 bg-background/95 backdrop-blur-sm z-10">
           <div className="flex items-center justify-between p-4 border-b">
               <div className="flex items-center gap-2">
-                <ImageIcon src="/lovable-uploads/024aba45-7ed8-4f1a-ab9b-d8bfccf26ea5.png" alt="Ragnarok Fit Logo" className="h-6 w-6 text-primary" />
+                <ImageIcon src="/lovable-uploads/024aba45-7ed8-4f1a-ab9b-d8bfccf26ea5.png" alt="Ragnarok Fit Logo" className="h-12 w-12 text-primary" />
                 <h1 className="font-bold text-lg tracking-tight">Ragnarok Fit</h1>
               </div>
               <div className="flex items-center gap-2">
