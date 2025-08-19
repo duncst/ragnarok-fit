@@ -40,6 +40,7 @@ export const exercises: ExerciseDef[] = [
   { name: "Face Pulls", bodyPart: "Back", equipment: "cable machine", targetMuscles: ["rear delts", "rhomboids"], description: "Cable face pulls" },
   { name: "Reverse Flyes", bodyPart: "Back", equipment: "dumbbells", targetMuscles: ["rear delts", "rhomboids"], description: "Reverse fly movement" },
   { name: "Shrugs", bodyPart: "Back", equipment: "dumbbells", targetMuscles: ["traps"], description: "Shoulder shrugs" },
+  { name: "One Arm Lat Pull-down", bodyPart: "Back", equipment: "cable machine", targetMuscles: ["lats", "biceps", "rhomboids"], description: "Single arm lat pulldown" },
 
   // Legs
   { name: "Squats", bodyPart: "Legs", equipment: "barbell", targetMuscles: ["quadriceps", "glutes", "hamstrings"], description: "Squat down and stand up" },
@@ -67,6 +68,12 @@ export const exercises: ExerciseDef[] = [
   { name: "Jump Squats", bodyPart: "Legs", equipment: "bodyweight", targetMuscles: ["quadriceps", "glutes"], description: "Explosive squat jumps", type: "reps" },
   { name: "Jumping Lunges", bodyPart: "Legs", equipment: "bodyweight", targetMuscles: ["quadriceps", "glutes"], description: "Alternating jumping lunges", type: "reps" },
   { name: "Step-ups", bodyPart: "Legs", equipment: "bodyweight", targetMuscles: ["quadriceps", "glutes"], description: "Alternating step-ups", type: "reps" },
+  { name: "Cossack Squats", bodyPart: "Legs", equipment: "bodyweight", targetMuscles: ["glutes", "inner thighs", "quadriceps"], description: "Deep lateral squat movement" },
+  { name: "Hack Squat", bodyPart: "Legs", equipment: "hack squat machine", targetMuscles: ["quadriceps", "glutes"], description: "Squat on hack squat machine" },
+  { name: "Seated Leg Curls", bodyPart: "Legs", equipment: "leg curl machine", targetMuscles: ["hamstrings"], description: "Seated hamstring curls" },
+  { name: "Lying Leg Curls", bodyPart: "Legs", equipment: "leg curl machine", targetMuscles: ["hamstrings"], description: "Lying hamstring curls" },
+  { name: "Hip Adduction", bodyPart: "Legs", equipment: "hip adduction machine", targetMuscles: ["hip adductors", "inner thighs"], description: "Bring legs together against resistance" },
+  { name: "Hip Abduction", bodyPart: "Legs", equipment: "hip abduction machine", targetMuscles: ["hip abductors", "glutes"], description: "Spread legs apart against resistance" },
 
   // Shoulders
   { name: "Overhead Press", bodyPart: "Shoulders", equipment: "barbell", targetMuscles: ["shoulders", "triceps"], description: "Press barbell overhead" },
