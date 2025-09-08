@@ -9,6 +9,7 @@ import { StatItem } from "@/components/StatItem";
 import { ImageIcon } from "@/components/ImageIcon";
 import { CalendarSection } from "@/components/forge/CalendarSection";
 import { MuscleGroupVolumeTracker } from "@/components/MuscleGroupVolumeTracker";
+import { WeeklyDistanceGoal } from "@/components/home/WeeklyDistanceGoal";
 import type { Workout, Run } from '@/types';
 import { useState } from 'react';
 
@@ -143,6 +144,7 @@ export const AnalyticsSection = ({
                       <StatItem icon={Zap} value={`${totalDistance.toFixed(1)} km`} label="Total Distance" />
                       <StatItem icon={TrendingUp} value={formatPace(bestPace)} label="Best Pace (min/km)" />
                     </div>
+                    <WeeklyDistanceGoal weeklyDistance={last7DaysDistance} />
                     <RunChart data={runChartData} />
                   </>
                 )}
