@@ -4,6 +4,7 @@ import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Swords, Shield, Zap, Leaf, Lock } from 'lucide-react';
 import { HeroCall } from './HeroCall';
+import { MobilityRoutine } from './recovery/MobilityRoutine';
 import { useHeroCallData } from '@/hooks/useHeroCallData';
 import { useNavigate } from 'react-router-dom';
 
@@ -93,7 +94,6 @@ export const DailyInvocation = () => {
         navigate('/run');
         break;
       case 'recovery':
-        // For now, show coming soon - could navigate to a recovery-specific page later
         setSelectedPath('recovery');
         break;
     }
@@ -104,25 +104,7 @@ export const DailyInvocation = () => {
   }
 
   if (selectedPath === 'recovery') {
-    return (
-      <Card className="w-full">
-        <CardContent className="p-6 text-center space-y-4">
-          <div className="space-y-2">
-            <h2 className="text-2xl font-bold text-primary">Path Selected</h2>
-            <p className="text-muted-foreground">
-              Recovery & Ritual coming soon...
-            </p>
-            <Button 
-              variant="outline" 
-              onClick={() => setSelectedPath(null)}
-              className="mt-4"
-            >
-              Choose Another Path
-            </Button>
-          </div>
-        </CardContent>
-      </Card>
-    );
+    return <MobilityRoutine onBack={() => setSelectedPath(null)} />;
   }
 
   return (
