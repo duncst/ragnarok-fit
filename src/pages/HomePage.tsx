@@ -3,6 +3,7 @@ import { DailyInvocation } from "@/components/DailyInvocation";
 import { BodyMetricsTracker } from "@/components/BodyMetricsTracker";
 import { ActionButtons } from "@/components/home/ActionButtons";
 import { AnalyticsSection } from "@/components/home/AnalyticsSection";
+import { WeeklyTargets } from "@/components/home/WeeklyTargets";
 import HeroCallOnboarding from "@/components/home/HeroCallOnboarding";
 import { useHomePageData } from "@/hooks/useHomePageData";
 import { useHeroCallOnboarding } from "@/hooks/useHeroCallOnboarding";
@@ -96,6 +97,11 @@ const HomePage = () => {
           </div>
         </div>
       </div>
+
+      <WeeklyTargets 
+        totalVolume={totalVolume} 
+        weeklyDistance={last7DaysDistance} 
+      />
 
       <ActionButtons />
       
