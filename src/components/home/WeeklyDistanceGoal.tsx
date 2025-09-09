@@ -1,5 +1,4 @@
 import { useState } from 'react';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Progress } from '@/components/ui/progress';
@@ -39,42 +38,38 @@ export const WeeklyDistanceGoal = ({ weeklyDistance }: WeeklyDistanceGoalProps) 
 
   if (isLoading) {
     return (
-      <Card>
-        <CardHeader className="pb-3">
-          <CardTitle className="flex items-center gap-2 text-sm font-medium">
+      <div className="space-y-3">
+        <div className="flex items-center justify-between">
+          <div className="flex items-center gap-2">
             <Target className="h-4 w-4 text-primary" />
-            Weekly Distance Goal
-          </CardTitle>
-        </CardHeader>
-        <CardContent>
-          <div className="animate-pulse">
-            <div className="h-4 bg-muted rounded w-3/4 mb-2"></div>
-            <div className="h-2 bg-muted rounded w-full"></div>
+            <span className="text-sm font-medium">Weekly Distance Goal</span>
           </div>
-        </CardContent>
-      </Card>
+        </div>
+        <div className="animate-pulse">
+          <div className="h-4 bg-muted rounded w-3/4 mb-2"></div>
+          <div className="h-2 bg-muted rounded w-full"></div>
+        </div>
+      </div>
     );
   }
 
   if (!goal && !isEditing) {
     return (
-      <Card>
-        <CardHeader className="pb-3">
-          <CardTitle className="flex items-center gap-2 text-sm font-medium">
+      <div className="space-y-3">
+        <div className="flex items-center justify-between">
+          <div className="flex items-center gap-2">
             <Target className="h-4 w-4 text-primary" />
-            Weekly Distance Goal
-          </CardTitle>
-        </CardHeader>
-        <CardContent>
-          <div className="text-center space-y-3">
-            <p className="text-sm text-muted-foreground">Set a weekly distance target</p>
-            <Button onClick={handleEdit} size="sm" className="w-full">
-              <Target className="h-4 w-4 mr-2" />
-              Set Goal
-            </Button>
+            <span className="text-sm font-medium">Weekly Distance Goal</span>
           </div>
-        </CardContent>
-      </Card>
+        </div>
+        <div className="text-center space-y-3">
+          <p className="text-sm text-muted-foreground">Set a weekly distance target</p>
+          <Button onClick={handleEdit} size="sm" className="w-full">
+            <Target className="h-4 w-4 mr-2" />
+            Set Goal
+          </Button>
+        </div>
+      </div>
     );
   }
 
@@ -83,27 +78,15 @@ export const WeeklyDistanceGoal = ({ weeklyDistance }: WeeklyDistanceGoalProps) 
   const remaining = Math.max(targetDistance - weeklyDistance, 0);
 
   return (
-    <Card>
-      <CardHeader className="pb-3">
-        <div className="flex items-center justify-between">
-          <CardTitle className="flex items-center gap-2 text-sm font-medium">
-            <Target className="h-4 w-4 text-primary" />
-            Weekly Distance Goal
-          </CardTitle>
-          {!isEditing && goal && (
-            <div className="flex gap-1">
-              <Button variant="ghost" size="sm" onClick={handleEdit}>
-                <Edit3 className="h-3 w-3" />
-              </Button>
-              <Button variant="ghost" size="sm" onClick={handleDelete}>
-                <Trash2 className="h-3 w-3" />
-              </Button>
+    <div className="space-y-3">
+      {isEditing ? (
+        <>
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-2">
+              <Target className="h-4 w-4 text-primary" />
+              <span className="text-sm font-medium">Weekly Distance Goal</span>
             </div>
-          )}
-        </div>
-      </CardHeader>
-      <CardContent className="space-y-3">
-        {isEditing ? (
+          </div>
           <div className="space-y-3">
             <div className="flex items-center gap-2">
               <Input
@@ -128,26 +111,41 @@ export const WeeklyDistanceGoal = ({ weeklyDistance }: WeeklyDistanceGoalProps) 
               </Button>
             </div>
           </div>
-        ) : (
-          <div className="space-y-2">
-            <div className="flex justify-between items-center text-sm">
-              <span className="text-muted-foreground">Progress</span>
-              <span className="font-medium">
+        </>
+      ) : (
+        <>
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-2">
+              <Target className="h-4 w-4 text-primary" />
+              <span className="text-sm font-medium">Weekly Distance Goal</span>
+            </div>
+            <div className="flex items-center gap-2">
+              <span className="text-sm text-muted-foreground">
                 {weeklyDistance.toFixed(1)} / {targetDistance}km
               </span>
-            </div>
-            <Progress value={progressPercent} className="h-2" />
-            <div className="text-xs text-muted-foreground text-center">
-              {remaining > 0 
-                ? `${remaining.toFixed(1)}km remaining` 
-                : progressPercent >= 100 
-                  ? '🎉 Goal achieved!' 
-                  : ''
-              }
+              {goal && (
+                <div className="flex gap-1">
+                  <Button variant="ghost" size="sm" onClick={handleEdit}>
+                    <Edit3 className="h-3 w-3" />
+                  </Button>
+                  <Button variant="ghost" size="sm" onClick={handleDelete}>
+                    <Trash2 className="h-3 w-3" />
+                  </Button>
+                </div>
+              )}
             </div>
           </div>
-        )}
-      </CardContent>
-    </Card>
+          <Progress value={progressPercent} className="h-2" />
+          {progressPercent >= 100 && (
+            <p className="text-xs text-green-600 font-medium">🎉 Weekly distance goal achieved!</p>
+          )}
+          {remaining > 0 && (
+            <p className="text-xs text-muted-foreground text-center">
+              {remaining.toFixed(1)}km remaining
+            </p>
+          )}
+        </>
+      )}
+    </div>
   );
 };
