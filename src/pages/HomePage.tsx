@@ -98,12 +98,12 @@ const HomePage = () => {
         </div>
       </div>
 
+      <ActionButtons />
+
       <WeeklyTargets 
         weeklyDistance={last7DaysDistance}
         workoutHistory={workoutHistory}
       />
-
-      <ActionButtons />
       
       {showHeroCallOnboarding ? (
         <HeroCallOnboarding 
