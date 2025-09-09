@@ -23,6 +23,10 @@ export const WeeklyTargets = ({ weeklyDistance, workoutHistory }: WeeklyTargetsP
       {/* Weekly Distance Goal */}
       <Card>
         <CardHeader className="pb-3">
+          <CardTitle className="flex items-center gap-2 text-base">
+            <Target className="h-4 w-4 text-primary" />
+            Weekly Distance Goal
+          </CardTitle>
         </CardHeader>
         <CardContent>
           <WeeklyDistanceGoal weeklyDistance={weeklyDistance} />
