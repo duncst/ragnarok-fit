@@ -35,11 +35,32 @@ export const ResetPasswordPage = () => {
     // Check if we have the necessary tokens in the URL
     const accessToken = searchParams.get('access_token');
     const refreshToken = searchParams.get('refresh_token');
+    const type = searchParams.get('type');
     
-    if (!accessToken || !refreshToken) {
+    console.log('Reset password page loaded');
+    console.log('URL params:', { accessToken: !!accessToken, refreshToken: !!refreshToken, type });
+    console.log('All search params:', Object.fromEntries(searchParams.entries()));
+    
+    if (!accessToken || !refreshToken || type !== 'recovery') {
+      console.error('Invalid reset link - missing tokens or wrong type');
       toast.error('Invalid or expired reset link. Please request a new one.');
       navigate('/auth');
+      return;
     }
+
+    // Set the session with the tokens from URL
+    supabase.auth.setSession({
+      access_token: accessToken,
+      refresh_token: refreshToken,
+    }).then(({ error }) => {
+      if (error) {
+        console.error('Session setup error:', error);
+        toast.error('Invalid or expired reset link. Please request a new one.');
+        navigate('/auth');
+      } else {
+        console.log('Session setup successful');
+      }
+    });
   }, [searchParams, navigate]);
 
   const handleResetPassword = async (values: ResetPasswordFormValues) => {
