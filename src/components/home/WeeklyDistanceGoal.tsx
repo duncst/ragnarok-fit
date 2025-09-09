@@ -39,12 +39,6 @@ export const WeeklyDistanceGoal = ({ weeklyDistance }: WeeklyDistanceGoalProps) 
   if (isLoading) {
     return (
       <div className="space-y-3">
-        <div className="flex items-center justify-between">
-          <div className="flex items-center gap-2">
-            <Target className="h-4 w-4 text-primary" />
-            <span className="text-sm font-medium">Weekly Distance Goal</span>
-          </div>
-        </div>
         <div className="animate-pulse">
           <div className="h-4 bg-muted rounded w-3/4 mb-2"></div>
           <div className="h-2 bg-muted rounded w-full"></div>
@@ -56,12 +50,6 @@ export const WeeklyDistanceGoal = ({ weeklyDistance }: WeeklyDistanceGoalProps) 
   if (!goal && !isEditing) {
     return (
       <div className="space-y-3">
-        <div className="flex items-center justify-between">
-          <div className="flex items-center gap-2">
-            <Target className="h-4 w-4 text-primary" />
-            <span className="text-sm font-medium">Weekly Distance Goal</span>
-          </div>
-        </div>
         <div className="text-center space-y-3">
           <p className="text-sm text-muted-foreground">Set a weekly distance target</p>
           <Button onClick={handleEdit} size="sm" className="w-full">
@@ -81,12 +69,6 @@ export const WeeklyDistanceGoal = ({ weeklyDistance }: WeeklyDistanceGoalProps) 
     <div className="space-y-3">
       {isEditing ? (
         <>
-          <div className="flex items-center justify-between">
-            <div className="flex items-center gap-2">
-              <Target className="h-4 w-4 text-primary" />
-              <span className="text-sm font-medium">Weekly Distance Goal</span>
-            </div>
-          </div>
           <div className="space-y-3">
             <div className="flex items-center gap-2">
               <Input
@@ -115,10 +97,6 @@ export const WeeklyDistanceGoal = ({ weeklyDistance }: WeeklyDistanceGoalProps) 
       ) : (
         <>
           <div className="flex items-center justify-between">
-            <div className="flex items-center gap-2">
-              <Target className="h-4 w-4 text-primary" />
-              <span className="text-sm font-medium">Weekly Distance Goal</span>
-            </div>
             <div className="flex items-center gap-2">
               <span className="text-sm text-muted-foreground">
                 {weeklyDistance.toFixed(1)} / {targetDistance}km
