@@ -16,9 +16,11 @@ interface AuthFormProps {
   loading: boolean;
   submitButtonText: string;
   loadingButtonText: string;
+  showForgotPassword?: boolean;
+  onForgotPassword?: () => void;
 }
 
-export const AuthForm = ({ onSubmit, loading, submitButtonText, loadingButtonText }: AuthFormProps) => {
+export const AuthForm = ({ onSubmit, loading, submitButtonText, loadingButtonText, showForgotPassword, onForgotPassword }: AuthFormProps) => {
   const form = useFormContext<AuthFormValues>();
 
   return (
@@ -52,6 +54,18 @@ export const AuthForm = ({ onSubmit, loading, submitButtonText, loadingButtonTex
       <Button type="submit" className="w-full" disabled={loading}>
         {loading ? loadingButtonText : submitButtonText}
       </Button>
+      
+      {showForgotPassword && onForgotPassword && (
+        <div className="text-center">
+          <button
+            type="button"
+            onClick={onForgotPassword}
+            className="text-sm text-muted-foreground hover:text-foreground transition-colors underline"
+          >
+            Forgot your password?
+          </button>
+        </div>
+      )}
     </form>
   );
 };

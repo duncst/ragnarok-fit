@@ -12,12 +12,14 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Mountain, Swords, Hammer, Target, Shield, Flame, Users, Crown } from "lucide-react";
 import { authSchema, type AuthFormValues } from '@/lib/schemas/auth';
 import { AuthForm } from '@/components/auth/AuthForm';
+import { ForgotPasswordModal } from '@/components/auth/ForgotPasswordModal';
 
 const LandingPage = () => {
   const { session } = useAuth();
   const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
   const [activeTab, setActiveTab] = useState('signup');
+  const [forgotPasswordOpen, setForgotPasswordOpen] = useState(false);
 
   useEffect(() => {
     if (session) {
@@ -144,10 +146,17 @@ const LandingPage = () => {
                           loading={loading}
                           submitButtonText="Enter the Forge"
                           loadingButtonText="Entering..."
+                          showForgotPassword={true}
+                          onForgotPassword={() => setForgotPasswordOpen(true)}
                         />
                       </TabsContent>
                     </Tabs>
                   </FormProvider>
+                  
+                  <ForgotPasswordModal
+                    open={forgotPasswordOpen}
+                    onOpenChange={setForgotPasswordOpen}
+                  />
                 </CardContent>
               </Card>
             </div>

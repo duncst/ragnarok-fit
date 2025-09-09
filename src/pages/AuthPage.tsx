@@ -9,12 +9,14 @@ import { useAuth } from '@/contexts/AuthContext';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { authSchema, type AuthFormValues } from '@/lib/schemas/auth';
 import { AuthForm } from '@/components/auth/AuthForm';
+import { ForgotPasswordModal } from '@/components/auth/ForgotPasswordModal';
 
 const AuthPage = () => {
   const { session } = useAuth();
   const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
   const [activeTab, setActiveTab] = useState('signin');
+  const [forgotPasswordOpen, setForgotPasswordOpen] = useState(false);
 
   useEffect(() => {
     if (session) {
@@ -106,6 +108,8 @@ const AuthPage = () => {
                   loading={loading}
                   submitButtonText="Sign In"
                   loadingButtonText="Signing In..."
+                  showForgotPassword={true}
+                  onForgotPassword={() => setForgotPasswordOpen(true)}
                 />
               </TabsContent>
               <TabsContent value="signup" className="pt-6">
@@ -118,6 +122,11 @@ const AuthPage = () => {
               </TabsContent>
             </Tabs>
           </FormProvider>
+
+          <ForgotPasswordModal
+            open={forgotPasswordOpen}
+            onOpenChange={setForgotPasswordOpen}
+          />
 
         </div>
       </div>
