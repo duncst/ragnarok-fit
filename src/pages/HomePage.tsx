@@ -99,8 +99,8 @@ const HomePage = () => {
       </div>
 
       <WeeklyTargets 
-        totalVolume={totalVolume} 
-        weeklyDistance={last7DaysDistance} 
+        weeklyDistance={last7DaysDistance}
+        workoutHistory={workoutHistory}
       />
 
       <ActionButtons />
