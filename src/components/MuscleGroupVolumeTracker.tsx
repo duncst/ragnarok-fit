@@ -80,14 +80,15 @@ export const MuscleGroupVolumeTracker = ({ workoutHistory }: MuscleGroupVolumeTr
         name.includes('push') || name.includes('dip') || 
         name.includes('fly')) {
       return 'Chest';
+    } else if (name.includes('squat') || name.includes('lunge') || 
+               name.includes('leg') || name.includes('calf') ||
+               name.includes('glute') || name.includes('hip') ||
+               name.includes('stiff-leg') || name.includes('stiff leg')) {
+      return 'Legs';
     } else if (name.includes('pull') || name.includes('row') || 
                name.includes('lat') || name.includes('deadlift') ||
                name.includes('back')) {
       return 'Back';
-    } else if (name.includes('squat') || name.includes('lunge') || 
-               name.includes('leg') || name.includes('calf') ||
-               name.includes('glute') || name.includes('hip')) {
-      return 'Legs';
     } else if (name.includes('shoulder') || (name.includes('press') && 
                !name.includes('bench')) || name.includes('raise') ||
                name.includes('shrug')) {
