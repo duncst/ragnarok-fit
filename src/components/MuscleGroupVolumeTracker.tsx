@@ -91,10 +91,11 @@ export const MuscleGroupVolumeTracker = ({ workoutHistory }: MuscleGroupVolumeTr
       return 'Back';
     } else if (name.includes('shoulder') || (name.includes('press') && 
                !name.includes('bench')) || name.includes('raise') ||
-               name.includes('shrug')) {
+               name.includes('lateral') || name.includes('shrug')) {
       return 'Shoulders';
     } else if (name.includes('curl') || name.includes('tricep') || 
-               name.includes('bicep') || name.includes('arm')) {
+               name.includes('bicep') || name.includes('arm') ||
+               name.includes('pushdown')) {
       return 'Arms';
     } else if (name.includes('plank') || name.includes('crunch') || 
                name.includes('core') || name.includes('abs') ||
