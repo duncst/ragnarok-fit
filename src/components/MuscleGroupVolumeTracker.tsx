@@ -77,7 +77,7 @@ export const MuscleGroupVolumeTracker = ({ workoutHistory }: MuscleGroupVolumeTr
   const getMuscleGroupFromExercise = (exerciseName: string): string => {
     const name = exerciseName.toLowerCase();
     if (name.includes('bench') || name.includes('chest') || 
-        name.includes('push') || name.includes('dip') || 
+        (name.includes('push') && !name.includes('pushdown')) || name.includes('dip') || 
         name.includes('fly')) {
       return 'Chest';
     } else if (name.includes('squat') || name.includes('lunge') || 
