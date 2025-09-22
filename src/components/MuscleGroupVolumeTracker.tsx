@@ -86,7 +86,7 @@ export const MuscleGroupVolumeTracker = ({ workoutHistory }: MuscleGroupVolumeTr
                name.includes('stiff-leg') || name.includes('stiff leg')) {
       return 'Legs';
     } else if (name.includes('pull') || name.includes('row') || 
-               name.includes('lat') || name.includes('deadlift') ||
+               (name.includes('lat') && !name.includes('lateral')) || name.includes('deadlift') ||
                name.includes('back')) {
       return 'Back';
     } else if (name.includes('shoulder') || (name.includes('press') && 
