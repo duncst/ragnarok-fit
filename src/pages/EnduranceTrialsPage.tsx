@@ -19,7 +19,7 @@ interface TemplateCfg {
 const QUICK_TEMPLATES: TemplateCfg[] = [
   { name: "VO2 Max Builder", intervals: 5, intervalMin: 4, restMin: 3, warmupMin: 5 },
   { name: "Short Bursts", intervals: 8, intervalMin: 2.5, restMin: 1.5, warmupMin: 5 },
-  { name: "Power Intervals", intervals: 4, intervalMin: 5, restMin: 3, warmupMin: 5 },
+  { name: "Sprintervals", intervals: 4, intervalMin: 0.5, restMin: 3, warmupMin: 5 },
   { name: "Endurance Test", intervals: 6, intervalMin: 6, restMin: 2.5, warmupMin: 5 },
 ];
 
