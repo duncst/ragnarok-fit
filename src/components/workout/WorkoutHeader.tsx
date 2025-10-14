@@ -9,10 +9,8 @@ import { Loader2, Save, X, Play, Pause } from 'lucide-react';
 interface WorkoutHeaderProps {
   workoutName: string;
   onNameChange: (name: string) => void;
-  onFinish: () => void;
-  onCancel: () => void;
-  isSaving: boolean;
   onSaveAsTemplate: () => void;
+  onCancel: () => void;
   isSavingAsTemplate: boolean;
   isWorkoutActive: boolean;
   onToggleWorkout: () => void;
@@ -24,10 +22,8 @@ interface WorkoutHeaderProps {
 export const WorkoutHeader = ({ 
   workoutName, 
   onNameChange, 
-  onFinish, 
-  onCancel,
-  isSaving, 
   onSaveAsTemplate, 
+  onCancel,
   isSavingAsTemplate,
   isWorkoutActive,
   onToggleWorkout,
@@ -37,21 +33,15 @@ export const WorkoutHeader = ({
 }: WorkoutHeaderProps) => {
   return (
     <div className="space-y-2">
-      {/* Top row: Workout name and save as template button */}
-      <div className="flex justify-between items-center gap-2">
-        <Input
-          placeholder="Workout Name (e.g. Push Day)"
-          value={workoutName}
-          onChange={(e) => onNameChange(e.target.value)}
-          className="text-2xl font-bold h-auto"
-        />
-        <Button variant="outline" size="icon" onClick={onSaveAsTemplate} disabled={isSavingAsTemplate || isSaving}>
-          {isSavingAsTemplate ? <Loader2 className="h-4 w-4 animate-spin" /> : <Save className="h-4 w-4" />}
-          <span className="sr-only">Save as template</span>
-        </Button>
-      </div>
+      {/* Workout name input */}
+      <Input
+        placeholder="Workout Name (e.g. Push Day)"
+        value={workoutName}
+        onChange={(e) => onNameChange(e.target.value)}
+        className="text-2xl font-bold h-auto"
+      />
       
-      {/* Bottom row: All interaction buttons including workout mode and finish */}
+      {/* Action buttons */}
       <div className="flex items-center gap-2">
         <Toggle
           pressed={isCookMode}
@@ -70,20 +60,21 @@ export const WorkoutHeader = ({
           variant="outline" 
           size="icon" 
           onClick={onToggleWorkout} 
-          disabled={isSaving || isSavingAsTemplate}
+          disabled={isSavingAsTemplate}
         >
           {isWorkoutActive ? <Pause className="h-4 w-4" /> : <Play className="h-4 w-4" />}
           <span className="sr-only">{isWorkoutActive ? 'Pause workout' : 'Start workout'}</span>
         </Button>
         {hasWorkoutData && (
           <>
-            <Button variant="outline" size="icon" onClick={onCancel} disabled={isSaving || isSavingAsTemplate}>
+            <Button variant="outline" size="icon" onClick={onCancel} disabled={isSavingAsTemplate}>
               <X className="h-4 w-4" />
               <span className="sr-only">Cancel workout</span>
             </Button>
-            <Button onClick={onFinish} disabled={isSaving || isSavingAsTemplate}>
-              {isSaving && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
-              Finish
+            <Button onClick={onSaveAsTemplate} disabled={isSavingAsTemplate}>
+              {isSavingAsTemplate && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
+              <Save className="mr-2 h-4 w-4" />
+              Save as Template
             </Button>
           </>
         )}

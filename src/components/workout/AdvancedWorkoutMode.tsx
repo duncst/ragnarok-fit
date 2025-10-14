@@ -18,12 +18,10 @@ interface AdvancedWorkoutModeProps {
   hasWorkoutData: boolean;
   
   // Mutation states
-  isSaving: boolean;
   isSavingAsTemplate: boolean;
   
   // Handlers
   onNameChange: (name: string) => void;
-  onFinish: () => void;
   onCancel: () => void;
   onSaveAsTemplate: () => void;
   onToggleWorkout: () => void;
@@ -49,10 +47,8 @@ export const AdvancedWorkoutMode = ({
   formattedDuration,
   isValhallaWorkout,
   hasWorkoutData,
-  isSaving,
   isSavingAsTemplate,
   onNameChange,
-  onFinish,
   onCancel,
   onSaveAsTemplate,
   onToggleWorkout,
@@ -82,9 +78,7 @@ export const AdvancedWorkoutMode = ({
         <WorkoutHeader
           workoutName={workoutName}
           onNameChange={onNameChange}
-          onFinish={onFinish}
           onCancel={onCancel}
-          isSaving={isSaving}
           onSaveAsTemplate={onSaveAsTemplate}
           isSavingAsTemplate={isSavingAsTemplate}
           isWorkoutActive={isWorkoutActive}

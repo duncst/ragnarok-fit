@@ -50,8 +50,9 @@ export const useSaveAsTemplate = () => {
             return templateData;
         },
         onSuccess: () => {
-            sonnerToast.success("Workout saved as template successfully!");
+            sonnerToast.success("Template saved successfully! You can now reuse this workout.");
             queryClient.invalidateQueries({ queryKey: ['workout_templates'] });
+            queryClient.invalidateQueries({ queryKey: ['workout-templates'] });
         },
         onError: (error) => {
             sonnerToast.error("Failed to save as template", { description: (error as Error).message });
@@ -61,11 +62,11 @@ export const useSaveAsTemplate = () => {
     const saveAsTemplate = ({ exercises, name }: { exercises: Exercise[], name: string }) => {
         const templateName = name.trim();
         if (!templateName) {
-            sonnerToast.error("Please enter a name for the workout to save it as a template.");
+            sonnerToast.error("Please enter a name for the template.");
             return;
         }
         if (exercises.every(e => e.name.trim() === '')) {
-            sonnerToast.error("Cannot save an empty workout as a template.");
+            sonnerToast.error("Cannot save an empty template.");
             return;
         }
         saveAsTemplateMutation.mutate({ exercises, name: templateName });

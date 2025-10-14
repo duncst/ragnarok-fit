@@ -5,6 +5,7 @@ import { supabase } from '@/integrations/supabase/client';
 import { useWorkoutTimer } from '@/hooks/useWorkoutTimer';
 import { useWorkoutState } from '@/hooks/useWorkoutState';
 import { useSaveWorkout } from '@/hooks/useSaveWorkout';
+import { useSaveAsTemplate } from '@/hooks/useSaveAsTemplate';
 import { useRestTimer } from '@/hooks/useRestTimer';
 import { useActiveWorkout } from '@/contexts/ActiveWorkoutContext';
 import { SimpleWorkoutExecution } from '@/components/workout/SimpleWorkoutExecution';
@@ -53,6 +54,7 @@ const RitualWorkoutPage = () => {
   } = useWorkoutState();
 
   const { saveWorkoutMutation, finishWorkout } = useSaveWorkout();
+  const { saveAsTemplate, saveAsTemplateMutation } = useSaveAsTemplate();
   const { setActiveWorkout } = useActiveWorkout();
   
   const { 
