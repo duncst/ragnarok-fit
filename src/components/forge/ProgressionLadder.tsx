@@ -1,7 +1,9 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
 import { Progress } from "@/components/ui/progress";
-import { Check, Trophy } from "lucide-react";
+import { Check, Trophy, ChevronDown } from "lucide-react";
 import { useForgeData } from "@/hooks/useForgeData";
+import { useState } from 'react';
 
 interface ProgressionLevel {
   id: string;
@@ -17,6 +19,7 @@ interface ProgressionLevel {
 }
 
 export const ProgressionLadder = () => {
+  const [isOpen, setIsOpen] = useState(false);
   const { forgeProgress, forgeTitles } = useForgeData();
   
   const progressionLevels: ProgressionLevel[] = forgeTitles.map((title, index) => {
@@ -223,18 +226,27 @@ export const ProgressionLadder = () => {
   };
 
   return (
-    <Card className="bg-card/50 border-border/50">
-      <CardHeader>
-        <CardTitle className="flex items-center gap-2">
-          <Trophy className="h-5 w-5 text-primary" />
-          Your Progression Ladder
-        </CardTitle>
-      </CardHeader>
-      <CardContent>
-        <div className="space-y-0">
-          {progressionLevels.map((level, index) => renderProgressionLevel(level, index))}
-        </div>
-      </CardContent>
-    </Card>
+    <Collapsible open={isOpen} onOpenChange={setIsOpen}>
+      <Card className="bg-card/50 border-border/50">
+        <CollapsibleTrigger className="w-full">
+          <CardHeader className="hover:bg-muted/50 transition-colors">
+            <div className="flex items-center justify-between w-full">
+              <CardTitle className="flex items-center gap-2">
+                <Trophy className="h-5 w-5 text-primary" />
+                Your Progression Ladder
+              </CardTitle>
+              <ChevronDown className={`h-4 w-4 text-muted-foreground transition-transform duration-200 ${isOpen ? 'rotate-180' : ''}`} />
+            </div>
+          </CardHeader>
+        </CollapsibleTrigger>
+        <CollapsibleContent>
+          <CardContent>
+            <div className="space-y-0">
+              {progressionLevels.map((level, index) => renderProgressionLevel(level, index))}
+            </div>
+          </CardContent>
+        </CollapsibleContent>
+      </Card>
+    </Collapsible>
   );
 };
