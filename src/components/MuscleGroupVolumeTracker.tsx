@@ -78,7 +78,7 @@ export const MuscleGroupVolumeTracker = ({ workoutHistory }: MuscleGroupVolumeTr
     const name = exerciseName.toLowerCase();
     if (name.includes('bench') || name.includes('chest') || 
         (name.includes('push') && !name.includes('pushdown')) || name.includes('dip') || 
-        name.includes('fly')) {
+        name.includes('fly') || name.includes('incline')) {
       return 'Chest';
     } else if (name.includes('squat') || name.includes('lunge') || 
                name.includes('leg') || name.includes('calf') ||
@@ -90,7 +90,7 @@ export const MuscleGroupVolumeTracker = ({ workoutHistory }: MuscleGroupVolumeTr
                name.includes('back')) {
       return 'Back';
     } else if (name.includes('shoulder') || (name.includes('press') && 
-               !name.includes('bench')) || name.includes('raise') ||
+               !name.includes('bench') && !name.includes('incline')) || name.includes('raise') ||
                name.includes('lateral') || name.includes('shrug')) {
       return 'Shoulders';
     } else if (name.includes('curl') || name.includes('tricep') || 
