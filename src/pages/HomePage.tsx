@@ -58,26 +58,25 @@ const HomePage = () => {
                 startOfWeek.setDate(diff);
                 startOfWeek.setHours(0, 0, 0, 0);
                 
+                const runeMap = {
+                  'Mon': 'ᚱ',
+                  'Tue': 'ᚢ',
+                  'Wed': 'ᚦ',
+                  'Thu': 'ᚨ',
+                  'Fri': 'ᛏ',
+                  'Sat': 'ᛜ',
+                  'Sun': 'ᛉ'
+                };
+                
                 return weekDays.map((dayName, index) => {
                   const dayDate = new Date(startOfWeek);
                   dayDate.setDate(startOfWeek.getDate() + index);
                   const isToday = dayDate.toDateString() === today.toDateString();
-                  const isPast = dayDate < today;
                   
+                  // Get the actual day name from the date to match with completedDays
                   const dayNames = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
-                  const dayIndex = index === 6 ? 0 : index + 1;
-                  const completedDayName = dayNames[dayIndex];
-                  const isCompleted = stats.completedDays?.includes(completedDayName) || false;
-                  
-                  const runeMap = {
-                    'Mon': 'ᚱ',
-                    'Tue': 'ᚢ',
-                    'Wed': 'ᚦ',
-                    'Thu': 'ᚨ',
-                    'Fri': 'ᛏ',
-                    'Sat': 'ᛜ',
-                    'Sun': 'ᛉ'
-                  };
+                  const actualDayName = dayNames[dayDate.getDay()];
+                  const isCompleted = stats.completedDays?.includes(actualDayName) || false;
                   
                   return (
                     <div key={dayName} className="flex flex-col items-center gap-1">
