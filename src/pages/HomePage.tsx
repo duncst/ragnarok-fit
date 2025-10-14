@@ -114,21 +114,6 @@ const HomePage = () => {
         <DailyInvocation />
       )}
       
-      <AnalyticsSection
-        workoutHistory={workoutHistory}
-        runHistory={runHistory}
-        totalPRs={totalPRs}
-        isLoading={isLoading}
-        strengthChartData={strengthChartData}
-        runChartData={runChartData}
-        workoutsThisWeek={workoutsThisWeek}
-        runsThisWeek={runsThisWeek}
-        last7DaysDistance={last7DaysDistance}
-        totalVolume={totalVolume}
-        totalDistance={totalDistance}
-        bestPace={bestPace}
-      />
-      
       <BodyMetricsTracker />
     </div>
   );

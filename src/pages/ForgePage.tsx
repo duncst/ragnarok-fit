@@ -2,8 +2,25 @@
 import React from 'react';
 import { ForgeStatsGrid } from '@/components/forge/ForgeStatsGrid';
 import { ProgressionLadder } from '@/components/forge/ProgressionLadder';
+import { AnalyticsSection } from '@/components/home/AnalyticsSection';
+import { useHomePageData } from '@/hooks/useHomePageData';
 
 const ForgePage = () => {
+  const {
+    workoutHistory,
+    runHistory,
+    isLoading,
+    strengthChartData,
+    runChartData,
+    workoutsThisWeek,
+    runsThisWeek,
+    last7DaysDistance,
+    totalVolume,
+    totalDistance,
+    bestPace,
+    totalPRs
+  } = useHomePageData();
+
   return (
     <div className="min-h-screen bg-background p-6 space-y-8">
       {/* Header */}
@@ -19,6 +36,22 @@ const ForgePage = () => {
 
       {/* Progression Ladder */}
       <ProgressionLadder />
+
+      {/* Your Saga Section */}
+      <AnalyticsSection
+        workoutHistory={workoutHistory}
+        runHistory={runHistory}
+        totalPRs={totalPRs}
+        isLoading={isLoading}
+        strengthChartData={strengthChartData}
+        runChartData={runChartData}
+        workoutsThisWeek={workoutsThisWeek}
+        runsThisWeek={runsThisWeek}
+        last7DaysDistance={last7DaysDistance}
+        totalVolume={totalVolume}
+        totalDistance={totalDistance}
+        bestPace={bestPace}
+      />
 
       {/* Footer Quote */}
       <div className="text-center space-y-4 pt-8">
