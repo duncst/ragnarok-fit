@@ -16,7 +16,7 @@ export const CalendarSection = () => {
           <CardHeader className="hover:bg-muted/50 transition-colors">
             <div className="flex items-center justify-between w-full">
               <CardTitle className="flex items-center gap-2 text-lg font-semibold">
-                <img src={deedsIcon} alt="Scroll icon" className="h-7 w-7" />
+                <img src={deedsIcon} alt="Scroll icon" className="h-8 w-8" />
                 Behold your Deeds
               </CardTitle>
               <ChevronDown className={`h-4 w-4 text-muted-foreground transition-transform duration-200 ${calendarOpen ? 'rotate-180' : ''}`} />

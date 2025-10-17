@@ -10,7 +10,7 @@ const BeholdYourDeedsSection = () => {
     <AccordionItem value="monthly-calendar" className="bg-gradient-to-r from-primary/10 to-primary/20 border-primary/30 rounded-lg">
       <AccordionTrigger className="px-6 py-4 hover:no-underline">
         <div className="flex items-center gap-2">
-          <img src={deedsIcon} alt="Scroll icon" className="h-5 w-5" />
+          <img src={deedsIcon} alt="Scroll icon" className="h-6 w-6" />
           <span className="text-foreground text-xl font-bold">Behold your Deeds</span>
         </div>
       </AccordionTrigger>
