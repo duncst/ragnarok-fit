@@ -3,13 +3,14 @@ import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '@/components/ui/collapsible';
-import { Swords, Zap, Leaf, Lock, ChevronDown } from 'lucide-react';
+import { Swords, Zap, Lock, ChevronDown } from 'lucide-react';
 import { ImageIcon } from './ImageIcon';
 import { HeroCall } from './HeroCall';
 import { MobilityRoutine } from './recovery/MobilityRoutine';
 import { useHeroCallData } from '@/hooks/useHeroCallData';
 import { useNavigate } from 'react-router-dom';
 import hammerIcon from '@/assets/hammer-icon.png';
+import recoveryIcon from '@/assets/recovery-icon.png';
 
 type WorkoutPath = 'hero-call' | 'strength' | 'endurance' | 'recovery';
 
@@ -78,7 +79,7 @@ export const DailyInvocation = () => {
       title: 'Recovery & Ritual',
       subtitle: 'Active recovery, mobility, or reflection.',
       description: 'Even the gods must rest before the next battle.',
-      icon: Leaf,
+      icon: recoveryIcon,
       buttonText: 'Recovery Ritual',
       isLocked: !isRecoveryUnlocked,
       lockReason: `Complete ${3 - weeklyWorkouts} more active days this week to unlock`
