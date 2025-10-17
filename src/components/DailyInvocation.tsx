@@ -3,11 +3,13 @@ import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '@/components/ui/collapsible';
-import { Swords, Hammer, Zap, Leaf, Lock, ChevronDown } from 'lucide-react';
+import { Swords, Zap, Leaf, Lock, ChevronDown } from 'lucide-react';
+import { ImageIcon } from './ImageIcon';
 import { HeroCall } from './HeroCall';
 import { MobilityRoutine } from './recovery/MobilityRoutine';
 import { useHeroCallData } from '@/hooks/useHeroCallData';
 import { useNavigate } from 'react-router-dom';
+import hammerIcon from '@/assets/hammer-icon.png';
 
 type WorkoutPath = 'hero-call' | 'strength' | 'endurance' | 'recovery';
 
@@ -16,7 +18,7 @@ interface WorkoutOption {
   title: string;
   subtitle: string;
   description: string;
-  icon: React.ComponentType<{ className?: string }>;
+  icon: React.ComponentType<{ className?: string }> | string;
   buttonText: string;
   isLocked?: boolean;
   lockReason?: string;
@@ -60,7 +62,7 @@ export const DailyInvocation = () => {
       title: 'Strength Trial',
       subtitle: 'Focused feats of power and control.',
       description: 'Test your sinew, and earn the right to bear the iron.',
-      icon: Hammer,
+      icon: hammerIcon,
       buttonText: 'Begin Trial of Strength'
     },
     {
@@ -121,9 +123,10 @@ export const DailyInvocation = () => {
 
         {/* Collapsible Path Options */}
         <div className="space-y-2">
-          {workoutOptions.map((option) => {
+        {workoutOptions.map((option) => {
             const IconComponent = option.icon;
             const isLocked = option.isLocked;
+            const isCustomIcon = typeof IconComponent === 'string';
             
             return (
               <Collapsible key={option.id}>
@@ -136,7 +139,11 @@ export const DailyInvocation = () => {
                         onClick={() => !isLocked && handlePathSelection(option.id)}
                         disabled={isLocked}
                       >
-                        <IconComponent className="h-5 w-5" />
+                        {isCustomIcon ? (
+                          <ImageIcon src={IconComponent} alt={option.title} className="h-5 w-5" />
+                        ) : (
+                          <IconComponent className="h-5 w-5" />
+                        )}
                         <span className="font-semibold">{option.buttonText}</span>
                         {isLocked && <Lock className="h-4 w-4 ml-auto" />}
                       </Button>
