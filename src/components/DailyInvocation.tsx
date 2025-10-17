@@ -3,7 +3,7 @@ import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '@/components/ui/collapsible';
-import { Swords, Shield, Zap, Leaf, Lock, ChevronDown } from 'lucide-react';
+import { Swords, Hammer, Zap, Leaf, Lock, ChevronDown } from 'lucide-react';
 import { HeroCall } from './HeroCall';
 import { MobilityRoutine } from './recovery/MobilityRoutine';
 import { useHeroCallData } from '@/hooks/useHeroCallData';
@@ -60,7 +60,7 @@ export const DailyInvocation = () => {
       title: 'Strength Trial',
       subtitle: 'Focused feats of power and control.',
       description: 'Test your sinew, and earn the right to bear the iron.',
-      icon: Shield,
+      icon: Hammer,
       buttonText: 'Begin Trial of Strength'
     },
     {
