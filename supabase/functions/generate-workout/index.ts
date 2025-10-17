@@ -169,7 +169,19 @@ serve(async (req) => {
 
     // For each exercise, get the last used weight and update the plan
     for (const exercise of workoutJson.exercises) {
-...
+      const { data: lastWeight, error: rpcError } = await supabaseClient.rpc('get_last_exercise_weight', {
+        p_exercise_name: exercise.name,
+      });
+
+      if (rpcError) {
+        console.error(`Error fetching last weight for "${exercise.name}":`, rpcError.message);
+        // If there's an error, we'll just proceed with the default weight of 0.
+      }
+      
+      const weightToSet = lastWeight > 0 ? lastWeight : 0;
+
+      for (const set of exercise.sets) {
+        set.weight = weightToSet;
       }
     }
 
