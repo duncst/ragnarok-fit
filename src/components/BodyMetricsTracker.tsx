@@ -1,15 +1,15 @@
-
 import { useQuery } from '@tanstack/react-query';
 import { useAuth } from '@/contexts/AuthContext';
 import { supabase } from '@/integrations/supabase/client';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { Plus, HeartPulse, Weight } from 'lucide-react';
+import { Plus, HeartPulse } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import type { BodyMetrics } from '@/types';
 import { Skeleton } from '@/components/ui/skeleton';
 import { StatItem } from '@/components/StatItem';
 import { format } from 'date-fns';
+import weightIcon from '@/assets/weight-icon.png';
 
 export const BodyMetricsTracker = () => {
     const { user } = useAuth();
@@ -58,7 +58,7 @@ export const BodyMetricsTracker = () => {
                     <div>
                         <div className="grid grid-cols-2 gap-4">
                             <StatItem 
-                                icon={Weight} 
+                                icon={weightIcon} 
                                 value={latestMetrics.weight ? `${latestMetrics.weight} kg` : 'N/A'} 
                                 label="Weight" 
                             />
