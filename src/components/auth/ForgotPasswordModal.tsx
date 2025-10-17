@@ -44,25 +44,16 @@ export const ForgotPasswordModal = ({ open, onOpenChange }: ForgotPasswordModalP
       const currentOrigin = window.location.origin;
       const redirectUrl = `${currentOrigin}/reset-password`;
       
-      console.log('Sending password reset email to:', values.email);
-      console.log('Redirect URL:', redirectUrl);
-      console.log('Current origin:', currentOrigin);
-      
-      const { data, error } = await supabase.auth.resetPasswordForEmail(values.email, {
+      const { error } = await supabase.auth.resetPasswordForEmail(values.email, {
         redirectTo: redirectUrl,
       });
 
-      if (error) {
-        console.error('Reset password error details:', error);
-        throw error;
-      }
+      if (error) throw error;
 
-      console.log('Password reset response:', data);
       toast.success('Password reset email sent! Check your inbox (including spam folder) for the reset link.');
       form.reset();
       onOpenChange(false);
     } catch (error: any) {
-      console.error('Password reset error:', error);
       toast.error(error.message || 'Failed to send reset email. Please try again.');
     } finally {
       setLoading(false);

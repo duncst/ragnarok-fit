@@ -57,7 +57,6 @@ async function encryptData(data: string): Promise<string> {
     
     return btoa(String.fromCharCode(...combined));
   } catch (error) {
-    console.error('Encryption failed:', error);
     throw new Error('Failed to encrypt data');
   }
 }
@@ -80,7 +79,6 @@ async function decryptData(encryptedData: string): Promise<string> {
     const decoder = new TextDecoder();
     return decoder.decode(decryptedBuffer);
   } catch (error) {
-    console.error('Decryption failed:', error);
     throw new Error('Failed to decrypt data');
   }
 }
@@ -93,7 +91,6 @@ export const secureStorage = {
       const encrypted = await encryptData(jsonString);
       localStorage.setItem(key, encrypted);
     } catch (error) {
-      console.error('Secure storage set failed:', error);
       toast.error('Failed to save data securely');
       // Fallback to regular storage for non-critical data
       localStorage.setItem(key, JSON.stringify(value));
@@ -108,7 +105,6 @@ export const secureStorage = {
       const decrypted = await decryptData(encrypted);
       return JSON.parse(decrypted);
     } catch (error) {
-      console.warn('Secure storage get failed, trying fallback:', error);
       // Fallback to regular storage
       try {
         const fallback = localStorage.getItem(key);
