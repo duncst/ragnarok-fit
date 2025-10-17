@@ -63,18 +63,93 @@ serve(async (req) => {
         throw new Error("OPENAI_API_KEY is not set in Supabase secrets.");
     }
 
-    const body = await req.json();
-    const equipment = body?.equipment;
-    const focusArea = body?.focusArea || 'Full Body';
-    const equipmentList = Array.isArray(equipment) && equipment.length > 0 ? equipment.join(', ') : 'Bodyweight';
-    const finalPrompt = PROMPT_TEMPLATE(equipmentList, focusArea);
-    
     const supabaseClient = createClient(
       Deno.env.get('SUPABASE_URL') ?? '',
       Deno.env.get('SUPABASE_ANON_KEY') ?? '',
-      // Create a Supabase client with the user's token
       { global: { headers: { Authorization: req.headers.get('Authorization')! } } }
     )
+
+    // Get authenticated user
+    const { data: { user }, error: authError } = await supabaseClient.auth.getUser()
+    if (authError || !user) {
+      return new Response(JSON.stringify({ error: 'Unauthorized' }), {
+        headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+        status: 401,
+      })
+    }
+
+    // Check rate limits
+    const { data: rateLimitData, error: rateLimitError } = await supabaseClient.rpc(
+      'check_workout_generation_rate_limit',
+      { p_user_id: user.id }
+    );
+
+    if (rateLimitError) {
+      console.error('Rate limit check error:', rateLimitError);
+      return new Response(JSON.stringify({ error: 'Rate limit check failed' }), {
+        headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+        status: 500,
+      });
+    }
+
+    if (!rateLimitData.allowed) {
+      const message = rateLimitData.hourly_count >= rateLimitData.hourly_limit
+        ? `Rate limit exceeded: ${rateLimitData.hourly_limit} generations per hour. Try again in a few minutes.`
+        : `Daily limit exceeded: ${rateLimitData.daily_limit} generations per day. Try again tomorrow.`;
+      
+      return new Response(JSON.stringify({ 
+        error: message,
+        limits: rateLimitData
+      }), {
+        headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+        status: 429,
+      });
+    }
+
+    const body = await req.json();
+    const equipment = body?.equipment;
+    const focusArea = body?.focusArea || 'Full Body';
+
+    // INPUT VALIDATION
+    // Validate equipment is an array
+    if (equipment && !Array.isArray(equipment)) {
+      return new Response(JSON.stringify({ error: 'Equipment must be an array' }), {
+        headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+        status: 400,
+      });
+    }
+
+    // Validate equipment length limit
+    if (equipment && equipment.length > 20) {
+      return new Response(JSON.stringify({ error: 'Maximum 20 equipment items allowed' }), {
+        headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+        status: 400,
+      });
+    }
+
+    // Validate each equipment item
+    if (equipment) {
+      for (const item of equipment) {
+        if (typeof item !== 'string' || item.length > 50 || item.trim().length === 0) {
+          return new Response(JSON.stringify({ error: 'Invalid equipment item' }), {
+            headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+            status: 400,
+          });
+        }
+      }
+    }
+
+    // Validate focus area
+    const validFocusAreas = ['Full Body', 'Upper Body', 'Lower Body', 'Push', 'Pull', 'Legs'];
+    if (focusArea && !validFocusAreas.includes(focusArea)) {
+      return new Response(JSON.stringify({ error: 'Invalid focus area. Must be one of: ' + validFocusAreas.join(', ') }), {
+        headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+        status: 400,
+      });
+    }
+
+    const equipmentList = Array.isArray(equipment) && equipment.length > 0 ? equipment.join(', ') : 'Bodyweight';
+    const finalPrompt = PROMPT_TEMPLATE(equipmentList, focusArea);
 
     const completion = await openai.chat.completions.create({
       model: 'gpt-4o-mini',
@@ -94,22 +169,17 @@ serve(async (req) => {
 
     // For each exercise, get the last used weight and update the plan
     for (const exercise of workoutJson.exercises) {
-      const { data: lastWeight, error: rpcError } = await supabaseClient.rpc('get_last_exercise_weight', {
-        p_exercise_name: exercise.name,
-      });
-
-      if (rpcError) {
-        console.error(`Error fetching last weight for "${exercise.name}":`, rpcError.message);
-        // If there's an error, we'll just proceed with the default weight of 0.
-      }
-      
-      const weightToSet = lastWeight > 0 ? lastWeight : 0;
-
-      for (const set of exercise.sets) {
-        set.weight = weightToSet;
+...
       }
     }
 
+    // Log successful generation request
+    await supabaseClient
+      .from('workout_generation_requests')
+      .insert({ 
+        user_id: user.id,
+        success: true 
+      });
 
     return new Response(JSON.stringify(workoutJson), {
       headers: { ...corsHeaders, 'Content-Type': 'application/json' },

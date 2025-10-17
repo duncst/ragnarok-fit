@@ -43,8 +43,24 @@ export const useGenerateWorkout = ({ setWorkoutName, setExercises }: UseGenerate
             }));
             setExercises(exercisesFromAI);
         },
-        onError: (error) => {
-            sonnerToast.error("Failed to generate workout", { description: (error as Error).message });
+        onError: (error: any) => {
+            const errorMessage = error?.message || 'Unknown error occurred';
+            
+            // Check if it's a rate limit error
+            if (errorMessage.includes('Rate limit') || errorMessage.includes('limit exceeded')) {
+                sonnerToast.error("Generation Limit Reached", { 
+                    description: errorMessage,
+                    duration: 5000 
+                });
+            } else if (errorMessage.includes('Invalid')) {
+                sonnerToast.error("Invalid Input", { 
+                    description: errorMessage 
+                });
+            } else {
+                sonnerToast.error("Failed to generate workout", { 
+                    description: errorMessage 
+                });
+            }
         }
     });
 

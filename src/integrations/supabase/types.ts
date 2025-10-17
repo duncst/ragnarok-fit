@@ -345,6 +345,30 @@ export type Database = {
           },
         ]
       }
+      workout_generation_requests: {
+        Row: {
+          created_at: string
+          id: string
+          ip_address: string | null
+          success: boolean
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          ip_address?: string | null
+          success?: boolean
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          ip_address?: string | null
+          success?: boolean
+          user_id?: string
+        }
+        Relationships: []
+      }
       workout_sets: {
         Row: {
           completed: boolean
@@ -488,6 +512,10 @@ export type Database = {
       can_view_template: {
         Args: { template_id: string }
         Returns: boolean
+      }
+      check_workout_generation_rate_limit: {
+        Args: { p_user_id: string }
+        Returns: Json
       }
       get_activity_likes: {
         Args: { activity_ids: string[] }
