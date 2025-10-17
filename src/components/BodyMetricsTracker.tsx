@@ -3,7 +3,7 @@ import { useAuth } from '@/contexts/AuthContext';
 import { supabase } from '@/integrations/supabase/client';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { Plus, HeartPulse } from 'lucide-react';
+import { Plus, HeartPulse, Zap } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import type { BodyMetrics } from '@/types';
 import { Skeleton } from '@/components/ui/skeleton';
@@ -63,7 +63,7 @@ export const BodyMetricsTracker = () => {
                                 label="Weight" 
                             />
                             <StatItem 
-                                icon={HeartPulse} 
+                                icon={Zap} 
                                 value={latestMetrics.vo2_max || 'N/A'} 
                                 label="VO2 Max" 
                             />
