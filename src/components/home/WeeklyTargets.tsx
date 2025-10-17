@@ -16,7 +16,7 @@ export const WeeklyTargets = ({ weeklyDistance, workoutHistory }: WeeklyTargetsP
       <AccordionItem value="weekly-targets">
         <AccordionTrigger className="text-xl font-semibold">
           <div className="flex items-center gap-2">
-            <img src={spearIcon} alt="Spear icon" className="h-6 w-6" />
+            <img src={spearIcon} alt="Spear icon" className="h-8 w-8" />
             Weekly Targets
           </div>
         </AccordionTrigger>
@@ -29,7 +29,7 @@ export const WeeklyTargets = ({ weeklyDistance, workoutHistory }: WeeklyTargetsP
             <Card>
               <CardHeader className="pb-3">
                 <CardTitle className="flex items-center gap-2 text-base">
-                  <img src={spearIcon} alt="Spear icon" className="h-5 w-5" />
+                  <img src={spearIcon} alt="Spear icon" className="h-6 w-6" />
                   Weekly Distance Goal
                 </CardTitle>
               </CardHeader>
