@@ -141,9 +141,9 @@ export const DailyInvocation = () => {
                         disabled={isLocked}
                       >
                         {isCustomIcon ? (
-                          <ImageIcon src={IconComponent} alt={option.title} className="h-5 w-5" />
+                          <ImageIcon src={IconComponent} alt={option.title} className="h-7 w-7" />
                         ) : (
-                          <IconComponent className="h-5 w-5" />
+                          <IconComponent className="h-7 w-7" />
                         )}
                         <span className="font-semibold">{option.buttonText}</span>
                         {isLocked && <Lock className="h-4 w-4 ml-auto" />}
