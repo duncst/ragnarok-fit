@@ -3,12 +3,13 @@ import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '@/components/ui/collapsible';
-import { Swords, Lock, ChevronDown } from 'lucide-react';
+import { Lock, ChevronDown } from 'lucide-react';
 import { ImageIcon } from './ImageIcon';
 import { HeroCall } from './HeroCall';
 import { MobilityRoutine } from './recovery/MobilityRoutine';
 import { useHeroCallData } from '@/hooks/useHeroCallData';
 import { useNavigate } from 'react-router-dom';
+import heroIcon from '@/assets/hero-icon.png';
 import hammerIcon from '@/assets/hammer-icon.png';
 import recoveryIcon from '@/assets/recovery-icon.png';
 import enduranceIcon from '@/assets/endurance-icon.png';
@@ -56,7 +57,7 @@ export const DailyInvocation = () => {
       title: 'The Hero\'s Call',
       subtitle: 'A daily, all-around challenge—bodyweight and grit.',
       description: 'The forge is hot. Step into it.',
-      icon: Swords,
+      icon: heroIcon,
       buttonText: 'Answer the Hero\'s Call'
     },
     {
