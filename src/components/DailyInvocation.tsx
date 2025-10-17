@@ -131,18 +131,18 @@ export const DailyInvocation = () => {
                   <CardContent className="p-0">
                     <div className="flex items-center gap-2">
                       <Button
-                        variant="ghost"
+                        variant={isLocked ? "outline" : "default"}
                         className="flex-1 justify-start gap-3 h-auto py-3 px-4"
                         onClick={() => !isLocked && handlePathSelection(option.id)}
                         disabled={isLocked}
                       >
-                        <IconComponent className={`h-5 w-5 ${isLocked ? 'text-muted-foreground' : 'text-primary'}`} />
+                        <IconComponent className="h-5 w-5" />
                         <span className="font-semibold">{option.buttonText}</span>
-                        {isLocked && <Lock className="h-4 w-4 ml-auto text-muted-foreground" />}
+                        {isLocked && <Lock className="h-4 w-4 ml-auto" />}
                       </Button>
                       
                       <CollapsibleTrigger asChild>
-                        <Button variant="ghost" size="icon" className="mr-2">
+                        <Button variant="outline" size="icon" className="mr-2">
                           <ChevronDown className="h-4 w-4" />
                         </Button>
                       </CollapsibleTrigger>
