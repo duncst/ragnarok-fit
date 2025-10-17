@@ -2,7 +2,8 @@ import React, { useState } from 'react';
 import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
-import { Swords, Shield, Zap, Leaf, Lock } from 'lucide-react';
+import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '@/components/ui/collapsible';
+import { Swords, Shield, Zap, Leaf, Lock, ChevronDown } from 'lucide-react';
 import { HeroCall } from './HeroCall';
 import { MobilityRoutine } from './recovery/MobilityRoutine';
 import { useHeroCallData } from '@/hooks/useHeroCallData';
@@ -52,7 +53,7 @@ export const DailyInvocation = () => {
       subtitle: 'A daily, all-around challenge—bodyweight and grit.',
       description: 'The forge is hot. Step into it.',
       icon: Swords,
-      buttonText: 'Answer the Call'
+      buttonText: 'Answer the Hero\'s Call'
     },
     {
       id: 'strength',
@@ -60,7 +61,7 @@ export const DailyInvocation = () => {
       subtitle: 'Focused feats of power and control.',
       description: 'Test your sinew, and earn the right to bear the iron.',
       icon: Shield,
-      buttonText: 'Begin Strength Trial'
+      buttonText: 'Begin Trial of Strength'
     },
     {
       id: 'endurance',
@@ -68,7 +69,7 @@ export const DailyInvocation = () => {
       subtitle: 'Runs, rucks, and relentless motion.',
       description: 'Prove you can endure, not just prevail.',
       icon: Zap,
-      buttonText: 'Start Endurance March'
+      buttonText: 'Endure'
     },
     {
       id: 'recovery',
@@ -76,7 +77,7 @@ export const DailyInvocation = () => {
       subtitle: 'Active recovery, mobility, or reflection.',
       description: 'Even the gods must rest before the next battle.',
       icon: Leaf,
-      buttonText: 'Enter the Ritual',
+      buttonText: 'Recovery Ritual',
       isLocked: !isRecoveryUnlocked,
       lockReason: `Complete ${3 - weeklyWorkouts} more active days this week to unlock`
     }
@@ -109,98 +110,63 @@ export const DailyInvocation = () => {
 
   return (
     <Card className="w-full">
-      <CardContent className="p-6 space-y-6">
-        {/* Header */}
-        <div className="text-center space-y-3">
-          <h1 className="text-3xl font-bold text-primary">{getDailyPhrase()}</h1>
-          <div className="space-y-2">
-            <p className="text-lg text-muted-foreground">
-              Each dawn brings a choice:
-            </p>
-            <p className="text-muted-foreground italic">
-              To remain unchanged, or to rise anew.
-            </p>
-          </div>
+      <CardContent className="p-4 space-y-4">
+        {/* Compact Header */}
+        <div className="text-center space-y-2">
+          <h2 className="text-xl font-bold text-primary">{getDailyPhrase()}</h2>
+          <p className="text-sm text-muted-foreground italic">
+            To remain unchanged, or to rise anew.
+          </p>
         </div>
 
-        <div className="border-t border-dashed border-muted-foreground/30 pt-6">
-          <h2 className="text-xl font-semibold text-center mb-6">Choose Your Path:</h2>
-          
-          <div className="grid gap-4 md:grid-cols-2">
-            {workoutOptions.map((option) => {
-              const IconComponent = option.icon;
-              const isLocked = option.isLocked;
-              
-              return (
-                <Card 
-                  key={option.id}
-                  className={`transition-all duration-200 cursor-pointer border-2 ${
-                    isLocked 
-                      ? 'border-muted bg-muted/10 opacity-60' 
-                      : 'border-border hover:border-primary hover:shadow-md hover:scale-[1.02]'
-                  }`}
-                  onClick={() => !isLocked && handlePathSelection(option.id)}
-                >
-                  <CardContent className="p-4 space-y-3">
-                    <div className="flex items-start justify-between">
-                      <div className="space-y-1 flex-1">
-                        <div className="flex items-center gap-2">
-                          <h3 className="font-bold text-lg">
-                            {option.title}
-                          </h3>
-                          {isLocked && <Lock className="h-4 w-4 text-muted-foreground" />}
-                        </div>
-                        <p className="text-sm text-muted-foreground">
-                          {option.subtitle}
-                        </p>
-                      </div>
-                      <IconComponent className={`h-6 w-6 ${isLocked ? 'text-muted-foreground' : 'text-primary'}`} />
+        {/* Collapsible Path Options */}
+        <div className="space-y-2">
+          {workoutOptions.map((option) => {
+            const IconComponent = option.icon;
+            const isLocked = option.isLocked;
+            
+            return (
+              <Collapsible key={option.id}>
+                <Card className={`${isLocked ? 'opacity-60' : ''}`}>
+                  <CardContent className="p-0">
+                    <div className="flex items-center gap-2">
+                      <Button
+                        variant="ghost"
+                        className="flex-1 justify-start gap-3 h-auto py-3 px-4"
+                        onClick={() => !isLocked && handlePathSelection(option.id)}
+                        disabled={isLocked}
+                      >
+                        <IconComponent className={`h-5 w-5 ${isLocked ? 'text-muted-foreground' : 'text-primary'}`} />
+                        <span className="font-semibold">{option.buttonText}</span>
+                        {isLocked && <Lock className="h-4 w-4 ml-auto text-muted-foreground" />}
+                      </Button>
+                      
+                      <CollapsibleTrigger asChild>
+                        <Button variant="ghost" size="icon" className="mr-2">
+                          <ChevronDown className="h-4 w-4" />
+                        </Button>
+                      </CollapsibleTrigger>
                     </div>
                     
-                    <div className="space-y-3">
-                      <p className={`text-sm font-medium italic ${isLocked ? 'text-muted-foreground' : 'text-foreground'}`}>
-                        "{option.description}"
-                      </p>
-                      
-                      {isLocked ? (
-                        <div className="space-y-2">
-                          <Badge variant="outline" className="w-full justify-center text-xs">
+                    <CollapsibleContent>
+                      <div className="px-4 pb-3 pt-1 space-y-2 border-t">
+                        <p className="text-sm font-medium">{option.subtitle}</p>
+                        <p className="text-sm text-muted-foreground italic">
+                          "{option.description}"
+                        </p>
+                        {isLocked && (
+                          <Badge variant="outline" className="text-xs">
                             <Lock className="h-3 w-3 mr-1" />
-                            Locked
-                          </Badge>
-                          <p className="text-xs text-muted-foreground text-center">
                             {option.lockReason}
-                          </p>
-                        </div>
-                      ) : (
-                        <Button 
-                          className="w-full"
-                          onClick={(e) => {
-                            e.stopPropagation();
-                            handlePathSelection(option.id);
-                          }}
-                        >
-                          {option.buttonText}
-                        </Button>
-                      )}
-                    </div>
+                          </Badge>
+                        )}
+                      </div>
+                    </CollapsibleContent>
                   </CardContent>
                 </Card>
-              );
-            })}
-          </div>
-        </div>
-
-        {/* Footer */}
-        <div className="border-t border-dashed border-muted-foreground/30 pt-4">
-          <div className="text-center space-y-2">
-            <p className="text-sm text-muted-foreground">
-              Choose your proving ground.
-            </p>
-            <p className="text-xs text-muted-foreground italic">
-              "The day awaits. What will you forge?"
-            </p>
-          </div>
+              </Collapsible>
+            );
+          })}
         </div>
       </CardContent>
     </Card>
