@@ -1,7 +1,6 @@
 
 import { DailyInvocation } from "@/components/DailyInvocation";
 import { BodyMetricsTracker } from "@/components/BodyMetricsTracker";
-import { ActionButtons } from "@/components/home/ActionButtons";
 import { AnalyticsSection } from "@/components/home/AnalyticsSection";
 import { WeeklyTargets } from "@/components/home/WeeklyTargets";
 import { WeeklyStreakDisplay } from "@/components/home/WeeklyStreakDisplay";
@@ -48,12 +47,10 @@ const HomePage = () => {
             completedDays={stats.completedDays} 
             weeklyCount={stats.weeklyCount} 
           />
-        </div>
       </div>
+    </div>
 
-      <ActionButtons />
-
-      <WeeklyTargets 
+    <WeeklyTargets
         weeklyDistance={last7DaysDistance}
         workoutHistory={workoutHistory}
       />
