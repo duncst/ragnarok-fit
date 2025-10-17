@@ -4,12 +4,14 @@ import { Button } from '@/components/ui/button';
 import { Textarea } from '@/components/ui/textarea';
 import { Label } from '@/components/ui/label';
 import { Badge } from '@/components/ui/badge';
+import { Input } from '@/components/ui/input';
+import { Checkbox } from '@/components/ui/checkbox';
 
 interface WorkoutCompletionDialogProps {
   isOpen: boolean;
   workoutName: string;
   workoutDuration: string;
-  onComplete: (message?: string) => void;
+  onComplete: (data: { message?: string; saveAsTemplate?: boolean; templateName?: string }) => void;
   onCancel: () => void;
   isLoading?: boolean;
 }
@@ -23,13 +25,19 @@ export const WorkoutCompletionDialog = ({
   isLoading = false
 }: WorkoutCompletionDialogProps) => {
   const [message, setMessage] = useState('');
+  const [saveAsTemplate, setSaveAsTemplate] = useState(false);
+  const [templateName, setTemplateName] = useState('');
 
   const handleComplete = () => {
-    onComplete(message.trim() || undefined);
+    onComplete({
+      message: message.trim() || undefined,
+      saveAsTemplate,
+      templateName: saveAsTemplate ? templateName.trim() : undefined
+    });
   };
 
   const handleSkip = () => {
-    onComplete();
+    onComplete({});
   };
 
   return (
@@ -66,6 +74,37 @@ export const WorkoutCompletionDialog = ({
             <p className="text-xs text-muted-foreground text-right">
               {message.length}/280
             </p>
+          </div>
+
+          <div className="space-y-3 border-t pt-4">
+            <div className="flex items-center space-x-2">
+              <Checkbox
+                id="save-template"
+                checked={saveAsTemplate}
+                onCheckedChange={(checked) => setSaveAsTemplate(checked === true)}
+              />
+              <Label
+                htmlFor="save-template"
+                className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70 cursor-pointer"
+              >
+                Save as template for future workouts
+              </Label>
+            </div>
+            
+            {saveAsTemplate && (
+              <div className="space-y-2 pl-6">
+                <Label htmlFor="template-name" className="text-sm">
+                  Template Name
+                </Label>
+                <Input
+                  id="template-name"
+                  placeholder="Enter template name..."
+                  value={templateName}
+                  onChange={(e) => setTemplateName(e.target.value)}
+                  className="h-10"
+                />
+              </div>
+            )}
           </div>
 
           <div className="flex gap-3">

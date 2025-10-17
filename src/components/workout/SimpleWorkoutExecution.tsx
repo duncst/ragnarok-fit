@@ -19,7 +19,7 @@ interface SimpleWorkoutExecutionProps {
   onUpdateSet: (exerciseId: string, setId: string, field: 'weight' | 'reps' | 'duration' | 'distance', value: number) => void;
   onToggleSet: (exerciseId: string, setId: string) => void;
   onStartWorkout: () => void;
-  onFinishWorkout: (forgeMessage?: string) => void;
+  onFinishWorkout: (forgeMessage?: string, saveAsTemplate?: boolean, templateName?: string) => void;
   onCancelWorkout: () => void;
   workoutTimer: string;
   isStarted: boolean;
@@ -81,9 +81,9 @@ export const SimpleWorkoutExecution: React.FC<SimpleWorkoutExecutionProps> = ({
     setShowCompletionDialog(true);
   };
 
-  const handleCompleteWorkout = (forgeMessage?: string) => {
+  const handleCompleteWorkout = (data: { message?: string; saveAsTemplate?: boolean; templateName?: string }) => {
     setShowCompletionDialog(false);
-    onFinishWorkout(forgeMessage);
+    onFinishWorkout(data.message, data.saveAsTemplate, data.templateName);
   };
 
   const handleCancelCompletion = () => {

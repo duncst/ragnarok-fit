@@ -72,7 +72,7 @@ export const HeroCall = () => {
     setIsInWorkoutMode(false);
   };
 
-  const handleMarkComplete = async (forgeMessage?: string) => {
+  const handleMarkComplete = async (data: { message?: string; saveAsTemplate?: boolean; templateName?: string }) => {
     try {
       // Save to Hero's Call completions table
       await completeHeroCall.mutateAsync({
@@ -85,7 +85,7 @@ export const HeroCall = () => {
         'hero_call',
         `Answered the Hero's Call: ${currentWorkout.name}`,
         undefined,
-        forgeMessage
+        data.message
       );
 
       // Also save as a regular workout for analytics
@@ -105,7 +105,7 @@ export const HeroCall = () => {
         finishWorkout({
           exercises,
           name: `Hero's Call: ${currentWorkout.name}`,
-          forgeMessage,
+          forgeMessage: data.message,
         });
       }
 

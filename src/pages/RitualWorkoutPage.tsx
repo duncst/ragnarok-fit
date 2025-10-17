@@ -206,13 +206,13 @@ const RitualWorkoutPage = () => {
     navigate('/workout/new');
   };
 
-  const handleFinishWorkout = (forgeMessage?: string) => {
+  const handleFinishWorkout = (forgeMessage?: string, shouldSaveAsTemplate?: boolean, newTemplateName?: string) => {
     const totalTime = Math.floor(totalDuration / 1000);
     const formattedTime = `${Math.floor(totalTime / 60)}:${(totalTime % 60).toString().padStart(2, '0')}`;
     
     finishWorkout({ 
       exercises, 
-      name: templateName,
+      name: templateName || 'Ritual',
       forgeMessage,
       onValhallaScorePrompt: (name) => handleValhallaScorePrompt(name, totalTime),
       onCelebration: (workoutName, duration) => {
@@ -220,6 +220,11 @@ const RitualWorkoutPage = () => {
         setShowCelebration(true);
       }
     });
+    
+    // Save as template if requested
+    if (shouldSaveAsTemplate && newTemplateName) {
+      saveAsTemplate({ exercises, name: newTemplateName });
+    }
     
     pauseWorkout();
     resetTimer();
