@@ -1,11 +1,13 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
+import { Progress } from "@/components/ui/progress";
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
-import { Zap, AlertTriangle, CheckCircle2, ChevronDown } from "lucide-react";
+import { Zap, AlertTriangle, CheckCircle2, ChevronDown, Target } from "lucide-react";
 import type { Workout } from '@/types';
 import { subDays, isWithinInterval, startOfDay, format } from 'date-fns';
 import { isHeroCallWorkout } from '@/lib/workoutUtils';
 import { useState } from 'react';
+import { useMuscleGroupGoals } from '@/hooks/useMuscleGroupGoals';
 
 interface MuscleGroupVolumeTrackerProps {
   workoutHistory?: Workout[];
@@ -53,6 +55,7 @@ export const MuscleGroupVolumeTracker = ({ workoutHistory }: MuscleGroupVolumeTr
   const today = new Date();
   const last7DaysInterval = { start: startOfDay(subDays(today, 6)), end: new Date() };
   const [expandedGroups, setExpandedGroups] = useState<Set<string>>(new Set());
+  const { getGoal } = useMuscleGroupGoals();
 
   // Enhanced data structure to track detailed information
   const muscleGroupData: Record<string, {
@@ -169,6 +172,8 @@ export const MuscleGroupVolumeTracker = ({ workoutHistory }: MuscleGroupVolumeTr
             const status = getMuscleGroupStatus(data.totalSets);
             const StatusIcon = status.icon;
             const isExpanded = expandedGroups.has(muscleGroup);
+            const goal = getGoal(muscleGroup);
+            const progressPercent = goal ? Math.min((data.totalSets / goal.weekly_target_sets) * 100, 100) : 0;
             
             return (
               <Collapsible key={muscleGroup} open={isExpanded} onOpenChange={() => toggleExpanded(muscleGroup)}>
@@ -176,9 +181,17 @@ export const MuscleGroupVolumeTracker = ({ workoutHistory }: MuscleGroupVolumeTr
                   <div className="flex items-center justify-between p-2 bg-muted/50 rounded-md hover:bg-muted/70 transition-colors">
                     <div className="flex items-center gap-2 min-w-0 flex-1">
                       <StatusIcon className="h-3 w-3 text-muted-foreground flex-shrink-0" />
-                      <div className="min-w-0 text-left">
-                        <p className="font-medium text-xs truncate">{muscleGroup}</p>
-                        <p className="text-xs text-muted-foreground">{data.totalSets} sets</p>
+                      <div className="min-w-0 text-left flex-1">
+                        <div className="flex items-center gap-2">
+                          <p className="font-medium text-xs truncate">{muscleGroup}</p>
+                          {goal && <Target className="h-3 w-3 text-primary flex-shrink-0" />}
+                        </div>
+                        <p className="text-xs text-muted-foreground">
+                          {data.totalSets} sets{goal && ` / ${goal.weekly_target_sets}`}
+                        </p>
+                        {goal && (
+                          <Progress value={progressPercent} className="h-1 mt-1" />
+                        )}
                       </div>
                     </div>
                     <div className="flex items-center gap-2">

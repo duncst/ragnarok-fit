@@ -130,6 +130,33 @@ export type Database = {
         }
         Relationships: []
       }
+      muscle_group_volume_goals: {
+        Row: {
+          created_at: string
+          id: string
+          muscle_group: string
+          updated_at: string
+          user_id: string
+          weekly_target_sets: number
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          muscle_group: string
+          updated_at?: string
+          user_id: string
+          weekly_target_sets: number
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          muscle_group?: string
+          updated_at?: string
+          user_id?: string
+          weekly_target_sets?: number
+        }
+        Relationships: []
+      }
       personal_records: {
         Row: {
           created_at: string
