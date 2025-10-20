@@ -178,31 +178,37 @@ export const MuscleGroupVolumeTracker = ({ workoutHistory }: MuscleGroupVolumeTr
             return (
               <Collapsible key={muscleGroup} open={isExpanded} onOpenChange={() => toggleExpanded(muscleGroup)}>
                 <CollapsibleTrigger className="w-full">
-                  <div className="flex items-center justify-between p-2 bg-muted/50 rounded-md hover:bg-muted/70 transition-colors">
-                    <div className="flex items-center gap-2 min-w-0 flex-1">
-                      <StatusIcon className="h-3 w-3 text-muted-foreground flex-shrink-0" />
-                      <div className="min-w-0 text-left flex-1">
-                        <div className="flex items-center gap-2">
-                          <p className="font-medium text-xs truncate">{muscleGroup}</p>
-                          {goal && <Target className="h-3 w-3 text-primary flex-shrink-0" />}
-                        </div>
-                        <p className="text-xs text-muted-foreground">
-                          {data.totalSets} sets{goal && ` / ${goal.weekly_target_sets}`}
-                        </p>
-                        {goal && (
-                          <Progress value={progressPercent} className="h-1 mt-1" />
-                        )}
+                  <div className="flex items-start justify-between p-3 bg-muted/50 rounded-md hover:bg-muted/70 transition-colors">
+                    <div className="flex-1 space-y-2">
+                      <div className="flex items-center gap-2">
+                        {goal && <Target className="h-4 w-4 text-primary" />}
+                        <span className="font-medium">{muscleGroup}</span>
                       </div>
+                      <div className="flex items-center gap-2">
+                        <span className="text-lg font-semibold">
+                          {goal 
+                            ? `${data.totalSets}/${goal.weekly_target_sets} sets`
+                            : `${data.totalSets} sets`
+                          }
+                        </span>
+                        <Badge 
+                          variant="outline" 
+                          className={getMuscleGroupColor(data.totalSets)}
+                        >
+                          <status.icon className="h-3 w-3 mr-1" />
+                          {status.label}
+                        </Badge>
+                      </div>
+                      {goal && (
+                        <div className="w-full bg-muted rounded-full h-2 overflow-hidden">
+                          <div 
+                            className={`h-full transition-all duration-300 ${getMuscleGroupColor(data.totalSets)}`}
+                            style={{ width: `${progressPercent}%` }}
+                          />
+                        </div>
+                      )}
                     </div>
-                    <div className="flex items-center gap-2">
-                      <Badge 
-                        variant="secondary" 
-                        className={`text-xs px-1.5 py-0.5 flex-shrink-0 ${getMuscleGroupColor(data.totalSets)}`}
-                      >
-                        {status.label}
-                      </Badge>
-                      <ChevronDown className={`h-3 w-3 text-muted-foreground transition-transform ${isExpanded ? 'rotate-180' : ''}`} />
-                    </div>
+                    <ChevronDown className={`h-4 w-4 text-muted-foreground transition-transform ml-2 mt-1 ${isExpanded ? 'rotate-180' : ''}`} />
                   </div>
                 </CollapsibleTrigger>
                 <CollapsibleContent>
