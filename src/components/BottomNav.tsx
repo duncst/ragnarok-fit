@@ -28,7 +28,7 @@ const navItems = [
   { to: "/home", icon: HomeIcon, label: "Home" },
   { to: "/workout/new", icon: StartWorkoutIcon, label: "Workout" },
   { to: "/forge", icon: Anvil, label: "Forge" },
-  { to: "/goals", icon: Target, label: "Goals" },
+  { to: "/capability-paths", icon: PathsIcon, label: "Paths" },
   { to: "/clan", icon: Users, label: "Clan" },
 ];
 

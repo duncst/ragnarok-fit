@@ -2,6 +2,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
 import { WeeklyDistanceGoal } from "./WeeklyDistanceGoal";
 import { MuscleGroupVolumeTracker } from "@/components/MuscleGroupVolumeTracker";
+import { MuscleGroupGoalSetter } from "./MuscleGroupGoalSetter";
 import spearIcon from "@/assets/spear-icon.png";
 import type { Workout } from '@/types';
 
@@ -24,6 +25,9 @@ export const WeeklyTargets = ({ weeklyDistance, workoutHistory }: WeeklyTargetsP
           <div className="space-y-6">
             {/* Muscle Group Volume Tracker */}
             <MuscleGroupVolumeTracker workoutHistory={workoutHistory} />
+
+            {/* Muscle Group Goal Setter */}
+            <MuscleGroupGoalSetter />
 
             {/* Weekly Distance Goal */}
             <Card>

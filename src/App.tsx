@@ -22,7 +22,6 @@ import { ResetPasswordPage } from "./pages/ResetPasswordPage";
 import WorkoutHistoryPage from "./pages/WorkoutHistoryPage";
 import { AuthProvider } from "./contexts/AuthContext";
 import LogBodyMetricsPage from "./pages/LogBodyMetricsPage";
-import GoalsPage from "./pages/GoalsPage";
 import EnduranceTrialsPage from "./pages/EnduranceTrialsPage";
 import EnduranceSessionPage from "./pages/EnduranceSessionPage";
 import ClanPage from "./pages/ClanPage";
@@ -57,7 +56,6 @@ const App = () => (
                 <Route path="/clan" element={<ClanPage />} />
                 <Route path="/endure/trials" element={<EnduranceTrialsPage />} />
                 <Route path="/endure/session" element={<EnduranceSessionPage />} />
-                <Route path="/goals" element={<GoalsPage />} />
               </Route>
               <Route path="*" element={<NotFound />} />
             </Routes>
