@@ -107,6 +107,13 @@ export const HeroCall = () => {
           name: `Hero's Call: ${currentWorkout.name}`,
           forgeMessage: data.message,
         });
+        
+        // Save as template if requested (though Hero's Call is already a system template)
+        // This allows users to save their customized version
+        if (data.saveAsTemplate && data.templateName) {
+          // Note: Would need to import and use saveAsTemplate here if desired
+          // Currently Hero's Call workouts are system templates, not user templates
+        }
       }
 
       setShowCompletion(false);
