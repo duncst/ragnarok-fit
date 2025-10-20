@@ -17,6 +17,7 @@ const MUSCLE_GROUPS = [
 
 export const MuscleGroupGoalSetter = () => {
   const { goals, setGoal, getGoal } = useMuscleGroupGoals();
+  const [isAdding, setIsAdding] = useState(false);
   const [selectedMuscleGroup, setSelectedMuscleGroup] = useState('');
   const [setsInput, setSetsInput] = useState('');
 
@@ -36,7 +37,14 @@ export const MuscleGroupGoalSetter = () => {
       setGoal(selectedMuscleGroup, sets);
       setSelectedMuscleGroup('');
       setSetsInput('');
+      setIsAdding(false);
     }
+  };
+
+  const handleCancel = () => {
+    setIsAdding(false);
+    setSelectedMuscleGroup('');
+    setSetsInput('');
   };
 
   const existingGoal = selectedMuscleGroup ? getGoal(selectedMuscleGroup) : null;
@@ -51,8 +59,18 @@ export const MuscleGroupGoalSetter = () => {
         </CardTitle>
       </CardHeader>
       <CardContent>
-        <div className="space-y-4">
-          <div className="space-y-2">
+        {!isAdding ? (
+          <div className="space-y-3">
+            <div className="text-center space-y-3">
+              <p className="text-sm text-muted-foreground">Add or update weekly training targets</p>
+              <Button onClick={() => setIsAdding(true)} size="sm" className="w-full">
+                <Target className="h-4 w-4 mr-2" />
+                Set Goal
+              </Button>
+            </div>
+          </div>
+        ) : (
+          <div className="space-y-3">
             <p className="text-sm font-medium">{isUpdating ? 'Update' : 'Add'} Muscle Group Goal</p>
             <div className="flex gap-2">
               <Select value={selectedMuscleGroup} onValueChange={handleMuscleGroupChange}>
@@ -75,12 +93,18 @@ export const MuscleGroupGoalSetter = () => {
                 min="1"
                 className="w-32"
               />
-              <Button onClick={handleSetMuscleGoal} size="icon">
-                {isUpdating ? <Edit className="h-4 w-4" /> : <Plus className="h-4 w-4" />}
+            </div>
+            <div className="flex gap-2">
+              <Button onClick={handleSetMuscleGoal} size="sm" className="flex-1">
+                {isUpdating ? <Edit className="h-4 w-4 mr-1" /> : <Plus className="h-4 w-4 mr-1" />}
+                {isUpdating ? 'Update' : 'Add'}
+              </Button>
+              <Button onClick={handleCancel} variant="outline" size="sm" className="flex-1">
+                Cancel
               </Button>
             </div>
           </div>
-        </div>
+        )}
       </CardContent>
     </Card>
   );
