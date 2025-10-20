@@ -9,14 +9,10 @@ import { useMuscleGroupGoals } from '@/hooks/useMuscleGroupGoals';
 const MUSCLE_GROUPS = [
   'Chest',
   'Back',
-  'Shoulders',
-  'Triceps',
-  'Biceps',
   'Legs',
+  'Shoulders',
+  'Arms',
   'Core',
-  'Glutes',
-  'Forearms',
-  'Calves',
 ];
 
 export const MuscleGroupGoalSetter = () => {
