@@ -41,6 +41,7 @@ export const exercises: ExerciseDef[] = [
   { name: "Reverse Flyes", bodyPart: "Back", equipment: "dumbbells", targetMuscles: ["rear delts", "rhomboids"], description: "Reverse fly movement" },
   { name: "Shrugs", bodyPart: "Back", equipment: "dumbbells", targetMuscles: ["traps"], description: "Shoulder shrugs" },
   { name: "One Arm Lat Pull-down", bodyPart: "Back", equipment: "cable machine", targetMuscles: ["lats", "biceps", "rhomboids"], description: "Single arm lat pulldown" },
+  { name: "Pullover", bodyPart: "Back", equipment: "dumbbells", targetMuscles: ["lats", "chest", "serratus"], description: "Dumbbell pullover over bench" },
 
   // Legs
   { name: "Squats", bodyPart: "Legs", equipment: "barbell", targetMuscles: ["quadriceps", "glutes", "hamstrings"], description: "Squat down and stand up" },
@@ -74,6 +75,10 @@ export const exercises: ExerciseDef[] = [
   { name: "Lying Leg Curls", bodyPart: "Legs", equipment: "leg curl machine", targetMuscles: ["hamstrings"], description: "Lying hamstring curls" },
   { name: "Hip Adduction", bodyPart: "Legs", equipment: "hip adduction machine", targetMuscles: ["hip adductors", "inner thighs"], description: "Bring legs together against resistance" },
   { name: "Hip Abduction", bodyPart: "Legs", equipment: "hip abduction machine", targetMuscles: ["hip abductors", "glutes"], description: "Spread legs apart against resistance" },
+  { name: "Good Morning", bodyPart: "Legs", equipment: "barbell", targetMuscles: ["hamstrings", "glutes", "erector spinae"], description: "Hip hinge with barbell on shoulders" },
+  { name: "Jefferson Curl", bodyPart: "Legs", equipment: "dumbbells", targetMuscles: ["hamstrings", "erector spinae"], description: "Controlled spinal flexion with weight" },
+  { name: "Reverse Nordic", bodyPart: "Legs", equipment: "bodyweight", targetMuscles: ["quadriceps", "hip flexors"], description: "Lean back from kneeling position" },
+  { name: "Banded Reverse Nordic", bodyPart: "Legs", equipment: "resistance band", targetMuscles: ["quadriceps", "hip flexors"], description: "Reverse nordic with band assistance" },
 
   // Shoulders
   { name: "Overhead Press", bodyPart: "Shoulders", equipment: "barbell", targetMuscles: ["shoulders", "triceps"], description: "Press barbell overhead" },
