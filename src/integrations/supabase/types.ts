@@ -14,6 +14,36 @@ export type Database = {
   }
   public: {
     Tables: {
+      blog_posts: {
+        Row: {
+          author_id: string
+          content: string
+          created_at: string | null
+          id: string
+          published: boolean | null
+          title: string
+          updated_at: string | null
+        }
+        Insert: {
+          author_id: string
+          content: string
+          created_at?: string | null
+          id?: string
+          published?: boolean | null
+          title: string
+          updated_at?: string | null
+        }
+        Update: {
+          author_id?: string
+          content?: string
+          created_at?: string | null
+          id?: string
+          published?: boolean | null
+          title?: string
+          updated_at?: string | null
+        }
+        Relationships: []
+      }
       body_metrics: {
         Row: {
           created_at: string
@@ -243,6 +273,27 @@ export type Database = {
           id?: string
           notes?: string | null
           run_type?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
+      user_roles: {
+        Row: {
+          created_at: string | null
+          id: string
+          role: Database["public"]["Enums"]["app_role"]
+          user_id: string
+        }
+        Insert: {
+          created_at?: string | null
+          id?: string
+          role: Database["public"]["Enums"]["app_role"]
+          user_id: string
+        }
+        Update: {
+          created_at?: string | null
+          id?: string
+          role?: Database["public"]["Enums"]["app_role"]
           user_id?: string
         }
         Relationships: []
@@ -528,18 +579,12 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
-      add_activity_like: {
-        Args: { p_activity_id: string }
-        Returns: undefined
-      }
+      add_activity_like: { Args: { p_activity_id: string }; Returns: undefined }
       calculate_valhalla_tier: {
         Args: { challenge_name: string; completion_time_minutes: number }
         Returns: string
       }
-      can_view_template: {
-        Args: { template_id: string }
-        Returns: boolean
-      }
+      can_view_template: { Args: { template_id: string }; Returns: boolean }
       check_workout_generation_rate_limit: {
         Args: { p_user_id: string }
         Returns: Json
@@ -553,10 +598,7 @@ export type Database = {
           user_id: string
         }[]
       }
-      get_hero_call_streak: {
-        Args: { p_user_id: string }
-        Returns: number
-      }
+      get_hero_call_streak: { Args: { p_user_id: string }; Returns: number }
       get_hero_call_weekly_count: {
         Args: { p_user_id: string }
         Returns: number
@@ -575,10 +617,7 @@ export type Database = {
         Args: { p_exercise_name: string }
         Returns: number
       }
-      get_user_workouts: {
-        Args: Record<PropertyKey, never>
-        Returns: Json
-      }
+      get_user_workouts: { Args: never; Returns: Json }
       get_users_forge_titles: {
         Args: { p_user_ids: string[] }
         Returns: {
@@ -588,18 +627,19 @@ export type Database = {
           user_id: string
         }[]
       }
-      get_valhalla_progress: {
-        Args: Record<PropertyKey, never>
-        Returns: Json
+      get_valhalla_progress: { Args: never; Returns: Json }
+      has_role: {
+        Args: {
+          _role: Database["public"]["Enums"]["app_role"]
+          _user_id: string
+        }
+        Returns: boolean
       }
       hero_call_completed_today: {
         Args: { p_user_id: string }
         Returns: boolean
       }
-      is_template_owner: {
-        Args: { template_id: string }
-        Returns: boolean
-      }
+      is_template_owner: { Args: { template_id: string }; Returns: boolean }
       record_valhalla_challenge: {
         Args: {
           p_challenge_name: string
@@ -618,7 +658,7 @@ export type Database = {
       }
     }
     Enums: {
-      [_ in never]: never
+      app_role: "admin" | "user"
     }
     CompositeTypes: {
       [_ in never]: never
@@ -745,6 +785,8 @@ export type CompositeTypes<
 
 export const Constants = {
   public: {
-    Enums: {},
+    Enums: {
+      app_role: ["admin", "user"],
+    },
   },
 } as const

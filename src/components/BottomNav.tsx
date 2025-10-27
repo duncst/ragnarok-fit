@@ -29,7 +29,7 @@ const navItems = [
   { to: "/workout/new", icon: StartWorkoutIcon, label: "Workout" },
   { to: "/forge", icon: Anvil, label: "Forge" },
   { to: "/capability-paths", icon: PathsIcon, label: "Paths" },
-  { to: "/clan", icon: Users, label: "Clan" },
+  { to: "/blog", icon: Target, label: "Blog" },
 ];
 
 const BottomNav = () => {

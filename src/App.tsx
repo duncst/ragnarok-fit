@@ -19,6 +19,7 @@ import ForgePage from "./pages/ForgePage";
 import LandingPage from "./pages/LandingPage";
 import AuthPage from "./pages/AuthPage";
 import { ResetPasswordPage } from "./pages/ResetPasswordPage";
+import BlogPage from "./pages/BlogPage";
 import WorkoutHistoryPage from "./pages/WorkoutHistoryPage";
 import { AuthProvider } from "./contexts/AuthContext";
 import LogBodyMetricsPage from "./pages/LogBodyMetricsPage";
@@ -37,12 +38,13 @@ const App = () => (
       <AuthProvider>
         <InputSanitizer>
           <BrowserRouter>
-            <Routes>
-              <Route path="/" element={<LandingPage />} />
-              <Route path="/auth" element={<AuthPage />} />
-              <Route path="/reset-password" element={<ResetPasswordPage />} />
+        <Routes>
+          <Route path="/" element={<LandingPage />} />
+          <Route path="/auth" element={<AuthPage />} />
+          <Route path="/reset-password" element={<ResetPasswordPage />} />
               <Route element={<Layout />}>
                 <Route path="/home" element={<HomePage />} />
+                <Route path="/blog" element={<BlogPage />} />
                 <Route path="/exercises" element={<ExercisesPage />} />
                 <Route path="/forge" element={<ForgePage />} />
                 <Route path="/capability-paths" element={<CapabilityPathsPage />} />
