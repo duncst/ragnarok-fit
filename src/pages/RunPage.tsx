@@ -24,6 +24,8 @@ const runTypes = [
   "Hill Training",
   "Race",
   "Bike",
+  "Mixed Cardio",
+  "Jump Rope",
 ];
 
 const RunPage = () => {
