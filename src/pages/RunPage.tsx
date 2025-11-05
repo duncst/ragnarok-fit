@@ -14,6 +14,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { toast as sonnerToast } from "sonner";
 import { useForgedWeekCheck } from "@/contexts/ForgedWeekContext";
 import { useBrotherhoodActivities } from "@/hooks/useBrotherhoodActivities";
+
 const runTypes = [
   "Easy Run",
   "Tempo Run", 
@@ -27,6 +28,9 @@ const runTypes = [
   "Mixed Cardio",
   "Jump Rope",
 ];
+
+// Activities that only track duration, not distance
+const durationOnlyActivities = ["Mixed Cardio", "Jump Rope"];
 
 const RunPage = () => {
   const [isRunning, setIsRunning] = useState(false);
@@ -126,10 +130,16 @@ const RunPage = () => {
   };
 
   const handleSaveRun = async () => {
-    const dist = parseFloat(distance);
-    if (isNaN(dist) || dist <= 0) {
-      sonnerToast.error("Enter a valid distance", { description: "Distance must be greater than 0 km." });
-      return;
+    const isDurationOnly = durationOnlyActivities.includes(runType);
+    
+    // For distance-based activities, validate distance
+    let dist = 0;
+    if (!isDurationOnly) {
+      dist = parseFloat(distance);
+      if (isNaN(dist) || dist <= 0) {
+        sonnerToast.error("Enter a valid distance", { description: "Distance must be greater than 0 km." });
+        return;
+      }
     }
 
     const manualSeconds = getManualDurationSeconds();
@@ -154,13 +164,19 @@ const RunPage = () => {
         'endurance',
         `Logged ${runType}`,
         undefined,
-        `${dist.toFixed(2)} km in ${formatTime(durationSeconds)}`
+        isDurationOnly 
+          ? `${formatTime(durationSeconds)}`
+          : `${dist.toFixed(2)} km in ${formatTime(durationSeconds)}`
       );
 
       // Trigger forged day check
       checkForNewForgedWeek();
 
-      sonnerToast.success("Run saved", { description: `${dist.toFixed(2)} km - ${formatTime(durationSeconds)}` });
+      sonnerToast.success("Activity saved", { 
+        description: isDurationOnly 
+          ? formatTime(durationSeconds)
+          : `${dist.toFixed(2)} km - ${formatTime(durationSeconds)}` 
+      });
 
       // Reset state
       setTime(0);
@@ -264,23 +280,29 @@ const RunPage = () => {
       <Dialog open={showSaveDialog} onOpenChange={setShowSaveDialog}>
         <DialogContent>
           <DialogHeader>
-            <DialogTitle>Save run</DialogTitle>
-            <DialogDescription>Enter details to log your endurance session.</DialogDescription>
+            <DialogTitle>Save activity</DialogTitle>
+            <DialogDescription>
+              {durationOnlyActivities.includes(runType) 
+                ? "Enter duration to log your activity."
+                : "Enter details to log your endurance session."}
+            </DialogDescription>
           </DialogHeader>
           <div className="space-y-4">
-            <div className="grid grid-cols-1 gap-2">
-              <Label htmlFor="distance">Distance (km)</Label>
-              <Input
-                id="distance"
-                type="number"
-                inputMode="decimal"
-                step="0.01"
-                min="0"
-                placeholder="e.g., 5.00"
-                value={distance}
-                onChange={(e) => setDistance(e.target.value)}
-              />
-            </div>
+            {!durationOnlyActivities.includes(runType) && (
+              <div className="grid grid-cols-1 gap-2">
+                <Label htmlFor="distance">Distance (km)</Label>
+                <Input
+                  id="distance"
+                  type="number"
+                  inputMode="decimal"
+                  step="0.01"
+                  min="0"
+                  placeholder="e.g., 5.00"
+                  value={distance}
+                  onChange={(e) => setDistance(e.target.value)}
+                />
+              </div>
+            )}
             <div className="grid grid-cols-1 gap-2">
               <Label>Duration (HH:MM:SS)</Label>
               <div className="flex items-center gap-2">
@@ -336,8 +358,11 @@ const RunPage = () => {
           </div>
           <DialogFooter>
             <Button variant="ghost" onClick={handleDiscard} disabled={isSaving}>Discard</Button>
-            <Button onClick={handleSaveRun} disabled={isSaving || !distance}>
-              {isSaving ? "Saving..." : "Save run"}
+            <Button 
+              onClick={handleSaveRun} 
+              disabled={isSaving || (!durationOnlyActivities.includes(runType) && !distance)}
+            >
+              {isSaving ? "Saving..." : "Save activity"}
             </Button>
           </DialogFooter>
         </DialogContent>
