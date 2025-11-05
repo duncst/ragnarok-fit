@@ -111,7 +111,7 @@ const BlogPage = () => {
     <div className="container mx-auto px-4 py-8 max-w-4xl">
         <div className="flex items-center justify-between mb-8">
           <div>
-            <h1 className="text-4xl font-bold mb-2">Ragnarok Fit Blog</h1>
+            <h1 className="text-4xl font-bold mb-2">What Makes a Man</h1>
             <p className="text-muted-foreground">Training insights and updates</p>
           </div>
           {isAdmin && (
