@@ -130,7 +130,6 @@ export const exercises: ExerciseDef[] = [
   { name: "Weighted Russian Twists", bodyPart: "Core", equipment: "medicine ball", targetMuscles: ["obliques"], description: "Russian twists with weight" },
   { name: "Leg Raises", bodyPart: "Core", equipment: "bodyweight", targetMuscles: ["lower abs"], description: "Raise legs while lying down" },
   { name: "Hanging Leg Raises", bodyPart: "Core", equipment: "pull-up bar", targetMuscles: ["lower abs"], description: "Hanging leg raises" },
-  { name: "Mountain Climbers", bodyPart: "Core", equipment: "bodyweight", targetMuscles: ["core", "cardio"], description: "Alternate bringing knees to chest", type: "time" },
   { name: "Dead Bug", bodyPart: "Core", equipment: "bodyweight", targetMuscles: ["core"], description: "Opposite arm and leg extensions" },
   { name: "Bicycle Crunches", bodyPart: "Core", equipment: "bodyweight", targetMuscles: ["abs", "obliques"], description: "Alternate elbow to knee crunches" },
   { name: "Sit-ups", bodyPart: "Core", equipment: "bodyweight", targetMuscles: ["abs"], description: "Standard sit-ups", type: "reps" },
@@ -151,6 +150,7 @@ export const exercises: ExerciseDef[] = [
   { name: "Skipping", bodyPart: "Cardio", equipment: "bodyweight", targetMuscles: ["calves", "legs"], description: "Skipping movement", type: "time" },
   { name: "Running in Place", bodyPart: "Cardio", equipment: "bodyweight", targetMuscles: ["legs"], description: "Run in place", type: "time" },
   { name: "Running", bodyPart: "Cardio", equipment: "bodyweight", targetMuscles: ["legs"], description: "400m run or 2 min high knees", type: "distance" },
+  { name: "Mountain Climbers", bodyPart: "Cardio", equipment: "bodyweight", targetMuscles: ["core", "shoulders", "legs"], description: "Alternate driving knees to chest from plank position", type: "time" },
 
   // Full Body
   { name: "Burpees", bodyPart: "Full Body", equipment: "bodyweight", targetMuscles: ["full body"], description: "Squat, jump back, push-up, jump forward, jump up" },
@@ -168,7 +168,6 @@ export const exercises: ExerciseDef[] = [
   { name: "Crab Walks", bodyPart: "Full Body", equipment: "bodyweight", targetMuscles: ["full body"], description: "Walk in crab position" },
   { name: "Duck Walks", bodyPart: "Full Body", equipment: "bodyweight", targetMuscles: ["legs", "glutes"], description: "Walk in squat position" },
   { name: "Inchworms", bodyPart: "Full Body", equipment: "bodyweight", targetMuscles: ["full body"], description: "Walk hands out to plank and back" },
-  { name: "Mountain Climbers", bodyPart: "Full Body", equipment: "bodyweight", targetMuscles: ["core", "shoulders", "legs"], description: "Alternate driving knees to chest from plank position" },
   { name: "Sprawls", bodyPart: "Full Body", equipment: "bodyweight", targetMuscles: ["full body"], description: "Like a burpee but hips stay low" },
 
   // Olympic Lifts
