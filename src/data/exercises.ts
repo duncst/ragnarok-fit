@@ -261,5 +261,4 @@ export const exercises: ExerciseDef[] = [
   { name: "Chest Stretch", bodyPart: "Chest", equipment: "bodyweight", targetMuscles: ["chest", "shoulders"], description: "Doorway chest stretch", type: "time" },
   { name: "Side Stretch", bodyPart: "Core", equipment: "bodyweight", targetMuscles: ["obliques", "lats"], description: "Standing side bend", type: "time" },
   { name: "Threading the Needle", bodyPart: "Back", equipment: "bodyweight", targetMuscles: ["shoulders", "upper back"], description: "Rotate through arms under body", type: "reps" },
-  { name: "Downward Dog", bodyPart: "Full Body", equipment: "bodyweight", targetMuscles: ["hamstrings", "calves", "shoulders"], description: "Downward facing dog pose", type: "time" },
 ];
