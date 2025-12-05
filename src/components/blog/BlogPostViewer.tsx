@@ -1,6 +1,7 @@
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { Badge } from '@/components/ui/badge';
 import { format } from 'date-fns';
+import DOMPurify from 'dompurify';
 
 interface BlogPost {
   id: string;
@@ -53,7 +54,7 @@ export const BlogPostViewer = ({ post, open, onClose }: BlogPostViewerProps) => 
         </DialogHeader>
         <div 
           className="prose prose-sm max-w-none py-4"
-          dangerouslySetInnerHTML={{ __html: formatMarkdown(post.content) }}
+          dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(formatMarkdown(post.content)) }}
         />
       </DialogContent>
     </Dialog>
