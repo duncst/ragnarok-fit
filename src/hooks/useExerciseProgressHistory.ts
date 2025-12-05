@@ -11,11 +11,59 @@ interface ExerciseSession {
   maxReps: number;
 }
 
+interface BodyweightRecord {
+  date: string;
+  weight: number;
+}
+
+// Bodyweight exercises that should use user's bodyweight
+const BODYWEIGHT_EXERCISES = [
+  'pull-ups',
+  'chin-ups',
+  'dips',
+  'push-ups',
+  'muscle-ups',
+  'pike push-ups',
+  'handstand push-ups',
+  'inverted rows',
+  'hanging leg raises',
+  'body rows',
+];
+
+const isBodyweightExercise = (exerciseName: string): boolean => {
+  return BODYWEIGHT_EXERCISES.some(
+    (bw) => exerciseName.toLowerCase().includes(bw.toLowerCase()) ||
+            bw.toLowerCase().includes(exerciseName.toLowerCase())
+  );
+};
+
 // Epley formula for estimated 1RM: weight × (1 + reps/30)
 const calculate1RM = (weight: number, reps: number): number => {
   if (reps === 0 || weight === 0) return 0;
   if (reps === 1) return weight;
   return weight * (1 + reps / 30);
+};
+
+// Find the closest bodyweight record to a given date
+const getBodyweightForDate = (
+  date: string,
+  bodyweightRecords: BodyweightRecord[]
+): number => {
+  if (bodyweightRecords.length === 0) return 0;
+  
+  const targetDate = new Date(date).getTime();
+  let closest = bodyweightRecords[0];
+  let closestDiff = Math.abs(new Date(closest.date).getTime() - targetDate);
+  
+  for (const record of bodyweightRecords) {
+    const diff = Math.abs(new Date(record.date).getTime() - targetDate);
+    if (diff < closestDiff) {
+      closest = record;
+      closestDiff = diff;
+    }
+  }
+  
+  return closest.weight;
 };
 
 export const useExerciseProgressHistory = (exerciseName: string) => {
@@ -32,6 +80,22 @@ export const useExerciseProgressHistory = (exerciseName: string) => {
     const fetchExerciseProgress = async () => {
       setIsLoading(true);
       try {
+        const isBodyweight = isBodyweightExercise(exerciseName);
+        
+        // Fetch bodyweight records if this is a bodyweight exercise
+        let bodyweightRecords: BodyweightRecord[] = [];
+        if (isBodyweight) {
+          const { data: metrics } = await supabase
+            .from('body_metrics')
+            .select('date, weight')
+            .not('weight', 'is', null)
+            .order('date', { ascending: true });
+          
+          bodyweightRecords = (metrics || [])
+            .filter((m) => m.weight !== null)
+            .map((m) => ({ date: m.date, weight: m.weight as number }));
+        }
+
         // Fetch all completed workouts with this exercise
         const { data: workouts, error } = await supabase
           .from('workouts')
@@ -68,6 +132,11 @@ export const useExerciseProgressHistory = (exerciseName: string) => {
 
           if (matchingExercises.length === 0) return;
 
+          // Get bodyweight for this workout date
+          const workoutBodyweight = isBodyweight
+            ? getBodyweightForDate(workout.end_time!, bodyweightRecords)
+            : 0;
+
           let totalVolume = 0;
           let maxEstimated1RM = 0;
           let totalSets = 0;
@@ -76,21 +145,28 @@ export const useExerciseProgressHistory = (exerciseName: string) => {
 
           matchingExercises.forEach((exercise) => {
             exercise.workout_sets?.forEach((set) => {
-              if (set.completed && set.weight > 0) {
-                const setVolume = set.weight * set.reps;
-                totalVolume += setVolume;
-                totalSets++;
+              if (set.completed && set.reps > 0) {
+                // For bodyweight exercises, use bodyweight + any additional weight
+                const effectiveWeight = isBodyweight
+                  ? workoutBodyweight + (set.weight || 0)
+                  : set.weight;
+                
+                if (effectiveWeight > 0) {
+                  const setVolume = effectiveWeight * set.reps;
+                  totalVolume += setVolume;
+                  totalSets++;
 
-                const estimated1RM = calculate1RM(set.weight, set.reps);
-                if (estimated1RM > maxEstimated1RM) {
-                  maxEstimated1RM = estimated1RM;
-                }
+                  const estimated1RM = calculate1RM(effectiveWeight, set.reps);
+                  if (estimated1RM > maxEstimated1RM) {
+                    maxEstimated1RM = estimated1RM;
+                  }
 
-                if (set.weight > maxWeight) {
-                  maxWeight = set.weight;
-                }
-                if (set.reps > maxReps) {
-                  maxReps = set.reps;
+                  if (effectiveWeight > maxWeight) {
+                    maxWeight = effectiveWeight;
+                  }
+                  if (set.reps > maxReps) {
+                    maxReps = set.reps;
+                  }
                 }
               }
             });
