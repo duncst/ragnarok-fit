@@ -18,7 +18,7 @@ const TRACKED_EXERCISES = [
   'Romanian Deadlifts',
   'Leg Press',
   'Incline Bench Press',
-  'Military Press',
+  'Single Arm Press',
 ];
 
 export const ExerciseProgressTracker = () => {
