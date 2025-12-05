@@ -13,6 +13,8 @@ const TRACKED_EXERCISES = [
   'Overhead Press',
   'Barbell Rows',
   'Pull-ups',
+  'Dips',
+  'Chin-ups',
   'Romanian Deadlifts',
   'Leg Press',
   'Incline Bench Press',
