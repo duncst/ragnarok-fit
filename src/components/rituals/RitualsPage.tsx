@@ -54,17 +54,45 @@ export const RitualsPage = () => {
     }
   });
 
+  // Fetch last performed dates for each template
+  const { data: lastPerformedMap = {} } = useQuery({
+    queryKey: ['workout-last-performed', templates.map(t => t.name)],
+    queryFn: async () => {
+      if (templates.length === 0) return {};
+      
+      const templateNames = templates.map(t => t.name);
+      const { data, error } = await supabase
+        .from('workouts')
+        .select('name, end_time')
+        .in('name', templateNames)
+        .not('end_time', 'is', null)
+        .order('end_time', { ascending: false });
+
+      if (error) throw error;
+      
+      // Create a map of template name -> most recent end_time
+      const performedMap: Record<string, string> = {};
+      data?.forEach(workout => {
+        if (!performedMap[workout.name]) {
+          performedMap[workout.name] = workout.end_time;
+        }
+      });
+      return performedMap;
+    },
+    enabled: templates.length > 0
+  });
+
   const rituals: Ritual[] = templates.map(template => ({
     id: template.id,
     name: template.name,
     description: `Custom training ritual`,
-    category: 'Strength', // Default for now, could be enhanced
+    category: 'Strength',
     exercises: template.workout_template_exercises?.map(ex => ({
       name: ex.exercise_name,
       sets: ex.sets,
-      reps: 10 // Default, could be enhanced
+      reps: 10
     })) || [],
-    lastPerformed: template.created_at
+    lastPerformed: lastPerformedMap[template.name] || undefined
   }));
 
   const filteredRituals = activeTab === 'Valhalla' 
