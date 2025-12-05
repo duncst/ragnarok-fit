@@ -95,6 +95,7 @@ export const exercises: ExerciseDef[] = [
   { name: "Pike Push-ups", bodyPart: "Shoulders", equipment: "bodyweight", targetMuscles: ["shoulders", "triceps"], description: "Pike position push-ups", type: "reps" },
   { name: "Handstand Push-ups", bodyPart: "Shoulders", equipment: "bodyweight", targetMuscles: ["shoulders", "triceps"], description: "Handstand push-ups" },
   { name: "Cable Lateral Raises", bodyPart: "Shoulders", equipment: "cable machine", targetMuscles: ["shoulders"], description: "Cable lateral raises" },
+  { name: "Viking Press", bodyPart: "Shoulders", equipment: "landmine", targetMuscles: ["shoulders", "triceps", "chest"], description: "Landmine-based overhead press" },
 
   // Arms - Biceps
   { name: "Bicep Curls", bodyPart: "Arms", equipment: "dumbbells", targetMuscles: ["biceps"], description: "Curl dumbbells up" },
