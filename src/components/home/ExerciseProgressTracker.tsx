@@ -9,7 +9,7 @@ import { TrendingUp, Dumbbell } from 'lucide-react';
 const TRACKED_EXERCISES = [
   'Bench Press',
   'Squat',
-  'Deadlift',
+  'Deadlifts',
   'Overhead Press',
   'Barbell Rows',
   'Pull-ups',
