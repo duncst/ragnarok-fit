@@ -5,6 +5,7 @@ import { AnalyticsSection } from "@/components/home/AnalyticsSection";
 import { WeeklyTargets } from "@/components/home/WeeklyTargets";
 import { WeeklyStreakDisplay } from "@/components/home/WeeklyStreakDisplay";
 import HeroCallOnboarding from "@/components/home/HeroCallOnboarding";
+import { ExerciseProgressTracker } from "@/components/home/ExerciseProgressTracker";
 import { useHomePageData } from "@/hooks/useHomePageData";
 import { useHeroCallOnboarding } from "@/hooks/useHeroCallOnboarding";
 import { useForgeProgress } from "@/hooks/useForgeProgress";
@@ -63,6 +64,8 @@ const HomePage = () => {
       ) : (
         <DailyInvocation />
       )}
+
+      <ExerciseProgressTracker />
       
       <BodyMetricsTracker />
     </div>
