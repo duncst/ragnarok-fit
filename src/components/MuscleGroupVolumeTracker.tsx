@@ -79,12 +79,23 @@ export const MuscleGroupVolumeTracker = ({ workoutHistory }: MuscleGroupVolumeTr
 
   const getMuscleGroupFromExercise = (exerciseName: string): string => {
     const name = exerciseName.toLowerCase();
+    
+    // Core exercises (check first to catch "hanging leg raises" before "leg" check)
+    if (name.includes('plank') || name.includes('crunch') || 
+        name.includes('core') || name.includes('abs') ||
+        name.includes('twist') || name.includes('sit-up') ||
+        name.includes('hanging leg') || name.includes('leg raise') ||
+        name.includes('dead bug') || name.includes('hollow')) {
+      return 'Core';
+    }
+    
     if (name.includes('bench') || name.includes('chest') || 
         (name.includes('push') && !name.includes('pushdown')) || name.includes('dip') || 
         name.includes('fly') || name.includes('incline')) {
       return 'Chest';
     } else if (name.includes('squat') || name.includes('lunge') || 
-               name.includes('leg') || name.includes('calf') ||
+               name.includes('leg press') || name.includes('leg curl') || 
+               name.includes('leg extension') || name.includes('calf') ||
                name.includes('glute') || name.includes('hip') ||
                name.includes('stiff-leg') || name.includes('stiff leg')) {
       return 'Legs';
@@ -93,17 +104,14 @@ export const MuscleGroupVolumeTracker = ({ workoutHistory }: MuscleGroupVolumeTr
                name.includes('back')) {
       return 'Back';
     } else if (name.includes('shoulder') || (name.includes('press') && 
-               !name.includes('bench') && !name.includes('incline')) || name.includes('raise') ||
-               name.includes('lateral') || name.includes('shrug')) {
+               !name.includes('bench') && !name.includes('incline') && !name.includes('leg')) || 
+               name.includes('lateral') || name.includes('shrug') ||
+               (name.includes('raise') && !name.includes('leg') && !name.includes('calf'))) {
       return 'Shoulders';
     } else if (name.includes('curl') || name.includes('tricep') || 
                name.includes('bicep') || name.includes('arm') ||
                name.includes('pushdown')) {
       return 'Arms';
-    } else if (name.includes('plank') || name.includes('crunch') || 
-               name.includes('core') || name.includes('abs') ||
-               name.includes('twist') || name.includes('sit-up')) {
-      return 'Core';
     }
     return 'Core'; // Default fallback
   };
