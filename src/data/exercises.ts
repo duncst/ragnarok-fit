@@ -43,6 +43,7 @@ export const exercises: ExerciseDef[] = [
   { name: "One Arm Lat Pull-down", bodyPart: "Back", equipment: "cable machine", targetMuscles: ["lats", "biceps", "rhomboids"], description: "Single arm lat pulldown" },
   { name: "Pullover", bodyPart: "Back", equipment: "dumbbells", targetMuscles: ["lats", "chest", "serratus"], description: "Dumbbell pullover over bench" },
   { name: "Hip Huggers", bodyPart: "Back", equipment: "bodyweight", targetMuscles: ["rhomboids", "rear delts", "traps"], description: "Squeeze shoulder blades together while lying face down" },
+  { name: "Back Extensions", bodyPart: "Back", equipment: "bodyweight", targetMuscles: ["erector spinae", "glutes", "hamstrings"], description: "Extend torso upward on hyperextension bench" },
 
   // Legs
   { name: "Squats", bodyPart: "Legs", equipment: "barbell", targetMuscles: ["quadriceps", "glutes", "hamstrings"], description: "Squat down and stand up" },
