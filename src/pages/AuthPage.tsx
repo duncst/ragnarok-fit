@@ -20,7 +20,7 @@ const AuthPage = () => {
 
   useEffect(() => {
     if (session) {
-      navigate('/', { replace: true });
+      navigate('/home', { replace: true });
     }
   }, [session, navigate]);
 
@@ -47,7 +47,7 @@ const AuthPage = () => {
       sonnerToast.error('Sign In Failed', { description: error.message });
     } else {
       sonnerToast.success('Signed in successfully!');
-      navigate('/');
+      navigate('/home');
     }
     setLoading(false);
   };
