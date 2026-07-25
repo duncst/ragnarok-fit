@@ -1,7 +1,6 @@
 
 import { DailyInvocation } from "@/components/DailyInvocation";
 import { BodyMetricsTracker } from "@/components/BodyMetricsTracker";
-import { AnalyticsSection } from "@/components/home/AnalyticsSection";
 import { WeeklyTargets } from "@/components/home/WeeklyTargets";
 import { WeeklyStreakDisplay } from "@/components/home/WeeklyStreakDisplay";
 import HeroCallOnboarding from "@/components/home/HeroCallOnboarding";
@@ -12,20 +11,7 @@ import { useForgeProgress } from "@/hooks/useForgeProgress";
 import { useHeroCallData } from "@/hooks/useHeroCallData";
 
 const HomePage = () => {
-  const {
-    workoutHistory,
-    runHistory,
-    isLoading,
-    strengthChartData,
-    runChartData,
-    workoutsThisWeek,
-    runsThisWeek,
-    last7DaysDistance,
-    totalVolume,
-    totalDistance,
-    bestPace,
-    totalPRs
-  } = useHomePageData();
+  const { workoutHistory, last7DaysDistance } = useHomePageData();
 
   const { showHeroCallOnboarding, dismissHeroCallOnboarding } = useHeroCallOnboarding();
   const { forgeProgress } = useForgeProgress();

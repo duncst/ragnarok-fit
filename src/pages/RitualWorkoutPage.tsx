@@ -73,7 +73,6 @@ const RitualWorkoutPage = () => {
   const { data: dbTemplate, isLoading, error } = useQuery({
     queryKey: ['workout-template', templateId],
     queryFn: async () => {
-      console.log('Fetching template with ID:', templateId);
       if (!templateId) throw new Error('No template ID provided');
       
       const { data, error } = await supabase
@@ -89,7 +88,6 @@ const RitualWorkoutPage = () => {
         .eq('id', templateId)
         .single();
 
-      console.log('Template query result:', { data, error });
       if (error) throw error;
       return data;
     },
@@ -97,16 +95,6 @@ const RitualWorkoutPage = () => {
   });
 
   const template = isValhalla ? valhallaTemplate : dbTemplate;
-  
-  console.log('Debug info:', {
-    templateId,
-    isValhalla,
-    valhallaTemplate,
-    dbTemplate,
-    template,
-    isLoading,
-    error
-  });
 
   // Initialize workout from template
   useEffect(() => {
