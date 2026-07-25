@@ -4,7 +4,7 @@ import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
-import { Plus, Play, Clock, X, RotateCcw, Trash2 } from 'lucide-react';
+import { Plus, Play, Clock, X, RotateCcw, Trash2, Dumbbell } from 'lucide-react';
 import { CreateRitualModal } from './CreateRitualModal';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { supabase } from '@/integrations/supabase/client';
@@ -145,6 +145,15 @@ export const RitualsPage = () => {
         <p className="text-base sm:text-lg text-muted-foreground px-2">
           Create and track your personal training rituals to forge your own path.
         </p>
+        <Button
+          variant="link"
+          size="sm"
+          className="text-muted-foreground"
+          onClick={() => navigate('/exercises')}
+        >
+          <Dumbbell className="mr-1.5 h-4 w-4" />
+          Browse Exercise Library
+        </Button>
       </div>
 
       {/* Tabs */}
