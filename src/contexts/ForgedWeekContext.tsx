@@ -2,13 +2,16 @@ import React, { createContext, useContext, useCallback } from 'react';
 import { useForgedWeekCelebration } from '@/hooks/useForgedWeekCelebration';
 
 interface ForgedWeekContextType {
+  showCelebration: boolean;
+  newlyForgedWeek: number;
   checkForNewForgedWeek: () => Promise<void>;
+  closeCelebration: () => void;
 }
 
 const ForgedWeekContext = createContext<ForgedWeekContextType | undefined>(undefined);
 
 export const ForgedWeekProvider = ({ children }: { children: React.ReactNode }) => {
-  const { checkForNewForgedWeek } = useForgedWeekCelebration();
+  const { showCelebration, newlyForgedWeek, checkForNewForgedWeek, closeCelebration } = useForgedWeekCelebration();
 
   const triggerCheck = useCallback(async () => {
     // Small delay to ensure database operations are complete
@@ -18,7 +21,9 @@ export const ForgedWeekProvider = ({ children }: { children: React.ReactNode }) 
   }, [checkForNewForgedWeek]);
 
   return (
-    <ForgedWeekContext.Provider value={{ checkForNewForgedWeek: triggerCheck }}>
+    <ForgedWeekContext.Provider
+      value={{ showCelebration, newlyForgedWeek, checkForNewForgedWeek: triggerCheck, closeCelebration }}
+    >
       {children}
     </ForgedWeekContext.Provider>
   );
@@ -27,8 +32,13 @@ export const ForgedWeekProvider = ({ children }: { children: React.ReactNode }) 
 export const useForgedWeekCheck = () => {
   const context = useContext(ForgedWeekContext);
   if (context === undefined) {
-    // Return a no-op function if not within provider
-    return { checkForNewForgedWeek: async () => {} };
+    // Return no-op defaults if not within provider
+    return {
+      showCelebration: false,
+      newlyForgedWeek: 0,
+      checkForNewForgedWeek: async () => {},
+      closeCelebration: () => {},
+    };
   }
   return context;
 };
