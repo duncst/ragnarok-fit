@@ -264,6 +264,8 @@ export const SimpleWorkoutExecution: React.FC<SimpleWorkoutExecutionProps> = ({
                         {/* Completion Circle */}
                         <button
                           onClick={() => onToggleSet(exercise.id, set.id)}
+                          aria-pressed={set.completed}
+                          aria-label={set.completed ? `Mark set ${setIndex + 1} incomplete` : `Mark set ${setIndex + 1} complete`}
                           className={`w-8 h-8 rounded-full border-2 ${
                             set.completed 
                               ? 'bg-green-500 border-green-500' 
@@ -284,6 +286,7 @@ export const SimpleWorkoutExecution: React.FC<SimpleWorkoutExecutionProps> = ({
                           onClick={() => onRemoveSet(exercise.id, set.id)}
                           className="h-8 w-8 text-red-500 hover:text-red-600"
                           disabled={exercise.sets.length <= 1}
+                          aria-label={`Remove set ${setIndex + 1}`}
                         >
                           <X className="h-4 w-4" />
                         </Button>

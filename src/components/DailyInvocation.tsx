@@ -152,7 +152,7 @@ export const DailyInvocation = () => {
                       </Button>
                       
                       <CollapsibleTrigger asChild>
-                        <Button variant="ghost" size="icon">
+                        <Button variant="ghost" size="icon" aria-label={`Show details for ${option.title}`}>
                           <ChevronDown className="h-4 w-4" />
                         </Button>
                       </CollapsibleTrigger>

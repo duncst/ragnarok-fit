@@ -145,6 +145,8 @@ export const SetRow = ({ set, setIndex, onUpdate, onToggle, exerciseType = 'weig
         size="icon"
         className="justify-self-center"
         onClick={onToggle}
+        aria-pressed={set.completed}
+        aria-label={set.completed ? `Mark set ${setIndex + 1} incomplete` : `Mark set ${setIndex + 1} complete`}
       >
         {set.completed ? (
           <div className="h-6 w-6 rounded-full bg-green-500 flex items-center justify-center">

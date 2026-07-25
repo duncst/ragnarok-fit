@@ -61,7 +61,7 @@ export const SimpleWorkoutCreation = ({
     <div className="h-screen flex flex-col bg-background">
       {/* Header */}
       <div className="flex items-center justify-between p-4 border-b">
-        <Button variant="ghost" size="icon" onClick={onCancel}>
+        <Button variant="ghost" size="icon" onClick={onCancel} aria-label="Cancel new workout">
           <X className="h-5 w-5" />
         </Button>
         <h1 className="text-lg font-semibold">New Workout</h1>
@@ -106,6 +106,7 @@ export const SimpleWorkoutCreation = ({
                       onClick={() => onMoveExercise(exercise.id, 'up')}
                       disabled={index === 0}
                       className="h-8 w-8"
+                      aria-label={`Move ${exercise.name || `exercise ${index + 1}`} up`}
                     >
                       <ChevronUp className="h-4 w-4" />
                     </Button>
@@ -115,6 +116,7 @@ export const SimpleWorkoutCreation = ({
                       onClick={() => onMoveExercise(exercise.id, 'down')}
                       disabled={index === exercises.length - 1}
                       className="h-8 w-8"
+                      aria-label={`Move ${exercise.name || `exercise ${index + 1}`} down`}
                     >
                       <ChevronDown className="h-4 w-4" />
                     </Button>
@@ -123,6 +125,7 @@ export const SimpleWorkoutCreation = ({
                       size="icon"
                       onClick={() => onRemoveExercise(exercise.id)}
                       className="h-8 w-8"
+                      aria-label={`Remove ${exercise.name || `exercise ${index + 1}`}`}
                     >
                       <X className="h-4 w-4" />
                     </Button>

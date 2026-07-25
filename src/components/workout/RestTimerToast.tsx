@@ -43,6 +43,7 @@ export const RestTimerToast = ({ duration, onDismiss }: RestTimerToastProps) => 
               size="icon"
               onClick={onDismiss}
               className="h-6 w-6"
+              aria-label="Dismiss rest timer"
             >
               <X className="h-4 w-4" />
             </Button>

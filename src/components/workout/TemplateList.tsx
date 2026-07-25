@@ -72,7 +72,7 @@ export const TemplateList = ({ templates, isLoading, onStartWorkout, showPublicT
                   )}
                 </div>
                 <div className="flex items-center space-x-2" onClick={e => e.stopPropagation()}>
-                  <Button variant="ghost" size="icon" onClick={() => onStartWorkout(template)}>
+                  <Button variant="ghost" size="icon" onClick={() => onStartWorkout(template)} aria-label={`Start ${template.name} workout`}>
                     <Play className="h-5 w-5 text-primary" />
                   </Button>
                   {template.user_id === user?.id && (

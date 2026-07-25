@@ -41,6 +41,7 @@ export const BlogPostCard = ({ post, isAdmin, onEdit, onDelete, onView }: BlogPo
                 variant="ghost"
                 size="icon"
                 onClick={() => onEdit?.(post)}
+                aria-label={`Edit "${post.title}"`}
               >
                 <Edit className="h-4 w-4" />
               </Button>
@@ -48,6 +49,7 @@ export const BlogPostCard = ({ post, isAdmin, onEdit, onDelete, onView }: BlogPo
                 variant="ghost"
                 size="icon"
                 onClick={() => onDelete?.(post.id)}
+                aria-label={`Delete "${post.title}"`}
               >
                 <Trash2 className="h-4 w-4" />
               </Button>
