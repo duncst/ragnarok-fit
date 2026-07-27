@@ -18,11 +18,14 @@ import { toast } from 'sonner';
 import { resetPasswordSchema, type ResetPasswordFormValues } from '@/lib/schemas/passwordReset';
 import { Shield, ArrowLeft } from 'lucide-react';
 
+type LinkStatus = 'verifying' | 'ready' | 'invalid';
+
 export const ResetPasswordPage = () => {
   const [loading, setLoading] = useState(false);
+  const [linkStatus, setLinkStatus] = useState<LinkStatus>('verifying');
   const [searchParams] = useSearchParams();
   const navigate = useNavigate();
-  
+
   const form = useForm<ResetPasswordFormValues>({
     resolver: zodResolver(resetPasswordSchema),
     defaultValues: {
@@ -32,45 +35,68 @@ export const ResetPasswordPage = () => {
   });
 
   useEffect(() => {
-    // Check if we have the necessary tokens in the URL
-    const accessToken = searchParams.get('access_token');
-    const refreshToken = searchParams.get('refresh_token');
-    const type = searchParams.get('type');
-    const tokenHash = searchParams.get('token_hash');
-    
-    // Handle different URL formats from Supabase
-    if (type === 'recovery') {
-      if (accessToken && refreshToken) {
-        // New format with tokens in URL
-        supabase.auth.setSession({
-          access_token: accessToken,
-          refresh_token: refreshToken,
-        }).then(({ error }) => {
-          if (error) {
-            toast.error('Invalid or expired reset link. Please request a new one.');
-            navigate('/auth');
-          }
-        });
-      } else if (tokenHash) {
-        // Verify the token hash
-        supabase.auth.verifyOtp({
-          token_hash: tokenHash,
-          type: 'recovery'
-        }).then(({ error }) => {
-          if (error) {
-            toast.error('Invalid or expired reset link. Please request a new one.');
-            navigate('/auth');
-          }
-        });
-      } else {
-        toast.error('Invalid or expired reset link. Please request a new one.');
-        navigate('/auth');
+    let isMounted = true;
+    const markReady = () => { if (isMounted) setLinkStatus('ready'); };
+
+    // Supabase's client library reads the recovery proof directly off the
+    // full URL on its own (it can arrive as a `#access_token=...` fragment,
+    // which React Router's useSearchParams can never see, or as a `?code=`/
+    // `?token_hash=` query param depending on flow). Once it establishes the
+    // session, it fires a PASSWORD_RECOVERY auth event — that's the reliable
+    // signal to use instead of manually re-parsing the URL ourselves.
+    const { data: { subscription } } = supabase.auth.onAuthStateChange((event) => {
+      if (event === 'PASSWORD_RECOVERY') {
+        markReady();
       }
-    } else {
+    });
+
+    // That processing can finish before this component even mounts, so also
+    // check for an already-established session as a fallback.
+    supabase.auth.getSession()
+      .then(({ data: { session } }) => {
+        if (session) {
+          markReady();
+          return;
+        }
+
+        // Fallback for a custom email template that links straight to this
+        // page with a token_hash query param instead of going through
+        // Supabase's hosted /verify redirect.
+        const tokenHash = searchParams.get('token_hash');
+        const type = searchParams.get('type');
+        if (tokenHash && type === 'recovery') {
+          return supabase.auth.verifyOtp({ token_hash: tokenHash, type: 'recovery' }).then(({ error }) => {
+            if (!error) markReady();
+          });
+        }
+      })
+      .catch((error) => {
+        console.error('Error checking for a recovery session:', error);
+      });
+
+    // Independent of whether the checks above ever resolve (e.g. a network
+    // issue hangs the getSession() call itself), don't leave the user
+    // staring at "Verifying..." forever — give it a window, then fail closed.
+    const timeoutId = setTimeout(() => {
+      if (isMounted) {
+        setLinkStatus((current) => (current === 'verifying' ? 'invalid' : current));
+      }
+    }, 4000);
+
+    return () => {
+      isMounted = false;
+      clearTimeout(timeoutId);
+      subscription.unsubscribe();
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  useEffect(() => {
+    if (linkStatus === 'invalid') {
       toast.error('Invalid or expired reset link. Please request a new one.');
       navigate('/auth');
     }
-  }, [searchParams, navigate]);
+  }, [linkStatus, navigate]);
 
   const handleResetPassword = async (values: ResetPasswordFormValues) => {
     setLoading(true);
@@ -83,8 +109,8 @@ export const ResetPasswordPage = () => {
 
       toast.success('Password updated successfully! You can now sign in with your new password.');
       navigate('/auth');
-    } catch (error: any) {
-      toast.error(error.message || 'Failed to update password. Please try again.');
+    } catch (error) {
+      toast.error(error instanceof Error ? error.message : 'Failed to update password. Please try again.');
     } finally {
       setLoading(false);
     }
@@ -115,51 +141,58 @@ export const ResetPasswordPage = () => {
             </CardDescription>
           </CardHeader>
           <CardContent>
-            <Form {...form}>
-              <form onSubmit={form.handleSubmit(handleResetPassword)} className="space-y-4">
-                <FormField
-                  control={form.control}
-                  name="password"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>New Password</FormLabel>
-                      <FormControl>
-                        <Input type="password" placeholder="Enter new password" {...field} />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-                
-                <FormField
-                  control={form.control}
-                  name="confirmPassword"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>Confirm Password</FormLabel>
-                      <FormControl>
-                        <Input type="password" placeholder="Confirm new password" {...field} />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-                
-                <Button type="submit" className="w-full" disabled={loading}>
-                  {loading ? 'Updating Password...' : 'Update Password'}
-                </Button>
-                
-                <Button
-                  type="button"
-                  variant="outline"
-                  onClick={handleBackToAuth}
-                  className="w-full"
-                >
-                  <ArrowLeft className="mr-2 h-4 w-4" />
-                  Back to Sign In
-                </Button>
-              </form>
-            </Form>
+            {linkStatus === 'verifying' ? (
+              <div className="flex flex-col items-center gap-3 py-6">
+                <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary" />
+                <p className="text-sm text-muted-foreground">Verifying your reset link...</p>
+              </div>
+            ) : (
+              <Form {...form}>
+                <form onSubmit={form.handleSubmit(handleResetPassword)} className="space-y-4">
+                  <FormField
+                    control={form.control}
+                    name="password"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>New Password</FormLabel>
+                        <FormControl>
+                          <Input type="password" placeholder="Enter new password" {...field} />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+
+                  <FormField
+                    control={form.control}
+                    name="confirmPassword"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>Confirm Password</FormLabel>
+                        <FormControl>
+                          <Input type="password" placeholder="Confirm new password" {...field} />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+
+                  <Button type="submit" className="w-full" disabled={loading}>
+                    {loading ? 'Updating Password...' : 'Update Password'}
+                  </Button>
+
+                  <Button
+                    type="button"
+                    variant="outline"
+                    onClick={handleBackToAuth}
+                    className="w-full"
+                  >
+                    <ArrowLeft className="mr-2 h-4 w-4" />
+                    Back to Sign In
+                  </Button>
+                </form>
+              </Form>
+            )}
           </CardContent>
         </Card>
       </div>
