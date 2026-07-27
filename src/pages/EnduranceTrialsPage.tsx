@@ -65,7 +65,9 @@ const EnduranceTrialsPage: React.FC = () => {
   return (
     <div className="space-y-6">
       <div className="flex items-center gap-2">
-        <ArrowLeft className="opacity-60" onClick={() => navigate(-1)} role="button" />
+        <Button variant="ghost" size="icon" onClick={() => navigate(-1)} aria-label="Go back">
+          <ArrowLeft className="opacity-60" />
+        </Button>
         <div className="flex items-center gap-2 text-xl font-semibold">
           <Wind className="text-primary" />
           Valhalla Trials

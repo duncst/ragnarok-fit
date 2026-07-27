@@ -52,8 +52,9 @@ export const useSaveWorkout = () => {
                         reps: set.reps,
                         weight: set.weight,
                         completed: set.completed,
+                        duration: set.duration ?? null,
+                        distance: set.distance ?? null,
                         "order": setIndex,
-                        // Note: duration is not stored in the database yet, but the UI supports it
                     }));
                     
                     const { error: setsError } = await supabase

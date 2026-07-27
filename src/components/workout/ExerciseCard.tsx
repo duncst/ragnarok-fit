@@ -106,6 +106,7 @@ export const ExerciseCard = ({
                   onClick={() => onMove(exercise.id, 'up')}
                   disabled={exerciseIndex === 0}
                   className="h-8 w-8"
+                  aria-label={`Move ${exercise.name || `exercise ${exerciseIndex + 1}`} up`}
                 >
                   <ChevronUp className="h-4 w-4 text-muted-foreground" />
                 </Button>
@@ -115,12 +116,13 @@ export const ExerciseCard = ({
                   onClick={() => onMove(exercise.id, 'down')}
                   disabled={exerciseIndex === totalExercises - 1}
                   className="h-8 w-8"
+                  aria-label={`Move ${exercise.name || `exercise ${exerciseIndex + 1}`} down`}
                 >
                   <ChevronDown className="h-4 w-4 text-muted-foreground" />
                 </Button>
               </>
             )}
-            <Button variant="ghost" size="icon" onClick={() => onRemove(exercise.id)} className="h-8 w-8">
+            <Button variant="ghost" size="icon" onClick={() => onRemove(exercise.id)} className="h-8 w-8" aria-label={`Remove ${exercise.name || `exercise ${exerciseIndex + 1}`}`}>
               <Trash2 className="h-4 w-4 text-muted-foreground" />
             </Button>
           </div>

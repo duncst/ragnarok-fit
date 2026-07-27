@@ -169,6 +169,7 @@ export const TemplateForm = ({ open, onOpenChange, onSuccess }: TemplateFormProp
                           className="h-5 w-5"
                           onClick={() => handleMoveExercise(index, -1)}
                           disabled={index === 0}
+                          aria-label={`Move ${exercise.name} up`}
                         >
                           <ArrowUp className="h-3 w-3" />
                         </Button>
@@ -178,6 +179,7 @@ export const TemplateForm = ({ open, onOpenChange, onSuccess }: TemplateFormProp
                           className="h-5 w-5"
                           onClick={() => handleMoveExercise(index, 1)}
                           disabled={index === selectedExercises.length - 1}
+                          aria-label={`Move ${exercise.name} down`}
                         >
                           <ArrowDown className="h-3 w-3" />
                         </Button>
@@ -204,7 +206,7 @@ export const TemplateForm = ({ open, onOpenChange, onSuccess }: TemplateFormProp
                         aria-label={`Suggested reps for ${exercise.name}`}
                       />
                       <span className="text-muted-foreground text-xs">reps</span>
-                      <Button variant="ghost" size="icon" className="h-6 w-6" onClick={() => handleRemoveExercise(exercise.name)}>
+                      <Button variant="ghost" size="icon" className="h-6 w-6" onClick={() => handleRemoveExercise(exercise.name)} aria-label={`Remove ${exercise.name}`}>
                         <X className="h-4 w-4" />
                       </Button>
                     </div>

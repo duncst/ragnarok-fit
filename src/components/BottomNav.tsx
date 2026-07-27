@@ -8,16 +8,8 @@ const HomeIcon = ({ className }: { className?: string }) => (
     <ImageIcon src="/lovable-uploads/5415ad51-d2ec-4830-ae93-73416fc1e5ee.png" alt="Home icon" className={className} />
 );
 
-const RunningIcon = ({ className }: { className?: string }) => (
-    <ImageIcon src="/lovable-uploads/ce6da73b-d67b-4c6a-9101-65cfa425f67a.png" alt="Running icon" className={className} />
-);
-
 const StartWorkoutIcon = ({ className }: { className?: string }) => (
-    <ImageIcon src="/lovable-uploads/59098dd1-6550-4f60-bc29-d0c1165a7d3c.png" alt="Exercise icon" className={className} />
-);
-
-const ExerciseIcon = ({ className }: { className?: string }) => (
-    <ImageIcon src="/lovable-uploads/1283fc3a-3186-4200-86ce-e6e99c46f46d.png" alt="Start Workout icon" className={className} />
+    <ImageIcon src="/lovable-uploads/59098dd1-6550-4f60-bc29-d0c1165a7d3c.png" alt="Workout icon" className={className} />
 );
 
 const navItems = [

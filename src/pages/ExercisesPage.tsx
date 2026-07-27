@@ -78,7 +78,7 @@ const ExercisesPage = () => {
                     <Badge variant="outline">{exercise.equipment}</Badge>
                   </div>
                 </div>
-                <Button variant="ghost" size="icon" className="shrink-0">
+                <Button variant="ghost" size="icon" className="shrink-0" aria-label={`Add ${exercise.name} to workout`}>
                   <Plus className="h-5 w-5 text-primary" />
                 </Button>
               </div>

@@ -59,7 +59,7 @@ export const HeroCallWorkoutMode = ({
                 <p className="text-sm text-muted-foreground">Stay the course. Every rep, every step, every breath—etched into your saga.</p>
               </div>
             </div>
-            <Button variant="outline" size="icon" onClick={onExit} className="flex-shrink-0">
+            <Button variant="outline" size="icon" onClick={onExit} className="flex-shrink-0" aria-label="Exit Hero's Call">
               <X className="h-5 w-5" />
             </Button>
           </div>

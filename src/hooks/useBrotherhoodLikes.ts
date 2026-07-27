@@ -26,20 +26,15 @@ export const useBrotherhoodLikes = (activityIds: string[]) => {
         return;
       }
 
-      // Query the likes table using raw SQL since the table isn't in the types yet
       const { data: likesData, error } = await supabase
-        .from('brotherhood_activity_likes' as any)
-        .select('*')
-        .in('activity_id', activityIds);
+        .rpc('get_activity_likes', { activity_ids: activityIds });
 
       if (error) {
         throw error;
       }
 
-      // Process the likes data
       const processedLikes: ActivityLikes = {};
-      
-      // Initialize all activities with 0 likes
+
       activityIds.forEach(activityId => {
         processedLikes[activityId] = {
           count: 0,
@@ -47,18 +42,15 @@ export const useBrotherhoodLikes = (activityIds: string[]) => {
         };
       });
 
-      // Count likes and check if user has liked each activity
-      if (Array.isArray(likesData)) {
-        likesData.forEach((like: any) => {
-          const activityId = like.activity_id;
-          if (processedLikes[activityId]) {
-            processedLikes[activityId].count += 1;
-            if (like.user_id === user.id) {
-              processedLikes[activityId].userHasLiked = true;
-            }
+      (likesData || []).forEach((like) => {
+        const activityId = like.activity_id;
+        if (processedLikes[activityId]) {
+          processedLikes[activityId].count += 1;
+          if (like.user_id === user.id) {
+            processedLikes[activityId].userHasLiked = true;
           }
-        });
-      }
+        }
+      });
 
       setLikes(processedLikes);
     } catch (error) {
@@ -99,12 +91,7 @@ export const useBrotherhoodLikes = (activityIds: string[]) => {
           }
         }));
 
-        // Remove like from database
-        const { error } = await supabase
-          .from('brotherhood_activity_likes' as any)
-          .delete()
-          .eq('user_id', user.id)
-          .eq('activity_id', activityId);
+        const { error } = await supabase.rpc('remove_activity_like', { p_activity_id: activityId });
 
         if (error) {
           console.error('Error removing like:', error);
@@ -126,13 +113,7 @@ export const useBrotherhoodLikes = (activityIds: string[]) => {
           }
         }));
 
-        // Add like to database
-        const { error } = await supabase
-          .from('brotherhood_activity_likes' as any)
-          .insert([{
-            user_id: user.id,
-            activity_id: activityId
-          }]);
+        const { error } = await supabase.rpc('add_activity_like', { p_activity_id: activityId });
 
         if (error) {
           console.error('Error adding like:', error);

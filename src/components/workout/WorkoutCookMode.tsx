@@ -74,7 +74,7 @@ export const WorkoutCookMode = ({
                 {workoutName || 'Workout Mode'}
               </h1>
             </div>
-            <Button variant="outline" size="icon" onClick={onExitCookMode} className="flex-shrink-0">
+            <Button variant="outline" size="icon" onClick={onExitCookMode} className="flex-shrink-0" aria-label="Exit workout mode">
               <X className="h-5 w-5" />
             </Button>
           </div>
@@ -147,6 +147,7 @@ export const WorkoutCookMode = ({
                         onClick={() => onMoveExercise(exercise.id, 'up')}
                         disabled={exerciseIndex === 0}
                         className="h-8 w-8"
+                        aria-label={`Move ${exercise.name || `exercise ${exerciseIndex + 1}`} up`}
                       >
                         <ChevronUp className="h-4 w-4 text-muted-foreground" />
                       </Button>
@@ -156,6 +157,7 @@ export const WorkoutCookMode = ({
                         onClick={() => onMoveExercise(exercise.id, 'down')}
                         disabled={exerciseIndex === exercises.length - 1}
                         className="h-8 w-8"
+                        aria-label={`Move ${exercise.name || `exercise ${exerciseIndex + 1}`} down`}
                       >
                         <ChevronDown className="h-4 w-4 text-muted-foreground" />
                       </Button>
@@ -164,6 +166,7 @@ export const WorkoutCookMode = ({
                         size="icon" 
                         onClick={() => onRemoveExercise(exercise.id)}
                         className="h-8 w-8"
+                        aria-label={`Remove ${exercise.name || `exercise ${exerciseIndex + 1}`}`}
                       >
                         <X className="h-4 w-4 text-muted-foreground" />
                       </Button>
