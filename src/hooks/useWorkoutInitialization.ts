@@ -4,7 +4,7 @@ import { useLocation } from 'react-router-dom';
 import type { Exercise, WorkoutTemplate, Workout } from '@/types';
 import { useWorkoutPersistence } from './useWorkoutPersistence';
 
-export const useWorkoutInitialization = () => {
+export const useWorkoutInitialization = (sessionId?: string) => {
   const location = useLocation();
   const template = location.state?.template as WorkoutTemplate | undefined;
   const workout = location.state?.workout as Workout | undefined;
@@ -53,9 +53,11 @@ export const useWorkoutInitialization = () => {
       }));
       setExercises(exercisesFromWorkout);
     } else {
-      // Try to load persisted workout
+      // Try to load a persisted workout, but only if it belongs to this same
+      // session (both undefined counts as a match for the plain "New Workout"
+      // flow) — otherwise we'd risk resuming an unrelated, stale draft.
       loadWorkout().then(persistedWorkout => {
-        if (persistedWorkout) {
+        if (persistedWorkout && persistedWorkout.sessionId === sessionId) {
           setWorkoutName(persistedWorkout.workoutName);
           setExercises(persistedWorkout.exercises);
           setSelectedEquipment(persistedWorkout.selectedEquipment);
@@ -66,6 +68,7 @@ export const useWorkoutInitialization = () => {
     }
     
     setIsInitialized(true);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [template, workout]);
 
   return {

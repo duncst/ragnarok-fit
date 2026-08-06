@@ -4,6 +4,7 @@ import { useQuery } from '@tanstack/react-query';
 import { supabase } from '@/integrations/supabase/client';
 import { useWorkoutTimer } from '@/hooks/useWorkoutTimer';
 import { useWorkoutState } from '@/hooks/useWorkoutState';
+import { useWorkoutPersistence } from '@/hooks/useWorkoutPersistence';
 import { useSaveWorkout } from '@/hooks/useSaveWorkout';
 import { useSaveAsTemplate } from '@/hooks/useSaveAsTemplate';
 import { useRestTimer } from '@/hooks/useRestTimer';
@@ -22,6 +23,16 @@ const RitualWorkoutPage = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const templateName = location.state?.templateName || 'Ritual';
+
+  // Load template data - either from database or from location state for Valhalla
+  const valhallaTemplate = location.state?.template;
+  const isValhalla = location.state?.isValhalla || templateId?.startsWith('valhalla-');
+
+  // Identifies this specific workout session so an in-progress draft can be
+  // told apart from a stale/unrelated one and safely resumed after the page
+  // reloads mid-workout (backgrounding, a brief sign-out, etc.) instead of
+  // being silently overwritten by a fresh, empty copy of the template.
+  const sessionId = templateId ? `${isValhalla ? 'valhalla' : 'ritual'}-${templateId}` : undefined;
 
   const [showValhallaScoreDialog, setShowValhallaScoreDialog] = useState(false);
   const [currentValhallaWorkout, setCurrentValhallaWorkout] = useState('');
@@ -51,8 +62,9 @@ const RitualWorkoutPage = () => {
     restDuration,
     setRestDuration,
     clearPersistedWorkout,
-  } = useWorkoutState();
+  } = useWorkoutState(sessionId);
 
+  const { loadWorkout } = useWorkoutPersistence();
   const { saveWorkoutMutation, finishWorkout } = useSaveWorkout();
   const { saveAsTemplate, saveAsTemplateMutation } = useSaveAsTemplate();
   const { setActiveWorkout } = useActiveWorkout();
@@ -66,10 +78,6 @@ const RitualWorkoutPage = () => {
     handleDismissRestTimer 
   } = useRestTimer(restDuration, false);
 
-  // Load template data - either from database or from location state for Valhalla
-  const valhallaTemplate = location.state?.template;
-  const isValhalla = location.state?.isValhalla || templateId?.startsWith('valhalla-');
-  
   const { data: dbTemplate, isLoading, error } = useQuery({
     queryKey: ['workout-template', templateId],
     queryFn: async () => {
@@ -96,50 +104,68 @@ const RitualWorkoutPage = () => {
 
   const template = isValhalla ? valhallaTemplate : dbTemplate;
 
-  // Initialize workout from template
+  // Initialize workout from template — but first check whether there's
+  // already an in-progress draft for this exact session (e.g. the page
+  // reloaded mid-workout) and resume that instead of silently overwriting it
+  // with a fresh, empty copy of the template.
   useEffect(() => {
-    if (template) {
-      // Clear any persisted workout data when starting a ritual
-      clearPersistedWorkout();
-      
-      let templateExercises: Exercise[];
-      
-      if (isValhalla && template.exercises) {
-        // Handle Valhalla template with exercises array
-        templateExercises = template.exercises.map((ex: any, index: number) => ({
-          id: `${Date.now()}_${index}`,
-          name: ex.name,
-          sets: Array.from({ length: ex.sets }, (_, setIndex) => ({
-            id: `${Date.now()}_${index}_set${setIndex}`,
-            reps: ex.suggestedReps || 0,
-            weight: 0,
-            completed: false,
-            duration: 0,
-            distance: 0,
-          }))
-        }));
-      } else if (template.workout_template_exercises) {
-        // Handle regular database template
-        templateExercises = template.workout_template_exercises
-          .sort((a, b) => a.order - b.order)
-          .map((templateEx, index) => ({
+    if (!template) return;
+
+    let cancelled = false;
+
+    (async () => {
+      const persisted = sessionId ? await loadWorkout() : null;
+      if (cancelled) return;
+
+      if (persisted && persisted.sessionId === sessionId && persisted.exercises?.length > 0) {
+        // Resume the in-progress workout as-is; don't touch the persisted copy.
+        setExercises(persisted.exercises);
+        if (persisted.restDuration) setRestDuration(persisted.restDuration);
+      } else {
+        // No matching draft — clear any stale/unrelated one and start fresh.
+        clearPersistedWorkout();
+
+        let templateExercises: Exercise[];
+
+        if (isValhalla && template.exercises) {
+          // Handle Valhalla template with exercises array
+          templateExercises = template.exercises.map((ex: any, index: number) => ({
             id: `${Date.now()}_${index}`,
-            name: templateEx.exercise_name,
-            sets: Array.from({ length: templateEx.sets }, (_, setIndex) => ({
+            name: ex.name,
+            sets: Array.from({ length: ex.sets }, (_, setIndex) => ({
               id: `${Date.now()}_${index}_set${setIndex}`,
-              reps: 0,
+              reps: ex.suggestedReps || 0,
               weight: 0,
               completed: false,
               duration: 0,
               distance: 0,
             }))
           }));
-      } else {
-        return;
+        } else if (template.workout_template_exercises) {
+          // Handle regular database template
+          templateExercises = template.workout_template_exercises
+            .sort((a, b) => a.order - b.order)
+            .map((templateEx, index) => ({
+              id: `${Date.now()}_${index}`,
+              name: templateEx.exercise_name,
+              sets: Array.from({ length: templateEx.sets }, (_, setIndex) => ({
+                id: `${Date.now()}_${index}_set${setIndex}`,
+                reps: 0,
+                weight: 0,
+                completed: false,
+                duration: 0,
+                distance: 0,
+              }))
+            }));
+        } else {
+          return;
+        }
+
+        setExercises(templateExercises);
       }
 
-      setExercises(templateExercises);
-      
+      if (cancelled) return;
+
       // Register active workout
       setActiveWorkout({
         id: templateId || 'ritual',
@@ -149,12 +175,17 @@ const RitualWorkoutPage = () => {
         returnPath: location.pathname,
         templateId,
       });
-      
+
       // Only auto-start for non-Valhalla workouts
       if (!isWorkoutActive && !isValhalla) {
         startWorkout();
       }
-    }
+    })();
+
+    return () => {
+      cancelled = true;
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [template?.id, isValhalla]);
 
   const isValhallaWorkout = (name: string) => {
@@ -217,6 +248,7 @@ const RitualWorkoutPage = () => {
     pauseWorkout();
     resetTimer();
     setActiveWorkout(null);
+    clearPersistedWorkout();
   };
 
   const handleCloseCelebration = () => {
@@ -229,6 +261,7 @@ const RitualWorkoutPage = () => {
     pauseWorkout();
     resetTimer();
     setActiveWorkout(null);
+    clearPersistedWorkout();
     toast.success('Ritual cancelled');
     navigate('/workout/new');
   };
