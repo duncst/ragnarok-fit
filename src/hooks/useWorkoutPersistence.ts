@@ -12,6 +12,10 @@ export interface PersistedWorkout {
   focusArea: string;
   restDuration: number;
   timestamp: number;
+  // Identifies which workout session this draft belongs to (e.g. a specific
+  // ritual/template), so we only ever resume a draft into the matching
+  // session instead of bleeding progress between unrelated workouts.
+  sessionId?: string;
 }
 
 export const useWorkoutPersistence = () => {

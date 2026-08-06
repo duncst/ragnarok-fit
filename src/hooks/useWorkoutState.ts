@@ -5,7 +5,7 @@ import { useWorkoutPersistence } from './useWorkoutPersistence';
 import { useExerciseManagement } from './useExerciseManagement';
 import { useSetManagement } from './useSetManagement';
 
-export const useWorkoutState = () => {
+export const useWorkoutState = (sessionId?: string) => {
   const { saveWorkout, clearWorkout } = useWorkoutPersistence();
 
   const {
@@ -20,7 +20,7 @@ export const useWorkoutState = () => {
     restDuration,
     setRestDuration,
     isInitialized,
-  } = useWorkoutInitialization();
+  } = useWorkoutInitialization(sessionId);
 
   const {
     addExercise,
@@ -48,9 +48,10 @@ export const useWorkoutState = () => {
         selectedEquipment,
         focusArea,
         restDuration,
+        sessionId,
       });
     }
-  }, [exercises, workoutName, selectedEquipment, focusArea, restDuration, isInitialized, saveWorkout]);
+  }, [exercises, workoutName, selectedEquipment, focusArea, restDuration, isInitialized, saveWorkout, sessionId]);
 
   const clearPersistedWorkout = () => {
     clearWorkout();
